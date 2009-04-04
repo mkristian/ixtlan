@@ -51,15 +51,20 @@ class ApplicationController < ActionController::Base
     repository(:single_sign_on) do
       token = SingleSignOn.new(:ip => request.ip)
       token.user = User.authenticate(params[:username], params[:password])
-      token.save if token.user
-      token
+      if token.user
+        token.save 
+        token
+      end
     end
   end
   
   def login_from_token(token)
     repository(:single_sign_on) do
-      SingleSignOn.get(token) || SingleSignOn.first(:one_time => token)
+      sso = SingleSignOn.get(token) || SingleSignOn.first(:one_time => token)
+      puts "login from token"
+      p sso
+      p sso.user
+      sso
     end
   end
-
 end

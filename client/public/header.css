@@ -1,0 +1,50 @@
+#header .nav {
+float: right;
+}
+#header .nav a{
+font-weight: bold;
+}
+#header .nav input, 
+#header .application input{
+border-top:0;
+margin: 0;
+}
+#header .nav a, 
+#header .nav input, 
+#header .application input{
+color: black;
+border-left: 1px darkblue solid;
+border-right: 1px darkblue solid;
+margin-left: -1px;
+padding-left: .5em;
+padding-right: .5em; 
+}
+#header .application input{
+margin-rightt: -1px;
+margin-left: 0px;
+}
+#header .nav a:hover{
+text-decoration: none;
+border-bottom: 2px solid darkblue;
+}
+#header .nav input, 
+#header .application input{
+border-bottom: 2px solid white;
+background-color: white;
+font-weight: bold;
+font-size: 1em;
+cursor: pointer;
+}
+#header .nav input:hover, 
+#header .application input:hover{
+border-bottom: 2px solid darkblue;
+}
+#header .nav a{ 
+padding-bottom: 2px;  
+}
+#header .application{
+float: left;
+}
+#body{
+clear: both;
+}

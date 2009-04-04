@@ -65,13 +65,18 @@ class ResetPasswordsController < ApplicationController
       flash[:reset_password_notice] = "email not found"
     elsif reset_password.save
       flash[:reset_password_notice] = "email sent to reset password. #{request.url}/#{reset_password.token}/edit"
-      p flash
     else
       p reset_password.errors
       flash[:reset_password_notice] = "some error occured"
     end
     respond_to do |format|
-      format.html { redirect_to(reset_password.success_url) }
+      url = reset_password.success_url + 
+        if reset_password.success_url =~ /^http/
+          "?flash=#{Base64.encode64('reset_password_notice$' + flash[:reset_password_notice])}"
+        else
+          ""
+        end
+      format.html { redirect_to(url) }
       format.xml  { render :status => :created, :location => reset_password.success_url }
     end
   end

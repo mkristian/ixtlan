@@ -11,6 +11,7 @@ class Views::Layouts::Page < Erector::Widget
         title title_text
         css "/widgets.css"
         css "/header.css"
+        css "/client.css"
       end
       body do
         div :id => 'header' do
@@ -27,42 +28,28 @@ class Views::Layouts::Page < Erector::Widget
   end
 
   def render_header
-    unless helpers.dummy_user?
-      div :class => :application do
-        form_tag dispatches_path do
-          hidden_field_tag(:application, :demo)
-          submit_tag :demo
-        end
-      end
+    div :class => :application do
+      rawtext form_tag dispatches_path
+      rawtext helpers.hidden_field_tag(:application, :users)
+      submit_tag :users
+      rawtext "</form>"
     end
     if allowed(:configurations, :edit)
       div :class => :nav do
         a "config", :href => "/configuration"
       end
     end
-    if allowed(:users, :index)
-      div :class => :nav do
-        a "users", :href => "/users"
-      end
-    end
-    if allowed(:groups, :index)
-      div :class => :nav do
-        a "groups", :href => "/groups"
-      end
-    end
-    
-    unless helpers.dummy_user?
-      div :class => :nav do
-        a "profile", :href => "/profile/edit"
-      end
+    div :class => :nav do
+      rawtext form_tag dispatches_path
+      rawtext helpers.hidden_field_tag(:application, :profile)
+      submit_tag :profile
+      rawtext "</form>"
     end
 
-    unless helpers.controller.send(:dummy_user?)
-      div :class => :nav do
-        rawtext form_tag helpers.request.path, :method => :delete
-        submit_tag :logout
-        rawtext "</form>"
-      end
+    div :class => :nav do
+      rawtext form_tag helpers.request.path, :method => :delete
+      submit_tag :logout
+      rawtext "</form>"
     end
   end
 

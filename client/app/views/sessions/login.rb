@@ -4,7 +4,7 @@ class Views::Sessions::Login < Erector::Widget
     html :xmlns => "http://www.w3.org/1999/xhtml" do
       head do
         title "users login" 
-        css "/users.css"
+        css "/client.css"
       end
       body :id => :login do
         
@@ -43,12 +43,12 @@ class Views::Sessions::Login < Erector::Widget
           flash.clear
         end
 
-        form_for(:reset_password, :url => reset_passwords_path.to_s ) do |f| 
+        form_for(:reset_password, :url =>  "http://localhost:4000/reset_passwords" ) do |f| 
           div :class => :input do
             text "Email Address: "
             text_field_tag :email
           end
-          rawtext helpers.hidden_field_tag "reset_password[success_url]", helpers.request.path
+          rawtext helpers.hidden_field_tag "reset_password[success_url]", helpers.request.url.sub(/.flash=.*/, '')
           
           div :class => :input do
             submit_tag("Send Password", :class => :action_button)
