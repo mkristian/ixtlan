@@ -1,0 +1,97 @@
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+
+describe User do
+  def create_user(options = {})
+    User.create({ 
+     :login => "MyString", :email => "MyString", :name => "MyString", :hashed_password => "MyString", :age => 1       }.merge(options))
+  end
+
+  before(:each) do
+    @user = create_user
+  end
+
+  it "should be valid" do
+  end
+
+  it 'should create' do
+    @user.new_record?.should be_false
+  end
+
+  it 'should require login' do
+    user = create_user(:login => nil)
+    user.errors.on(:login).should_not == nil
+  end
+
+  it 'should not match login' do
+    user = create_user(:login => "<script" )
+    user.errors.on(:login).should_not == nil
+    user = create_user(:login => "sc'ript" )
+    user.errors.on(:login).should_not == nil
+    user = create_user(:login => "scr&ipt" )
+    user.errors.on(:login).should_not == nil
+    user = create_user(:login => 'scr"ipt' )
+    user.errors.on(:login).should_not == nil
+    user = create_user(:login => "script>" )
+    user.errors.on(:login).should_not == nil
+  end
+
+  it 'should require email' do
+    user = create_user(:email => nil)
+    user.errors.on(:email).should_not == nil
+  end
+
+  it 'should not match email' do
+    user = create_user(:email => "<script" )
+    user.errors.on(:email).should_not == nil
+    user = create_user(:email => "sc'ript" )
+    user.errors.on(:email).should_not == nil
+    user = create_user(:email => "scr&ipt" )
+    user.errors.on(:email).should_not == nil
+    user = create_user(:email => 'scr"ipt' )
+    user.errors.on(:email).should_not == nil
+    user = create_user(:email => "script>" )
+    user.errors.on(:email).should_not == nil
+  end
+
+  it 'should require name' do
+    user = create_user(:name => nil)
+    user.errors.on(:name).should_not == nil
+  end
+
+  it 'should not match name' do
+    user = create_user(:name => "<script" )
+    user.errors.on(:name).should_not == nil
+    user = create_user(:name => "sc'ript" )
+    user.errors.on(:name).should_not == nil
+    user = create_user(:name => "scr&ipt" )
+    user.errors.on(:name).should_not == nil
+    user = create_user(:name => 'scr"ipt' )
+    user.errors.on(:name).should_not == nil
+    user = create_user(:name => "script>" )
+    user.errors.on(:name).should_not == nil
+  end
+
+  it 'should require hashed_password' do
+    user = create_user(:hashed_password => nil)
+    user.errors.on(:hashed_password).should_not == nil
+  end
+
+  it 'should not match hashed_password' do
+    user = create_user(:hashed_password => "<script" )
+    user.errors.on(:hashed_password).should_not == nil
+    user = create_user(:hashed_password => "sc'ript" )
+    user.errors.on(:hashed_password).should_not == nil
+    user = create_user(:hashed_password => "scr&ipt" )
+    user.errors.on(:hashed_password).should_not == nil
+    user = create_user(:hashed_password => 'scr"ipt' )
+    user.errors.on(:hashed_password).should_not == nil
+    user = create_user(:hashed_password => "script>" )
+    user.errors.on(:hashed_password).should_not == nil
+  end
+
+
+  it 'should be numerical age' do
+    user = create_user(:age => "string123" )
+    user.age.should == nil #none parsable integer are set to nil
+  end
+end

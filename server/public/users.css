@@ -1,0 +1,45 @@
+body {
+font-family: verdana, arial, helvetica, sans-serif;
+font-size:   .8em;
+margin: 0;
+}
+#login fieldset{
+margin: 0;
+border: darkblue 1px solid;
+}
+#login input{
+border: darkblue 1px solid;
+margin-bottom: .5em;
+}
+#login .input {
+margin-left: auto;
+margin-right: auto;
+width: 10em;
+}
+#login .input input:focus{
+background-color: lightgray;
+}
+#login .action_button{
+background-color: white;
+}
+#login .action_button:hover{
+background-color: silver;
+}
+#login .message{
+position: relative;
+top: -3em;
+background-color: lightgrey;
+opacity: .8;
+padding: 1em;
+width: 50%;
+margin-left:auto;
+margin-right:auto;
+margin-top: 1.5em;
+margin-bottom: -3em;
+text-align: center;
+color: darkgreen;
+border: darkgreen solid 1px;
+}
+#login .reset_password{
+top: -3.5em;
+}
