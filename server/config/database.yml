@@ -23,7 +23,16 @@ test:
   timeout: 5000
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
-  timeout: 5000
+  repositories:
+    default:
+      adapter: mysql 
+      database: taperoom_users
+      host: mysql.taperoom.dreamhosters.com
+      username: taperoom
+      password: Tikapatthana
+    single_sign_on:
+      adapter: mysql 
+      database: taperoom_users
+      host: mysql.taperoom.dreamhosters.com
+      username: taperoom
+      password: Tikapatthana

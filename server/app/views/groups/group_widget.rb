@@ -53,24 +53,21 @@ class Views::Groups::GroupWidget < ErectorWidgets::EntityWidget
       div :class => :second do
         b "Name"
         br
-        #rawtext 
-        (f.text_field(:name, :disabled => disabled))
+        rawtext(f.text_field(:name, :disabled => disabled))
       end
       
       div :class => :first do
         b "Description"
         br
-        (f.text_area(:description, :disabled => disabled))
+        rawtext(f.text_area(:description, :disabled => disabled))
       end
       
       unless disabled
         div :class => :action_button do
           if @group.new_record?
-            #rawtext
-            (f.submit("Create"))
+            rawtext(f.submit("Create"))
           else
-            #rawtext
-            (f.submit("Update"))
+            rawtext(f.submit("Update"))
           end
         end
       end

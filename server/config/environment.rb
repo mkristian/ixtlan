@@ -14,14 +14,24 @@ Rails::Initializer.run do |config|
   config.gem 'datamapper4rail', :lib => 'datamapper4rails/adapters/restful_adapter'
   config.gem 'rspec-rails', :lib => false
   config.gem 'rspec', :lib => false
+  config.gem 'extlib'
+  config.gem 'dm-core'
   config.gem 'dm-ldap-adapter', :lib => 'ldap/version'
   config.gem 'dm-serializer'
+  config.gem 'json_pure', :lib => 'json'
   config.gem 'dm-constraints'
   config.gem 'dm-timestamps'
   config.gem 'dm-validations'
-  config.gem 'do_sqlite3'
-  config.gem 'ixtlan'
+  config.gem 'data_objects'
+  config.gem 'do_sqlite3' unless RAILS_ENV == 'production'
+  config.gem 'do_mysql' if RAILS_ENV == 'production'
   config.gem 'addressable', :lib => 'addressable/uri'
+  config.gem 'logging'
+  config.gem 'ixtlan'
+  
+  # needed to build extensions !!
+#  config.gem 'polyglot'
+#  config.gem 'rubyforge'
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
