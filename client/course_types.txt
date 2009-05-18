@@ -1,0 +1,16 @@
+course_types
+	course_description:text
+	old_or_special:boolean
+	at_course_type:string
+	default_accept_file:string
+	increment_courses:boolean
+	course_stat_level:integer
+	confirm_required_flag:boolean
+	confirm_days_out_start:integer
+	confirm_days_out_end:integer
+	confirmation_reply:string
+	reminder_flag:boolean
+	reminder_days_out:integer
+	bump_flag:boolean
+	bump_days_out:integer
+	bump_notification:boolean

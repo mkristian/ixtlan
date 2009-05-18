@@ -1,4 +1,47 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
+
+  map.resources :locations
 
   map.resource :configuration, :member => {:edit => [:post,:delete]}
 

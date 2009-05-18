@@ -7,13 +7,11 @@ describe ConfigurationsController do
   end
   
   before(:each) do
-    user = Login.new(:id => 1)
+    user = User.new(:id => 1)
     def user.groups
-      [Role.new(:name => "root")]
+      [Group.new(:name => "root")]
     end
-    token = Token.new(:token => 'hmm')
-    token.user = user
-    controller.send(:current_user=, token)
+    controller.send(:current_user=, user)
   end
 
   describe "GET show" do

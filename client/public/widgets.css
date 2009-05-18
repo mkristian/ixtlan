@@ -56,6 +56,10 @@ entity
 .entity {
 padding-bottom: 1em;
 }
+.entity .scrollable{
+height: 25em;
+overflow: auto;
+}
 .entity .timestamps {
 position: relative;
 top: -2em;
@@ -151,6 +155,6 @@ border-bottom: solid darkblue 2px;
 float:right;
 }
 .nav_buttons input{
-margin-top: -1.1em;
+margin-top: -.9em;
 margin-left: -1px;
 }

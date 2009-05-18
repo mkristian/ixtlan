@@ -1,0 +1,6 @@
+en:
+  locations:
+    created: Location was successfully created.
+    updated: Location was successfully updated.
+    new_location: new location
+    location: location

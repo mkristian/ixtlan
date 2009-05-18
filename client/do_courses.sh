@@ -1,0 +1,1 @@
+cat courses.txt | sed -e s/NULL// -e s/NOT// -e s/CONSTRAINT.*/,/ -e s/TABLE// -e s/CREATE// -e "s/\[//g" -e "s/\]//g" -e "s/\([A-Z]\)/_\1/g" | tr QWERTYUIOPASDFGHJKLZXCVBNM qwertyuiopasdfghjklzxcvbnm| sed -e "s/_//" -e "s/  //g" -e "s/\ ,/,/" -e "s/,//" -e s/\ bit/:boolean/ -e s/\ n*varchar[\(].*[\)]/:string/ -e s/\ tinyint/:integer/ -e s/\ smallint/:integer/ 

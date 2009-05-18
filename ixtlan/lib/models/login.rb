@@ -10,6 +10,7 @@ class Login
   property :login, String, :nullable => false , :length => 4..32, :index => :unique_index, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
   property :name, String, :nullable => false, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
   property :email, String, :nullable => false, :format => :email_address, :nullable => false, :length => 8..64, :index => :unique_index, :field => "mail"
+  property :language, String, :nullable => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
   
   # needed for guard
 #  def roles   

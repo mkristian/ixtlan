@@ -1,0 +1,64 @@
+ 
+ 
+ 
+ 
+locations
+(
+	id:integer
+	location_name:string
+	next_add_student_id:integer
+	default_state:string
+	default_country:string
+	default_native_language:string
+	default_news_language:string
+	default_app_origin:string
+	location_signature:text
+	accept_confirm_weeks:integer
+	course_loc_id:string
+	rides_rpt_name:string
+	bignore_accents:boolean
+	registrar_email_address:string
+	from_name:string
+	email_signature:text
+	bounce_to_email_address:string
+	enable_confirm_module:boolean
+
+);
+
+course_types
+(
+	id:integer
+	course_description:text
+	old_or_special:boolean
+	at_course_type:string
+	default_accept_file:string
+	bincrement_courses:boolean
+	course_stat_level:integer
+	default_confirm_required_flag:boolean
+	default_confirm_days_out_start:integer
+	default_confirm_days_out_end:integer
+	default_confirmation_reply:string
+	default_reminder_flag:boolean
+	default_reminder_days_out:integer
+	default_bump_flag:boolean
+	default_bump_days_out:integer
+	default_bump_notification:boolean
+
+);
+
+course_types_location 
+(
+	location_id:integer
+	course_type_id:integer
+	confirm_required_flag:boolean
+	confirm_days_out_start:integer
+	confirm_days_out_end:integer
+	confirmation_reply:string
+	reminder_flag:boolean
+	reminder_days_out:integer
+	bump_flag:boolean
+	bump_days_out:integer
+	bump_notification:boolean
+
+);
+

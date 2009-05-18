@@ -1,0 +1,26 @@
+en:
+  locations:
+    created: Location was successfully created.
+    updated: Location was successfully updated.
+    deleted: Location was successfully deleted.
+    new_location: new location
+    location: location
+    list: locationlist
+    name: Name
+    signature: Signature
+    next_add_student_id: Next add student
+    default_state: Default state
+    default_country: Default country
+    default_native_language: Default native language
+    default_news_language: Default news language
+    default_app_origin: Default app origin
+    accept_confirm_weeks: Accept confirm weeks
+    course_loc_id: Course loc
+    rides_rpt_name: Rides rpt name
+    ignore_accents: Ignore accents
+    registrar_email_address: Registrar email address
+    from_name: From name
+    email_signature: Email signature
+    bounce_to_email_address: Bounce to email address
+    enable_confirm_module: Enable confirm module
+     

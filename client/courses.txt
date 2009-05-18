@@ -1,0 +1,71 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
+CREATE TABLE [Locations]
+(
+	[LocationId] [nvarchar](5) NOT NULL,
+	[LocationName] [nvarchar](64) NOT NULL,
+	[NextAddStudentID] [int] NULL CONSTRAINT [df_NextAddStudentID]  DEFAULT ((0)),
+	[DefaultState] [nvarchar](20) NULL,
+	[DefaultCountry] [nvarchar](20) NULL,
+	[DefaultNativeLanguage] [nvarchar](3) NULL,
+	[DefaultNewsLanguage] [nvarchar](3) NULL,
+	[DefaultAppOrigin] [nvarchar](15) NULL,
+	[LocationSignature] [nvarchar](max) NULL,
+	[AcceptConfirmWeeks] [smallint] NULL CONSTRAINT [df_AcceptConfirmWeeks]  DEFAULT ((2)),
+	[CourseLocId] [nvarchar](5) NOT NULL,
+	[RidesRptName] [nvarchar](30) NULL,
+	[bIgnoreAccents] [bit] NOT NULL CONSTRAINT [df_bIgnoreAccents]  DEFAULT ((0)),
+	[RegistrarEmailAddress] [varchar](50) NULL,
+	[FromName] [varchar](50) NULL,
+	[EmailSignature] [varchar](2000) NULL,
+	[BounceToEmailAddress] [varchar](50) NULL,
+	[EnableConfirmModule] [bit] NOT NULL CONSTRAINT [df_Loc_EnableConfirmMod]  DEFAULT ((0)),
+ CONSTRAINT [PK_Locations] PRIMARY KEY CLUSTERED 
+(
+	[LocationId] ASC
+);
+
+CREATE TABLE [CourseTypes]
+(
+	[CourseTypeId] [nvarchar](10) NOT NULL,
+	[CourseDescription] [nvarchar](max) NOT NULL,
+	[OldOrSpecial] [bit] NOT NULL CONSTRAINT [df_CourseTypes_OldOrSpecial]  DEFAULT ((0)),
+	[ATCourseType] [nvarchar](10) NULL,
+	[DefaultAcceptFile] [nvarchar](30) NULL,
+	[bIncrementCourses] [bit] NOT NULL CONSTRAINT [df_bIncrementCourses]  DEFAULT ((1)),
+	[CourseStatLevel] [tinyint] NULL CONSTRAINT [df_CourseStatLevel]  DEFAULT ((0)),
+	[DefaultConfirmRequiredFlag] [bit] NULL,
+	[DefaultConfirmDaysOutStart] [tinyint] NULL,
+	[DefaultConfirmDaysOutEnd] [tinyint] NULL,
+	[DefaultConfirmationReply] [varchar](10) NULL,
+	[DefaultReminderFlag] [bit] NULL,
+	[DefaultReminderDaysOut] [tinyint] NULL,
+	[DefaultBumpFlag] [bit] NULL,
+	[DefaultBumpDaysOut] [tinyint] NULL,
+	[DefaultBumpNotification] [bit] NULL,
+ CONSTRAINT [PK_CourseTypes] PRIMARY KEY CLUSTERED 
+(
+	[CourseTypeId] ASC
+);
+
+CREATE TABLE [LocationCourseTypes] 
+(
+	[LocationID] [nvarchar](5) NOT NULL,
+	[CourseTypeID] [nvarchar](10) NOT NULL,
+	[ConfirmRequiredFlag] [bit] NULL,
+	[ConfirmDaysOutStart] [tinyint] NULL,
+	[ConfirmDaysOutEnd] [tinyint] NULL,
+	[ConfirmationReply] [nvarchar](10) NULL,
+	[ReminderFlag] [bit] NULL,
+	[ReminderDaysOut] [tinyint] NULL,
+	[BumpFlag] [bit] NULL,
+	[BumpDaysOut] [tinyint] NULL,
+	[BumpNotification] [bit] NULL,
+ CONSTRAINT [PK_LocCouresTypes] PRIMARY KEY CLUSTERED 
+(
+	[LocationID] ASC,
+	[CourseTypeID] ASC
+);
+

@@ -63,5 +63,9 @@ Rails::Initializer.run do |config|
 
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
+  spec = config.gems.detect{|g| g.name == 'erector_widgets'}.specification
+  config.i18n.load_path += Dir[spec.full_gem_path + '/' + spec.require_path + '/erector_widgets/locales/*yml']
   # config.i18n.default_locale = :de
+
+  #p config.gems.detect{|g| g.name == 'ixtlan'}.specification
 end

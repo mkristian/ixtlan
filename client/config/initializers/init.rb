@@ -30,4 +30,3 @@ module DatamapperStore
     end
   end
 end
-

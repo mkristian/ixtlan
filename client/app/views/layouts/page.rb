@@ -12,6 +12,9 @@ class Views::Layouts::Page < Erector::Widget
         css "/widgets.css"
         css "/header.css"
         css "/client.css"
+        # to avoid trying to use a stale form just force a reload 
+        # when the session got a timeout
+        meta :"http-equiv" => "refresh", :content => "#{Configuration.instance.session_idle_timeout * 60}"
       end
       body do
         div :id => 'header' do
@@ -60,6 +63,7 @@ class Views::Layouts::Page < Erector::Widget
   def render_footer
     text "Copyright (c) 2009"
   end
+
 end
 
 require 'erector_widgets/entity_widget'

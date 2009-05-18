@@ -43,13 +43,18 @@ class Views::Profiles::ProfileWidget < ErectorWidgets::EntityWidget
         rawtext (f.password_field(:password_confirmation, :disabled => disabled))
       end
 
-      if @groups.size > 0
-        div :class => :first do
-          b "Old Password"
-          br
-          input :disabled => disabled, :type => :password, :name => :old_password
-        end
+      div :class => :first do
+        b "Old Password"
+        br
+        input :disabled => disabled, :type => :password, :name => :old_password
+      end
         
+      div :class => :second do
+        b "Preferred Language"
+        br
+        select :name=>"user[language]" do
+          options_for_select(['en', 'de'], [@user.language])
+        end
       end
 
       unless disabled

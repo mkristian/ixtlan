@@ -11,6 +11,7 @@ lib/models/login.rb
 lib/models/role.rb
 lib/models/token.rb
 lib/passwords.rb
+lib/session_timeout.rb
 lib/unrestful_authentication.rb
 lib/version.rb
 lib/views/configurations/base_configuration_widget.rb

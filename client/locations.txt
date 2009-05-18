@@ -1,0 +1,18 @@
+locations
+	name:string
+	signature:text
+	next_add_student_id:integer
+	default_state:string
+	default_country:string
+	default_native_language:string
+	default_news_language:string
+	default_app_origin:string
+	accept_confirm_weeks:integer
+	course_loc_id:string
+	rides_rpt_name:string
+	ignore_accents:boolean
+	registrar_email_address:string
+	from_name:string
+	email_signature:text
+	bounce_to_email_address:string
+	enable_confirm_module:boolean
