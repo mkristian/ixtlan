@@ -55,7 +55,7 @@ class ErectorWidgets::SortableTableWidget < Erector::Widget
   end
 
   def render_table_header
-    @__field == @headers[0] unless @__field 
+    @__field = @__headers[0] unless @__field 
     @__headers.each do |head|
       if head == @__field
         th do

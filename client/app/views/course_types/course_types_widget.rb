@@ -2,7 +2,7 @@ class Views::CourseTypes::CourseTypesWidget < ErectorWidgets::EntitiesWidget
 
   def initialize(view, assigns, io, *args)
     super(view, assigns, io, *args)
-    @table_widget = CourseTypesSortableTableWidget.new(view, assigns, io, assigns["#{entities_symbol}"], @__entities, [:course_description,:old_or_special,:at_course_type,:default_accept_file,:increment_courses,:course_stat_level,:confirm_required_flag,:confirm_days_out_start,:confirm_days_out_end,:confirmation_reply,:reminder_flag,:reminder_days_out,:bump_flag,:bump_days_out,:bump_notification,], @field, @direction)
+    @table_widget = CourseTypesSortableTableWidget.new(view, assigns, io, :course_types, @__entities, [:course_description,:old_or_special,:at_course_type,:default_accept_file,:increment_courses,:course_stat_level,:confirm_required_flag,:confirm_days_out_start,:confirm_days_out_end,:confirmation_reply,:reminder_flag,:reminder_days_out,:bump_flag,:bump_days_out,:bump_notification,], @field, @direction)
   end
 
   def entities_symbol

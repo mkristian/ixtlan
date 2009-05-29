@@ -1,6 +1,6 @@
 migration 0, :setup_config do
   up do
-    Configuration.create(:session_idle_timeout => 5, :id => 1)
+    raise "error" unless Configuration.create(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 1)
   end
 
   down do

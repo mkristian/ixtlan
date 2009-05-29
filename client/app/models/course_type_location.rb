@@ -17,4 +17,8 @@ class CourseTypeLocation
 
   timestamps :at
 
+
+   def to_s
+     "CourseTypeLocation(#{attribute_get(:id)})"
+   end
 end

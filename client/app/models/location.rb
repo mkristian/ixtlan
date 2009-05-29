@@ -23,4 +23,8 @@ class Location
 
   timestamps :at
 
+
+   def to_s
+     "Location(#{attribute_get(:id)})"
+   end
 end

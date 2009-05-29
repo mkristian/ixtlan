@@ -2,7 +2,7 @@ class LocationsController < ApplicationController
   # GET /locations
   # GET /locations.xml
   def index
-    @locations = Location.all()
+    @locations = Location.all(@find_all_args)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -74,13 +74,25 @@ class LocationsController < ApplicationController
   # DELETE /locations/1
   # DELETE /locations/1.xml
   def destroy
-    location = Location.get(params[:id])
-    location.destroy if location
+    @location = Location.get(params[:id])
+    @location.destroy if @location
 
     respond_to do |format|
       flash[:notice] = t('locations.location_deleted')
       format.html { redirect_to(locations_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  private
+
+  def audit
+    if @location
+      @location.to_s
+    elsif @locations
+      "Locations[#{@locations.size};#{@field}:#{@direction}]"
+    else
+      ""
     end
   end
 end

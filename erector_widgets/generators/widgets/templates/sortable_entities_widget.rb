@@ -2,7 +2,7 @@ class Views::<%= plural_name.camelize %>::<%= plural_name.camelize %>Widget < Er
 
   def initialize(view, assigns, io, *args)
     super(view, assigns, io, *args)
-    @table_widget = <%= plural_name.camelize %>SortableTableWidget.new(view, assigns, io, assigns["#{entities_symbol}"], @__entities, [<% for attribute in attributes -%>
+    @table_widget = <%= plural_name.camelize %>SortableTableWidget.new(view, assigns, io, :<%= plural_name %>, @__entities, [<% for attribute in attributes -%>
 <% if attribute.field_type.to_s != 'text_area' -%>:<%= attribute.column.name %>,<% end -%><% end -%>], @field, @direction)
   end
 

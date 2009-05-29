@@ -2,7 +2,7 @@ class CourseTypeLocationsController < ApplicationController
   # GET /course_type_locations
   # GET /course_type_locations.xml
   def index
-    @course_type_locations = CourseTypeLocation.all()
+    @course_type_locations = CourseTypeLocation.all(@find_all_args)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -74,13 +74,25 @@ class CourseTypeLocationsController < ApplicationController
   # DELETE /course_type_locations/1
   # DELETE /course_type_locations/1.xml
   def destroy
-    course_type_location = CourseTypeLocation.get(params[:id])
-    course_type_location.destroy if course_type_location
+    @course_type_location = CourseTypeLocation.get(params[:id])
+    @course_type_location.destroy if @course_type_location
 
     respond_to do |format|
       flash[:notice] = t('course_type_locations.course_type_location_deleted')
       format.html { redirect_to(course_type_locations_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  private
+
+  def audit
+    if @course_type_location
+      @course_type_location.to_s
+    elsif @course_type_locations
+      "CourseTypeLocations[#{@course_type_locations.size};#{@field}:#{@direction}]"
+    else
+      ""
     end
   end
 end

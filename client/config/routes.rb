@@ -1,4 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :locations
+
+  map.resources :course_type_locations
+
+  map.resources :course_types
+
   map.resources :course_types
 
   map.resources :course_types

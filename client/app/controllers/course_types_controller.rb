@@ -2,16 +2,7 @@ class CourseTypesController < ApplicationController
   # GET /course_types
   # GET /course_types.xml
   def index
-    @field = params[:field].to_sym if params[:field]
-    @direction = params[:direction] == "up" ? :up : :down
-    args = if @field
-             {:order => [@direction == :down ? @field.asc : @field.desc]}
-           else
-             {}
-           end
-#    args.clear unless args[:order][0]
-
-    @course_types = CourseType.all(args)
+    @course_types = CourseType.all(@find_all_args)
 
     respond_to do |format|
       format.html # index.html.erb

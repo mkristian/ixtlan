@@ -40,67 +40,67 @@ class Views::CourseTypeLocations::CourseTypeLocationWidget < ErectorWidgets::Ent
     
     form_for(:course_type_location, args) do |f|
       div :class => :scrollable do
-        div :class => :second do
+        div :class => [:second, error_class(@course_type_location, :location_id)] do
           b t('course_type_locations.location_id')
           br
           rawtext (f.text_field(:location_id, :disabled => disabled))
         end
 
-        div :class => :first do
+        div :class => [:first, error_class(@course_type_location, :course_type_id)] do
           b t('course_type_locations.course_type_id')
           br
           rawtext (f.text_field(:course_type_id, :disabled => disabled))
         end
 
-        div :class => :second do
+        div :class => [:second, error_class(@course_type_location, :confirm_required_flag)] do
           b t('course_type_locations.confirm_required_flag')
           br
           rawtext (f.check_box(:confirm_required_flag, :disabled => disabled))
         end
 
-        div :class => :first do
+        div :class => [:first, error_class(@course_type_location, :confirm_days_out_start)] do
           b t('course_type_locations.confirm_days_out_start')
           br
           rawtext (f.text_field(:confirm_days_out_start, :disabled => disabled))
         end
 
-        div :class => :second do
+        div :class => [:second, error_class(@course_type_location, :confirm_days_out_end)] do
           b t('course_type_locations.confirm_days_out_end')
           br
           rawtext (f.text_field(:confirm_days_out_end, :disabled => disabled))
         end
 
-        div :class => :first do
+        div :class => [:first, error_class(@course_type_location, :confirmation_reply)] do
           b t('course_type_locations.confirmation_reply')
           br
           rawtext (f.text_field(:confirmation_reply, :disabled => disabled))
         end
 
-        div :class => :second do
+        div :class => [:second, error_class(@course_type_location, :reminder_flag)] do
           b t('course_type_locations.reminder_flag')
           br
           rawtext (f.check_box(:reminder_flag, :disabled => disabled))
         end
 
-        div :class => :first do
+        div :class => [:first, error_class(@course_type_location, :reminder_days_out)] do
           b t('course_type_locations.reminder_days_out')
           br
           rawtext (f.text_field(:reminder_days_out, :disabled => disabled))
         end
 
-        div :class => :second do
+        div :class => [:second, error_class(@course_type_location, :bump_flag)] do
           b t('course_type_locations.bump_flag')
           br
           rawtext (f.check_box(:bump_flag, :disabled => disabled))
         end
 
-        div :class => :first do
+        div :class => [:first, error_class(@course_type_location, :bump_days_out)] do
           b t('course_type_locations.bump_days_out')
           br
           rawtext (f.text_field(:bump_days_out, :disabled => disabled))
         end
 
-        div :class => :second do
+        div :class => [:second, error_class(@course_type_location, :bump_notification)] do
           b t('course_type_locations.bump_notification')
           br
           rawtext (f.check_box(:bump_notification, :disabled => disabled))
