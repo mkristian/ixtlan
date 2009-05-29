@@ -3,7 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe Configuration do
   before(:each) do
     @valid_attributes = {
-      :session_idle_timeout => 1
+      :session_idle_timeout => 1,
+      :keep_audit_logs => 1
     }
   end
 

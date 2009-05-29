@@ -49,6 +49,7 @@ describe ConfigurationsController do
     describe "with valid params" do
 
       it "updates the requested configuration" do
+        mock_configuration.should_receive(:keep_audit_logs).twice
         mock_configuration.should_receive(:update_attributes).with({'these' => 'params'})
         mock_configuration.should_receive(:dirty?)
         put :update, :configuration => {:these => 'params'}
@@ -56,6 +57,7 @@ describe ConfigurationsController do
 
       it "exposes the requested configuration as @configuration" do
         Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:keep_audit_logs).twice
         mock_configuration.should_receive(:update_attributes).and_return(true)
         put :update
         assigns(:configuration).should equal(mock_configuration)
@@ -63,6 +65,7 @@ describe ConfigurationsController do
 
       it "redirects to the configuration" do
         Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:keep_audit_logs).twice
         mock_configuration.should_receive(:update_attributes).and_return(true)
         put :update
         response.should redirect_to(configuration_url)
@@ -73,6 +76,7 @@ describe ConfigurationsController do
     describe "with invalid params" do
 
       it "updates the requested configuration" do
+        mock_configuration.should_receive(:keep_audit_logs).twice
         mock_configuration.should_receive(:update_attributes).with({'these' => 'params'})
         mock_configuration.should_receive(:dirty?)
         put :update, :configuration => {:these => 'params'}
@@ -80,6 +84,7 @@ describe ConfigurationsController do
 
       it "exposes the configuration as @configuration" do
         Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:keep_audit_logs)
         mock_configuration.should_receive(:update_attributes).and_return(false)
         mock_configuration.should_receive(:dirty?).and_return(true)
         put :update
@@ -88,6 +93,7 @@ describe ConfigurationsController do
 
       it "re-renders the 'edit' template" do
         Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:keep_audit_logs)
         mock_configuration.should_receive(:update_attributes).and_return(false)
         mock_configuration.should_receive(:dirty?).and_return(true)
         put :update

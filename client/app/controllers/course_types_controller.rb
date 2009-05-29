@@ -4,8 +4,12 @@ class CourseTypesController < ApplicationController
   def index
     @field = params[:field].to_sym if params[:field]
     @direction = params[:direction] == "up" ? :up : :down
-    args = {:order => [@direction == :down ? @field.asc : @field.desc]}
-    args.clear unless args[:order][0]
+    args = if @field
+             {:order => [@direction == :down ? @field.asc : @field.desc]}
+           else
+             {}
+           end
+#    args.clear unless args[:order][0]
 
     @course_types = CourseType.all(args)
 
