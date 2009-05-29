@@ -46,8 +46,12 @@ class WidgetsGenerator < Rails::Generator::NamedBase
       m.template("entity_widget.rb",
                  File.join('app/views', controller_class_path, controller_file_name, "#{singular_name}_widget.rb"))
 
-      m.template("entities_widget.rb",
-                 File.join('app/views', controller_class_path, controller_file_name, "#{plural_name}_widget.rb"))
+      unless !options[:sortable].nil? && options[:i8n].nil?
+        raise "sortable needs i18n enabled !!!"
+      else
+        m.template((options[:sortable] ? "sortable_" : "" ) + "entities_widget.rb",
+                   File.join('app/views', controller_class_path, controller_file_name, "#{plural_name}_widget.rb"))
+      end
 
       # Layout and stylesheet.
       unless options[:skip_page]
@@ -78,6 +82,8 @@ class WidgetsGenerator < Rails::Generator::NamedBase
            "Add guards for the actions on this model") { |v| options[:add_guard] = v }
     opt.on("--i18n",
            "use i18n keys instead of text") { |v| options[:i18n] = v }
+    opt.on("--sortable",
+           "generate sortable list views") { |v| options[:sortable] = v }
   end
   
   def scaffold_views

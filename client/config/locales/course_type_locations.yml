@@ -1,0 +1,20 @@
+en:
+  course_type_locations:
+    created: CourseTypeLocation was successfully created.
+    updated: CourseTypeLocation was successfully updated.
+    deleted: CourseTypeLocation was successfully deleted.
+    new_course_type_location: new course_type_location
+    course_type_location: course_type_location
+    list: course_type_locationlist
+    location_id: Location
+    course_type_id: Course type
+    confirm_required_flag: Confirm required flag
+    confirm_days_out_start: Confirm days out start
+    confirm_days_out_end: Confirm days out end
+    confirmation_reply: Confirmation reply
+    reminder_flag: Reminder flag
+    reminder_days_out: Reminder days out
+    bump_flag: Bump flag
+    bump_days_out: Bump days out
+    bump_notification: Bump notification
+     

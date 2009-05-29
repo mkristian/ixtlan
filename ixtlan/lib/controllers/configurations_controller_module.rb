@@ -25,9 +25,16 @@ module ConfigurationsControllerModule
   # PUT /configurations.xml
   def update
     @configuration = Configuration.instance
-
+    keep_audit_logs = @configuration.keep_audit_logs  
     respond_to do |format|
       if @configuration.update_attributes(params[:configuration]) or not @configuration.dirty?
+
+        # reconfigure audit logging if changed
+        if keep_audit_logs != @configuration.keep_audit_logs  
+          AuditConfig.reconfigure(Configuration.instance.keep_audit_logs, 
+                                  Rails.root.join('log').to_s + '/audit.log')
+        end
+
         flash[:notice] = 'Configuration was successfully updated.'
         format.html { redirect_to(configuration_url) }
         format.xml  { head :ok }
@@ -38,4 +45,9 @@ module ConfigurationsControllerModule
     end
   end
 
+  private 
+
+  def audit
+    Configuration.instance.to_s
+  end
 end

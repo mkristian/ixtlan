@@ -50,7 +50,7 @@ class ScaffoldWidgetsGenerator < Rails::Generator::NamedBase
 
       m.dependency 'rspec_dm_controller', [name], :collision => options[:collision]
 
-      m.dependency 'widgets', [name] + @args, :collision => options[:collision], :skip_page => options[:skip_page]
+      m.dependency 'widgets', [name] + @args, :collision => options[:collision], :skip_page => options[:skip_page], :sortable => options[:sortable]
     end
   end
 
@@ -71,8 +71,12 @@ class ScaffoldWidgetsGenerator < Rails::Generator::NamedBase
            "Add constraints for this model") { |v| options[:add_constraints] = v }
     opt.on("--skip-page",
            "Skip layout page") { |v| options[:skip_page] = v }
+    opt.on("--ixtlan",
+           "add ixtlan specific code") { |v| options[:ixtlan] = v }
     opt.on("--i18n",
            "use i18n keys instead of text") { |v| options[:i18n] = v }
+    opt.on("--sortable",
+           "generate sortable list views") { |v| options[:sortable] = v }
   end
   
   def model_name

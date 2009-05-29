@@ -12,43 +12,22 @@ describe ConfigurationsController do
       [Group.new(:name => "root")]
     end
     controller.send(:current_user=, user)
-  end
-
-  describe "GET index" do
-
-    it "exposes all configurationses as @configurationses" do
-      Configuration.should_receive(:all).and_return([mock_configuration])
-      get :index
-      assigns[:configurations].should == [mock_configuration]
-    end
-
-    describe "with mime type of xml" do
-  
-      it "renders all configurationses as xml" do
-        Configuration.should_receive(:all).and_return(configurations = mock("Array of Configurations"))
-        configurations.should_receive(:to_xml).and_return("generated XML")
-        get :index, :format => 'xml'
-        response.body.should == "generated XML"
-      end
-    
-    end
-
+    Configuration.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
+    mock_configuration.should_receive(:session_idle_timeout).any_number_of_times.and_return(1)
   end
 
   describe "GET show" do
 
     it "exposes the requested configuration as @configuration" do
-      Configuration.should_receive(:get!).with("37").and_return(mock_configuration)
-      get :show, :id => "37"
+      get :show
       assigns[:configuration].should equal(mock_configuration)
     end
     
     describe "with mime type of xml" do
 
       it "renders the requested configuration as xml" do
-        Configuration.should_receive(:get!).with("37").and_return(mock_configuration)
         mock_configuration.should_receive(:to_xml).and_return("generated XML")
-        get :show, :id => "37", :format => 'xml'
+        get :show, :format => 'xml'
         response.body.should == "generated XML"
       end
 
@@ -56,60 +35,13 @@ describe ConfigurationsController do
     
   end
 
-  describe "GET new" do
-  
-    it "exposes a new configuration as @configuration" do
-      Configuration.should_receive(:new).and_return(mock_configuration)
-      get :new
-      assigns[:configuration].should equal(mock_configuration)
-    end
-
-  end
-
   describe "GET edit" do
   
     it "exposes the requested configuration as @configuration" do
-      Configuration.should_receive(:get!).with("37").and_return(mock_configuration)
-      get :edit, :id => "37"
+      get :edit
       assigns[:configuration].should equal(mock_configuration)
     end
 
-  end
-
-  describe "POST create" do
-
-    describe "with valid params" do
-      
-      it "exposes a newly created configuration as @configuration" do
-        Configuration.should_receive(:new).with({'these' => 'params'}).and_return(mock_configuration(:save => true))
-        post :create, :configuration => {:these => 'params'}
-        assigns(:configuration).should equal(mock_configuration)
-      end
-
-      it "redirects to the created configuration" do
-        Configuration.stub!(:new).and_return(mock_configuration(:save => true))
-        post :create, :configuration => {}
-        response.should redirect_to(configuration_url(mock_configuration))
-      end
-      
-    end
-    
-    describe "with invalid params" do
-
-      it "exposes a newly created but unsaved configuration as @configuration" do
-        Configuration.stub!(:new).with({'these' => 'params'}).and_return(mock_configuration(:save => false))
-        post :create, :configuration => {:these => 'params'}
-        assigns(:configuration).should equal(mock_configuration)
-      end
-
-      it "re-renders the 'new' template" do
-        Configuration.stub!(:new).and_return(mock_configuration(:save => false))
-        post :create, :configuration => {}
-        response.should render_template('new')
-      end
-      
-    end
-    
   end
 
   describe "PUT udpate" do
@@ -117,22 +49,23 @@ describe ConfigurationsController do
     describe "with valid params" do
 
       it "updates the requested configuration" do
-        Configuration.should_receive(:get!).with("37").and_return(mock_configuration)
         mock_configuration.should_receive(:update_attributes).with({'these' => 'params'})
         mock_configuration.should_receive(:dirty?)
-        put :update, :id => "37", :configuration => {:these => 'params'}
+        put :update, :configuration => {:these => 'params'}
       end
 
       it "exposes the requested configuration as @configuration" do
-        Configuration.stub!(:get!).and_return(mock_configuration(:update_attributes => true))
-        put :update, :id => "1"
+        Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:update_attributes).and_return(true)
+        put :update
         assigns(:configuration).should equal(mock_configuration)
       end
 
       it "redirects to the configuration" do
-        Configuration.stub!(:get!).and_return(mock_configuration(:update_attributes => true))
-        put :update, :id => "1"
-        response.should redirect_to(configuration_url(mock_configuration))
+        Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:update_attributes).and_return(true)
+        put :update
+        response.should redirect_to(configuration_url)
       end
 
     end
@@ -140,41 +73,27 @@ describe ConfigurationsController do
     describe "with invalid params" do
 
       it "updates the requested configuration" do
-        Configuration.should_receive(:get!).with("37").and_return(mock_configuration)
         mock_configuration.should_receive(:update_attributes).with({'these' => 'params'})
         mock_configuration.should_receive(:dirty?)
-        put :update, :id => "37", :configuration => {:these => 'params'}
+        put :update, :configuration => {:these => 'params'}
       end
 
       it "exposes the configuration as @configuration" do
-        Configuration.stub!(:get!).and_return(mock_configuration(:update_attributes => false))
-        mock_configuration.should_receive(:dirty?)
-        put :update, :id => "1"
+        Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:update_attributes).and_return(false)
+        mock_configuration.should_receive(:dirty?).and_return(true)
+        put :update
         assigns(:configuration).should equal(mock_configuration)
       end
 
       it "re-renders the 'edit' template" do
-        Configuration.stub!(:get!).and_return(mock_configuration(:update_attributes => false, :dirty? => true))
-        put :update, :id => "1"
+        Configuration.stub!(:get!).and_return(mock_configuration)
+        mock_configuration.should_receive(:update_attributes).and_return(false)
+        mock_configuration.should_receive(:dirty?).and_return(true)
+        put :update
         response.should render_template('edit')
       end
 
-    end
-
-  end
-
-  describe "DELETE destroy" do
-
-    it "destroys the requested configuration" do
-      Configuration.should_receive(:get).with("37").and_return(mock_configuration)
-      mock_configuration.should_receive(:destroy)
-      delete :destroy, :id => "37"
-    end
-  
-    it "redirects to the configurations list" do
-      Configuration.should_receive(:get).with("1").and_return(mock_configuration(:destroy => true))
-      delete :destroy, :id => "1"
-      response.should redirect_to(configurations_url)
     end
 
   end

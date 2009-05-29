@@ -31,13 +31,13 @@ describe ConfigurationsController do
       params_from(:get, "/configuration/edit").should == {:controller => "configurations", :action => "edit"}
     end
   
-    it "generates params for #edit" do
-      params_from(:post, "/configuration/edit").should == {:controller => "configurations", :action => "edit"}
-    end
+#    it "generates params for #edit" do
+#      params_from(:post, "/configuration/edit").should == {:controller => "configurations", :action => "edit"}
+#    end
   
-    it "generates params for #edit" do
-      params_from(:delete, "/configuration/edit").should == {:controller => "configurations", :action => "edit"}
-    end
+#    it "generates params for #edit" do
+#      params_from(:delete, "/configuration/edit").should == {:controller => "configurations", :action => "edit"}
+#    end
   
     it "generates params for #update" do
       params_from(:put, "/configuration").should == {:controller => "configurations", :action => "update"}

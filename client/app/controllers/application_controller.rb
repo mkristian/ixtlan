@@ -21,12 +21,13 @@ class ApplicationController < ActionController::Base
       (params["commit"] == "Login" or verify_authenticity_token) 
   end
 
+  # overwrite methods from session_timeout
   def session_expired
     flash[:notice] = "session expired"
   end
 
   def new_session_timeout
-    logger.debug "#{Configuration.instance.session_idle_timeout.minutes.from_now}"
+    logger.debug "timeout at #{Configuration.instance.session_idle_timeout.minutes.from_now}"
     Configuration.instance.session_idle_timeout.minutes.from_now
   end
 

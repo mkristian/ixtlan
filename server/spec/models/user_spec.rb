@@ -10,6 +10,7 @@ describe User do
       :name => "value for name",
       :password => "passWord1",
       :password_confirmation => "passWord1",
+      :language => "en",
       :created_at => Time.now,
       :updated_at => Time.now
     }

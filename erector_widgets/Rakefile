@@ -6,7 +6,7 @@ require './lib/version.rb'
 
 Hoe.new('erector_widgets', ErectorWidgets::VERSION) do |p|
   p.developer('mkristian', 'm.kristian@web.de')
-  p.extra_deps = ['guard', 'rspec-rails', 'datamapper4rail']
+  p.extra_deps = ['guard', 'rspec-rails', 'datamapper4rail-ixtlan']
 end
 
 desc 'Install the package as a gem.'

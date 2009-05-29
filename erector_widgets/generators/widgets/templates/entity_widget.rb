@@ -55,7 +55,7 @@ class Views::<%= plural_name.camelize %>::<%= singular_name.camelize %>Widget < 
     form_for(:<%= singular_name %>, args) do |f|
       div :class => :scrollable do
 <% attributes.each_with_index do |attribute, index| -%>
-        div :class => <%= index % 2 == 0 ? ":second" : ":first" %> do
+        div :class => [<%= index % 2 == 0 ? ":second" : ":first" %>, error_class(@<%= singular_name %>, :<%= attribute.name %>)] do
           b <% if options[:i18n] -%>t('<%= plural_name %>.<%= attribute.column.name %>')<% else -%>"<%= attribute.column.human_name %>"<% end -%>
 
           br

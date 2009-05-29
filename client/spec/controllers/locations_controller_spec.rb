@@ -12,6 +12,9 @@ describe LocationsController do
       [Group.new(:name => "root")]
     end
     controller.send(:current_user=, user)
+    mock_configuration = mock_model(Configuration,{})
+    Configuration.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
+    mock_configuration.should_receive(:session_idle_timeout).any_number_of_times.and_return(1)
   end
 
   describe "GET index" do

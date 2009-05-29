@@ -28,4 +28,10 @@ class ProfilesController < ApplicationController
       render :edit
     end
   end
+
+  private
+
+  def audit
+    @user.to_s
+  end
 end

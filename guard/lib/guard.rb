@@ -12,7 +12,7 @@ module Guard
         def guard
           unless current_user.nil? or ::Guard::Guard.check(params[:controller], params[:action], current_user.roles)
             u = current_user
-            throw ::Guard::PermissionDenied.new("permission denied for {#{u.roles.each{|r| r.name}.join ',' }} on #{params[:controller]}##{params[:action]}")
+            throw ::Guard::PermissionDenied.new("permission denied for roles[#{u.roles.collect{|r| r.name}.join ',' }] on #{params[:controller]}##{params[:action]}")
           end
           return true
         end
@@ -65,7 +65,7 @@ module Guard
         if (allowed.nil?)
           throw GuardException.new("GuardException: unknown action #{action} for controller #{controller}")
         else
-          allowed << @@superuser
+          allowed << @@superuser unless allowed.member? @@superuser
           for role in roles
             if allowed.member? role.name.to_sym
               return true

@@ -6,6 +6,10 @@ module DispatchesControllerModule
     base.skip_before_filter :guard
   end
 
+  def url(application)
+    @@map[application.to_sym] if application
+  end
+
   def index
     flash[:notice] = 'missing url for dispatch'
     render "errors/general"    
@@ -13,7 +17,7 @@ module DispatchesControllerModule
 
   # POST /dispatches
   def create
-    if url = @@map[params[:application].to_sym]
+    if url = url(params[:application])
       token = nil
       repository(:single_sign_on) do
         token = Token.get(session[:token])
@@ -27,4 +31,9 @@ module DispatchesControllerModule
     end
   end
 
+  private 
+
+  def audit
+    ""
+  end
 end

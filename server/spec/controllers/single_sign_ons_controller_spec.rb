@@ -5,7 +5,12 @@ describe SingleSignOnsController do
   def mock_single_sign_on(stubs={})
     @mock_single_sign_on ||= mock_model(SingleSignOn, stubs)
   end
-  
+
+  before(:each)do
+    mock_configuration = mock_model(Configuration,{})
+    Configuration.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
+    mock_configuration.should_receive(:session_idle_timeout).any_number_of_times.and_return(1)
+  end
 
   describe "GET index" do
 

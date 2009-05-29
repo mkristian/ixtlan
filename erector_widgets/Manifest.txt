@@ -12,6 +12,7 @@ generators/widgets/templates/index.rb
 generators/widgets/templates/new.rb
 generators/widgets/templates/page.rb
 generators/widgets/templates/show.rb
+generators/widgets/templates/sortable_entities_widget.rb
 generators/widgets/templates/style.css
 generators/widgets/widgets_generator.rb
 lib/erector_widgets.rb
@@ -20,4 +21,5 @@ lib/erector_widgets/entities_widget.rb
 lib/erector_widgets/entity_widget.rb
 lib/erector_widgets/locales/widgets.yml
 lib/erector_widgets/locales/widgets_de.yml
+lib/erector_widgets/sortable_table_widget.rb
 lib/version.rb

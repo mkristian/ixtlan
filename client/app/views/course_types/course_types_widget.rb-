@@ -1,0 +1,129 @@
+class Views::CourseTypes::CourseTypesWidget < ErectorWidgets::EntitiesWidget
+
+  def initialize(view, assigns, io, *args)
+    super(view, assigns, io, *args)
+    @table_widget = CourseTypesSortedTableWidget.new(view, assigns, io, @__entities, [:course_description, :old_or_special, :at_course_type, :default_accept_file, :increment_courses, :course_stat_level, :confirm_required_flag, :confirm_days_out_start, :confirm_days_out_end, :confirmation_reply, :reminder_flag, :reminder_days_out, :bump_flag, :bump_days_out, :bump_notification], @field, @direction)
+  end
+
+  def entities_symbol
+    :course_types
+  end
+
+  def title
+    t("course_types.list")
+  end
+  
+  def render_navigation
+    if allowed(:course_types, :new)
+      div :class => :nav_buttons do
+        button_to t('widget.new'), new_course_type_path, :method => :get
+      end
+    end
+  end
+
+  def render_table
+    @table_widget.render_to(self)
+  end
+end
+
+class SortableTableWidget < Erector::Widget
+
+  def initialize(view, assigns, io, entities, headers, sorted_field, direction)
+    super(view, assigns, io)
+    @__entities = entities
+    @__headers = headers
+    @__field = sorted_field
+    @__direction = direction
+  end
+
+  def link_args(entity)
+    raise "not implemented"
+  end
+  
+  def delete_form(entity)
+    raise "not implemented"
+  end
+
+  def render
+    table do
+      thead do
+        tr do
+          render_table_header
+        end
+      end
+      tbody do
+        for entity in @__entities
+          tr do
+            render_table_row(entity)
+          end
+        end
+      end
+    end
+  end
+
+  def render_table_row(entity)
+    td do
+      a entity.course_description, link_args(entity)
+    end
+    first = true
+    @__headers.each do |head|
+      if first
+        first = false
+      else
+        td entity.attribute_get(head)
+      end
+    end
+
+    if allowed(:course_types, :destroy)
+      td :class => :cell_buttons do
+        delete_form(entity)
+      end
+    end
+  end
+
+  def render_table_header
+    @__headers.each do |head|
+      if head == @__field
+        th do
+          if @__direction == :down
+            direction = :up
+            arrow = " ∇"
+          else
+            direction = :down
+            arrow = " ∆"
+          end
+          a(t("course_types.#{head}") + arrow, 
+            :href => "?field=#{head}&direction=#{direction}")
+        end
+      else
+        th do
+          a(t("course_types.#{head}"), 
+            :href => "?field=#{head}&direction=down")
+        end
+      end
+    end
+  end
+end
+
+class CourseTypesSortedTableWidget < SortableTableWidget
+
+  def link_args(entity)
+    args = {}
+    if allowed(:course_types, :edit)
+      args[:href] = edit_course_type_path(entity.id)
+    elsif allowed(:course_types, :show)
+      args[:href] = course_type_path(entity.id)
+    end
+    args
+  end
+  
+  def delete_form(entity)
+    form_for(:course_type, 
+             :url => course_type_path(entity.id),
+             :html => { :method => :delete , #:confirm => 'Are you sure?'
+             }) do |f|
+      rawtext(f.submit(t('widget.delete')))
+    end
+  end
+
+end

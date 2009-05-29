@@ -1,0 +1,212 @@
+class Views::CourseTypes::CourseTypesWidget < ErectorWidgets::EntitiesWidget
+
+  def initialize(view, assigns, io, *args)
+    super(view, assigns, io, *args)
+    @table_widget = CourseTypesSortedTableWidget.new(view, assigns, io, @__entities, [:course_description, :old_or_special, :at_course_type, :default_accept_file, :increment_courses, :course_stat_level, :confirm_required_flag, :confirm_days_out_start, :confirm_days_out_end, :confirmation_reply, :reminder_flag, :reminder_days_out, :bump_flag, :bump_days_out, :bump_notification], @field, @direction)
+  end
+
+  def entities_symbol
+    :course_types
+  end
+
+  def title
+    t("course_types.list")
+  end
+  
+  def render_navigation
+    if allowed(:course_types, :new)
+      div :class => :nav_buttons do
+        button_to t('widget.new'), new_course_type_path, :method => :get
+      end
+    end
+  end
+
+  def render_table
+    @table_widget.render_to(self)
+  end
+
+  def render_table_header
+    render_sorted_table_header([:course_description, :old_or_special, :at_course_type, :default_accept_file, :increment_courses, :course_stat_level, :confirm_required_flag, :confirm_days_out_start, :confirm_days_out_end, :confirmation_reply, :reminder_flag, :reminder_days_out, :bump_flag, :bump_days_out, :bump_notification], @field, @direction)
+  end
+
+  def rrender_table_header # "∇∆"
+    th t('course_types.old_or_special') 
+    th t('course_types.at_course_type')
+    th t('course_types.default_accept_file')
+    th t('course_types.increment_courses')
+    th t('course_types.course_stat_level')
+    th t('course_types.confirm_required_flag')
+    th t('course_types.confirm_days_out_start')
+    th t('course_types.confirm_days_out_end')
+    th t('course_types.confirmation_reply')
+    th t('course_types.reminder_flag')
+    th t('course_types.reminder_days_out')
+    th t('course_types.bump_flag')
+    th t('course_types.bump_days_out')
+    th t('course_types.bump_notification')
+  end
+ 
+  def render_sorted_table_header(headers, field, direction)
+    field ||= :old_or_special
+    direction ||= :down
+    headers.each do |head|
+      if head == field
+        th do
+          if direction == :down
+            direction = :up
+            arrow = " ∇"
+          else
+            direction = :down
+            arrow = " ∆"
+          end
+          a(t("course_types.#{head}") + arrow, 
+            :href => "?field=#{head}&direction=#{direction}")
+        end
+      else
+        th do
+          a(t("course_types.#{head}"), 
+            :href => "?field=#{head}&direction=down")
+        end
+      end
+    end
+  end
+
+  def render_table_row(course_type)
+    td do
+      args = {}
+      if allowed(:course_types, :edit)
+        args[:href] = edit_course_type_path(course_type.id)
+      elsif allowed(:course_types, :show)
+        args[:href] = course_type_path(course_type.id)
+      end
+      a course_type.course_description, args
+    end
+    td course_type.attribute_get(:old_or_special)
+    td course_type.at_course_type
+    td course_type.default_accept_file
+    td course_type.increment_courses
+    td course_type.course_stat_level
+    td course_type.confirm_required_flag
+    td course_type.confirm_days_out_start
+    td course_type.confirm_days_out_end
+    td course_type.confirmation_reply
+    td course_type.reminder_flag
+    td course_type.reminder_days_out
+    td course_type.bump_flag
+    td course_type.bump_days_out
+    td course_type.bump_notification
+
+    td :class => :cell_buttons do
+      if allowed(:course_types, :destroy)
+        form_for(:course_type, 
+                 :url => course_type_path(course_type.id),
+                 :html => { :method => :delete , #:confirm => 'Are you sure?'
+                          }) do |f|
+          rawtext(f.submit(t('widget.delete')))
+        end
+      end
+    end
+  end
+end
+
+class SortableTableWidget < Erector::Widget
+
+  def initialize(view, assigns, io, entities, headers, sorted_field, direction)
+    super(view, assigns, io)
+    @__entities = entities
+    @__headers = headers
+    @__field = sorted_field
+    @__direction = direction
+  end
+
+  def link_args(entity)
+    raise "not implemented"
+  end
+  
+  def delete_form(entity)
+    raise "not implemented"
+  end
+
+  def render
+    table do
+      thead do
+        tr do
+          render_table_header
+        end
+      end
+      tbody do
+        for entity in @__entities
+          tr do
+            render_table_row(entity)
+          end
+        end
+      end
+    end
+  end
+
+  def render_table_row(entity)
+    td do
+      a entity.course_description, link_args(entity)
+    end
+    first = true
+    @__headers.each do |head|
+      if first
+        first = false
+      else
+        td entity.attribute_get(head)
+      end
+    end
+
+    if !responds_to? :allowed or allowed(:course_types, :destroy)
+      td :class => :cell_buttons do
+        delete_form(entity)
+      end
+    end
+  end
+
+  def render_table_header
+    @__headers.each do |head|
+      if head == @__field
+        th do
+          if @__direction == :down
+            direction = :up
+            arrow = " ∇"
+          else
+            direction = :down
+            arrow = " ∆"
+          end
+          a(t("course_types.#{head}") + arrow, 
+            :href => "?field=#{head}&direction=#{direction}")
+        end
+      else
+        th do
+          a(t("course_types.#{head}"), 
+            :href => "?field=#{head}&direction=down")
+        end
+      end
+    end
+  end
+end
+
+class CourseTypesSortedTableWidget < SortableTableWidget
+
+  def link_args(entity)
+    args = {}
+    if allowed(:course_types, :edit)
+      args[:href] = edit_course_type_path(entity.id)
+    elsif allowed(:course_types, :show)
+      args[:href] = course_type_path(entity.id)
+    end
+    args
+  end
+  
+  def delete_form(entity)
+    form_for(:course_type, 
+             :url => course_type_path(entity.id),
+             :html => { :method => :delete , #:confirm => 'Are you sure?'
+             }) do |f|
+      rawtext(f.submit(t('widget.delete')))
+    end
+  end
+
+end

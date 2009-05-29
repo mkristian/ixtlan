@@ -2,6 +2,9 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
+lib/audit.rb
+lib/audit_config.rb
+lib/cache_headers.rb
 lib/controllers/configurations_controller_module.rb
 lib/controllers/dispatches_controller_module.rb
 lib/ixtlan.rb

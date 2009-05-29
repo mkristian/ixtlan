@@ -1,0 +1,24 @@
+en:
+  course_types:
+    created: CourseType was successfully created.
+    updated: CourseType was successfully updated.
+    deleted: CourseType was successfully deleted.
+    new_course_type: new course_type
+    course_type: course_type
+    list: course_typelist
+    course_description: Course description
+    old_or_special: Old or special
+    at_course_type: At course type
+    default_accept_file: Default accept file
+    increment_courses: Increment courses
+    course_stat_level: Course stat level
+    confirm_required_flag: Confirm required flag
+    confirm_days_out_start: Confirm days out start
+    confirm_days_out_end: Confirm days out end
+    confirmation_reply: Confirmation reply
+    reminder_flag: Reminder flag
+    reminder_days_out: Reminder days out
+    bump_flag: Bump flag
+    bump_days_out: Bump days out
+    bump_notification: Bump notification
+     

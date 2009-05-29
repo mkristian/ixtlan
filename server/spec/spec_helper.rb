@@ -5,6 +5,20 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'spec/autorun'
 require 'spec/rails'
 
+class User < Login
+  def user
+    self
+  end
+
+  def roles
+    groups
+  end
+
+  def token
+    "hmm"
+  end
+end
+
 require 'rake'
 Rake::FileList[File.expand_path(File.dirname(__FILE__) + "../app/models") + "/**/*.rb"].each do |model|
   load model

@@ -1,8 +1,8 @@
 Guard::Guard.initialize(:groups, 
-                 { :index => [], 
-                   :show => [], 
-                   :edit => [], 
-                   :update => [], 
-                   :new => [], 
-                   :create => [], 
-                   :destroy => [] })
+                 { :index => [:admin, :useradmin, :users], 
+                   :show => [:admin, :useradmin, :users], 
+                   :edit => [:admin], 
+                   :update => [:admin], 
+                   :new => [:admin], 
+                   :create => [:admin], 
+                   :destroy => [:admin] })

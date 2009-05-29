@@ -15,23 +15,26 @@ namespace :db do
     end
     ::DataMapper.auto_upgrade!
   end
+end
 
+namespace :dm do
   namespace :migrate do
     task :load => :environment do
       gem 'dm-migrations'
-      FileList["db/migrations/**/*.rb"].each do |migration|
+      require "migration_runner"
+      FileList["db/migrate/**/*.rb"].each do |migration|
         load migration
       end
     end
     
     desc "Migrate up using migrations"
-    task :up, :version, :needs => :load do |t, args|
+    task :up => :load do |t, args|
       version = args[:version]
       migrate_up!(version)
     end
 
     desc "Migrate down using migrations"
-    task :down, :version, :needs => :load do |t, args|
+    task :down => :load do |t, args|
       version = args[:version]
       migrate_down!(version)
     end
@@ -39,4 +42,4 @@ namespace :db do
 
   desc "Migrate the database to the latest version"
   task :migrate => 'db:migrate:up'
-  end
+end

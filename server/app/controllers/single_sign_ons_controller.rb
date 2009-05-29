@@ -56,4 +56,10 @@ class SingleSignOnsController < ApplicationController
       end
     end
   end
+
+  private
+
+  def audit
+    
+  end
 end

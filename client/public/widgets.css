@@ -90,6 +90,13 @@ border-top: 1pt solid darkblue;
 border-right: 1pt solid darkblue; 
 border-bottom: 1pt solid darkblue;   
 }
+.entity .error{
+color: darkred;
+}
+.entity .error input, .entity .error textarea{
+background-color: #fff4f4;
+border: solid 1px red;
+}
 .entity input:focus, .entity textarea:focus {
 background-color: lightgray;
 }

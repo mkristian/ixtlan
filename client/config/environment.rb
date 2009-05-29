@@ -10,8 +10,8 @@ Rails::Initializer.run do |config|
   config.gem 'guard'
   config.gem 'erector'
   config.gem 'erector_widgets'
-  config.gem 'datamapper4rail', :lib => 'datamapper4rails/adapters/restful_adapter'
-  config.gem 'datamapper4rail', :lib => 'datamapper4rails'
+  config.gem 'datamapper4rail-ixtlan', :lib => 'datamapper4rails/adapters/restful_adapter'
+  config.gem 'datamapper4rail-ixtlan', :lib => 'datamapper4rails'
   config.gem 'rspec-rails', :lib => false
   config.gem 'rspec', :lib => false
   config.gem 'extlib'

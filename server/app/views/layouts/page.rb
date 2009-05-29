@@ -11,6 +11,12 @@ class Views::Layouts::Page < Erector::Widget
         title title_text
         css "/widgets.css"
         css "/header.css"
+        if timeout = Configuration.instance.session_idle_timeout
+          # to avoid trying to use a stale form just force a reload 
+          # when the session got a timeout
+          meta(:"http-equiv" => "refresh", 
+               :content => "#{timeout * 60}")
+        end
       end
       body do
         div :id => 'header' do

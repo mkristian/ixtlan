@@ -21,19 +21,23 @@ class ErectorWidgets::EntitiesWidget < ErectorWidgets::BaseWidget
         end
       end
 
-      table do
-        tr do
-          render_table_header
-        end
-        for entity in @__entities
+      render_table
+    end
+  end
+  
+  def render_table
+    table do
+      tr do
+        render_table_header
+      end
+      for entity in @__entities
           tr do
-            render_table_row(entity)
-          end
+          render_table_row(entity)
         end
       end
     end
   end
-
+  
   def render_navigation
   end
   

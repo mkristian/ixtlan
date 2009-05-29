@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resource :configuration, :member => {:edit => [:post,:delete]}
+  map.resource :configuration#, :member => {:edit => [:post,:delete]}
 
   map.resources :dispatches
 

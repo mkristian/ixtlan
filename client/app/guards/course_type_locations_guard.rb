@@ -1,4 +1,4 @@
-Guard::Guard.initialize(:single_sign_ons, 
+Guard::Guard.initialize(:course_type_locations, 
                  { :index => [], 
                    :show => [], 
                    :edit => [], 

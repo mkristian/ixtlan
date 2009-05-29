@@ -92,8 +92,15 @@ background-color: lightgray;
 .entity .action_button input:hover{
 background-color: silver;
 }
+.entity .error{
+color: darkred;
+}
+.entity .error input{
+background-color: #fff4f4;
+border: solid 1px red;
+}
 
-/* 
+/*
 ========================
 both entity and entities
 ========================
@@ -107,9 +114,9 @@ margin: 0;
 }
 .message, .errors{
 position: relative;
-top: -4.8em;
+top: -2em;
 background-color: lightgrey;
-opacity: .9;
+opacity: .8;
 padding: 1em;
 width: 50%;
 margin-left:auto;
@@ -151,6 +158,6 @@ border-bottom: solid darkblue 2px;
 float:right;
 }
 .nav_buttons input{
-margin-top: -1.1em;
+margin-top: -.9em;
 margin-left: -1px;
 }

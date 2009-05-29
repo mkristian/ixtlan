@@ -39,4 +39,7 @@ class ErectorWidgets::BaseWidget < Erector::Widget
     end
   end
 
+  def error_class(entity, attribute)
+    :error if entity.errors[attribute]
+  end
 end

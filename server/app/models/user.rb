@@ -125,6 +125,10 @@ class User  < Login
   def to_xml_document
     to_x(:exclude => [:hashed_password, :created_at, :updated_at], :methods => [:roles])
   end
+
+  def to_s
+    "User(#{attribute_get(:id)})"
+  end
 end
 
 
