@@ -1,8 +1,8 @@
 en:
   course_types:
-    created: CourseType was successfully created.
-    updated: CourseType was successfully updated.
-    deleted: CourseType was successfully deleted.
+    course_type_created: CourseType was successfully created.
+    course_type_updated: CourseType was successfully updated.
+    course_type_deleted: CourseType was successfully deleted.
     new_course_type: new course_type
     course_type: course_type
     list: course_typelist

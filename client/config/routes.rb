@@ -1,89 +1,25 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :locations
+  map.resources :course_type_locations, :member => {:edit => [:post,:delete]}
+  map.connect ':course_type_locations', :controller => ':course_type_locations', :conditions => { :method => [:delete] }
+  map.connect ':course_type_locations/:id', :controller => ':course_type_locations', :conditions => { :method => [:post] }
 
-  map.resources :course_type_locations
+  map.resources :course_types, :member => {:edit => [:post,:delete]}
+  map.connect ':course_types', :controller => ':course_types', :conditions => { :method => [:delete] }
+  map.connect ':course_types/:id', :controller => ':course_types', :conditions => { :method => [:post] }
 
-  map.resources :course_types
+  map.resources :course_types, :member => {:edit => [:post,:delete]}
+  map.connect ':course_types', :controller => ':course_types', :conditions => { :method => [:delete] }
+  map.connect ':course_types/:id', :controller => ':course_types', :conditions => { :method => [:post] }
 
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
+  map.resources :course_types, :member => {:edit => [:post,:delete]}
+map.connect ':course_types', :controller => ':course_types', :conditions => { :method => [:delete] }
+map.connect ':course_types/:id', :controller => ':course_types', :conditions => { :method => [:post] }
 
   map.resources :course_types
 
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_types
-
-  map.resources :course_type_locations
-
-  map.resources :course_type_locations
-
-  map.resources :course_types
-
-  map.resources :course_typeses
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
-
-  map.resources :locations
+  map.resources :locations do |location|
+    location.resources :course_type_locations
+  end
 
   map.resource :configuration#, :member => {:edit => [:post,:delete]}
 

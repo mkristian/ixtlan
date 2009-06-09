@@ -8,7 +8,9 @@ class Views::Layouts::Page < Erector::Widget
     instruct
     html :xmlns => "http://www.w3.org/1999/xhtml" do
       head do
-        title title_text
+        title do
+          title_text
+        end
         css "/widgets.css"
         css "/header.css"
         css "/client.css"
@@ -32,27 +34,38 @@ class Views::Layouts::Page < Erector::Widget
 
   def render_header
     div :class => :application do
-      rawtext form_tag dispatches_path
-      rawtext helpers.hidden_field_tag(:application, :users)
-      submit_tag :users
-      rawtext "</form>"
+      form_tag dispatches_path do
+        rawtext helpers.hidden_field_tag(:application, :users)
+        submit_tag :users
+      end
+    end
+    if allowed(:course_types, :index)
+      div :class => :nav do
+        # TODO wrong plural in inflection code from extlib : typese from type
+        a "course types", :href => course_types_path.to_s
+      end
+    end
+    if allowed(:locations, :index)
+      div :class => :nav do
+        a "locations", :href => locations_path.to_s
+      end
     end
     if allowed(:configurations, :edit)
       div :class => :nav do
-        a "config", :href => "/configuration"
+        a "config", :href => configuration_path.to_s
       end
     end
     div :class => :nav do
-      rawtext form_tag dispatches_path
-      rawtext helpers.hidden_field_tag(:application, :profile)
-      submit_tag :profile
-      rawtext "</form>"
+      form_tag dispatches_path do
+        rawtext helpers.hidden_field_tag(:application, :profile)
+        submit_tag :profile
+      end
     end
 
     div :class => :nav do
-      rawtext form_tag helpers.request.path, :method => :delete
-      submit_tag :logout
-      rawtext "</form>"
+      form_tag helpers.request.path, :method => :delete do
+        submit_tag :logout
+      end
     end
   end
 
@@ -64,6 +77,11 @@ class Views::Layouts::Page < Erector::Widget
     text "Copyright (c) 2009"
   end
 
+  private 
+  
+  def t(text)
+    I18n.translate(text)
+  end
 end
 
 require 'erector_widgets/entity_widget'

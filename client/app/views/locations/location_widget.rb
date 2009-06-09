@@ -6,9 +6,9 @@ class Views::Locations::LocationWidget < ErectorWidgets::EntityWidget
  
   def title
     if @location.new_record?
-      t('locations.new_location')
+      text t('locations.new_location')
     else
-      t('locations.location') + " #{@location.name}"
+      text(t('locations.location') + " #{@location.name}")
     end
   end
 
@@ -23,6 +23,11 @@ class Views::Locations::LocationWidget < ErectorWidgets::EntityWidget
       if allowed(:locations, :edit)
         div :class => :nav_buttons do
           button_to t('widget.edit'), edit_location_path(@location.id), :method => :get, :class => :button
+        end
+      end
+      if allowed(:course_type_locations, :index)
+        div :class => :nav_buttons do
+          button_to t('course_type_locations.course_type_locations'), location_course_type_locations_path(@location.id), :method => :get, :class => :button
         end
       end
     end

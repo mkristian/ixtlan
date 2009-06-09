@@ -10,7 +10,7 @@ class Views::CourseTypes::CourseTypesWidget < ErectorWidgets::EntitiesWidget
   end
 
   def title
-    t("course_types.list")
+    text t("course_types.list")
   end
   
   def render_navigation
@@ -39,11 +39,13 @@ class CourseTypesSortableTableWidget < ErectorWidgets::SortableTableWidget
   end
   
   def delete_form(course_type)
-    form_for(:course_type, 
-             :url => course_type_path(course_type.id),
-             :html => { :method => :delete , #:confirm => 'Are you sure?'
-             }) do |f|
-      rawtext(f.submit(t('widget.delete')))
+    if allowed(:course_types, :destroy)
+      form_for(:course_type, 
+               :url => course_type_path(course_type.id),
+               :html => { :method => :delete , #:confirm => 'Are you sure?'
+               }) do |f|
+        rawtext(f.submit(t('widget.delete')))
+      end
     end
   end
 

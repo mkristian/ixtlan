@@ -12,7 +12,8 @@ logger.level = :debug
 logger.info "initialized logger . . ."
 
 guard_logger = Slf4r::LoggerFacade.new(Guard::Guard)
-Guard::Guard.load(guard_logger)
+# set the root user for this application
+Guard::Guard.load(guard_logger, :reg_root)
 guard_logger.info("guard loaded . . .")
 
 

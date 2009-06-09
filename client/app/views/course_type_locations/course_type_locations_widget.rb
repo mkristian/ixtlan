@@ -2,7 +2,7 @@ class Views::CourseTypeLocations::CourseTypeLocationsWidget < ErectorWidgets::En
 
   def initialize(view, assigns, io, *args)
     super(view, assigns, io, *args)
-    @table_widget = CourseTypeLocationsSortableTableWidget.new(view, assigns, io, :course_type_locations, @__entities, [:location_id,:course_type_id,:confirm_required_flag,:confirm_days_out_start,:confirm_days_out_end,:confirmation_reply,:reminder_flag,:reminder_days_out,:bump_flag,:bump_days_out,:bump_notification,], @field, @direction)
+    @table_widget = CourseTypeLocationsSortableTableWidget.new(view, assigns, io, :course_type_locations, @__entities, [[:course_type,:at_course_type],:confirm_required_flag,:confirm_days_out_start,:confirm_days_out_end,:confirmation_reply,:reminder_flag,:reminder_days_out,:bump_flag,:bump_days_out,:bump_notification,], @field, @direction)
   end
 
   def entities_symbol
@@ -10,13 +10,17 @@ class Views::CourseTypeLocations::CourseTypeLocationsWidget < ErectorWidgets::En
   end
 
   def title
-    t("course_type_locations.list")
+    text t("course_type_locations.list") 
+    text " < "
+    text t("course_type_locations.location")
+    text " "
+    a @location.name, :href => location_path(@location.id)
   end
   
   def render_navigation
     if allowed(:course_type_locations, :new)
       div :class => :nav_buttons do
-        button_to t('widget.new'), new_course_type_location_path, :method => :get
+        button_to t('widget.new'), new_location_course_type_location_path(@location.id), :method => :get
       end
     end
   end
@@ -31,19 +35,21 @@ class CourseTypeLocationsSortableTableWidget < ErectorWidgets::SortableTableWidg
   def link_args(course_type_location)
     args = {}
     if allowed(:course_type_locations, :edit)
-      args[:href] = edit_course_type_location_path(course_type_location.id)
+      args[:href] = edit_location_course_type_location_path(course_type_location.location_id, course_type_location.course_type_id)
     elsif allowed(:course_type_locations, :show)
-      args[:href] = course_type_location_path(course_type_location.id)
+      args[:href] = location_course_type_location_path(course_type_location.location_id, course_type_location.course_type_id)
     end
     args
   end
   
   def delete_form(course_type_location)
-    form_for(:course_type_location, 
-             :url => course_type_location_path(course_type_location.id),
-             :html => { :method => :delete , #:confirm => 'Are you sure?'
-             }) do |f|
-      rawtext(f.submit(t('widget.delete')))
+    if allowed(:course_type_locations, :destroy)
+      form_for(:course_type_location, 
+               :url => location_course_type_location_path(course_type_location.location_id, course_type_location.course_type_id),
+               :html => { :method => :delete , #:confirm => 'Are you sure?'
+               }) do |f|
+        rawtext(f.submit(t('widget.delete')))
+      end
     end
   end
 

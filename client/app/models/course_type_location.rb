@@ -1,10 +1,8 @@
 class CourseTypeLocation
   include DataMapper::Resource
 
-  property :id, Serial
-
-  property :location_id, Integer, :nullable => false 
-  property :course_type_id, Integer, :nullable => false 
+  property :location_id, Integer, :nullable => false, :key => true
+  property :course_type_id, Integer, :nullable => false, :key => true
   property :confirm_required_flag, Boolean, :nullable => false 
   property :confirm_days_out_start, Integer, :nullable => false 
   property :confirm_days_out_end, Integer, :nullable => false 
@@ -17,7 +15,12 @@ class CourseTypeLocation
 
   timestamps :at
 
+  belongs_to :course_type
 
+  def course_type_name
+    course_type.at_course_type
+  end
+  
    def to_s
      "CourseTypeLocation(#{attribute_get(:id)})"
    end

@@ -1,6 +1,6 @@
 Guard::Guard.initialize(:course_types, 
-                 { :index => [], 
-                   :show => [], 
+                 { :index => [:reg, :reg_admin], 
+                   :show => [:reg, :reg_admin], 
                    :edit => [], 
                    :update => [], 
                    :new => [], 

@@ -6,10 +6,12 @@ class Views::CourseTypeLocations::CourseTypeLocationWidget < ErectorWidgets::Ent
  
   def title
     if @course_type_location.new_record?
-      t('course_type_locations.new_course_type_location')
+      text t('course_type_locations.new_course_type_location')
     else
-      t('course_type_locations.course_type_location') + " #{@course_type_location.location_id}"
+      text t('course_type_locations.course_type_location') + " #{@course_type_location.location_id}"
     end
+    text " < "
+    a (t('location') + ":" + @location.name), :href => location_path(@location.id)
   end
 
   def render_navigation(disabled)
@@ -17,12 +19,12 @@ class Views::CourseTypeLocations::CourseTypeLocationWidget < ErectorWidgets::Ent
     if disabled and not @course_type_location.new_record?
       if allowed(:course_type_locations, :new)
         div :class => :nav_buttons do
-          button_to t('widget.new'), new_course_type_location_path, :method => :get, :class => :button
+          button_to t('widget.new'), new_location_course_type_location_path(@location.id), :method => :get, :class => :button
         end
       end
       if allowed(:course_type_locations, :edit)
         div :class => :nav_buttons do
-          button_to t('widget.edit'), edit_course_type_location_path(@course_type_location.id), :method => :get, :class => :button
+          button_to t('widget.edit'), edit_location_course_type_location_path(@location.id, @course_type_location.id), :method => :get, :class => :button
         end
       end
     end
@@ -31,25 +33,21 @@ class Views::CourseTypeLocations::CourseTypeLocationWidget < ErectorWidgets::Ent
   def render_entity(disabled)
     args = 
       if @course_type_location.new_record?
-        {:url => course_type_locations_path.to_s, :html => {:method => :post}}
+        {:url => location_course_type_locations_path(@location.id).to_s, :html => {:method => :post}}
       elsif disabled
-        {:url => edit_course_type_location_path(@course_type_location.id).to_s, :html => {:method => :get} }
+        {:url => edit_location_course_type_location_path(@location.id, @course_type_location.course_type_id).to_s, :html => {:method => :get} }
       else
-        {:url => course_type_location_path(@course_type_location.id).to_s, :html => {:method => :put} }
+        {:url => location_course_type_location_path(@location.id, @course_type_location.course_type_id).to_s, :html => {:method => :put} }
       end
     
     form_for(:course_type_location, args) do |f|
       div :class => :scrollable do
-        div :class => [:second, error_class(@course_type_location, :location_id)] do
-          b t('course_type_locations.location_id')
-          br
-          rawtext (f.text_field(:location_id, :disabled => disabled))
-        end
-
         div :class => [:first, error_class(@course_type_location, :course_type_id)] do
           b t('course_type_locations.course_type_id')
           br
-          rawtext (f.text_field(:course_type_id, :disabled => disabled))
+          select :name=>"course_type_location[course_type_id]", :disabled => disabled do
+            options_for_select(@course_types.collect {|ct| [ct.at_course_type, ct.id]}, @course_type_location.course_type_id)
+          end
         end
 
         div :class => [:second, error_class(@course_type_location, :confirm_required_flag)] do

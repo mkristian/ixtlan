@@ -10,7 +10,7 @@ class Views::Locations::LocationsWidget < ErectorWidgets::EntitiesWidget
   end
 
   def title
-    t("locations.list")
+    text(t("locations.list"))
   end
   
   def render_navigation
@@ -39,11 +39,13 @@ class LocationsSortableTableWidget < ErectorWidgets::SortableTableWidget
   end
   
   def delete_form(location)
-    form_for(:location, 
-             :url => location_path(location.id),
-             :html => { :method => :delete , #:confirm => 'Are you sure?'
-             }) do |f|
-      rawtext(f.submit(t('widget.delete')))
+    if allowed(:locations, :destroy)
+      form_for(:location, 
+               :url => location_path(location.id),
+               :html => { :method => :delete , #:confirm => 'Are you sure?'
+               }) do |f|
+        rawtext(f.submit(t('widget.delete')))
+      end
     end
   end
 

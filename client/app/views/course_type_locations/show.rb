@@ -7,7 +7,11 @@ class Views::CourseTypeLocations::Show < Views::Layouts::Page
   end
 
   def title_text
-    @course_type_location_widget.title
+    text t('course_type_location.show_course_type_location') 
+    text " > "
+    text t('course_type_location.location')
+    text ": "
+    text @location.name
   end
 
   def render_body   

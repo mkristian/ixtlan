@@ -1,8 +1,4 @@
 Guard::Guard.initialize(:configurations, 
-                 { :index => [], 
-                   :show => [], 
+                 { :show => [], 
                    :edit => [], 
-                   :update => [], 
-                   :new => [], 
-                   :create => [], 
-                   :destroy => [] })
+                   :update => [] })

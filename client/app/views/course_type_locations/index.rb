@@ -6,7 +6,11 @@ class Views::CourseTypeLocations::Index < Views::Layouts::Page
   end
 
   def title_text
-    @course_type_locations_widget.title
+    text t("course_type_locations.list") 
+    text " > "
+    text t('course_type_location.location')
+    text ": "
+    text @location.name
   end
 
   def render_body
