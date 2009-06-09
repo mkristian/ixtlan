@@ -39,4 +39,7 @@ class Group
     to_x({:exclude => [:description]}, doc)
   end
 
+  def to_s
+    "Group(#{attribute_get(:id)})"
+  end
 end

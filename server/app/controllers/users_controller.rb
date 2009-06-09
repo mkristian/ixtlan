@@ -80,6 +80,7 @@ class UsersController < ApplicationController
         format.html { redirect_to(user_url(@user.id)) }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
+        @groups = Group.all(:order => [:name.desc])
         format.html { render :new }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
@@ -113,6 +114,18 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(users_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  private
+
+  def audit
+    if @user
+      @user.to_s
+    elsif @users
+      "Users[#{@users.size}]"
+    else
+      ""
     end
   end
 end

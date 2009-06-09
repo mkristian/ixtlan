@@ -65,6 +65,15 @@ class Views::Users::UserWidget < ErectorWidgets::EntityWidget
         end
       end 
 
+      div :class => :first do
+        b "Preferred Language"
+        br
+        select :name=>"user[language]" do
+          options_for_select(['en', 'de'], [@user.language])
+        end
+      end
+
+      
       unless disabled
         div :class => :action_button do
           if @user.new_record?
