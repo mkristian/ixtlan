@@ -1,8 +1,8 @@
 en:
   <%= plural_name %>:
-    created: <%= class_name %> was successfully created.
-    updated: <%= class_name %> was successfully updated.
-    deleted: <%= class_name %> was successfully deleted.
+    <%= singular_name %>_created: <%= class_name %> was successfully created.
+    <%= singular_name %>_updated: <%= class_name %> was successfully updated.
+    <%= singular_name %>_deleted: <%= class_name %> was successfully deleted.
     new_<%= singular_name %>: new <%= singular_name %>
     <%= singular_name %>: <%= singular_name %>
     list: <%= singular_name %>list

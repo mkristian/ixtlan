@@ -5,7 +5,7 @@ class Views::<%= plural_name.camelize %>::<%= plural_name.camelize %>Widget < Er
   end
 
   def title
-    <% if options[:i18n] -%>t("<%= plural_name %>.list")<% else -%>"<%= singular_name %>list"<% end -%>
+    text <% if options[:i18n] -%>t("<%= plural_name %>.list")<% else -%>"<%= singular_name %>list"<% end -%>
 
   end
   
