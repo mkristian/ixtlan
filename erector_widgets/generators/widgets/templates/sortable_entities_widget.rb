@@ -11,7 +11,7 @@ class Views::<%= plural_name.camelize %>::<%= plural_name.camelize %>Widget < Er
   end
 
   def title
-    <% if options[:i18n] -%>t("<%= plural_name %>.list")<% else -%>"<%= singular_name %>list"<% end -%>
+    text <% if options[:i18n] -%>t("<%= plural_name %>.list")<% else -%>"<%= singular_name %>list"<% end -%>
 
   end
   
@@ -48,12 +48,18 @@ class <%= plural_name.camelize %>SortableTableWidget < ErectorWidgets::SortableT
   end
   
   def delete_form(<%= singular_name %>)
-    form_for(:<%= singular_name %>, 
-             :url => <%= singular_name %>_path(<%= singular_name %>.id),
-             :html => { :method => :delete , #:confirm => 'Are you sure?'
-             }) do |f|
-      rawtext(f.submit(<% if options[:i18n] -%>t('widget.delete')<% else -%>"delete"<% end -%>))
+<% if options[:add_guard] -%>
+    if allowed(:<%= plural_name %>, :destroy)
+<% end -%>
+      form_for(:<%= singular_name %>, 
+               :url => <%= singular_name %>_path(<%= singular_name %>.id),
+               :html => { :method => :delete , #:confirm => 'Are you sure?'
+               }) do |f|
+        rawtext(f.submit(<% if options[:i18n] -%>t('widget.delete')<% else -%>"delete"<% end -%>))
+      end
+<% if options[:add_guard] -%>
     end
+<% end -%>
   end
 
 end

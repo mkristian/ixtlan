@@ -6,12 +6,14 @@ class ErectorWidgets::EntitiesWidget < ErectorWidgets::BaseWidget
   end
 
   def title
-    "please overwrite"
+    text "please overwrite"
   end
 
   def render
     fieldset :class => :entities do
-      legend title
+      legend do
+        title
+      end
 
       render_navigation
 

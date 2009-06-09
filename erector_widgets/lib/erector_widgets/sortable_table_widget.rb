@@ -37,15 +37,23 @@ class ErectorWidgets::SortableTableWidget < Erector::Widget
   end
 
   def render_table_row(entity)
-    td do
-      a entity.course_description, link_args(entity)
-    end
     first = true
     @__headers.each do |head|
       if first
         first = false
+        td do
+          if head.instance_of? Array
+            a entity.send(head[0]).attribute_get(head[1]), link_args(entity)
+          else
+            a entity.attribute_get(head), link_args(entity)
+          end
+        end
       else
-        td entity.attribute_get(head)
+        if head.instance_of? Array
+          td entity.send(head[0]).attribute_get(head[1])
+        else
+          td entity.attribute_get(head)
+        end
       end
     end
 
@@ -57,6 +65,7 @@ class ErectorWidgets::SortableTableWidget < Erector::Widget
   def render_table_header
     @__field = @__headers[0] unless @__field 
     @__headers.each do |head|
+      head = head[0] if head.instance_of? Array
       if head == @__field
         th do
           if @__direction == :down

@@ -7,15 +7,15 @@ class Views::<%= plural_name.camelize %>::<%= singular_name.camelize %>Widget < 
   def title
     if @<%= singular_name %>.new_record?
 <% if options[:i18n] -%>
-      t('<%= plural_name %>.new_<%= singular_name %>')
+      text t('<%= plural_name %>.new_<%= singular_name %>')
 <% else -%>
-      "new <%= singular_name %>"
+      text "new <%= singular_name %>"
 <% end -%>
     else
 <% if options[:i18n] -%>
-      t('<%= plural_name %>.<%= singular_name %>') + " #{@<%= singular_name %>.<%= attributes[0].name%>}"
+      text(t('<%= plural_name %>.<%= singular_name %>') + " #{@<%= singular_name %>.<%= attributes[0].name%>}")
 <% else -%>
-      "<%= singular_name %> #{@<%= singular_name %>.<%= attributes[0].name%>}"
+      text "<%= singular_name %> #{@<%= singular_name %>.<%= attributes[0].name%>}"
 <% end -%>
     end
   end

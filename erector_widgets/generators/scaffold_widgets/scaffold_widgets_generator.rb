@@ -55,7 +55,7 @@ class ScaffoldWidgetsGenerator < Rails::Generator::NamedBase
   end
 
   protected
-  
+
   def banner
     "Usage: #{$0} scaffold_widgets ModelName [field:type, field:type]"
   end
@@ -81,5 +81,26 @@ class ScaffoldWidgetsGenerator < Rails::Generator::NamedBase
   
   def model_name
     class_name.demodulize
+  end
+end
+module Rails
+  module Generator
+    module Commands
+      class Create < Base
+        
+        def route_resources(*resources)
+          resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
+          sentinel = 'ActionController::Routing::Routes.draw do |map|'
+          
+          logger.route "map.resources #{resource_list}"
+          unless options[:pretend]
+            gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
+              "#{match}\n  map.resources #{resource_list}, :member => {:edit => [:post,:delete]}\n  map.connect '#{resource_list}', :controller => '#{resource_list}', :conditions => { :method => [:delete] }\n  map.connect '#{resource_list}/:id', :controller => '#{resource_list}', :conditions => { :method => [:post] }\n"  
+            end
+          end
+        end
+        
+      end
+    end
   end
 end
