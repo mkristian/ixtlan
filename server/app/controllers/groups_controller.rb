@@ -82,4 +82,16 @@ class GroupsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  private
+
+  def audit
+    if @group
+      @group.to_s
+    elsif @groups
+      "Groups[#{@groups.size};#{@field}:#{@direction}]"
+    else
+      ""
+    end
+  end
 end

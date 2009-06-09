@@ -80,4 +80,8 @@ class ResetPasswordsController < ApplicationController
       format.xml  { render :status => :created, :location => reset_password.success_url }
     end
   end
+  private
+
+  def audit    
+  end
 end
