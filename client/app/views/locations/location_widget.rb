@@ -6,9 +6,9 @@ class Views::Locations::LocationWidget < ErectorWidgets::EntityWidget
  
   def title
     if @location.new_record?
-      t('locations.new_location')
+      text t('locations.new_location')
     else
-      t('locations.location') + " #{@location.name}"
+      text(t('locations.location') + " #{@location.name}")
     end
   end
 

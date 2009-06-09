@@ -6,9 +6,9 @@ class Views::CourseTypeLocations::CourseTypeLocationWidget < ErectorWidgets::Ent
  
   def title
     if @course_type_location.new_record?
-      t('course_type_locations.new_course_type_location')
+      text t('course_type_locations.new_course_type_location')
     else
-      t('course_type_locations.course_type_location') + " #{@course_type_location.location_id}"
+      text(t('course_type_locations.course_type_location') + " #{@course_type_location.location_id}")
     end
   end
 

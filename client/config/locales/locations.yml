@@ -1,8 +1,8 @@
 en:
   locations:
-    created: Location was successfully created.
-    updated: Location was successfully updated.
-    deleted: Location was successfully deleted.
+    location_created: Location was successfully created.
+    location_updated: Location was successfully updated.
+    location_deleted: Location was successfully deleted.
     new_location: new location
     location: location
     list: locationlist

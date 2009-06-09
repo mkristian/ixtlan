@@ -1,8 +1,8 @@
 en:
   course_type_locations:
-    created: CourseTypeLocation was successfully created.
-    updated: CourseTypeLocation was successfully updated.
-    deleted: CourseTypeLocation was successfully deleted.
+    course_type_location_created: CourseTypeLocation was successfully created.
+    course_type_location_updated: CourseTypeLocation was successfully updated.
+    course_type_location_deleted: CourseTypeLocation was successfully deleted.
     new_course_type_location: new course_type_location
     course_type_location: course_type_location
     list: course_type_locationlist
