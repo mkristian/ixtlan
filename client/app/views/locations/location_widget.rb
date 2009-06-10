@@ -25,10 +25,10 @@ class Views::Locations::LocationWidget < ErectorWidgets::EntityWidget
           button_to t('widget.edit'), edit_location_path(@location.id), :method => :get, :class => :button
         end
       end
-      if allowed(:course_type_locations, :index)
-        div :class => :nav_buttons do
-          button_to t('course_type_locations.course_type_locations'), location_course_type_locations_path(@location.id), :method => :get, :class => :button
-        end
+    end
+    if allowed(:course_type_locations, :index) and not @location.new_record?
+      div :class => :nav_buttons do
+        button_to t('course_type_locations.course_type_locations'), location_course_type_locations_path(@location.id), :method => :get, :class => :button
       end
     end
   end

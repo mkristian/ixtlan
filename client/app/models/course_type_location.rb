@@ -16,12 +16,8 @@ class CourseTypeLocation
   timestamps :at
 
   belongs_to :course_type
-
-  def course_type_name
-    course_type.at_course_type
-  end
   
    def to_s
-     "CourseTypeLocation(#{attribute_get(:id)})"
+     "CourseTypeLocation(#{attribute_get(:course_type_id)}, #{attribute_get(:location_id)})"
    end
 end

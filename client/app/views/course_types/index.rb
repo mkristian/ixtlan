@@ -2,7 +2,7 @@ class Views::CourseTypes::Index < Views::Layouts::Page
 
   def initialize(view, assigns, stream)
     super(view, assigns, stream)
-    @course_types_widget = CourseTypesWidget.new(view, assigns, stream)
+    @course_types_widget = ::Views::CourseTypes::CourseTypesWidget.new(view, assigns, stream)
   end
 
   def title_text

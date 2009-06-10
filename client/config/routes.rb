@@ -1,25 +1,15 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :course_type_locations, :member => {:edit => [:post,:delete]}
-  map.connect ':course_type_locations', :controller => ':course_type_locations', :conditions => { :method => [:delete] }
-  map.connect ':course_type_locations/:id', :controller => ':course_type_locations', :conditions => { :method => [:post] }
-
   map.resources :course_types, :member => {:edit => [:post,:delete]}
-  map.connect ':course_types', :controller => ':course_types', :conditions => { :method => [:delete] }
-  map.connect ':course_types/:id', :controller => ':course_types', :conditions => { :method => [:post] }
+  map.connect 'course_types', :controller => 'course_types', :conditions => { :method => [:delete] }
+  map.connect 'course_types/:id', :controller => 'course_types', :conditions => { :method => [:post] }
 
-  map.resources :course_types, :member => {:edit => [:post,:delete]}
-  map.connect ':course_types', :controller => ':course_types', :conditions => { :method => [:delete] }
-  map.connect ':course_types/:id', :controller => ':course_types', :conditions => { :method => [:post] }
-
-  map.resources :course_types, :member => {:edit => [:post,:delete]}
-map.connect ':course_types', :controller => ':course_types', :conditions => { :method => [:delete] }
-map.connect ':course_types/:id', :controller => ':course_types', :conditions => { :method => [:post] }
-
-  map.resources :course_types
-
-  map.resources :locations do |location|
-    location.resources :course_type_locations
+  map.resources :locations, :member => {:edit => [:post,:delete]} do |location|
+    location.resources :course_type_locations, :member => {:edit => [:post,:delete]}
+    location.connect 'locations/:location_id/course_type_locations', :controller => 'course_type_locations', :conditions => { :method => [:delete] }
+    location.connect 'locations/:location_id/course_type_locations/:id', :controller => 'course_type_locations', :conditions => { :method => [:post] }
   end
+  map.connect 'locations', :controller => 'locations', :conditions => { :method => [:delete] }
+  map.connect 'locations/:id', :controller => 'locations', :conditions => { :method => [:post] }
 
   map.resource :configuration#, :member => {:edit => [:post,:delete]}
 
