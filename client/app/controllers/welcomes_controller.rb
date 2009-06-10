@@ -5,4 +5,7 @@ class WelcomesController < ApplicationController
   def show
   end
 
+  private
+  def audit
+  end
 end

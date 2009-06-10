@@ -2,7 +2,7 @@ class Views::<%= plural_name.camelize %>::Index < Views::Layouts::Page
 
   def initialize(view, assigns, stream)
     super(view, assigns, stream)
-    @<%= plural_name %>_widget = <%= plural_name.camelize %>Widget.new(view, assigns, stream)
+    @<%= plural_name %>_widget = ::Views::<%= plural_name.camelize %>::<%= plural_name.camelize %>Widget.new(view, assigns, stream)
   end
 
   def title_text

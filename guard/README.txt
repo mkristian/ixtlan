@@ -1,6 +1,6 @@
 = guard
 
-* FIX (url)
+* http://github.com/mkristian/ixtlan/tree/master
 
 == DESCRIPTION:
 

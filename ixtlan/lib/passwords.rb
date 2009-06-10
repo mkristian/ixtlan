@@ -8,7 +8,14 @@ class Passwords
     # collect 8 random characters from the either of the above ranges
     begin
       #TODO use secure random somehow !!!
-      pwd = (1..length).collect { (j= Kernel.rand(3); i = Kernel.rand(offset[j][0]); i += offset[j][1]).chr }.join
+      bytes = ActiveSupport::SecureRandom.random_bytes(length * 2)
+      
+      pwd = (0..(length - 1)).collect do |idx| 
+        j= bytes[idx * 2] % 3
+        i = bytes[idx * 2 + 1] % offset[j][0]
+        i += offset[j][1]
+        i.chr
+      end.join
     end while !((pwd =~ /[a-z]/) && (pwd =~ /[A-Z]/) && (pwd =~ /[0-9]/))
     pwd
   end

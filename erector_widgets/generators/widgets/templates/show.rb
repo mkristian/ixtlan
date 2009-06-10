@@ -2,7 +2,7 @@ class Views::<%= plural_name.camelize %>::Show < Views::Layouts::Page
 
   def initialize(view, assigns, stream)
     super(view, assigns, stream)
-    @<%= singular_name %>_widget = <%= singular_name.camelize %>Widget.new(view, assigns, stream)
+    @<%= singular_name %>_widget = ::Views::<%= plural_name.camelize %>::<%= singular_name.camelize %>Widget.new(view, assigns, stream)
     @<%= singular_name %>_widget.disabled = true
   end
 
