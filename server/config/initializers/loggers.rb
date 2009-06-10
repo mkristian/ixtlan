@@ -4,7 +4,8 @@ require 'slf4r/logging_logger'
 
 Logging.init :debug, :info, :warn, :error
 
-appender = Logging::Appender.stdout
+#appender = Logging::Appender.stdout
+appender = Logging::Appenders::File.new('default', :filename => "#{RAILS_ROOT}/log/#{RAILS_ENV}.log")
 appender.layout = Logging::Layouts::Pattern.new(:pattern => "[%d] %-l (%c) %m\n")
 logger = Logging::Logger.new(:root)
 logger.add_appenders(appender)

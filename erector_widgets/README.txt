@@ -1,6 +1,6 @@
 = erector_widgets
 
-* FIX (url)
+* http://github.com/mkristian/ixtlan/tree/master
 
 == DESCRIPTION:
 

@@ -90,12 +90,13 @@ module Rails
         
         def route_resources(*resources)
           resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
+          resource_clist = resources.map { |r| r.to_s }.join(', ')
           sentinel = 'ActionController::Routing::Routes.draw do |map|'
           
           logger.route "map.resources #{resource_list}"
           unless options[:pretend]
             gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
-              "#{match}\n  map.resources #{resource_list}, :member => {:edit => [:post,:delete]}\n  map.connect '#{resource_list}', :controller => '#{resource_list}', :conditions => { :method => [:delete] }\n  map.connect '#{resource_list}/:id', :controller => '#{resource_list}', :conditions => { :method => [:post] }\n"  
+              "#{match}\n  map.resources #{resource_list}, :member => {:edit => [:post,:delete]}\n  map.connect '#{resource_clist}', :controller => '#{resource_clist}', :conditions => { :method => [:delete] }\n  map.connect '#{resource_clist}/:id', :controller => '#{resource_clist}', :conditions => { :method => [:post] }\n"  
             end
           end
         end
