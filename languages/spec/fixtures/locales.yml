@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  language: MyString
+  country: MyString
+
+two:
+  language: MyString
+  country: MyString
