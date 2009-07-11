@@ -14,32 +14,72 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
 public abstract class Resource {
-	private List<ResourceChangeListener<Resource>> listeners = new ArrayList<ResourceChangeListener<Resource>>();
+	
+	private final List<ResourceChangeListener<Resource>> listeners = new ArrayList<ResourceChangeListener<Resource>>();
+	
 	private final Repository repository;
-	boolean isNew = true;
+
+	enum State {
+		NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED
+	}
+
+	State state = State.NEW;
+
 	final String storageName;
 
-	Resource(Repository repository, ResourceFactory factory) {
+	Resource(Repository repository, ResourceFactory<?> factory) {
 		this.repository = repository;
 		this.storageName = factory.storageName();
 	}
 
 	void save() {
-		if (isNew) {
+		switch (state) {
+		case NEW:
+		case TO_BE_CREATED:
+			state = State.TO_BE_CREATED;
 			repository.post(this, new ResourceRequestCallback(this));
-		} else {
+			break;
+		case UP_TO_DATE:
+		case TO_BE_UPDATED:
+		case TO_BE_DELETED:
+			state = State.TO_BE_UPDATED;
 			repository.put(this, new ResourceRequestCallback(this));
+			break;
+		default:
+			throw new IllegalStateException("can not save with state " + state);
 		}
 	}
 
 	void destroy() {
-		repository.delete(this, new ResourceRequestCallback(this));
+		switch (state) {
+		case UP_TO_DATE:
+		case TO_BE_DELETED:
+			state = State.TO_BE_DELETED;
+			repository.delete(this, new ResourceRequestCallback(this));
+			break;
+		default:
+			throw new IllegalStateException("can not delete with state " + state);
+		}
 	}
 
 	void fromXml(String xml) {
 		Document doc = XMLParser.parse(xml);
 		fromXml(doc.getDocumentElement());
-		isNew = false;
+	}
+
+	String toXml() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("<").append(storageName).append(">");
+		appendXml(buf);
+		buf.append("</").append(storageName).append(">");
+		return buf.toString();
+	}
+
+	void append(StringBuffer buf, String name, String value) {
+		if (value != null) {
+			buf.append("<").append(name).append(">").append(value).append("</")
+					.append(name).append(">");
+		}
 	}
 
 	void addResourceChangeListener(ResourceChangeListener<Resource> listener) {
@@ -72,7 +112,7 @@ public abstract class Resource {
 	}
 
 	protected String getString(Element root, String name) {
-		Node node = root.getElementsByTagName(name).item(0);		
+		Node node = root.getElementsByTagName(name).item(0);
 		return node == null ? null : node.getFirstChild().getNodeValue();
 	}
 
@@ -80,5 +120,5 @@ public abstract class Resource {
 
 	abstract String key();
 
-	abstract String toXml();
+	abstract void appendXml(StringBuffer buf);
 }

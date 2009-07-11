@@ -5,5 +5,4 @@ class Locale
   property :language, String, :nullable => false
   property :country, String, :nullable => false
   timestamps :at
-
 end

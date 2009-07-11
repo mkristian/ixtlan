@@ -11,9 +11,7 @@ import com.google.gwt.http.client.RequestException;
 public class RestfulRequestBuilder extends RequestBuilder {
 	public RestfulRequestBuilder(String httpMethod, String url) {
 		super(httpMethod, url);
-		//if (true || "POST".equals(httpMethod) || "PUT".equals(httpMethod)) {
-			setHeader("content-type", "application/xml");
-		//}
+		setHeader("content-type", "application/xml");
 	}
 
 	public Request sendRequest(String data, RequestCallback callback)

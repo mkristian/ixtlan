@@ -11,9 +11,9 @@ import com.google.gwt.http.client.Response;
 
 public class ResourceListRequestCallback implements RequestCallback {
 
-	private final ResourceList<? extends Resource> list;
+	private final Resources<? extends Resource> list;
 
-	ResourceListRequestCallback(ResourceList<? extends Resource> list) {
+	ResourceListRequestCallback(Resources<? extends Resource> list) {
 		this.list = list;
 	}
 
@@ -22,7 +22,6 @@ public class ResourceListRequestCallback implements RequestCallback {
 	}
 
 	public void onResponseReceived(Request request, Response response) {
-		GWT.log(response.getText(), null);
 		list.fromXml(response.getText());
 	}
 }
