@@ -16,7 +16,6 @@ import com.google.gwt.xml.client.XMLParser;
 public abstract class Resource {
 	
 	private final List<ResourceChangeListener<Resource>> listeners = new ArrayList<ResourceChangeListener<Resource>>();
-	
 	private final Repository repository;
 
 	enum State {
@@ -82,11 +81,11 @@ public abstract class Resource {
 		}
 	}
 
-	void addResourceChangeListener(ResourceChangeListener<Resource> listener) {
+	void addResourceChangeListener(ResourceChangeListener <Resource> listener) {
 		this.listeners.add(listener);
 	}
 
-	void removeResourceChangeListener(ResourceChangeListener<Resource> listener) {
+	void removeResourceChangeListener(ResourceChangeListener<? extends Resource> listener) {
 		this.listeners.remove(listener);
 	}
 
