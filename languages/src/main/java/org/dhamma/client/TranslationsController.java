@@ -22,7 +22,7 @@ public class TranslationsController {
 	
 	private final KeyUpHandler keyUpHandler;
 
-	public TranslationsController(GetText getText, final TranslationsPopupPanel panel) {
+	public TranslationsController(final GetText getText, final TranslationsPopupPanel panel) {
 		this.panel = panel;
 		panel.addCloseHandler(new CloseHandler<PopupPanel>() {
 

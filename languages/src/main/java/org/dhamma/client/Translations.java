@@ -27,7 +27,7 @@ public class Translations implements EntryPoint {
 		final GetText getText = new GetText(wordFactory);
 		getText.load();
 	
-		new TranslationsPopupPanel(getText);
+		new TranslationsController(getText, new TranslationsPopupPanel(getText));
 
 		
 		if (true)
