@@ -3,6 +3,9 @@ package org.dhamma.client;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dhamma.client.resource.Resources;
+import org.dhamma.client.resource.ResourcesChangeListener;
+
 import com.google.gwt.core.client.GWT;
 
 public class GetText {

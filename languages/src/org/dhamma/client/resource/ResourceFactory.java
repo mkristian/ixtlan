@@ -1,15 +1,15 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
-import org.dhamma.client.Resource.State;
+import org.dhamma.client.resource.Resource.State;
 
 
 
-public abstract class ResourceFactory<E extends Resource> {
+public abstract class ResourceFactory<E extends Resource<E>> {
 	
-	final Repository repository;
+	protected final Repository repository;
 
 	public ResourceFactory(Repository repository) {
 		this.repository = repository;
@@ -19,7 +19,7 @@ public abstract class ResourceFactory<E extends Resource> {
 
 	abstract protected E newResource();
 
-	public E get(int id, ResourceChangeListener<Resource> listener) {
+	public E get(int id, ResourceChangeListener<E> listener) {
 		E resource = newResource();
 		resource.state = State.TO_BE_LOADED;
 		resource.addResourceChangeListener(listener);

@@ -1,12 +1,12 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dhamma.client.Resource.State;
+import org.dhamma.client.resource.Resource.State;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Element;
@@ -14,22 +14,22 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 @SuppressWarnings("serial")
-public class Resources<E extends Resource> extends ArrayList<E>{
+public class Resources<E extends Resource<E>> extends ArrayList<E>{
 	
 	private List<ResourcesChangeListener<E>> listeners = new ArrayList<ResourcesChangeListener<E>>();
 	
 	private final ResourceFactory<E> factory;
 	
-	private final ResourceChangeListener<E> resourceChangeListener = new ResourceChangeListener<E>(){
+//	private final ResourceChangeListener<E> resourceChangeListener = new ResourceChangeListener<E>(){
+//
+//		@Override
+//		public void onChange(E resource) {
+//			fireResourcesChangeEvents(resource);
+//		}
+//		
+//	};
 
-		@Override
-		public void onChange(E resource) {
-			fireResourcesChangeEvents(resource);
-		}
-		
-	};
-
-	Resources(ResourceFactory<E> factory) {
+	public Resources(ResourceFactory<E> factory) {
 		this.factory = factory;
 	}
 

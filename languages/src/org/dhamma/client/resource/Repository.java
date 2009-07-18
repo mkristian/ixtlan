@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
@@ -20,17 +20,17 @@ public class Repository {
 		doIt("GET", url + resourceName + "/" + id + ".xml", null, callback);
 	}
 
-	void post(Resource resource, RequestCallback callback) {
+	void post(Resource<? extends Resource<?>> resource, RequestCallback callback) {
 		doIt("POST", url + resource.storageName + ".xml", resource.toXml(),
 				callback);
 	}
 
-	void put(Resource resource, RequestCallback callback) {
+	void put(Resource<? extends Resource<?>> resource, RequestCallback callback) {
 		doIt("PUT", url + resource.storageName + "/" + resource.key()
 				+ ".xml", resource.toXml(), callback);
 	}
 
-	void delete(Resource resource, RequestCallback callback) {
+	void delete(Resource<? extends Resource<?>> resource, RequestCallback callback) {
 		doIt("DELETE", url + resource.storageName + "/" + resource.key()
 				+ ".xml", null, callback);
 	}

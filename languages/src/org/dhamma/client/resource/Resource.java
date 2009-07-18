@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -13,9 +13,9 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
-public abstract class Resource {
+public abstract class Resource<E extends Resource<E>> {
 	
-	private final List<ResourceChangeListener<Resource>> listeners = new ArrayList<ResourceChangeListener<Resource>>();
+	private final List<ResourceChangeListener<E>> listeners = new ArrayList<ResourceChangeListener<E>>();
 	private final Repository repository;
 
 	enum State {
@@ -26,12 +26,24 @@ public abstract class Resource {
 
 	final String storageName;
 
-	Resource(Repository repository, ResourceFactory<?> factory) {
+	Resource(Repository repository, ResourceFactory<E> factory) {
 		this.repository = repository;
 		this.storageName = factory.storageName();
 	}
 
-	void save() {
+	public boolean isNew(){
+		return	this.state == State.NEW;
+	}
+	
+	public boolean isUptodate(){
+		return this.state == State.UP_TO_DATE;
+	}
+	
+	public boolean isDeleted(){
+		return this.state == State.DELETED;
+	}
+	
+	public void save() {
 		switch (state) {
 		case NEW:
 		case TO_BE_CREATED:
@@ -49,7 +61,7 @@ public abstract class Resource {
 		}
 	}
 
-	void destroy() {
+	public void destroy() {
 		switch (state) {
 		case UP_TO_DATE:
 		case TO_BE_DELETED:
@@ -74,24 +86,25 @@ public abstract class Resource {
 		return buf.toString();
 	}
 
-	void append(StringBuffer buf, String name, String value) {
+	protected void append(StringBuffer buf, String name, String value) {
 		if (value != null) {
 			buf.append("<").append(name).append(">").append(value).append("</")
 					.append(name).append(">");
 		}
 	}
 
-	void addResourceChangeListener(ResourceChangeListener <Resource> listener) {
+	public void addResourceChangeListener(ResourceChangeListener <E> listener) {
 		this.listeners.add(listener);
 	}
 
-	void removeResourceChangeListener(ResourceChangeListener<? extends Resource> listener) {
+	public void removeResourceChangeListener(ResourceChangeListener<E> listener) {
 		this.listeners.remove(listener);
 	}
 
+	@SuppressWarnings("unchecked")
 	void fireResourceChangeEvents() {
-		for (ResourceChangeListener<Resource> listener : listeners) {
-			listener.onChange(this);
+		for (ResourceChangeListener<E> listener : listeners) {
+			listener.onChange((E) this);
 		}
 	}
 
@@ -114,10 +127,21 @@ public abstract class Resource {
 		Node node = root.getElementsByTagName(name).item(0);
 		return node == null ? null : node.getFirstChild().getNodeValue();
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buf = new StringBuffer(getClass().getName()).append("(");
+		toString(buf);
+	
+		return buf.append(")").toString();
+	}
+	
+	protected abstract void fromXml(Element root);
 
-	abstract void fromXml(Element root);
+	protected abstract String key();
 
-	abstract String key();
+	protected abstract void appendXml(StringBuffer buf);
 
-	abstract void appendXml(StringBuffer buf);
+	protected abstract void toString(StringBuffer buf);
+	
 }

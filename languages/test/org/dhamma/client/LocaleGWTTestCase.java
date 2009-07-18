@@ -1,13 +1,17 @@
 package org.dhamma.client;
 
-import org.dhamma.client.Resource.State;
+import org.dhamma.client.resource.RepositoryMock;
+import org.dhamma.client.resource.Resource;
+import org.dhamma.client.resource.ResourceChangeListener;
+import org.dhamma.client.resource.Resources;
+import org.dhamma.client.resource.ResourcesChangeListener;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class LocaleTest extends GWTTestCase {
+public class LocaleGWTTestCase extends GWTTestCase {
 
 	/**
 	 * Must refer to a valid module that sources this class.
@@ -16,9 +20,9 @@ public class LocaleTest extends GWTTestCase {
 		return "org.dhamma.Translations";
 	}
 
+	private RepositoryMock repository;
 	private Locale locale;
 	private LocaleFactory factory;
-	private RepositoryMock repository;
 	protected void gwtSetUp() {
 		repository = new RepositoryMock();
 		factory = new LocaleFactory(repository);
@@ -32,14 +36,22 @@ public class LocaleTest extends GWTTestCase {
 	}
 
 	public void testCreate() {
-		assertEquals(State.UP_TO_DATE, locale.state);
+		assertTrue(locale.isUptodate());
 		assertEquals(123, locale.id);
 	}
 
 	public void testRetrieve() {
 		repository.add("<locale><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></locale>", 1);
-		Locale l = factory.get(1);
-		assertEquals(State.UP_TO_DATE, l.state);
+		final boolean changed[] = {false};
+		Resource<Locale> l = factory.get(1, new ResourceChangeListener<Locale>() {
+			
+			@Override
+			public void onChange(Locale resource) {
+				changed[0] = true;
+			}
+		});
+		assertTrue(changed[0]);
+		assertTrue(locale.isUptodate());
 		assertEquals(locale.toString(), l.toString());
 	}
 
@@ -49,9 +61,17 @@ public class LocaleTest extends GWTTestCase {
 				"<locale><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></locale>" +
 				"<locale><id>123</id><created_at>2009-07-01T17:24:48+05:30</created_at></locale>" +
 				"</locales>", 1);
-		Resources<Locale> ls = factory.all();
-		for(Locale l : ls){
-			assertEquals(State.UP_TO_DATE, l.state);
+		final int changedCount[] = {0};
+		Resources<Locale> ls = factory.all(new ResourcesChangeListener<Locale>() {
+
+			@Override
+			public void onChange(Resources<Locale> resources, Locale resource) {
+				changedCount[0]++;
+			}
+		});
+		assertEquals(2, changedCount[0]);
+		for(Resource<Locale> l : ls){
+			assertTrue(locale.isUptodate());
 			assertEquals(locale.toString(), l.toString());
 		}
 	}
@@ -59,11 +79,11 @@ public class LocaleTest extends GWTTestCase {
 	public void testUpdate() {
 		locale.country = null;
 		locale.save();	
-		assertEquals(State.UP_TO_DATE, locale.state);
+		assertTrue(locale.isUptodate());
 	}
 
 	public void testDelete() {
 		this.locale.destroy();
-		assertEquals(State.DELETED, this.locale.state);
+		assertTrue(locale.isDeleted());
 	}
 }

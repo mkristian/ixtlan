@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
 
 import com.google.gwt.core.client.GWT;
@@ -11,9 +11,9 @@ import com.google.gwt.http.client.Response;
 
 public class ResourceListRequestCallback implements RequestCallback {
 
-	private final Resources<? extends Resource> list;
+	private final Resources<? extends Resource<?>> list;
 
-	ResourceListRequestCallback(Resources<? extends Resource> list) {
+	ResourceListRequestCallback(Resources<? extends Resource<?>> list) {
 		this.list = list;
 	}
 

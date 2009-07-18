@@ -1,9 +1,9 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
-import org.dhamma.client.Resource.State;
+import org.dhamma.client.resource.Resource.State;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -12,9 +12,9 @@ import com.google.gwt.http.client.Response;
 
 public class ResourceRequestCallback implements RequestCallback {
 
-	private final Resource resource;
+	private final Resource<? extends Resource<?>> resource;
 
-	ResourceRequestCallback(Resource resource) {
+	ResourceRequestCallback(Resource<? extends Resource<?>> resource) {
 		this.resource = resource;
 	}
 

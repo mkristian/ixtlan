@@ -1,7 +1,9 @@
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.dhamma.client.resource.Repository;
 
 import com.google.gwt.http.client.Header;
 import com.google.gwt.http.client.RequestCallback;
@@ -13,17 +15,17 @@ public class RepositoryMock extends Repository {
 	final List<String> requests = new ArrayList<String>();
 	private int current = 0;
 
-	void add(String responseText, int times) {
+	public void add(String responseText, int times) {
 		for (int i = 0; i < times; i++) {
 			responses.add(responseText);
 		}
 	}
 
-	void add(String responseText) {
+	public void add(String responseText) {
 		responses.add(responseText);
 	}
 
-	void reset() {
+	public void reset() {
 		this.requests.clear();
 		this.responses.clear();
 		this.current = 0;

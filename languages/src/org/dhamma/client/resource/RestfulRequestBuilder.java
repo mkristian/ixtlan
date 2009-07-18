@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.dhamma.client;
+package org.dhamma.client.resource;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
