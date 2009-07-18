@@ -1,0 +1,25 @@
+datamapper and rails
+
+hello,
+
+my experience with datamapper and rails is the following:
+
+* dm-more/rails_datamapper
+
+  never worked out of the box for me, I put a simple patch on lighthouse, but not applied yet. so I "forked" it in
+
+  http://github.com/mkristian/datamapper4rails/tree/master
+
+  and enhanced it whenever I needed it
+
+* cannot find Object 'Item' or something like this, does not work with extlib lookup but a simple Object.const_get will do. the work around for this is to load all model classes before processing the action from the controller. that works fine for me. I put a helper class in datamapper4rails. maybe extlib could check Object.const_get as last option, but I do not understand this lookup in its detail to judge this.
+
+* if you do not like the cookie session store from rails you have nothing left. so put a datamapper_store again into datamapper4rails. since I am about to move verything to rails 2.3.2 the store is for that version (version an older rails is around somewhere on my harddisk). any interest I would be happy to contribute it to rails_datamapper.
+
+* if you would like to keep the database consistent (within its constraints) then you should wrap a transaction around your actions. dito for the identity maps and for this I made two little classes. again happy they do not have specs yet)
+
+beside some concurrency issue with mysql, datamapper works great for me.
+
+there is a restful adapter in datamapper4rails. when I last look at the dm-more/adapter is was not in working state. then I had the choice between active_resource and datamapper. since datamapper opened the possibilty to reuse the "model" classes for either using it against the database or against the restful service, I decided to fix the adapter. it works a great way, and it works all the way for my project now, missing are single resources (one without primary keys or keys) and nesting 'has n' children. belongs_to does work as well manually implemented 'has n'. but when I looked to contribute the code, I found a lot of changes. sorry for duplicating.
+
+with regards Kristian
