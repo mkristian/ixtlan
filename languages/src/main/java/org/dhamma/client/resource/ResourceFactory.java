@@ -5,33 +5,30 @@ package org.dhamma.client.resource;
 
 import org.dhamma.client.resource.Resource.State;
 
-
-
 public abstract class ResourceFactory<E extends Resource<E>> {
-	
-	protected final Repository repository;
 
-	public ResourceFactory(Repository repository) {
-		this.repository = repository;
-	}
+    protected final Repository repository;
 
-	abstract public String storageName();
+    public ResourceFactory(Repository repository) {
+        this.repository = repository;
+    }
 
-	abstract protected E newResource();
+    abstract public String storageName();
 
-	public E get(int id, ResourceChangeListener<E> listener) {
-		E resource = newResource();
-		resource.state = State.TO_BE_LOADED;
-		resource.addResourceChangeListener(listener);
-		repository.get(storageName(), id, new ResourceRequestCallback(
-				resource));
-		return resource;
-	}
-	
-	public Resources<E> all(ResourcesChangeListener<E> listener) {
-		Resources<E> list = new Resources<E>(this);
-		list.addResourcesChangeListener(listener);
-		repository.all(storageName(), new ResourceListRequestCallback(list));
-		return list;
-	}
+    abstract protected E newResource();
+
+    public E get(int id, ResourceChangeListener<E> listener) {
+        E resource = newResource();
+        resource.state = State.TO_BE_LOADED;
+        resource.addResourceChangeListener(listener);
+        repository.get(storageName(), id, new ResourceRequestCallback(resource));
+        return resource;
+    }
+
+    public Resources<E> all(ResourcesChangeListener<E> listener) {
+        Resources<E> list = new Resources<E>(this);
+        list.addResourcesChangeListener(listener);
+        repository.all(storageName(), new ResourceListRequestCallback(list));
+        return list;
+    }
 }

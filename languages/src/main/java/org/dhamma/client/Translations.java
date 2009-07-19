@@ -15,76 +15,70 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class Translations implements EntryPoint {
 
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad() {
-		Repository repository = new Repository();
-		final LocaleFactory lfactory = new LocaleFactory(repository);
-		final Locale l = new Locale(repository, lfactory);
-		final WordFactory wordFactory = new WordFactory(repository);
+    /**
+     * This is the entry point method.
+     */
+    public void onModuleLoad() {
+        Repository repository = new Repository();
+        final LocaleFactory lfactory = new LocaleFactory(repository);
+        final Locale l = new Locale(repository, lfactory);
+        final WordFactory wordFactory = new WordFactory(repository);
 
-		final GetText getText = new GetText(wordFactory);
-		getText.load();
-	
-		new TranslationsController(getText, new TranslationsPopupPanel(getText));
+        final GetText getText = new GetText(wordFactory);
+        getText.load();
 
-		
-		if (true)
-			return;
+        new TranslationsController(getText, new TranslationsPopupPanel(getText));
 
-		final Label label1 = new Label("loading ...");
-		final Label label2 = new Label("loading ...");
-		RootPanel.get("nameFieldContainer").add(label1);
-		RootPanel.get("sendButtonContainer").add(label2);
+        if (true) return;
 
-		l.country = "asd";
-		l.language = "dsa";
-		// l.created_at = new Timestamp(0);
-		l.addResourceChangeListener(new ResourceChangeListener<Locale>() {
+        final Label label1 = new Label("loading ...");
+        final Label label2 = new Label("loading ...");
+        RootPanel.get("nameFieldContainer").add(label1);
+        RootPanel.get("sendButtonContainer").add(label2);
 
-			@Override
-			public void onChange(Locale resource) {
+        l.country = "asd";
+        l.language = "dsa";
+        // l.created_at = new Timestamp(0);
+        l.addResourceChangeListener(new ResourceChangeListener<Locale>() {
 
-				Resource<Locale> ll = lfactory.get(l.id, null);
-				ll.removeResourceChangeListener(this);
-				ll
-						.addResourceChangeListener(new ResourceChangeListener<Locale>() {
+            public void onChange(Locale resource) {
 
-							@Override
-							public void onChange(Locale locale) {
-								label1.setText(locale.toString());
+                Resource<Locale> ll = lfactory.get(l.id, null);
+                ll.removeResourceChangeListener(this);
+                ll.addResourceChangeListener(new ResourceChangeListener<Locale>() {
 
-								locale.removeResourceChangeListener(this);
-								locale.language = "rew";
+                    public void onChange(Locale locale) {
+                        label1.setText(locale.toString());
 
-								locale.save();
-								lfactory.get(((Locale) locale).id, null);
-								locale
-										.addResourceChangeListener(new ResourceChangeListener<Locale>() {
+                        locale.removeResourceChangeListener(this);
+                        locale.language = "rew";
 
-											@Override
-											public void onChange(Locale resource) {
-												label2.setText(resource
-														.toString());
+                        locale.save();
+                        lfactory.get(((Locale) locale).id, null);
+                        locale.addResourceChangeListener(new ResourceChangeListener<Locale>() {
 
-												// resource.destroy();
-											}
-										});
-							}
-						});
-			}
+                            public void onChange(Locale resource) {
+                                label2.setText(resource.toString());
 
-		});
-		l.save();
+                                // resource.destroy();
+                            }
+                        });
+                    }
+                });
+            }
 
-		lfactory.all(null);
-		Resources<Locale> r = new Resources<Locale>(lfactory);
-//		r
-//				.fromXml("<locales type='array'>"
-//						+ "<locale><id>1</id><created_at>2009-07-09T17:14:48+05:30</created_at></locale>"
-//						+ "<locale><id>2</id><created_at>2009-07-01T17:24:48+05:30</created_at></locale>"
-//						+ "</locales>");
-//		GWT.log(r.toString(), null);
-	}
+        });
+        l.save();
+
+        lfactory.all(null);
+        Resources<Locale> r = new Resources<Locale>(lfactory);
+        // r
+        // .fromXml("<locales type='array'>"
+        // +
+        // "<locale><id>1</id><created_at>2009-07-09T17:14:48+05:30</created_at></locale>"
+        // +
+        // "<locale><id>2</id><created_at>2009-07-01T17:24:48+05:30</created_at></locale>"
+        // + "</locales>");
+        // GWT.log(r.toString(), null);
+    }
 }

@@ -13,77 +13,79 @@ import com.google.gwt.junit.client.GWTTestCase;
  */
 public class WordGWTTestCase extends GWTTestCase {
 
-	/**
-	 * Must refer to a valid module that sources this class.
-	 */
-	public String getModuleName() {
-		return "org.dhamma.Translations";
-	}
+    /**
+     * Must refer to a valid module that sources this class.
+     */
+    public String getModuleName() {
+        return "org.dhamma.Translations";
+    }
 
-	private RepositoryMock repository;
-	private Word word;
-	private WordFactory factory;
-	protected void gwtSetUp() {
-		repository = new RepositoryMock();
-		factory = new WordFactory(repository);
-		word = new Word(repository, factory);
+    private RepositoryMock repository;
+    private Word           word;
+    private WordFactory    factory;
 
-		word.code = "en";
-		word.text = "english";
-		repository.add("<word><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></word>", 1);
-		word.save();
-		repository.reset();
-	}
+    protected void gwtSetUp() {
+        repository = new RepositoryMock();
+        factory = new WordFactory(repository);
+        word = new Word(repository, factory);
 
-	public void testCreate() {
-		assertTrue(word.isUptodate());
-		assertEquals(123, word.id);
-	}
+        word.code = "en";
+        word.text = "english";
+        repository.add("<word><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></word>",
+                1);
+        word.save();
+        repository.reset();
+    }
 
-	public void testRetrieve() {
-		repository.add("<word><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></word>", 1);
-		final boolean changed[] = {false};
-		Resource<Word> l = factory.get(1, new ResourceChangeListener<Word>() {
-			
-			@Override
-			public void onChange(Word resource) {
-				changed[0] = true;
-			}
-		});
-		assertTrue(changed[0]);
-		assertTrue(word.isUptodate());
-		assertEquals(word.toString(), l.toString());
-	}
+    public void testCreate() {
+        assertTrue(word.isUptodate());
+        assertEquals(123, word.id);
+    }
 
-	public void testRetrieveAll() {
-		repository.reset();
-		repository.add("<words type='array'>" +
-				"<word><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></word>" +
-				"<word><id>123</id><created_at>2009-07-01T17:24:48+05:30</created_at></word>" +
-				"</words>", 1);
-		final int changedCount[] = {0};
-		Resources<Word> ls = factory.all(new ResourcesChangeListener<Word>() {
-			
-			@Override
-			public void onChange(Resources<Word> resources, Word resource) {
-				changedCount[0]++;
-			}
-		});
-		assertEquals(2, changedCount[0]);
-		for(Resource<Word> l : ls){
-			assertTrue(word.isUptodate());
-			assertEquals(word.toString(), l.toString());
-		}
-	}
+    public void testRetrieve() {
+        repository.add("<word><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></word>",
+                1);
+        final boolean changed[] = { false };
+        Resource<Word> l = factory.get(1, new ResourceChangeListener<Word>() {
 
-	public void testUpdate() {
-		word.text = null;
-		word.save();	
-		assertTrue(word.isUptodate());
-	}
+            public void onChange(Word resource) {
+                changed[0] = true;
+            }
+        });
+        assertTrue(changed[0]);
+        assertTrue(word.isUptodate());
+        assertEquals(word.toString(), l.toString());
+    }
 
-	public void testDelete() {
-		this.word.destroy();
-		assertTrue(word.isDeleted());
-	}
+    public void testRetrieveAll() {
+        repository.reset();
+        repository.add("<words type='array'>"
+                + "<word><id>123</id><created_at>2009-07-09T17:14:48+05:30</created_at></word>"
+                + "<word><id>123</id><created_at>2009-07-01T17:24:48+05:30</created_at></word>"
+                + "</words>",
+                1);
+        final int changedCount[] = { 0 };
+        Resources<Word> ls = factory.all(new ResourcesChangeListener<Word>() {
+
+            public void onChange(Resources<Word> resources, Word resource) {
+                changedCount[0]++;
+            }
+        });
+        assertEquals(2, changedCount[0]);
+        for (Resource<Word> l : ls) {
+            assertTrue(word.isUptodate());
+            assertEquals(word.toString(), l.toString());
+        }
+    }
+
+    public void testUpdate() {
+        word.text = null;
+        word.save();
+        assertTrue(word.isUptodate());
+    }
+
+    public void testDelete() {
+        this.word.destroy();
+        assertTrue(word.isDeleted());
+    }
 }

@@ -14,46 +14,47 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class ProxyServlet extends HttpServlet {
 
-	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		URL url = new URL("http://localhost:3000" + req.getRequestURI());
-		HttpURLConnection con = ((HttpURLConnection) url.openConnection());
-		con.setRequestMethod(req.getMethod());
-		con.setDoInput(true);
-		con.addRequestProperty("Content-type", req.getContentType());
-		log(req.getMethod());
-		InputStream in = null;
-		OutputStream out = null;
-		if (req.getContentLength() > 0) {
-			con.setDoOutput(true);
-			con.addRequestProperty("Content-length", ""
-					+ req.getContentLength());
-			try {
-				in = req.getInputStream();
-				out = con.getOutputStream();
-				int i = in.read();
-				while (i != -1) {
-					out.write(i);
-					i = in.read();
-				}
-			} finally {
-				if (out != null) {
-					out.close();
-				}
-			}
-		}
-		try {
-			in = con.getInputStream();
-			out = resp.getOutputStream();
-			int i = in.read();
-			while (i != -1) {
-				out.write(i);
-				i = in.read();
-			}
-		} finally {
-			if (in != null)
-				in.close();
-		}
-	}
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        URL url = new URL("http://localhost:3000" + req.getRequestURI());
+        HttpURLConnection con = ((HttpURLConnection) url.openConnection());
+        con.setRequestMethod(req.getMethod());
+        con.setDoInput(true);
+        con.addRequestProperty("Content-type", req.getContentType());
+        log(req.getMethod());
+        InputStream in = null;
+        OutputStream out = null;
+        if (req.getContentLength() > 0) {
+            con.setDoOutput(true);
+            con.addRequestProperty("Content-length", ""
+                    + req.getContentLength());
+            try {
+                in = req.getInputStream();
+                out = con.getOutputStream();
+                int i = in.read();
+                while (i != -1) {
+                    out.write(i);
+                    i = in.read();
+                }
+            }
+            finally {
+                if (out != null) {
+                    out.close();
+                }
+            }
+        }
+        try {
+            in = con.getInputStream();
+            out = resp.getOutputStream();
+            int i = in.read();
+            while (i != -1) {
+                out.write(i);
+                i = in.read();
+            }
+        }
+        finally {
+            if (in != null) in.close();
+        }
+    }
 }

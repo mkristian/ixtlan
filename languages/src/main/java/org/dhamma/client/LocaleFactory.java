@@ -8,16 +8,16 @@ import org.dhamma.client.resource.ResourceFactory;
 
 public class LocaleFactory extends ResourceFactory<Locale> {
 
-	public LocaleFactory(Repository repository) {
-		super(repository);
-	}
+    public LocaleFactory(Repository repository) {
+        super(repository);
+    }
 
-	public String storageName() {
-		return "locale";
-	}
+    public String storageName() {
+        return "locale";
+    }
 
-	protected Locale newResource() {
-		return new Locale(repository, this);
-	}
+    protected Locale newResource() {
+        return new Locale(repository, this);
+    }
 
 }
