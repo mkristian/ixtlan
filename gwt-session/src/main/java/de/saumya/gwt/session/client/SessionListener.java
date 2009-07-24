@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.session.client;
 
-interface SessionListener {
+public interface SessionListener {
     
     void onSessionTimeout();
     

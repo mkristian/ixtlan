@@ -18,7 +18,7 @@ public class SessionTest implements EntryPoint {
         private final Label   message     = new Label();
         private final TextBox username    = new TextBox();
         private final TextBox password    = new PasswordTextBox();
-        private final Button  loginButton = new Button("login");
+        private final Button  loginButton;
 
         public LoginPanel() {
             add(message);
@@ -28,6 +28,7 @@ public class SessionTest implements EntryPoint {
             add(new Label("password"));
             password.setTabIndex(2);
             add(password);
+            loginButton = new Button("login");
             loginButton.setTabIndex(3);
             add(loginButton);
         }
@@ -56,10 +57,11 @@ public class SessionTest implements EntryPoint {
 
     static class SessionPanel extends HorizontalPanel implements SessionScreen {
         final Label  welcome      = new Label();
-        final Button logoutButton = new Button("logout");
+        final Button logoutButton;
 
         SessionPanel() {
             add(welcome);
+            logoutButton = new Button("logout");
             add(logoutButton);
         }
 
@@ -79,8 +81,8 @@ public class SessionTest implements EntryPoint {
     public void onModuleLoad() {
         final LoginPanel loginPanel = new LoginPanel();
         final SessionPanel sessionPanel = new SessionPanel();
-
-        new SessionController(loginPanel, sessionPanel);
+        
+        new SessionController(new Session(), loginPanel, sessionPanel);
 
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);

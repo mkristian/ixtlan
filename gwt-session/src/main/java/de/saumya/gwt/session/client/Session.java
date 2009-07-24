@@ -121,7 +121,8 @@ public class Session {
     }
 
     boolean isAllowed(String action,
-            ResourceFactory<? extends Resource<?>> factory, Role role) {
+            Class<ResourceFactory<? extends Resource<?>>> factoryClass, Role role) {
+        //TODO make this real
         if (loggedIn) {
             return true;
         }
@@ -130,10 +131,14 @@ public class Session {
         }
     }
 
-    User user() {
+    public User user() {
         return user;
     }
 
+    public boolean hasUser(){
+        return loggedIn;
+    }
+    
     String sessionToken() {
         return token;
     }

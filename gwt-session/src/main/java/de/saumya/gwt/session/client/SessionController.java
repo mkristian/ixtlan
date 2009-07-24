@@ -12,9 +12,7 @@ public class SessionController {
     private final LoginScreen   loginScreen;
     private final SessionScreen sessionSession;
 
-    protected final Session session = new Session();
-
-    public SessionController(final LoginScreen loginScreen,
+    public SessionController(final Session session, final LoginScreen loginScreen,
             final SessionScreen sessionSession) {
         this.loginScreen = loginScreen;
         this.sessionSession = sessionSession;
