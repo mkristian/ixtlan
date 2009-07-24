@@ -2,8 +2,8 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.4/distro-source/core/src/gwt-module.dtd">
 <module rename-to='datamapper'>
   
-  <inherits name="cde.saumya.gwt.datamapper.Datamapper"/>
-                       -->
+  <inherits name="de.saumya.gwt.datamapper.Datamapper"/>
+
   <entry-point class='de.saumya.gwt.datamapper.client.Datamapper'/>
 
 </module>
