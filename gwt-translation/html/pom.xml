@@ -10,7 +10,7 @@
   </parent>
   <groupId>de.saumya.gwt.translation</groupId>
   <artifactId>html</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GWT interface for translating html pages</name>
   <build>
@@ -20,18 +20,23 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <runTarget>HTML.html</runTarget>
-          <module>de.saumya.gwt.translation.html.HTML</module> 
+          <module>de.saumya.gwt.translation.html.HTML</module>
         </configuration>
         <executions>
           <execution>
             <goals>
+              <goal>compile</goal>
               <goal>test</goal>
+              <goal>clean</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
