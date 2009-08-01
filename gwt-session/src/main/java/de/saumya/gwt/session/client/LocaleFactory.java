@@ -1,7 +1,10 @@
 /**
  * 
  */
-package de.saumya.gwt.datamapper.client;
+package de.saumya.gwt.session.client;
+
+import de.saumya.gwt.datamapper.client.Repository;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 public class LocaleFactory extends ResourceFactory<Locale> {
 

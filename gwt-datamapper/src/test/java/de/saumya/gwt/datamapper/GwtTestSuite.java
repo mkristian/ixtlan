@@ -5,13 +5,13 @@ import junit.framework.TestSuite;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
-import de.saumya.gwt.datamapper.client.LocaleTestGwt;
+import de.saumya.gwt.datamapper.client.SampleTestGwt;
 
 public class GwtTestSuite extends GWTTestSuite {
     
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for GWT Datamapper");
-        suite.addTestSuite(LocaleTestGwt.class);
+        suite.addTestSuite(SampleTestGwt.class);
         return suite;
     }
 }

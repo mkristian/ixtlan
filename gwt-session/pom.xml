@@ -18,6 +18,13 @@
       <artifactId>datamapper</artifactId>
       <version>${pom.version}</version> 
     </dependency>
+    <dependency>
+      <groupId>de.saumya.gwt</groupId>
+      <artifactId>datamapper</artifactId>
+      <version>${pom.version}</version> 
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -26,13 +33,12 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
-          <runTarget>Session.html</runTarget>
-          <module>de.saumya.gwt.session.SessionTest</module> 
+          <runTarget>Session.html</runTarget> 
         </configuration>
         <executions>
           <execution>
-            <id>test</id>
             <configuration>
+              <module>de.saumya.gwt.session.SessionTests</module> 
             </configuration>
             <goals>
               <goal>test</goal>

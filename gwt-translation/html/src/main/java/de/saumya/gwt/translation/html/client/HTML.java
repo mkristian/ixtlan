@@ -15,18 +15,22 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.gettext.client.GetText;
 import de.saumya.gwt.gettext.client.WordFactory;
+import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
+import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.SessionScreen;
+import de.saumya.gwt.session.client.UserFactory;
+import de.saumya.gwt.session.client.VenueFactory;
 
 public class HTML implements EntryPoint {
 
     static class LoginPanel extends VerticalPanel implements LoginScreen {
 
-        private final Label   message     = new Label();
-        private final TextBox username    = new TextBox();
-        private final TextBox password    = new PasswordTextBox();
+        private final Label   message  = new Label();
+        private final TextBox username = new TextBox();
+        private final TextBox password = new PasswordTextBox();
         private final Button  loginButton;
 
         public LoginPanel() {
@@ -64,7 +68,7 @@ public class HTML implements EntryPoint {
     }
 
     static class SessionPanel extends HorizontalPanel implements SessionScreen {
-        final Label  welcome      = new Label();
+        final Label  welcome = new Label();
         final Button logoutButton;
 
         public SessionPanel() {
@@ -93,9 +97,21 @@ public class HTML implements EntryPoint {
         final GetText getText = new GetText(wordFactory);
         getText.load();
 
-        final Session session = new Session();
-        
-        new TranslationsController(getText, new TranslationsPopupPanel(getText), session);
+        final VenueFactory venueFactory = new VenueFactory(repository);
+        final LocaleFactory localeFactory = new LocaleFactory(repository);
+        final RoleFactory roleFactory = new RoleFactory(repository,
+                localeFactory,
+                venueFactory);
+        final UserFactory userFactory = new UserFactory(repository,
+                localeFactory,
+                roleFactory);
+        final Session session = new Session(venueFactory,
+                                            roleFactory,
+                                            userFactory);
+
+        new TranslationsController(getText,
+                new TranslationsPopupPanel(getText),
+                session);
 
         final LoginPanel loginPanel = new LoginPanel();
         final SessionPanel sessionPanel = new SessionPanel();

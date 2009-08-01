@@ -34,9 +34,12 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
         this.factory = factory;
     }
 
-    void fromXml(String xml) {
+    public void fromXml(String xml) {
         GWT.log(xml, null);
-        Element root = XMLParser.parse(xml).getDocumentElement();
+        fromXml(XMLParser.parse(xml).getDocumentElement());
+    }        
+     
+    public void fromXml(Element root) {            
         NodeList list = root.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
             E resource = factory.newResource();
@@ -49,15 +52,29 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
         }
     }
 
-    void addResourcesChangeListener(ResourcesChangeListener<E> listener) {
+    public String toXml(){
+        StringBuffer buf = new StringBuffer();
+        toXml(buf);
+        return buf.toString();
+    }        
+    
+    public void toXml(StringBuffer buf){
+        buf.append("<").append(factory.storagePluralName()).append(">");
+        for(E rsrc: this){
+            rsrc.toXml(buf);
+        }
+        buf.append("</").append(factory.storagePluralName()).append(">");
+    }
+    
+    public void addResourcesChangeListener(ResourcesChangeListener<E> listener) {
         this.listeners.add(listener);
     }
 
-    void removeResourcesChangeListener(ResourcesChangeListener<E> listener) {
+    public void removeResourcesChangeListener(ResourcesChangeListener<E> listener) {
         this.listeners.remove(listener);
     }
 
-    void fireResourcesChangeEvents(E resource) {
+    private void fireResourcesChangeEvents(E resource) {
         for (ResourcesChangeListener<E> listener : listeners) {
             listener.onChange(this, resource);
         }

@@ -11,18 +11,23 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.saumya.gwt.datamapper.client.Repository;
+import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
+import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.SessionScreen;
+import de.saumya.gwt.session.client.UserFactory;
+import de.saumya.gwt.session.client.VenueFactory;
 
 public class GUI implements EntryPoint {
 
     static class LoginPanel extends VerticalPanel implements LoginScreen {
 
-        private final Label   message     = new Label();
-        private final TextBox username    = new TextBox();
-        private final TextBox password    = new PasswordTextBox();
+        private final Label   message  = new Label();
+        private final TextBox username = new TextBox();
+        private final TextBox password = new PasswordTextBox();
         private final Button  loginButton;
 
         public LoginPanel() {
@@ -61,7 +66,7 @@ public class GUI implements EntryPoint {
     }
 
     static class SessionPanel extends HorizontalPanel implements SessionScreen {
-        final Label  welcome      = new Label();
+        final Label  welcome = new Label();
         final Button logoutButton;
 
         SessionPanel() {
@@ -86,8 +91,19 @@ public class GUI implements EntryPoint {
     public void onModuleLoad() {
         final LoginPanel loginPanel = new LoginPanel();
         final SessionPanel sessionPanel = new SessionPanel();
-        
-        new SessionController(new Session(), loginPanel, sessionPanel);
+
+        final Repository repository = new Repository();
+        final VenueFactory venueFactory = new VenueFactory(repository);
+        final LocaleFactory localeFactory = new LocaleFactory(repository);
+        final RoleFactory roleFactory = new RoleFactory(repository,
+                localeFactory,
+                venueFactory);
+        final UserFactory userFactory = new UserFactory(repository,
+                localeFactory,
+                roleFactory);
+        new SessionController(new Session(venueFactory,
+                roleFactory,
+                userFactory), loginPanel, sessionPanel);
 
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);

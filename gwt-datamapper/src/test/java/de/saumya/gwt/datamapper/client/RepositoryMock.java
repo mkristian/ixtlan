@@ -13,7 +13,11 @@ public class RepositoryMock extends Repository {
     final List<String>         requests  = new ArrayList<String>();
     private int                current   = 0;
 
-    public void add(String responseText, int times) {
+    public void addXmlResponse(String responseText) {
+        addXmlResponse(responseText, 1);
+    }
+    
+    public void addXmlResponse(String responseText, int times) {
         for (int i = 0; i < times; i++) {
             responses.add(responseText);
         }

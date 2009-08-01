@@ -5,9 +5,9 @@ package de.saumya.gwt.datamapper.client;
 
 import com.google.gwt.xml.client.Element;
 
-public class Locale extends ResourceWithID<Locale> {
+public class Sample extends ResourceWithID<Sample> {
 
-    Locale(Repository repository, LocaleFactory factory) {
+    Sample(Repository repository, SampleFactory factory) {
         super(repository, factory);
     }
 

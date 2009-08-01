@@ -15,9 +15,21 @@ public abstract class ResourceFactory<E extends Resource<E>> {
 
     abstract public String storageName();
 
+    public String storagePluralName(){
+        return storageName() + "s";
+    }
+
     abstract protected E newResource();
 
+    public Resources<E> newResources() {
+        return new Resources<E>(this);
+    }
+
     public E get(int id, ResourceChangeListener<E> listener) {
+        return get("" + id, listener);
+    }
+
+    public E get(String id, ResourceChangeListener<E> listener) {
         E resource = newResource();
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);

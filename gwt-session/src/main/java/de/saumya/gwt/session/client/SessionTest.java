@@ -11,13 +11,15 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.saumya.gwt.datamapper.client.Repository;
+
 public class SessionTest implements EntryPoint {
 
     static class LoginPanel extends VerticalPanel implements LoginScreen {
 
-        private final Label   message     = new Label();
-        private final TextBox username    = new TextBox();
-        private final TextBox password    = new PasswordTextBox();
+        private final Label   message  = new Label();
+        private final TextBox username = new TextBox();
+        private final TextBox password = new PasswordTextBox();
         private final Button  loginButton;
 
         public LoginPanel() {
@@ -56,7 +58,7 @@ public class SessionTest implements EntryPoint {
     }
 
     static class SessionPanel extends HorizontalPanel implements SessionScreen {
-        final Label  welcome      = new Label();
+        final Label  welcome = new Label();
         final Button logoutButton;
 
         SessionPanel() {
@@ -81,8 +83,16 @@ public class SessionTest implements EntryPoint {
     public void onModuleLoad() {
         final LoginPanel loginPanel = new LoginPanel();
         final SessionPanel sessionPanel = new SessionPanel();
-        
-        new SessionController(new Session(), loginPanel, sessionPanel);
+        final Repository repository = new Repository();
+        final LocaleFactory localeFactory = new LocaleFactory(repository);
+        final RoleFactory roleFactory = new RoleFactory(repository,
+                localeFactory,
+                new VenueFactory(repository));
+        new SessionController(new Session(new VenueFactory(repository),
+                roleFactory,
+                new UserFactory(repository, localeFactory, roleFactory)),
+                loginPanel,
+                sessionPanel);
 
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);

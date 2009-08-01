@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.datamapper.client;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 
 public abstract class Resource<E extends Resource<E>> {
@@ -26,7 +28,7 @@ public abstract class Resource<E extends Resource<E>> {
 
     final String storageName;
 
-    Resource(Repository repository, ResourceFactory<E> factory) {
+    protected Resource(Repository repository, ResourceFactory<E> factory) {
         this.repository = repository;
         this.storageName = factory.storageName();
     }
@@ -74,17 +76,27 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
-    void fromXml(String xml) {
+    public void fromXml(String xml) {
         Document doc = XMLParser.parse(xml);
         fromXml(doc.getDocumentElement());
     }
 
-    String toXml() {
+    public String toXml() {
         StringBuffer buf = new StringBuffer();
+        toXml(buf);
+        return buf.toString();
+    }
+
+    public void toXml(StringBuffer buf) {
         buf.append("<").append(storageName).append(">");
         appendXml(buf);
         buf.append("</").append(storageName).append(">");
-        return buf.toString();
+    }
+
+    protected void append(StringBuffer buf, String name, Object value) {
+        if (value != null) {
+            append(buf, name, value.toString());
+        }
     }
 
     protected void append(StringBuffer buf, String name, String value) {
@@ -119,6 +131,11 @@ public abstract class Resource<E extends Resource<E>> {
         return value == null ? null : Timestamp.valueOf(value);
     }
 
+    protected Date getDate(Element root, String name) {
+        String value = getString(root, name);
+        return value == null ? null : Date.valueOf(value);
+    }
+
     protected Time getTime(Element root, String name) {
         String value = getString(root, name);
         return value == null ? null : Time.valueOf(value);
@@ -130,8 +147,19 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     protected String getString(Element root, String name) {
-        Node node = root.getElementsByTagName(name).item(0);
-        return node == null ? null : node.getFirstChild().getNodeValue();
+        NodeList list = root.getElementsByTagName(name);
+        for (int i = 0; i < list.getLength(); i++) {
+            Node node = list.item(i);
+            if (node.getParentNode().equals(root)) {
+                return node == null ? null : node.getFirstChild()
+                        .getNodeValue();
+            }
+        }
+        return null;
+    }
+
+    protected Element getChildElement(Element root, String name) {
+        return (Element) root.getElementsByTagName(name).item(0);
     }
 
     @Override
