@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
-import de.saumya.gwt.session.client.PermissionFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
@@ -30,36 +29,36 @@ public class Courses implements EntryPoint {
         private final Button  loginButton;
 
         public LoginPanel() {
-            add(this.message);
+            add(message);
             add(new Label("username"));
-            this.username.setTabIndex(1);
-            add(this.username);
+            username.setTabIndex(1);
+            add(username);
             add(new Label("password"));
-            this.password.setTabIndex(2);
-            add(this.password);
-            this.loginButton = new Button("login");
-            this.loginButton.setTabIndex(3);
-            add(this.loginButton);
+            password.setTabIndex(2);
+            add(password);
+            loginButton = new Button("login");
+            loginButton.setTabIndex(3);
+            add(loginButton);
         }
 
         @Override
         public ButtonBase loginButton() {
-            return this.loginButton;
+            return loginButton;
         }
 
         @Override
         public Label message() {
-            return this.message;
+            return message;
         }
 
         @Override
         public TextBoxBase passwordTextBox() {
-            return this.password;
+            return password;
         }
 
         @Override
         public TextBoxBase usernameTextBox() {
-            return this.username;
+            return username;
         }
 
     }
@@ -75,13 +74,10 @@ public class Courses implements EntryPoint {
         final RoleFactory roleFactory = new RoleFactory(repository,
                 localeFactory,
                 venueFactory);
-        final PermissionFactory permissionFactory = new PermissionFactory(repository,
-                roleFactory);
         final UserFactory userFactory = new UserFactory(repository,
                 localeFactory,
                 roleFactory);
         new SessionController(new Session(venueFactory,
-                permissionFactory,
                 roleFactory,
                 userFactory), loginPanel, sessionPanel);
 

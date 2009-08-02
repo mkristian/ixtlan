@@ -17,7 +17,6 @@ import de.saumya.gwt.gettext.client.GetText;
 import de.saumya.gwt.gettext.client.WordFactory;
 import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
-import de.saumya.gwt.session.client.PermissionFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
@@ -35,36 +34,36 @@ public class HTML implements EntryPoint {
         private final Button  loginButton;
 
         public LoginPanel() {
-            add(this.message);
+            add(message);
             add(new Label("username"));
-            this.username.setTabIndex(1);
-            add(this.username);
+            username.setTabIndex(1);
+            add(username);
             add(new Label("password"));
-            this.password.setTabIndex(2);
-            add(this.password);
-            this.loginButton = new Button("login");
-            this.loginButton.setTabIndex(3);
-            add(this.loginButton);
+            password.setTabIndex(2);
+            add(password);
+            loginButton = new Button("login");
+            loginButton.setTabIndex(3);
+            add(loginButton);
         }
 
         @Override
         public ButtonBase loginButton() {
-            return this.loginButton;
+            return loginButton;
         }
 
         @Override
         public Label message() {
-            return this.message;
+            return message;
         }
 
         @Override
         public TextBoxBase passwordTextBox() {
-            return this.password;
+            return password;
         }
 
         @Override
         public TextBoxBase usernameTextBox() {
-            return this.username;
+            return username;
         }
     }
 
@@ -73,19 +72,19 @@ public class HTML implements EntryPoint {
         final Button logoutButton;
 
         public SessionPanel() {
-            add(this.welcome);
-            this.logoutButton = new Button("logout");
-            add(this.logoutButton);
+            add(welcome);
+            logoutButton = new Button("logout");
+            add(logoutButton);
         }
 
         @Override
         public ButtonBase logoutButton() {
-            return this.logoutButton;
+            return logoutButton;
         }
 
         @Override
         public Label welcome() {
-            return this.welcome;
+            return welcome;
         }
 
     }
@@ -103,15 +102,12 @@ public class HTML implements EntryPoint {
         final RoleFactory roleFactory = new RoleFactory(repository,
                 localeFactory,
                 venueFactory);
-        final PermissionFactory permissionFactory = new PermissionFactory(repository,
-                roleFactory);
         final UserFactory userFactory = new UserFactory(repository,
                 localeFactory,
                 roleFactory);
         final Session session = new Session(venueFactory,
-                permissionFactory,
-                roleFactory,
-                userFactory);
+                                            roleFactory,
+                                            userFactory);
 
         new TranslationsController(getText,
                 new TranslationsPopupPanel(getText),
@@ -122,9 +118,9 @@ public class HTML implements EntryPoint {
 
         new SessionController(session, loginPanel, sessionPanel);
 
-        final DialogBox popup = new DialogBox();
+        DialogBox popup = new DialogBox();
         popup.setText("control");
-        final Panel panel = new VerticalPanel();
+        Panel panel = new VerticalPanel();
         panel.add(loginPanel);
         panel.add(sessionPanel);
         popup.add(panel);
