@@ -16,9 +16,9 @@
     <servlet-class>de.saumya.gwt.datamapper.server.ProxyServlet</servlet-class>
   </servlet>
   
-  <servlet-mapping>
+  <!--servlet-mapping>
     <servlet-name>xmlProxyServlet</servlet-name>
     <url-pattern>*.xml</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping-->
 
 </web-app>

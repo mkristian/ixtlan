@@ -23,36 +23,36 @@ public class SessionTest implements EntryPoint {
         private final Button  loginButton;
 
         public LoginPanel() {
-            add(message);
+            add(this.message);
             add(new Label("username"));
-            username.setTabIndex(1);
-            add(username);
+            this.username.setTabIndex(1);
+            add(this.username);
             add(new Label("password"));
-            password.setTabIndex(2);
-            add(password);
-            loginButton = new Button("login");
-            loginButton.setTabIndex(3);
-            add(loginButton);
+            this.password.setTabIndex(2);
+            add(this.password);
+            this.loginButton = new Button("login");
+            this.loginButton.setTabIndex(3);
+            add(this.loginButton);
         }
 
         @Override
         public ButtonBase loginButton() {
-            return loginButton;
+            return this.loginButton;
         }
 
         @Override
         public Label message() {
-            return message;
+            return this.message;
         }
 
         @Override
         public TextBoxBase passwordTextBox() {
-            return password;
+            return this.password;
         }
 
         @Override
         public TextBoxBase usernameTextBox() {
-            return username;
+            return this.username;
         }
 
     }
@@ -62,19 +62,19 @@ public class SessionTest implements EntryPoint {
         final Button logoutButton;
 
         SessionPanel() {
-            add(welcome);
-            logoutButton = new Button("logout");
-            add(logoutButton);
+            add(this.welcome);
+            this.logoutButton = new Button("logout");
+            add(this.logoutButton);
         }
 
         @Override
         public ButtonBase logoutButton() {
-            return logoutButton;
+            return this.logoutButton;
         }
 
         @Override
         public Label welcome() {
-            return welcome;
+            return this.welcome;
         }
 
     }
@@ -89,6 +89,7 @@ public class SessionTest implements EntryPoint {
                 localeFactory,
                 new VenueFactory(repository));
         new SessionController(new Session(new VenueFactory(repository),
+                new PermissionFactory(repository, roleFactory),
                 roleFactory,
                 new UserFactory(repository, localeFactory, roleFactory)),
                 loginPanel,

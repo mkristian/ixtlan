@@ -13,150 +13,171 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
 
 public class Session {
 
     class SessionTimer extends Timer {
 
         private final int timeout   = 1;
-        private int       countDown = timeout;
+        private int       countDown = this.timeout;
         private boolean   idle      = true;
 
         public SessionTimer() {
             Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
 
-                public void onPreviewNativeEvent(NativePreviewEvent event) {
-                    idle = false;
+                public void onPreviewNativeEvent(final NativePreviewEvent event) {
+                    SessionTimer.this.idle = false;
                 }
             });
         }
 
         @Override
         public void run() {
-            GWT.log("idle " + idle, null);
-            GWT.log("countDown " + countDown, null);
-            if (idle) {
-                countDown--;
-                if (countDown == 0) {
+            GWT.log("idle " + this.idle, null);
+            GWT.log("countDown " + this.countDown, null);
+            if (this.idle) {
+                this.countDown--;
+                if (this.countDown == 0) {
                     cancel();
-                    GWT.log("session timeout " + user.login, null);
+                    GWT.log("session timeout " + Session.this.user.login, null);
                     fireSessionTimeout();
                 }
             }
             else {
-                countDown = timeout * 6 - 1;
-                idle = true;
+                this.countDown = this.timeout * 6 - 1;
+                this.idle = true;
             }
         }
     }
 
-    private boolean            loggedIn = false;
-    private String             token    = null;
-    private User               user     = null;
-    private final Timer        timer    = new SessionTimer();
-    private final UserFactory  userFactory;
-    private final RoleFactory  roleFactory;
-    private final VenueFactory venueFactory;
+    private boolean                                          loggedIn = false;
+    private String                                           token    = null;
+    private User                                             user     = null;
+    private final Timer                                      timer    = new SessionTimer();
+    private final UserFactory                                userFactory;
+    private final RoleFactory                                roleFactory;
+    private final VenueFactory                               venueFactory;
+    private final Map<String, Map<String, Collection<Role>>> permissions;
 
-    public Session(VenueFactory venueFactory, RoleFactory roleFactory,
-            UserFactory userFactory) {
+    public Session(final VenueFactory venueFactory,
+            final PermissionFactory permissionFactory,
+            final RoleFactory roleFactory, final UserFactory userFactory) {
         this.venueFactory = venueFactory;
         this.roleFactory = roleFactory;
         this.userFactory = userFactory;
+        this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
+        permissionFactory.all(new ResourcesChangeListener<Permission>() {
+
+            @Override
+            public void onChange(final Resources<Permission> resources,
+                    final Permission resource) {
+                final Map<String, Collection<Role>> actions;
+                if (Session.this.permissions.containsKey(resource.resourceName)) {
+                    actions = Session.this.permissions.get(resource.resourceName);
+                }
+                else {
+                    actions = new HashMap<String, Collection<Role>>();
+                    Session.this.permissions.put(resource.resourceName, actions);
+                }
+                actions.put(resource.action, resource.roles);
+                GWT.log("added permission for '" + resource.resourceName + "#"
+                        + resource.action + ": " + resource.roles, null);
+            }
+        });
     }
 
     private final List<SessionListener> listeners = new ArrayList<SessionListener>();
 
-    public void addSessionListern(SessionListener listener) {
-        listeners.add(listener);
+    public void addSessionListern(final SessionListener listener) {
+        this.listeners.add(listener);
     }
 
-    public void removeSessionListern(SessionListener listener) {
-        listeners.remove(listener);
+    public void removeSessionListern(final SessionListener listener) {
+        this.listeners.remove(listener);
     }
 
     private void fireSessionTimeout() {
-        for (SessionListener listener : listeners) {
+        for (final SessionListener listener : this.listeners) {
             listener.onSessionTimeout();
         }
     }
 
     private void fireAccessDenied() {
-        for (SessionListener listener : listeners) {
+        for (final SessionListener listener : this.listeners) {
             listener.onAccessDenied();
         }
     }
 
     private void fireSuccessfulLogin() {
-        for (SessionListener listener : listeners) {
+        for (final SessionListener listener : this.listeners) {
             listener.onSuccessfulLogin();
         }
     }
 
     private void fireLoggedOut() {
-        for (SessionListener listener : listeners) {
+        for (final SessionListener listener : this.listeners) {
             listener.onLoggedOut();
         }
     }
 
-    void login(String username, String password) {
+    void login(final String username, final String password) {
         if ("dhamma".equals(username) && "mudita".equals(password)) {
-            loggedIn = true;
-            token = "blahblah";
-            user = userFactory.newResource();
-            user.name = "Dhamma";
-            user.login = "dhamma";
-            user.roles = roleFactory.newResources();
-            Role role = roleFactory.newResource();
+            this.loggedIn = true;
+            this.token = "blahblah";
+            this.user = this.userFactory.newResource();
+            this.user.name = "Dhamma";
+            this.user.login = "dhamma";
+            this.user.roles = this.roleFactory.newResources();
+            final Role role = this.roleFactory.newResource();
             role.name = "root";
-            user.roles.add(role);
+            this.user.roles.add(role);
 
-            Role vrole = roleFactory.newResource();
+            final Role vrole = this.roleFactory.newResource();
             vrole.name = "editor";
-            Venue dvara = venueFactory.newResource();
+            final Venue dvara = this.venueFactory.newResource();
             dvara.id = "dvara";
+            vrole.venues = this.venueFactory.newResources();
             vrole.venues.add(dvara);
-            Venue pajotta = venueFactory.newResource();
+            final Venue pajotta = this.venueFactory.newResource();
             dvara.id = "pajotta";
             vrole.venues.add(pajotta);
-            user.roles.add(vrole);
+            this.user.roles.add(vrole);
 
-            timer.scheduleRepeating(10000);
+            this.timer.scheduleRepeating(10000);
             GWT.log("login of " + username, null);
             fireSuccessfulLogin();
         }
         else {
-            loggedIn = false;
-            token = null;
-            user = null;
+            this.loggedIn = false;
+            this.token = null;
+            this.user = null;
             fireAccessDenied();
         }
     }
 
     void logout() {
-        loggedIn = false;
-        token = null;
-        timer.cancel();
-        GWT.log("log out " + user.login, null);
+        this.loggedIn = false;
+        this.token = null;
+        this.timer.cancel();
+        GWT.log("log out " + this.user.login, null);
         fireLoggedOut();
     }
 
-    enum Action {
-        SHOW, SHOW_ALL, CREATE, UPDATE, DESTROY
-    }
-
-    boolean isAllowed(Action action,
-            ResourceFactory<? extends Resource<?>> factory, String role) {
-        Role r = findAllowedRole(action, factory, role);
+    public boolean isAllowed(final String action,
+            final ResourceFactory<? extends Resource<?>> factory,
+            final String role) {
+        final Role r = findAllowedRole(action, factory, role);
         return r != null && r.locales == null && r.venues == null;
     }
 
-    boolean isAllowed(Action action,
-            ResourceFactory<? extends Resource<?>> factory, String role,
-            Locale locale) {
-        Role r = findAllowedRole(action, factory, role);
+    public boolean isAllowed(final String action,
+            final ResourceFactory<? extends Resource<?>> factory,
+            final String role, final Locale locale) {
+        final Role r = findAllowedRole(action, factory, role);
         if (r != null && r.venues == null) {
-            for (Locale l : r.locales) {
+            for (final Locale l : r.locales) {
                 if (l.code.equals(locale.code)) {
                     return true;
                 }
@@ -165,12 +186,12 @@ public class Session {
         return false;
     }
 
-    boolean isAllowed(Action action,
-            ResourceFactory<? extends Resource<?>> factory, String role,
-            Venue venue) {
-        Role r = findAllowedRole(action, factory, role);
+    public boolean isAllowed(final String action,
+            final ResourceFactory<? extends Resource<?>> factory,
+            final String role, final Venue venue) {
+        final Role r = findAllowedRole(action, factory, role);
         if (r != null && r.locales == null) {
-            for (Venue v : r.venues) {
+            for (final Venue v : r.venues) {
                 if (v.id.equals(venue.id)) {
                     return true;
                 }
@@ -179,14 +200,14 @@ public class Session {
         return false;
     }
 
-    Role findAllowedRole(Action action,
-            ResourceFactory<? extends Resource<?>> factory, String role) {
-        Map<String, Map<Action, Collection<Role>>> permissions = new HashMap<String, Map<Action, Collection<Role>>>();
+    private Role findAllowedRole(final String action,
+            final ResourceFactory<? extends Resource<?>> factory,
+            final String role) {
         // TODO make this real
-        if (loggedIn) {
-            Map<Action, Collection<Role>> factorypermission = permissions.get(factory.storageName());
-            if (factorypermission != null) {
-                for (Role r : factorypermission.get(action)) {
+        if (this.loggedIn) {
+            final Map<String, Collection<Role>> permission = this.permissions.get(factory.storageName());
+            if (permission != null) {
+                for (final Role r : permission.get(action)) {
                     if (r.name.equals(role)) {
                         return r;
                     }
@@ -196,15 +217,15 @@ public class Session {
         return null;
     }
 
-    public User user() {
-        return user;
+    public User getUser() {
+        return this.user;
     }
 
     public boolean hasUser() {
-        return loggedIn;
+        return this.loggedIn;
     }
 
-    String sessionToken() {
-        return token;
+    public String sessionToken() {
+        return this.token;
     }
 }

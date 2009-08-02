@@ -22,9 +22,9 @@ public class SessionController {
             @Override
             public void onSuccessfulLogin() {
                 showSessionScreen("welcome "
-                        + session.user().name
-                        + (session.user().email == null ? "" : "<"
-                                + session.user().email + ">"));
+                        + session.getUser().name
+                        + (session.getUser().email == null ? "" : "<"
+                                + session.getUser().email + ">"));
             }
 
             @Override
