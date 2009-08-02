@@ -30,6 +30,13 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>rails-maven-plugin</artifactId>
+        <configuration>
+          <module>org.dhamma.Translations</module>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <version>1.1</version>
