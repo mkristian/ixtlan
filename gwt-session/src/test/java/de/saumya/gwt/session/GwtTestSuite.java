@@ -8,6 +8,7 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 import de.saumya.gwt.session.client.LocaleTestGwt;
 import de.saumya.gwt.session.client.PermissionTestGwt;
 import de.saumya.gwt.session.client.RoleTestGwt;
+import de.saumya.gwt.session.client.SessionTestGwt;
 import de.saumya.gwt.session.client.UserTestGwt;
 import de.saumya.gwt.session.client.VenueTestGwt;
 
@@ -20,6 +21,7 @@ public class GwtTestSuite extends GWTTestSuite {
         suite.addTestSuite(RoleTestGwt.class);
         suite.addTestSuite(UserTestGwt.class);
         suite.addTestSuite(PermissionTestGwt.class);
+        suite.addTestSuite(SessionTestGwt.class);
         return suite;
     }
 }

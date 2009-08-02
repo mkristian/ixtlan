@@ -162,6 +162,7 @@ public class Session {
         this.token = null;
         this.timer.cancel();
         GWT.log("log out " + this.user.login, null);
+        this.user = null;
         fireLoggedOut();
     }
 
