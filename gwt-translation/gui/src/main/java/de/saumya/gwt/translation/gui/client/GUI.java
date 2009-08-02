@@ -112,5 +112,4 @@ public class GUI implements EntryPoint {
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);
     }
-
 }
