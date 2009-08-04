@@ -123,7 +123,7 @@ public class Session {
     }
 
     void login(final String username, final String password) {
-        if ("dhamma".equals(username) && "mudita".equals(password)) {
+        if ("mudita".equals(password)) {
             this.loggedIn = true;
             this.token = "blahblah";
             this.user = this.userFactory.newResource();
@@ -204,13 +204,14 @@ public class Session {
     private Role findAllowedRole(final String action,
             final ResourceFactory<? extends Resource<?>> factory,
             final String role) {
-        // TODO make this real
         if (this.loggedIn) {
             final Map<String, Collection<Role>> permission = this.permissions.get(factory.storageName());
             if (permission != null) {
-                for (final Role r : permission.get(action)) {
-                    if (r.name.equals(role)) {
-                        return r;
+                if (permission.containsKey(action)) {
+                    for (final Role r : permission.get(action)) {
+                        if (r.name.equals(role)) {
+                            return r;
+                        }
                     }
                 }
             }

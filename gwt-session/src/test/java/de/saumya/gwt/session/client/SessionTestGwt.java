@@ -15,6 +15,10 @@ public class SessionTestGwt extends GWTTestCase {
 
     protected SessionListenerMock listener;
 
+    protected UserFactory         userFactory;
+
+    protected LocaleFactory       localeFactory;
+
     /**
      * Must refer to a valid module that sources this class.
      */
@@ -28,17 +32,17 @@ public class SessionTestGwt extends GWTTestCase {
         this.repository = new RepositoryMock();
         this.repository.reset();
         final VenueFactory venueFactory = new VenueFactory(this.repository);
-        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
+        this.localeFactory = new LocaleFactory(this.repository);
         final RoleFactory roleFactory = new RoleFactory(this.repository,
-                localeFactory,
+                this.localeFactory,
                 venueFactory);
         final PermissionFactory permissionFactory = new PermissionFactory(this.repository,
                 roleFactory);
-        final UserFactory userFactory = new UserFactory(this.repository,
-                localeFactory,
+        this.userFactory = new UserFactory(this.repository,
+                this.localeFactory,
                 roleFactory);
         this.repository.add("<permissions>" + "<permission>"
-                + "<resource_name>config</resource_name>"
+                + "<resource_name>user</resource_name>"
                 + "<action>create</action>" + "<roles>" + "<role>"
                 + "<name>admin</name>"
                 + "<created_at>2005-07-09 17:14:48.0</created_at>" + "</role>"
@@ -46,7 +50,7 @@ public class SessionTestGwt extends GWTTestCase {
         this.session = new Session(venueFactory,
                 permissionFactory,
                 roleFactory,
-                userFactory);
+                this.userFactory);
         this.listener = new SessionListenerMock();
         this.session.addSessionListern(this.listener);
     }
@@ -122,4 +126,19 @@ public class SessionTestGwt extends GWTTestCase {
         assertNull(this.session.getUser());
     }
 
+    public void testIsAllowed() {
+        this.session.login("dhamma", "mudita");
+
+        assertTrue(this.session.isAllowed("create", this.userFactory, "admin"));
+    }
+
+    public void testNotIsAllowed() {
+        this.session.login("dhamma", "mudita");
+
+        assertFalse(this.session.isAllowed("update", this.userFactory, "admin"));
+        assertFalse(this.session.isAllowed("create", this.userFactory, "master"));
+        assertFalse(this.session.isAllowed("create",
+                                           this.localeFactory,
+                                           "admin"));
+    }
 }
