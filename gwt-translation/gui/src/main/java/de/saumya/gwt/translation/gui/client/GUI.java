@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.datamapper.client.Repository;
+import de.saumya.gwt.session.client.AuthenticationFactory;
 import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.PermissionFactory;
@@ -104,10 +105,8 @@ public class GUI implements EntryPoint {
         final UserFactory userFactory = new UserFactory(repository,
                 localeFactory,
                 roleFactory);
-        new SessionController(new Session(venueFactory,
-                permissionFactory,
-                roleFactory,
-                userFactory), loginPanel, sessionPanel);
+        new SessionController(new Session(new AuthenticationFactory(repository,
+                userFactory), permissionFactory), loginPanel, sessionPanel);
 
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);

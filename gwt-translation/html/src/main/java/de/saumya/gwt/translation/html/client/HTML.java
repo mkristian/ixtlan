@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.gettext.client.GetText;
 import de.saumya.gwt.gettext.client.WordFactory;
+import de.saumya.gwt.session.client.AuthenticationFactory;
 import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.PermissionFactory;
@@ -108,10 +109,9 @@ public class HTML implements EntryPoint {
         final UserFactory userFactory = new UserFactory(repository,
                 localeFactory,
                 roleFactory);
-        final Session session = new Session(venueFactory,
-                permissionFactory,
-                roleFactory,
-                userFactory);
+        final Session session = new Session(new AuthenticationFactory(repository,
+                userFactory),
+                permissionFactory);
 
         new TranslationsController(getText,
                 new TranslationsPopupPanel(getText),
