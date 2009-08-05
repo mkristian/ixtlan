@@ -88,15 +88,15 @@ public class SessionTest implements EntryPoint {
         final RoleFactory roleFactory = new RoleFactory(repository,
                 localeFactory,
                 new VenueFactory(repository));
-        new SessionController(new Session(new VenueFactory(repository),
-                new PermissionFactory(repository, roleFactory),
-                roleFactory,
-                new UserFactory(repository, localeFactory, roleFactory)),
+        final UserFactory userFactory = new UserFactory(repository,
+                localeFactory,
+                roleFactory);
+        new SessionController(new Session(new AuthenticationFactory(repository,
+                userFactory), new PermissionFactory(repository, roleFactory)),
                 loginPanel,
                 sessionPanel);
 
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);
     }
-
 }

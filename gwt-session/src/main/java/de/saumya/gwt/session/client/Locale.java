@@ -12,31 +12,34 @@ import de.saumya.gwt.datamapper.client.Resource;
 
 public class Locale extends Resource<Locale> {
 
-    Locale(Repository repository, LocaleFactory factory) {
+    Locale(final Repository repository, final LocaleFactory factory) {
         super(repository, factory);
     }
 
     // TODO change 'code' to 'id'
-    public String code;
+    public String    code;
     public Timestamp createdAt;
 
     @Override
     protected String key() {
-        return code;
+        return this.code;
     }
 
-    protected void appendXml(StringBuffer buf) {
-        append(buf, "code", code);
-        append(buf, "created_at", createdAt);
+    @Override
+    protected void appendXml(final StringBuffer buf) {
+        append(buf, "code", this.code);
+        append(buf, "created_at", this.createdAt);
     }
 
-    protected void fromXml(Element root) {
-        code = getString(root, "code");
-        createdAt = getTimestamp(root, "created_at");
+    @Override
+    protected void fromXml(final Element root) {
+        this.code = getString(root, "code");
+        this.createdAt = getTimestamp(root, "created_at");
     }
 
-    public void toString(StringBuffer buf) {
-        buf.append(":code => ").append(code);
-        buf.append(", :created_at => ").append(createdAt);
+    @Override
+    public void toString(final StringBuffer buf) {
+        buf.append(":code => ").append(this.code);
+        buf.append(", :created_at => ").append(this.createdAt);
     }
 }

@@ -52,6 +52,7 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
                 // resource.addResourceChangeListener(resourceChangeListener);
             }
         }
+        fireResourcesLoadedEvents();
     }
 
     public String toXml() {
@@ -81,6 +82,12 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
     private void fireResourcesChangeEvents(final E resource) {
         for (final ResourcesChangeListener<E> listener : this.listeners) {
             listener.onChange(this, resource);
+        }
+    }
+
+    private void fireResourcesLoadedEvents() {
+        for (final ResourcesChangeListener<E> listener : this.listeners) {
+            listener.onLoaded(this);
         }
     }
 

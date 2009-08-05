@@ -28,7 +28,8 @@ public abstract class Resource<E extends Resource<E>> {
 
     final String storageName;
 
-    protected Resource(Repository repository, ResourceFactory<E> factory) {
+    protected Resource(final Repository repository,
+            final ResourceFactory<E> factory) {
         this.repository = repository;
         this.storageName = factory.storageName();
     }
@@ -46,60 +47,63 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public void save() {
-        switch (state) {
+        switch (this.state) {
         case NEW:
         case TO_BE_CREATED:
-            state = State.TO_BE_CREATED;
-            repository.post(this, new ResourceRequestCallback(this));
+            this.state = State.TO_BE_CREATED;
+            this.repository.post(this, new ResourceRequestCallback(this));
             break;
         case UP_TO_DATE:
         case TO_BE_UPDATED:
         case TO_BE_DELETED:
-            state = State.TO_BE_UPDATED;
-            repository.put(this, new ResourceRequestCallback(this));
+            this.state = State.TO_BE_UPDATED;
+            this.repository.put(this, new ResourceRequestCallback(this));
             break;
         default:
-            throw new IllegalStateException("can not save with state " + state);
+            throw new IllegalStateException("can not save with state "
+                    + this.state);
         }
     }
 
     public void destroy() {
-        switch (state) {
+        switch (this.state) {
         case UP_TO_DATE:
         case TO_BE_DELETED:
-            state = State.TO_BE_DELETED;
-            repository.delete(this, new ResourceRequestCallback(this));
+            this.state = State.TO_BE_DELETED;
+            this.repository.delete(this, new ResourceRequestCallback(this));
             break;
         default:
             throw new IllegalStateException("can not delete with state "
-                    + state);
+                    + this.state);
         }
     }
 
-    public void fromXml(String xml) {
-        Document doc = XMLParser.parse(xml);
+    public void fromXml(final String xml) {
+        final Document doc = XMLParser.parse(xml);
         fromXml(doc.getDocumentElement());
     }
 
     public String toXml() {
-        StringBuffer buf = new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         toXml(buf);
         return buf.toString();
     }
 
-    public void toXml(StringBuffer buf) {
-        buf.append("<").append(storageName).append(">");
+    public void toXml(final StringBuffer buf) {
+        buf.append("<").append(this.storageName).append(">");
         appendXml(buf);
-        buf.append("</").append(storageName).append(">");
+        buf.append("</").append(this.storageName).append(">");
     }
 
-    protected void append(StringBuffer buf, String name, Object value) {
+    protected void append(final StringBuffer buf, final String name,
+            final Object value) {
         if (value != null) {
             append(buf, name, value.toString());
         }
     }
 
-    protected void append(StringBuffer buf, String name, String value) {
+    protected void append(final StringBuffer buf, final String name,
+            final String value) {
         if (value != null) {
             buf.append("<")
                     .append(name)
@@ -111,45 +115,47 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
-    public void addResourceChangeListener(ResourceChangeListener<E> listener) {
+    public void addResourceChangeListener(
+            final ResourceChangeListener<E> listener) {
         this.listeners.add(listener);
     }
 
-    public void removeResourceChangeListener(ResourceChangeListener<E> listener) {
+    public void removeResourceChangeListener(
+            final ResourceChangeListener<E> listener) {
         this.listeners.remove(listener);
     }
 
     @SuppressWarnings("unchecked")
     void fireResourceChangeEvents() {
-        for (ResourceChangeListener<E> listener : listeners) {
+        for (final ResourceChangeListener<E> listener : this.listeners) {
             listener.onChange((E) this);
         }
     }
 
-    protected Timestamp getTimestamp(Element root, String name) {
-        String value = getString(root, name);
+    protected Timestamp getTimestamp(final Element root, final String name) {
+        final String value = getString(root, name);
         return value == null ? null : Timestamp.valueOf(value);
     }
 
-    protected Date getDate(Element root, String name) {
-        String value = getString(root, name);
+    protected Date getDate(final Element root, final String name) {
+        final String value = getString(root, name);
         return value == null ? null : Date.valueOf(value);
     }
 
-    protected Time getTime(Element root, String name) {
-        String value = getString(root, name);
+    protected Time getTime(final Element root, final String name) {
+        final String value = getString(root, name);
         return value == null ? null : Time.valueOf(value);
     }
 
-    protected int getInt(Element root, String name) {
-        String value = getString(root, name);
+    protected int getInt(final Element root, final String name) {
+        final String value = getString(root, name);
         return value == null ? null : Integer.parseInt(value);
     }
 
-    protected String getString(Element root, String name) {
-        NodeList list = root.getElementsByTagName(name);
+    protected String getString(final Element root, final String name) {
+        final NodeList list = root.getElementsByTagName(name);
         for (int i = 0; i < list.getLength(); i++) {
-            Node node = list.item(i);
+            final Node node = list.item(i);
             if (node.getParentNode().equals(root)) {
                 return node == null ? null : node.getFirstChild()
                         .getNodeValue();
@@ -158,16 +164,29 @@ public abstract class Resource<E extends Resource<E>> {
         return null;
     }
 
-    protected Element getChildElement(Element root, String name) {
+    protected Element getChildElement(final Element root, final String name) {
         return (Element) root.getElementsByTagName(name).item(0);
     }
 
     @Override
     public String toString() {
-        StringBuffer buf = new StringBuffer(getClass().getName()).append("(");
+        final StringBuffer buf = new StringBuffer(getClass().getName()).append("(");
         toString(buf);
 
         return buf.append(")").toString();
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (key() == null || !(other instanceof Resource<?>)) {
+            return false;
+        }
+        return key().equals(((Resource<?>) other).key());
+    }
+
+    @Override
+    public int hashCode() {
+        return key() == null ? super.hashCode() : key().hashCode();
     }
 
     protected abstract void fromXml(Element root);

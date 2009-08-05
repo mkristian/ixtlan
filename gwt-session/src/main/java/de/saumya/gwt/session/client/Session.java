@@ -41,7 +41,8 @@ public class Session {
                 this.countDown--;
                 if (this.countDown == 0) {
                     cancel();
-                    GWT.log("session timeout " + Session.this.user.login, null);
+                    GWT.log("session timeout "
+                            + Session.this.authentication.user.login, null);
                     fireSessionTimeout();
                 }
             }
@@ -52,21 +53,14 @@ public class Session {
         }
     }
 
-    private boolean                                          loggedIn = false;
-    private String                                           token    = null;
-    private User                                             user     = null;
-    private final Timer                                      timer    = new SessionTimer();
-    private final UserFactory                                userFactory;
-    private final RoleFactory                                roleFactory;
-    private final VenueFactory                               venueFactory;
+    private Authentication                                   authentication = null;
+    private final Timer                                      timer          = new SessionTimer();
+    private final AuthenticationFactory                      authenticationFactory;
     private final Map<String, Map<String, Collection<Role>>> permissions;
 
-    public Session(final VenueFactory venueFactory,
-            final PermissionFactory permissionFactory,
-            final RoleFactory roleFactory, final UserFactory userFactory) {
-        this.venueFactory = venueFactory;
-        this.roleFactory = roleFactory;
-        this.userFactory = userFactory;
+    public Session(final AuthenticationFactory authenticationFactory,
+            final PermissionFactory permissionFactory) {
+        this.authenticationFactory = authenticationFactory;
         this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
@@ -84,6 +78,10 @@ public class Session {
                 actions.put(resource.action, resource.roles);
                 GWT.log("added permission for '" + resource.resourceName + "#"
                         + resource.action + ": " + resource.roles, null);
+            }
+
+            @Override
+            public void onLoaded(final Resources<Permission> resources) {
             }
         });
     }
@@ -122,47 +120,49 @@ public class Session {
         }
     }
 
+    private void doLogin(final Authentication authentication) {
+        this.authentication = authentication;
+        this.timer.scheduleRepeating(10000);
+        GWT.log("login of " + authentication.user.login, null);
+        fireSuccessfulLogin();
+    }
+
+    private void doAccessDenied() {
+        this.authentication = null;
+        fireAccessDenied();
+    }
+
     void login(final String username, final String password) {
         if ("mudita".equals(password)) {
-            this.loggedIn = true;
-            this.token = "blahblah";
-            this.user = this.userFactory.newResource();
-            this.user.name = "Dhamma";
-            this.user.login = "dhamma";
-            this.user.roles = this.roleFactory.newResources();
-            final Role role = this.roleFactory.newResource();
-            role.name = "root";
-            this.user.roles.add(role);
+            this.authenticationFactory.all(new ResourcesChangeListener<Authentication>() {
 
-            final Role vrole = this.roleFactory.newResource();
-            vrole.name = "editor";
-            final Venue dvara = this.venueFactory.newResource();
-            dvara.id = "dvara";
-            vrole.venues = this.venueFactory.newResources();
-            vrole.venues.add(dvara);
-            final Venue pajotta = this.venueFactory.newResource();
-            dvara.id = "pajotta";
-            vrole.venues.add(pajotta);
-            this.user.roles.add(vrole);
+                @Override
+                public void onChange(final Resources<Authentication> resources,
+                        final Authentication resource) {
+                    System.out.println(resource);
+                    if (resource.user.login.equals(username)) {
+                        doLogin(resource);
+                    }
+                }
 
-            this.timer.scheduleRepeating(10000);
-            GWT.log("login of " + username, null);
-            fireSuccessfulLogin();
+                @Override
+                public void onLoaded(final Resources<Authentication> resources) {
+                    if (!hasUser()) {
+                        doAccessDenied();
+                    }
+                }
+            });
         }
         else {
-            this.loggedIn = false;
-            this.token = null;
-            this.user = null;
-            fireAccessDenied();
+            doAccessDenied();
         }
     }
 
     void logout() {
-        this.loggedIn = false;
-        this.token = null;
         this.timer.cancel();
-        GWT.log("log out " + this.user.login, null);
-        this.user = null;
+        GWT.log("log out " + this.authentication.user.login, null);
+        this.authentication.destroy();
+        this.authentication = null;
         fireLoggedOut();
     }
 
@@ -204,7 +204,7 @@ public class Session {
     private Role findAllowedRole(final String action,
             final ResourceFactory<? extends Resource<?>> factory,
             final String role) {
-        if (this.loggedIn) {
+        if (this.authentication != null) {
             final Map<String, Collection<Role>> permission = this.permissions.get(factory.storageName());
             if (permission != null) {
                 if (permission.containsKey(action)) {
@@ -220,14 +220,14 @@ public class Session {
     }
 
     public User getUser() {
-        return this.user;
+        return this.authentication != null ? this.authentication.user : null;
     }
 
     public boolean hasUser() {
-        return this.loggedIn;
+        return this.authentication != null;
     }
 
     public String sessionToken() {
-        return this.token;
+        return this.authentication != null ? this.authentication.token : null;
     }
 }

@@ -4,6 +4,8 @@
 package de.saumya.gwt.session.client;
 
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.HashSet;
 
 import com.google.gwt.xml.client.Element;
 
@@ -15,7 +17,7 @@ class User extends Resource<User> {
 
     private final UserFactory factory;
 
-    protected User(Repository repository, UserFactory factory) {
+    protected User(final Repository repository, final UserFactory factory) {
         super(repository, factory);
         this.factory = factory;
     }
@@ -32,46 +34,64 @@ class User extends Resource<User> {
 
     @Override
     protected String key() {
-        return login;
+        return this.login;
     }
 
-    protected void appendXml(StringBuffer buf) {
-        append(buf, "login", login);
-        append(buf, "name", name);
-        append(buf, "email", email);
-        if (preferedLanguage != null) preferedLanguage.toXml(buf);
-        if (roles != null) roles.toXml(buf);
-        append(buf, "created_at", createdAt);
-        append(buf, "updated_at", updatedAt);
+    @Override
+    protected void appendXml(final StringBuffer buf) {
+        append(buf, "login", this.login);
+        append(buf, "name", this.name);
+        append(buf, "email", this.email);
+        if (this.preferedLanguage != null) {
+            this.preferedLanguage.toXml(buf);
+        }
+        if (this.roles != null) {
+            this.roles.toXml(buf);
+        }
+        append(buf, "created_at", this.createdAt);
+        append(buf, "updated_at", this.updatedAt);
     }
 
-    protected void fromXml(Element root) {
-        login = getString(root, "login");
-        name = getString(root, "name");
-        email = getString(root, "email");
-        Locale locale = factory.newLocaleResource();
+    @Override
+    protected void fromXml(final Element root) {
+        this.login = getString(root, "login");
+        this.name = getString(root, "name");
+        this.email = getString(root, "email");
+        final Locale locale = this.factory.newLocaleResource();
         locale.fromXml(root);
-        if (locale.key() != null)
-            preferedLanguage = locale;
-        Element child = getChildElement(root, "roles");
-        if (child != null) {
-            roles = factory.newRoleResources();
-            roles.fromXml(child);
+        if (locale.key() != null) {
+            this.preferedLanguage = locale;
         }
-        createdAt = getTimestamp(root, "created_at");
-        updatedAt = getTimestamp(root, "updated_at");
+        final Element child = getChildElement(root, "roles");
+        if (child != null) {
+            this.roles = this.factory.newRoleResources();
+            this.roles.fromXml(child);
+        }
+        this.createdAt = getTimestamp(root, "created_at");
+        this.updatedAt = getTimestamp(root, "updated_at");
     }
 
-    public void toString(StringBuffer buf) {
-        buf.append(":login => ").append(login);
-        buf.append(", :name => ").append(name);
-        buf.append(", :email => ").append(email);
-        if (preferedLanguage != null) {
+    @Override
+    public void toString(final StringBuffer buf) {
+        buf.append(":login => ").append(this.login);
+        buf.append(", :name => ").append(this.name);
+        buf.append(", :email => ").append(this.email);
+        if (this.preferedLanguage != null) {
             buf.append(", :preferedLanguage => ");
-            preferedLanguage.toString(buf);
+            this.preferedLanguage.toString(buf);
         }
-        if (roles != null) buf.append(", :roles => ").append(roles);
-        buf.append(", :created_at => ").append(createdAt);
-        buf.append(", :updated_at => ").append(updatedAt);
+        if (this.roles != null) {
+            buf.append(", :roles => ").append(this.roles);
+        }
+        buf.append(", :created_at => ").append(this.createdAt);
+        buf.append(", :updated_at => ").append(this.updatedAt);
+    }
+
+    public Collection<Locale> getAllowedLocales() {
+        final Collection<Locale> result = new HashSet<Locale>();
+        for (final Role role : this.roles) {
+            result.addAll(role.locales);
+        }
+        return result;
     }
 }

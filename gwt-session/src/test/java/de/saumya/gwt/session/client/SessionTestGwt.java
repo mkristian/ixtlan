@@ -47,12 +47,19 @@ public class SessionTestGwt extends GWTTestCase {
                 + "<name>admin</name>"
                 + "<created_at>2005-07-09 17:14:48.0</created_at>" + "</role>"
                 + "</roles>" + "</permission>" + "</permissions>");
-        this.session = new Session(venueFactory,
-                permissionFactory,
-                roleFactory,
-                this.userFactory);
+        this.session = new Session(new AuthenticationFactory(this.repository,
+                this.userFactory), permissionFactory);
         this.listener = new SessionListenerMock();
         this.session.addSessionListern(this.listener);
+
+        this.repository.reset();
+
+        this.repository.add("<authentications>" + "<authentication>"
+                + "<token>1234567890</token>" + "<user><login>dhamma</login>"
+                + "<roles>" + "<role>" + "<name>admin</name>"
+                + "<created_at>2005-07-09 17:14:48.0</created_at>" + "</role>"
+                + "</roles>" + "</user>" + "</authentication>"
+                + "</authentications>");
     }
 
     static class SessionListenerMock implements SessionListener {

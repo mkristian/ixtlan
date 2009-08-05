@@ -12,6 +12,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
     /**
      * Must refer to a valid module that sources this class.
      */
+    @Override
     public String getModuleName() {
         return "de.saumya.gwt.session.Session";
     }
@@ -31,66 +32,73 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                                                              ">admin")
                                                       + "</users>";
 
+    @Override
     protected void resourceSetUp() {
-        LocaleFactory localeFactory = new LocaleFactory(repository);
-        factory = new UserFactory(repository,
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
+        this.factory = new UserFactory(this.repository,
                 localeFactory,
-                new RoleFactory(repository,
+                new RoleFactory(this.repository,
                         localeFactory,
-                        new VenueFactory(repository)));
-        resource = factory.newResource();
+                        new VenueFactory(this.repository)));
+        this.resource = this.factory.newResource();
 
-        resource.name = "root";
+        this.resource.name = "root";
 
-        repository.addXmlResponse(RESOURCE_XML);
+        this.repository.addXmlResponse(RESOURCE_XML);
 
-        resource.save();
+        this.resource.save();
     }
 
+    @Override
     public void testCreate() {
-        assertTrue(resource.isUptodate());
-        assertEquals("root", resource.name);
+        assertTrue(this.resource.isUptodate());
+        assertEquals("root", this.resource.name);
     }
 
+    @Override
     public void testRetrieve() {
-        repository.addXmlResponse(RESOURCE_XML);
+        this.repository.addXmlResponse(RESOURCE_XML);
 
-        User rsrc = factory.get("root", countingResourceListener);
+        final User rsrc = this.factory.get("root",
+                                           this.countingResourceListener);
 
-        assertEquals(1, countingResourceListener.count());
-        assertTrue(resource.isUptodate());
-        assertEquals(resource.toString(), rsrc.toString());
+        assertEquals(1, this.countingResourceListener.count());
+        assertTrue(this.resource.isUptodate());
+        assertEquals(this.resource.toString(), rsrc.toString());
     }
 
+    @Override
     public void testRetrieveAll() {
-        repository.addXmlResponse(RESOURCES_XML);
+        this.repository.addXmlResponse(RESOURCES_XML);
 
-        Resources<User> resources = factory.all(countingResourcesListener);
+        final Resources<User> resources = this.factory.all(this.countingResourcesListener);
 
-        assertEquals(2, countingResourcesListener.count());
+        assertEquals(2, this.countingResourcesListener.count());
         int id = 0;
-        String[] codes = { "root", "admin" };
-        for (User rsrc : resources) {
-            assertTrue(resource.isUptodate());
-            assertEquals(resource.toXml().replace(">root",
-                                                  ">" + codes[id++]),
+        final String[] codes = { "root", "admin" };
+        for (final User rsrc : resources) {
+            assertTrue(this.resource.isUptodate());
+            assertEquals(this.resource.toXml().replace(">root",
+                                                       ">" + codes[id++]),
                          rsrc.toXml());
         }
     }
 
+    @Override
     public void testUpdate() {
-        resource.name = null;
-        resource.save();
+        this.resource.name = null;
+        this.resource.save();
 
         // TODO should result in an error since they are immutable
-        assertTrue(resource.isUptodate());
+        assertTrue(this.resource.isUptodate());
     }
 
+    @Override
     public void testDelete() {
         this.resource.destroy();
 
         // TODO should result in an error since they are immutable
-        assertTrue(resource.isDeleted());
+        assertTrue(this.resource.isDeleted());
     }
 
     private final static String XML = "<user>"
@@ -99,10 +107,23 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "<email>root@com</email>"
                                             + "<roles>"
                                             + "<role>"
+                                            + "<name>admin</name>"
+                                            + "<locales>"
+                                            + "<locale>"
+                                            + "<code>de</code>"
+                                            + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                            + "</locale>"
+                                            + "</locales>"
+                                            + "</role>"
+                                            + "<role>"
                                             + "<name>root</name>"
                                             + "<locales>"
                                             + "<locale>"
                                             + "<code>de</code>"
+                                            + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                            + "</locale>"
+                                            + "<locale>"
+                                            + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "</locales>"
@@ -113,21 +134,27 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "</venue>"
                                             + "</venues>"
                                             + "<created_at>2005-07-09 17:14:48.0</created_at>"
-                                            + "</role>" 
-                                            + "</roles>"
+                                            + "</role>" + "</roles>"
                                             + "</user>";
 
     public void testMarshallingUnmarshallingResource() {
-        Resource<User> resource = factory.newResource();
+        final Resource<User> resource = this.factory.newResource();
         resource.fromXml(XML);
 
         assertEquals(XML, resource.toXml());
     }
 
     public void testMarshallingUnmarshallingResources() {
-        Resources<User> resources = new Resources<User>(factory);
+        final Resources<User> resources = new Resources<User>(this.factory);
         resources.fromXml(RESOURCES_XML);
 
         assertEquals(RESOURCES_XML, resources.toXml());
+    }
+
+    public void testAllowedLocales() {
+        final User resource = this.factory.newResource();
+        resource.fromXml(XML);
+
+        assertEquals(2, resource.getAllowedLocales().size());
     }
 }

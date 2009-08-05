@@ -7,8 +7,6 @@ import com.google.gwt.core.client.GWT;
 
 import de.saumya.gwt.datamapper.client.Resources;
 import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
-import de.saumya.gwt.gettext.client.Word;
-import de.saumya.gwt.gettext.client.WordFactory;
 
 public class GetText {
 
@@ -16,34 +14,40 @@ public class GetText {
 
     private final Map<String, Word> wordMap = new HashMap<String, Word>();
 
-    public GetText(WordFactory wordFactory) {
+    public GetText(final WordFactory wordFactory) {
         this.wordFactory = wordFactory;
     }
 
     public void load() {
-        wordMap.clear();
+        this.wordMap.clear();
         this.wordFactory.all(new ResourcesChangeListener<Word>() {
 
-            public void onChange(Resources<Word> resources, Word word) {
+            @Override
+            public void onChange(final Resources<Word> resources,
+                    final Word word) {
                 GWT.log("word " + word.toString(), null);
-                wordMap.put(((Word) word).code, (Word) word);
-                GWT.log("map " + wordMap.toString(), null);
+                GetText.this.wordMap.put((word).code, word);
+                GWT.log("map " + GetText.this.wordMap.toString(), null);
+            }
+
+            @Override
+            public void onLoaded(final Resources<Word> resources) {
             }
         });
     }
 
-    public String _(String code) {
-        Word result = wordMap.get(code);
+    public String _(final String code) {
+        final Word result = this.wordMap.get(code);
         return result == null ? code : result.text;
     }
 
-    public Word getWord(String code) {
-        Word word = wordMap.get(code);
+    public Word getWord(final String code) {
+        Word word = this.wordMap.get(code);
         if (word == null) {
-            word = wordFactory.newResource();
+            word = this.wordFactory.newResource();
             word.code = code;
             word.text = code;
-            wordMap.put(code, word);
+            this.wordMap.put(code, word);
         }
         return word;
     }

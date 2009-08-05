@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
+import de.saumya.gwt.session.client.AuthenticationTestGwt;
 import de.saumya.gwt.session.client.LocaleTestGwt;
 import de.saumya.gwt.session.client.PermissionTestGwt;
 import de.saumya.gwt.session.client.RoleTestGwt;
@@ -22,6 +23,7 @@ public class GwtTestSuite extends GWTTestSuite {
         suite.addTestSuite(UserTestGwt.class);
         suite.addTestSuite(PermissionTestGwt.class);
         suite.addTestSuite(SessionTestGwt.class);
+        suite.addTestSuite(AuthenticationTestGwt.class);
         return suite;
     }
 }
