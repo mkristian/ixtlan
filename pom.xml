@@ -89,7 +89,6 @@
     <module>gwt-datamapper</module>
     <module>gwt-gettext</module>
     <module>gwt-session</module>
-    <module>gwt-courses</module>
     <module>gwt-translation</module>
   </modules>
 </project>
