@@ -18,13 +18,9 @@
       <artifactId>session</artifactId>
       <version>${pom.version}</version> 
     </dependency>
-    <dependency>
-      <groupId>de.saumya.gwt</groupId>
-      <artifactId>gettext</artifactId>
-      <version>${pom.version}</version> 
-    </dependency>
   </dependencies>
   <modules>
+    <module>common</module>
     <module>gui</module>
     <module>html</module>
   </modules>

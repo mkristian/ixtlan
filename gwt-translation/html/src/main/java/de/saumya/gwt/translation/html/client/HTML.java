@@ -98,6 +98,8 @@ public class HTML implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+
+        // setup component insert them in the constructor
         final Repository repository = new Repository();
         final WordFactory wordFactory = new WordFactory(repository);
 
@@ -114,15 +116,19 @@ public class HTML implements EntryPoint {
         final Session session = new Session(new AuthenticationFactory(repository,
                 userFactory),
                 permissionFactory);
+        final PhraseFactory phraseFactory = new PhraseFactory(repository,
+                userFactory,
+                new TranslationFactory(repository, userFactory));
         final GetText getText = new GetText(new WordBundleFactory(repository,
-                wordFactory), new PhraseBookFactory(repository,
-                new PhraseFactory(repository,
-                        userFactory,
-                        new TranslationFactory(repository, userFactory))));
+                wordFactory), wordFactory, new PhraseBookFactory(repository,
+                phraseFactory), phraseFactory);
+
+        // load word lists
         final Locale locale = localeFactory.newResource();
         locale.code = "en";
         getText.loadWordBundle(locale);
 
+        // setup the views + controllers
         new TranslationsController(getText,
                 new TranslationsPopupPanel(getText),
                 session);
@@ -141,5 +147,4 @@ public class HTML implements EntryPoint {
         popup.setVisible(true);
         popup.show();
     }
-
 }

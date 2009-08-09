@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" output="common/war/WEB-INF/classes" path="common/src/main/java"/>
+	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
 	<classpathentry kind="src" output="gui/war/WEB-INF/classes" path="gui/src/main/java"/>
 	<classpathentry kind="src" output="html/war/WEB-INF/classes" path="html/src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>

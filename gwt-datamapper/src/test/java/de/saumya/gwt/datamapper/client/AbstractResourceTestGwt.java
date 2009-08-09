@@ -64,7 +64,6 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
         final String xml = resource1Xml().replace(">" + value() + "<",
                                                   ">" + changedValue() + "<");
 
-        System.out.println(xml);
         this.repository.reset();
         this.repository.addXmlResponse(xml);
 

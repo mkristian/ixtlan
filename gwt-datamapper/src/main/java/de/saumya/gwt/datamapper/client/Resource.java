@@ -158,7 +158,7 @@ public abstract class Resource<E extends Resource<E>> {
 
     protected int getInt(final Element root, final String name) {
         final String value = getString(root, name);
-        return value == null ? null : Integer.parseInt(value);
+        return value == null ? 0 : Integer.parseInt(value);
     }
 
     protected String getString(final Element root, final String name) {

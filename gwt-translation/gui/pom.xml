@@ -13,6 +13,13 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GWT GUI for managing locale and translations</name>
+  <dependencies>
+    <dependency>
+      <groupId>de.saumya.gwt.translation</groupId>
+      <artifactId>common</artifactId>
+      <version>${pom.version}</version> 
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>

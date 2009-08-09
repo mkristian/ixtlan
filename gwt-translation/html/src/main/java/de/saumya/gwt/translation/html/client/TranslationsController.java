@@ -31,7 +31,7 @@ public class TranslationsController {
         this.panel = panel;
         panel.addCloseHandler(new CloseHandler<PopupPanel>() {
 
-            public void onClose(CloseEvent<PopupPanel> event) {
+            public void onClose(final CloseEvent<PopupPanel> event) {
                 for (int i = 0; i < panel.flow.getWidgetCount(); i++) {
                     ((WordNodeTextBox) panel.flow.getWidget(i)).refresh();
                 }
@@ -39,28 +39,28 @@ public class TranslationsController {
             }
         });
         session.addSessionListern(new SessionListener() {
-            
+
             @Override
             public void onSuccessfulLogin() {
             }
-            
+
             @Override
             public void onSessionTimeout() {
-                panel.hide();
+                panel.flow.clear();
             }
-            
+
             @Override
             public void onLoggedOut() {
-                panel.flow.clear();                
+                panel.flow.clear();
             }
-            
+
             @Override
             public void onAccessDenied() {
             }
         });
-        keyUpHandler = new KeyUpHandler() {
+        this.keyUpHandler = new KeyUpHandler() {
 
-            public void onKeyUp(KeyUpEvent event) {
+            public void onKeyUp(final KeyUpEvent event) {
                 if (event.getNativeKeyCode() == 13) {
                     panel.hide();
                 }
@@ -68,15 +68,15 @@ public class TranslationsController {
         };
         Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
 
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
+            public void onPreviewNativeEvent(final NativePreviewEvent event) {
                 if (session.hasUser()
                         && event.getNativeEvent().getType().equals("click")) {
-                    Element e = Element.as(event.getNativeEvent()
+                    final Element e = Element.as(event.getNativeEvent()
                             .getEventTarget());
                     if (e.getId().length() > 0) {
-                        NodeList<Node> l = e.getChildNodes();
+                        final NodeList<Node> l = e.getChildNodes();
                         for (int i = 0; i < l.getLength(); i++) {
-                            String val = l.getItem(i).getNodeValue();
+                            final String val = l.getItem(i).getNodeValue();
                             if (val != null) {
                                 GWT.log(val, null);
                             }
@@ -95,11 +95,12 @@ public class TranslationsController {
     }
 
     private void translate(final Element element) {
-        panel.setupTextBoxes(element, keyUpHandler);
-        panel.setPopupPosition(element.getOffsetLeft(), element.getOffsetTop()
-                + element.getOffsetHeight() / 2);
-        panel.setVisible(true);
-        panel.show();
-        ((Focusable) panel.flow.getWidget(0)).setFocus(true);
+        this.panel.setupTextBoxes(element, this.keyUpHandler);
+        this.panel.setPopupPosition(element.getOffsetLeft(),
+                                    element.getOffsetTop()
+                                            + element.getOffsetHeight() / 2);
+        this.panel.setVisible(true);
+        this.panel.show();
+        ((Focusable) this.panel.flow.getWidget(0)).setFocus(true);
     }
 }

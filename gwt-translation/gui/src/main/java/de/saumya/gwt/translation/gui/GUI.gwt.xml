@@ -4,6 +4,8 @@
   
   <inherits name="de.saumya.gwt.session.Session"/>
                       
+  <inherits name="de.saumya.gwt.translation.common.Common"/>
+
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->

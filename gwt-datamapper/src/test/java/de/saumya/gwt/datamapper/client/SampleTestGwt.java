@@ -26,7 +26,7 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
         this.locale.country = "GE";
         this.locale.language = "en";
 
-        this.repository.addXmlResponse(resourceNewXml());
+        this.repository.addXmlResponse(resource1Xml());
 
         this.locale.save();
 
@@ -40,16 +40,16 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
     @Override
     protected void doTestUpdate() {
-        this.locale.country = null;
+        this.locale.country = changedValue();
 
         this.locale.save();
 
-        assertNull(this.locale.country);
+        assertEquals(changedValue(), this.locale.country);
     }
 
     @Override
     protected String changedValue() {
-        return null;
+        return "DE";
     }
 
     @Override

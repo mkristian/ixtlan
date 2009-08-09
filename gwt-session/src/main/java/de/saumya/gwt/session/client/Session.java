@@ -43,6 +43,7 @@ public class Session {
                     cancel();
                     GWT.log("session timeout "
                             + Session.this.authentication.user.login, null);
+                    logout();
                     fireSessionTimeout();
                 }
             }
