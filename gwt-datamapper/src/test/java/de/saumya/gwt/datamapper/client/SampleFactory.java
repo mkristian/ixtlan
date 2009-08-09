@@ -5,16 +5,18 @@ package de.saumya.gwt.datamapper.client;
 
 public class SampleFactory extends ResourceFactory<Sample> {
 
-    public SampleFactory(Repository repository) {
+    public SampleFactory(final Repository repository) {
         super(repository);
     }
 
+    @Override
     public String storageName() {
         return "locale";
     }
 
-    protected Sample newResource() {
-        return new Sample(repository, this);
+    @Override
+    public Sample newResource() {
+        return new Sample(this.repository, this);
     }
 
 }

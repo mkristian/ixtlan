@@ -3,38 +3,39 @@
  */
 package de.saumya.gwt.datamapper.client;
 
-import de.saumya.gwt.datamapper.client.Resource.State;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
+import de.saumya.gwt.datamapper.client.Resource.State;
+
 public class ResourceRequestCallback implements RequestCallback {
 
     private final Resource<? extends Resource<?>> resource;
 
-    ResourceRequestCallback(Resource<? extends Resource<?>> resource) {
+    ResourceRequestCallback(final Resource<? extends Resource<?>> resource) {
         this.resource = resource;
     }
 
-    public void onError(Request request, Throwable exception) {
+    public void onError(final Request request, final Throwable exception) {
         GWT.log("error", exception);
     }
 
-    public void onResponseReceived(Request request, Response response) {
-        GWT.log(resource.state + " " + resource.toString(), null);
-        switch (resource.state) {
+    public void onResponseReceived(final Request request,
+            final Response response) {
+        GWT.log(this.resource.state + " " + this.resource.toString(), null);
+        switch (this.resource.state) {
         case TO_BE_CREATED:
         case TO_BE_LOADED:
-            resource.fromXml(response.getText());
         case TO_BE_UPDATED:
-            resource.state = State.UP_TO_DATE;
+            this.resource.fromXml(response.getText());
+            this.resource.state = State.UP_TO_DATE;
             break;
         case TO_BE_DELETED:
-            resource.state = State.DELETED;
+            this.resource.state = State.DELETED;
             break;
         }
-        resource.fireResourceChangeEvents();
+        this.resource.fireResourceChangeEvents();
     }
 }

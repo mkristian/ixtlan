@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -18,88 +18,52 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
     }
 
     private Permission          resource;
-    private PermissionFactory   factory;
-    private static final String RESOURCE_XML  = "<permission>"
-                                                      + "<resource_name>config</resource_name>"
-                                                      + "<action>create</action>"
-                                                      + "<roles><role>"
-                                                      + "<name>admin</name>"
-                                                      + "<created_at>2005-07-09 17:14:48.0</created_at>"
-                                                      + "</role></roles>"
-                                                      + "</permission>";
 
-    private static final String RESOURCES_XML = "<permissions>"
-                                                      + RESOURCE_XML
-                                                      + RESOURCE_XML.replace(">create<",
-                                                                             ">update<")
-                                                      + "</permissions>";
+    private RoleFactory         roleFactory;
+
+    private static final String RESOURCE_XML = "<permission>"
+                                                     + "<resource_name>config</resource_name>"
+                                                     + "<action>create</action>"
+                                                     + "<roles><role>"
+                                                     + "<name>admin</name>"
+                                                     + "<created_at>2005-07-09 17:14:48.0</created_at>"
+                                                     + "</role></roles>"
+                                                     + "</permission>";
 
     @Override
-    protected void resourceSetUp() {
-        this.factory = new PermissionFactory(this.repository,
-                new RoleFactory(this.repository,
-                        new LocaleFactory(this.repository),
-                        new VenueFactory(this.repository)));
+    protected String resourceNewXml() {
+        return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
+                                         "");
+    }
+
+    @Override
+    protected Resource<Permission> resourceSetUp() {
         this.resource = this.factory.newResource();
 
         this.resource.resourceName = "config";
         this.resource.action = "create";
+        final Role role = this.roleFactory.newResource();
+        role.name = "admin";
+        this.resource.roles.add(role);
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
         this.resource.save();
+
+        return this.resource;
     }
 
     @Override
-    public void testCreate() {
-        assertTrue(this.resource.isUptodate());
+    public void doTestCreate() {
         assertEquals("config", this.resource.resourceName);
+        assertEquals("create", this.resource.action);
     }
 
     @Override
-    public void testRetrieve() {
-        this.repository.addXmlResponse(RESOURCE_XML);
-
-        final Permission rsrc = this.factory.get("config",
-                                                 this.countingResourceListener);
-
-        assertEquals(1, this.countingResourceListener.count());
-        assertTrue(this.resource.isUptodate());
-        assertEquals(this.resource.toString(), rsrc.toString());
-    }
-
-    @Override
-    public void testRetrieveAll() {
-        this.repository.addXmlResponse(RESOURCES_XML);
-
-        final Resources<Permission> resources = this.factory.all(this.countingResourcesListener);
-
-        assertEquals(2, this.countingResourcesListener.count());
-        int id = 0;
-        final String[] codes = { "create", "update" };
-        for (final Resource<Permission> rsrc : resources) {
-            assertTrue(this.resource.isUptodate());
-            assertEquals(this.resource.toXml().replace(">create<",
-                                                       ">" + codes[id++] + "<"),
-                         rsrc.toXml());
-        }
-    }
-
-    @Override
-    public void testUpdate() {
-        this.resource.action = null;
+    public void doTestUpdate() {
+        this.resource.action = changedValue();
         this.resource.save();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(this.resource.isUptodate());
-    }
-
-    @Override
-    public void testDelete() {
-        this.resource.destroy();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(this.resource.isDeleted());
+        assertEquals(this.resource.action, changedValue());
     }
 
     private final static String XML = "<permission>"
@@ -112,17 +76,48 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
                                             + "</role>" + "</roles>"
                                             + "</permission>";
 
-    public void testMarshallingUnmarshallingResource() {
-        final Resource<Permission> resource = this.factory.newResource();
-        resource.fromXml(XML);
-
-        assertEquals(XML, resource.toXml());
+    @Override
+    protected String changedValue() {
+        return "doit";
     }
 
-    public void testMarshallingUnmarshallingResources() {
-        final Resources<Permission> resources = new Resources<Permission>(this.factory);
-        resources.fromXml(RESOURCES_XML);
+    @Override
+    protected ResourceFactory<Permission> factorySetUp() {
+        this.roleFactory = new RoleFactory(this.repository,
+                new LocaleFactory(this.repository),
+                new VenueFactory(this.repository));
+        return new PermissionFactory(this.repository, this.roleFactory);
+    }
 
-        assertEquals(RESOURCES_XML, resources.toXml());
+    @Override
+    protected String keyValue() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected String marshallingXml() {
+        return XML;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">create<", ">update<");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<permissions>" + resource1Xml() + resource2Xml()
+                + "</permissions>";
+    }
+
+    @Override
+    protected String value() {
+        return "create";
     }
 }

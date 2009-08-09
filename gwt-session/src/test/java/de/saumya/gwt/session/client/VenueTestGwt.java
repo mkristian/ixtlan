@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -12,90 +12,88 @@ public class VenueTestGwt extends AbstractResourceTestGwt<Venue> {
     /**
      * Must refer to a valid module that sources this class.
      */
+    @Override
     public String getModuleName() {
         return "de.saumya.gwt.session.Session";
     }
 
-    private Venue        resource;
-    private VenueFactory factory;
-    private static final String  RESOURCE_XML  = "<venue>"
-                                              + "<id>dhara</id>"
-                                              + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                              + "</venue>";
+    private Venue               resource;
 
-    private static final String  RESOURCES_XML = "<venues>"
-                                              + RESOURCE_XML
-                                              + RESOURCE_XML.replace(">dhara<", ">dvara<")
-                                              + "</venues>";
+    private static final String RESOURCE_XML = "<venue>"
+                                                     + "<id>dhara</id>"
+                                                     + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                                     + "</venue>";
 
-    protected void resourceSetUp() {
-        factory = new VenueFactory(repository);
-        resource = factory.newResource();
-
-        resource.id = "dhara";
-
-        repository.addXmlResponse(RESOURCE_XML);
-
-        resource.save();
+    @Override
+    protected String resourceNewXml() {
+        return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
+                                         "");
     }
 
-    public void testCreate() {
-        assertTrue(resource.isUptodate());
-        assertEquals("dhara", resource.id);
+    @Override
+    protected Resource<Venue> resourceSetUp() {
+        this.resource = this.factory.newResource();
+
+        this.resource.id = "dhara";
+
+        this.repository.addXmlResponse(RESOURCE_XML);
+
+        this.resource.save();
+
+        return this.resource;
     }
 
-    public void testRetrieve() {
-        repository.addXmlResponse(RESOURCE_XML);
-
-        Venue rsrc = factory.get("dhara", countingResourceListener);
-
-        assertEquals(1, countingResourceListener.count());
-        assertTrue(resource.isUptodate());
-        assertEquals(resource.toString(), rsrc.toString());
+    @Override
+    public void doTestCreate() {
+        assertEquals("dhara", this.resource.id);
     }
 
-    public void testRetrieveAll() {
-        repository.addXmlResponse(RESOURCES_XML);
+    @Override
+    public void doTestUpdate() {
+        this.resource.id = changedValue();
+        this.resource.save();
 
-        Resources<Venue> resources = factory.all(countingResourcesListener);
-
-        assertEquals(2, countingResourcesListener.count());
-        int id = 0;
-        String[] codes = {"dhara", "dvara"};
-        for (Resource<Venue> rsrc : resources) {
-            assertTrue(resource.isUptodate());
-            assertEquals(resource.toXml().replace(">dhara<", ">" + codes[id++] + "<"),
-                         rsrc.toXml());
-        }
+        assertEquals(this.resource.id, changedValue());
     }
 
-    public void testUpdate() {
-        resource.id = null;
-        resource.save();
-        
-        //TODO should result in an error since they are immutable
-        assertTrue(resource.isUptodate());
+    @Override
+    protected String changedValue() {
+        return "dvara";
     }
 
-    public void testDelete() {
-        this.resource.destroy();
-        
-        //TODO should result in an error since they are immutable
-        assertTrue(resource.isDeleted());
-    }
-    
-    public void testMarshallingUnmarshallingResource(){
-        Resource<Venue> resource = factory.newResource();
-        resource.fromXml(RESOURCE_XML);
-        
-        assertEquals(RESOURCE_XML, resource.toXml());
+    @Override
+    protected ResourceFactory<Venue> factorySetUp() {
+        return new VenueFactory(this.repository);
     }
 
-    public void testMarshallingUnmarshallingResources(){
-        Resources<Venue> resources = new Resources<Venue>(factory);
-        resources.fromXml(RESOURCES_XML);
-        
-        assertEquals(RESOURCES_XML, resources.toXml());
+    @Override
+    protected String keyValue() {
+        return "dhara";
+    }
+
+    @Override
+    protected String marshallingXml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">dhara<", ">dvara<");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<venues>" + resource1Xml() + resource2Xml() + "</venues>";
+    }
+
+    @Override
+    protected String value() {
+        return "dhara";
     }
 
 }

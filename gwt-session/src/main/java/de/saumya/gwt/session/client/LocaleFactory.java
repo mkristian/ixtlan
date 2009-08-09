@@ -8,16 +8,18 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 public class LocaleFactory extends ResourceFactory<Locale> {
 
-    public LocaleFactory(Repository repository) {
+    public LocaleFactory(final Repository repository) {
         super(repository);
     }
 
+    @Override
     public String storageName() {
         return "locale";
     }
 
-    protected Locale newResource() {
-        return new Locale(repository, this);
+    @Override
+    public Locale newResource() {
+        return new Locale(this.repository, this);
     }
 
 }

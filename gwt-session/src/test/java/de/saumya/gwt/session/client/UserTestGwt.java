@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -18,87 +18,45 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
     }
 
     private User                resource;
-    private UserFactory         factory;
-    private static final String RESOURCE_XML  = "<user>"
-                                                      + "<login>root</login>"
-                                                      + "<name>root</name>"
-                                                      + "<email>root@example.com</email>"
-                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                                      + "</user>";
 
-    private static final String RESOURCES_XML = "<users>"
-                                                      + RESOURCE_XML
-                                                      + RESOURCE_XML.replace(">root",
-                                                                             ">admin")
-                                                      + "</users>";
+    private static final String RESOURCE_XML = "<user>"
+                                                     + "<login>root</login>"
+                                                     + "<name>root user</name>"
+                                                     + "<email>root@example.com</email>"
+                                                     + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                                     + "</user>";
 
     @Override
-    protected void resourceSetUp() {
-        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
-        this.factory = new UserFactory(this.repository,
-                localeFactory,
-                new RoleFactory(this.repository,
-                        localeFactory,
-                        new VenueFactory(this.repository)));
+    protected Resource<User> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.name = "root";
+        this.resource.login = "root";
+        this.resource.name = "root user";
+        this.resource.email = "root@example.com";
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
         this.resource.save();
+
+        return this.resource;
     }
 
     @Override
-    public void testCreate() {
-        assertTrue(this.resource.isUptodate());
-        assertEquals("root", this.resource.name);
+    protected String resourceNewXml() {
+        return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
+                                         "");
     }
 
     @Override
-    public void testRetrieve() {
-        this.repository.addXmlResponse(RESOURCE_XML);
-
-        final User rsrc = this.factory.get("root",
-                                           this.countingResourceListener);
-
-        assertEquals(1, this.countingResourceListener.count());
-        assertTrue(this.resource.isUptodate());
-        assertEquals(this.resource.toString(), rsrc.toString());
+    public void doTestCreate() {
+        assertEquals("root user", this.resource.name);
     }
 
     @Override
-    public void testRetrieveAll() {
-        this.repository.addXmlResponse(RESOURCES_XML);
-
-        final Resources<User> resources = this.factory.all(this.countingResourcesListener);
-
-        assertEquals(2, this.countingResourcesListener.count());
-        int id = 0;
-        final String[] codes = { "root", "admin" };
-        for (final User rsrc : resources) {
-            assertTrue(this.resource.isUptodate());
-            assertEquals(this.resource.toXml().replace(">root",
-                                                       ">" + codes[id++]),
-                         rsrc.toXml());
-        }
-    }
-
-    @Override
-    public void testUpdate() {
-        this.resource.name = null;
+    public void doTestUpdate() {
+        this.resource.name = changedValue();
         this.resource.save();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(this.resource.isUptodate());
-    }
-
-    @Override
-    public void testDelete() {
-        this.resource.destroy();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(this.resource.isDeleted());
+        assertEquals(this.resource.name, changedValue());
     }
 
     private final static String XML = "<user>"
@@ -137,24 +95,55 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "</role>" + "</roles>"
                                             + "</user>";
 
-    public void testMarshallingUnmarshallingResource() {
-        final Resource<User> resource = this.factory.newResource();
-        resource.fromXml(XML);
-
-        assertEquals(XML, resource.toXml());
-    }
-
-    public void testMarshallingUnmarshallingResources() {
-        final Resources<User> resources = new Resources<User>(this.factory);
-        resources.fromXml(RESOURCES_XML);
-
-        assertEquals(RESOURCES_XML, resources.toXml());
-    }
-
     public void testAllowedLocales() {
         final User resource = this.factory.newResource();
         resource.fromXml(XML);
 
         assertEquals(2, resource.getAllowedLocales().size());
+    }
+
+    @Override
+    protected String changedValue() {
+        return "super user";
+    }
+
+    @Override
+    protected ResourceFactory<User> factorySetUp() {
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
+        return new UserFactory(this.repository,
+                localeFactory,
+                new RoleFactory(this.repository,
+                        localeFactory,
+                        new VenueFactory(this.repository)));
+    }
+
+    @Override
+    protected String keyValue() {
+        return "root";
+    }
+
+    @Override
+    protected String marshallingXml() {
+        return XML;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">root<", ">admin<");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<users>" + resource1Xml() + resource2Xml() + "</users>";
+    }
+
+    @Override
+    protected String value() {
+        return "root user";
     }
 }

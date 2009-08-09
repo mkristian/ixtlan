@@ -13,8 +13,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import de.saumya.gwt.gettext.client.GetText;
-import de.saumya.gwt.gettext.client.Word;
+import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.Word;
 
 public class TranslationsPopupPanel extends PopupPanel {
 

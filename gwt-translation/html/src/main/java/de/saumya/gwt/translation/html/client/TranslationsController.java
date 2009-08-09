@@ -16,9 +16,9 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-import de.saumya.gwt.gettext.client.GetText;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListener;
+import de.saumya.gwt.translation.common.client.GetText;
 
 public class TranslationsController {
 

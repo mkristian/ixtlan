@@ -103,6 +103,15 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     protected void append(final StringBuffer buf, final String name,
+            final Resource<?> value) {
+        if (value != null) {
+            buf.append("<").append(name).append(">");
+            value.appendXml(buf);
+            buf.append("</").append(name).append(">");
+        }
+    }
+
+    protected void append(final StringBuffer buf, final String name,
             final String value) {
         if (value != null) {
             buf.append("<")
@@ -157,8 +166,9 @@ public abstract class Resource<E extends Resource<E>> {
         for (int i = 0; i < list.getLength(); i++) {
             final Node node = list.item(i);
             if (node.getParentNode().equals(root)) {
-                return node == null ? null : node.getFirstChild()
-                        .getNodeValue();
+                return node == null || node.getFirstChild() == null
+                        ? null
+                        : node.getFirstChild().getNodeValue();
             }
         }
         return null;

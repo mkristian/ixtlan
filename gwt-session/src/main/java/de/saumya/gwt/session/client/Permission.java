@@ -16,6 +16,8 @@ class Permission extends Resource<Permission> {
     Permission(final Repository repository, final PermissionFactory factory) {
         super(repository, factory);
         this.factory = factory;
+        // TODO better pass in the role factory
+        this.roles = factory.newRoleResources();
     }
 
     String          resourceName;

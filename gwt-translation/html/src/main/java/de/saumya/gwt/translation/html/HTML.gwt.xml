@@ -4,7 +4,7 @@
   
   <inherits name="de.saumya.gwt.session.Session"/>
 
-  <inherits name="de.saumya.gwt.gettext.Gettext"/>
+  <inherits name="de.saumya.gwt.translation.common.Gettext"/>
 
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->

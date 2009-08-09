@@ -6,7 +6,7 @@ package de.saumya.gwt.translation.html.client;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.TextBox;
 
-import de.saumya.gwt.gettext.client.Word;
+import de.saumya.gwt.translation.common.client.Word;
 
 public class WordNodeTextBox extends TextBox {
     private final Node node;

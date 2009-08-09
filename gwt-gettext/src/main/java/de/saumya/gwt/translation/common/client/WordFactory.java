@@ -1,23 +1,25 @@
 /**
  * 
  */
-package de.saumya.gwt.gettext.client;
+package de.saumya.gwt.translation.common.client;
 
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 public class WordFactory extends ResourceFactory<Word> {
 
-    public WordFactory(Repository repository) {
+    public WordFactory(final Repository repository) {
         super(repository);
     }
 
+    @Override
     public String storageName() {
         return "word";
     }
 
-    protected Word newResource() {
-        return new Word(repository, this);
+    @Override
+    public Word newResource() {
+        return new Word(this.repository, this);
     }
 
 }

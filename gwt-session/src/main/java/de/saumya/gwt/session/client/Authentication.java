@@ -37,6 +37,7 @@ class Authentication extends Resource<Authentication> {
     @Override
     protected void fromXml(final Element root) {
         this.token = getString(root, "token");
+        this.login = null;
         this.password = null;
 
         this.user = this.userFactory.newResource();

@@ -1,81 +1,84 @@
 package de.saumya.gwt.datamapper.client;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
 public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
-    /**
-     * Must refer to a valid module that sources this class.
-     */
+    @Override
     public String getModuleName() {
         return "de.saumya.gwt.datamapper.Datamapper";
     }
 
-    private Sample        locale;
-    private SampleFactory factory;
-    private final String  LOCALE_XML  = "<locale>"
-                                              + "<id>123</id>"
-                                              + "<created_at>2009-07-09 17:14:48</created_at>"
+    private Sample       locale;
+
+    private final String RESOURCE_XML = "<locale>" + "<id>123</id>"
+                                              + "<language>en</language>"
+                                              + "<country>GE</country>"
                                               + "</locale>";
 
-    private final String  LOCALES_XML = "<locales>"
-                                              + LOCALE_XML
-                                              + LOCALE_XML.replace("123", "124")
-                                              + "</locales>";
-
-    protected void resourceSetUp() {
-        factory = new SampleFactory(repository);
-        locale = factory.newResource();
-
-        locale.country = "DE";
-        locale.language = "en";
-
-        repository.addXmlResponse(LOCALE_XML);
-
-        locale.save();
+    @Override
+    protected ResourceFactory<Sample> factorySetUp() {
+        return new SampleFactory(this.repository);
     }
 
-    public void testCreate() {
-        assertTrue(locale.isUptodate());
-        assertEquals(123, locale.id);
+    @Override
+    protected Resource<Sample> resourceSetUp() {
+        this.locale = this.factory.newResource();
+
+        this.locale.country = "GE";
+        this.locale.language = "en";
+
+        this.repository.addXmlResponse(resourceNewXml());
+
+        this.locale.save();
+
+        return this.locale;
     }
 
-    public void testRetrieve() {
-        repository.addXmlResponse(LOCALE_XML);
-
-        Sample l = factory.get(1, countingResourceListener);
-
-        assertEquals(1, countingResourceListener.count());
-        assertTrue(locale.isUptodate());
-        assertEquals(locale.toString(), l.toString());
+    @Override
+    public void doTestCreate() {
+        assertEquals(123, this.locale.id);
     }
 
-    public void testRetrieveAll() {
-        repository.addXmlResponse(LOCALES_XML);
+    @Override
+    protected void doTestUpdate() {
+        this.locale.country = null;
 
-        Resources<Sample> locales = factory.all(countingResourcesListener);
+        this.locale.save();
 
-        assertEquals(2, countingResourcesListener.count());
-        int id = 123;
-        for (Resource<Sample> l : locales) {
-            assertTrue(locale.isUptodate());
-            assertEquals(locale.toString().replace("123", "" + id++),
-                         l.toString());
-        }
+        assertNull(this.locale.country);
     }
 
-    public void testUpdate() {
-        locale.country = null;
-
-        locale.save();
-
-        assertTrue(locale.isUptodate());
+    @Override
+    protected String changedValue() {
+        return null;
     }
 
-    public void testDelete() {
-        this.locale.destroy();
+    @Override
+    protected String keyValue() {
+        return "123";
+    }
 
-        assertTrue(locale.isDeleted());
+    @Override
+    protected String marshallingXml() {
+        return this.RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return this.RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return this.RESOURCE_XML.replace("123", "124");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<locales>" + resource1Xml() + resource2Xml() + "</locales>";
+    }
+
+    @Override
+    protected String value() {
+        return "GE";
     }
 }

@@ -13,9 +13,8 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.gettext.client.GetText;
-import de.saumya.gwt.gettext.client.WordFactory;
 import de.saumya.gwt.session.client.AuthenticationFactory;
+import de.saumya.gwt.session.client.Locale;
 import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.PermissionFactory;
@@ -25,6 +24,12 @@ import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
+import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.PhraseBookFactory;
+import de.saumya.gwt.translation.common.client.PhraseFactory;
+import de.saumya.gwt.translation.common.client.TranslationFactory;
+import de.saumya.gwt.translation.common.client.WordBundleFactory;
+import de.saumya.gwt.translation.common.client.WordFactory;
 
 public class HTML implements EntryPoint {
 
@@ -96,9 +101,6 @@ public class HTML implements EntryPoint {
         final Repository repository = new Repository();
         final WordFactory wordFactory = new WordFactory(repository);
 
-        final GetText getText = new GetText(wordFactory);
-        getText.load();
-
         final VenueFactory venueFactory = new VenueFactory(repository);
         final LocaleFactory localeFactory = new LocaleFactory(repository);
         final RoleFactory roleFactory = new RoleFactory(repository,
@@ -112,6 +114,14 @@ public class HTML implements EntryPoint {
         final Session session = new Session(new AuthenticationFactory(repository,
                 userFactory),
                 permissionFactory);
+        final GetText getText = new GetText(new WordBundleFactory(repository,
+                wordFactory), new PhraseBookFactory(repository,
+                new PhraseFactory(repository,
+                        userFactory,
+                        new TranslationFactory(repository, userFactory))));
+        final Locale locale = localeFactory.newResource();
+        locale.code = "en";
+        getText.loadWordBundle(locale);
 
         new TranslationsController(getText,
                 new TranslationsPopupPanel(getText),

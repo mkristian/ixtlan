@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -12,89 +12,86 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
     /**
      * Must refer to a valid module that sources this class.
      */
+    @Override
     public String getModuleName() {
         return "de.saumya.gwt.session.Session";
     }
 
-    private Locale        locale;
-    private LocaleFactory factory;
-    private static final String  RESOURCE_XML  = "<locale>"
-                                              + "<code>en</code>"
-                                              + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                              + "</locale>";
+    private Locale              locale;
 
-    private static final String  RESOURCES_XML = "<locales>"
-                                              + RESOURCE_XML
-                                              + RESOURCE_XML.replace(">en<", ">en_GE<")
-                                              + "</locales>";
+    private static final String RESOURCE_XML = "<locale>"
+                                                     + "<code>en</code>"
+                                                     + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                                     + "</locale>";
 
-    protected void resourceSetUp() {
-        factory = new LocaleFactory(repository);
-        locale = factory.newResource();
-
-        locale.code = "en";
-
-        repository.addXmlResponse(RESOURCE_XML);
-
-        locale.save();
+    @Override
+    protected String resourceNewXml() {
+        return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
+                                         "");
     }
 
-    public void testCreate() {
-        assertTrue(locale.isUptodate());
-        assertEquals("en", locale.code);
+    @Override
+    protected Resource<Locale> resourceSetUp() {
+        this.locale = this.factory.newResource();
+
+        this.locale.code = "en";
+
+        this.repository.addXmlResponse(RESOURCE_XML);
+
+        this.locale.save();
+
+        return this.locale;
     }
 
-    public void testRetrieve() {
-        repository.addXmlResponse(RESOURCE_XML);
-
-        Locale l = factory.get("en", countingResourceListener);
-
-        assertEquals(1, countingResourceListener.count());
-        assertTrue(locale.isUptodate());
-        assertEquals(locale.toString(), l.toString());
+    @Override
+    public void doTestCreate() {
+        assertEquals("en", this.locale.code);
     }
 
-    public void testRetrieveAll() {
-        repository.addXmlResponse(RESOURCES_XML);
-
-        Resources<Locale> locales = factory.all(countingResourcesListener);
-
-        assertEquals(2, countingResourcesListener.count());
-        int id = 0;
-        String[] codes = {"en", "en_GE"};
-        for (Resource<Locale> l : locales) {
-            assertTrue(locale.isUptodate());
-            assertEquals(locale.toXml().replace(">en<", ">" + codes[id++] + "<"),
-                         l.toXml());
-        }
+    @Override
+    public void doTestUpdate() {
+        this.locale.code = changedValue();
+        this.locale.save();
+        assertEquals(this.locale.code, changedValue());
     }
 
-    public void testUpdate() {
-        locale.code = null;
-        locale.save();
-        
-        //TODO should result in an error since they are immutable
-        assertTrue(locale.isUptodate());
+    @Override
+    protected String changedValue() {
+        return "en_JP";
     }
 
-    public void testDelete() {
-        this.locale.destroy();
-        
-        //TODO should result in an error since they are immutable
-        assertTrue(locale.isDeleted());
-    }
-    
-    public void testMarshallingUnmarshallingResource(){
-        Resource<Locale> resource = factory.newResource();
-        resource.fromXml(RESOURCE_XML);
-        
-        assertEquals(RESOURCE_XML, resource.toXml());
+    @Override
+    protected ResourceFactory<Locale> factorySetUp() {
+        return new LocaleFactory(this.repository);
     }
 
-    public void testMarshallingUnmarshallingResources(){
-        Resources<Locale> resources = new Resources<Locale>(factory);
-        resources.fromXml(RESOURCES_XML);
-        
-        assertEquals(RESOURCES_XML, resources.toXml());
+    @Override
+    protected String keyValue() {
+        return "en";
+    }
+
+    @Override
+    protected String marshallingXml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">en<", ">fr<");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<locales>" + resource1Xml() + resource2Xml() + "</locales>";
+    }
+
+    @Override
+    protected String value() {
+        return "en";
     }
 }

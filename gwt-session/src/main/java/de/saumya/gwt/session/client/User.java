@@ -13,7 +13,7 @@ import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.Resources;
 
-class User extends Resource<User> {
+public class User extends Resource<User> {
 
     private final UserFactory factory;
 
@@ -53,7 +53,7 @@ class User extends Resource<User> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
+    public void fromXml(final Element root) {
         this.login = getString(root, "login");
         this.name = getString(root, "name");
         this.email = getString(root, "email");

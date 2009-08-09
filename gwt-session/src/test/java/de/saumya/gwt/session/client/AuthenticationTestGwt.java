@@ -1,7 +1,8 @@
 package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -17,95 +18,61 @@ public class AuthenticationTestGwt extends
         return "de.saumya.gwt.session.Session";
     }
 
-    private Authentication        resource;
-    private AuthenticationFactory factory;
-    private static final String   RESOURCE_XML  = "<authentication>"
-                                                        + "<token>asdqwe</token>"
-                                                        + "<user>"
-                                                        + "<login>root</login>"
-                                                        + "<name>root</name>"
-                                                        + "<email>root@example.com</email>"
-                                                        + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                                        + "</user>"
-                                                        + "</authentication>";
+    private Authentication      resource;
+    private UserFactory         userFactory;
 
-    private static final String   RESOURCES_XML = "<authentications>"
-                                                        + RESOURCE_XML
-                                                        + RESOURCE_XML.replace(">asdqwe",
-                                                                               ">1234567890")
-                                                        + "</authentications>";
+    private static final String RESOURCE_XML = "<authentication>"
+                                                     + "<token>asdqwe</token>"
+                                                     + "<user>"
+                                                     + "<login>root</login>"
+                                                     + "<name>root</name>"
+                                                     + "<email>root@example.com</email>"
+                                                     + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                                     + "</user>"
+                                                     + "</authentication>";
+
+    private static final String XML          = "<authentication><login>root</login><password>pwd</password></authentication>";
 
     @Override
-    protected void resourceSetUp() {
-        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
-        final UserFactory userFactory = new UserFactory(this.repository,
-                localeFactory,
-                new RoleFactory(this.repository,
-                        localeFactory,
-                        new VenueFactory(this.repository)));
-        this.factory = new AuthenticationFactory(this.repository, userFactory);
+    protected String resourceNewXml() {
+        return XML;
+    }
+
+    @Override
+    protected Resource<Authentication> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.token = "asdqwe";
-        this.resource.user = userFactory.newResource();
+        this.resource.login = "root";
+        this.resource.password = "pwd";
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
         this.resource.save();
+
+        return this.resource;
     }
 
     @Override
-    public void testCreate() {
-        assertTrue(this.resource.isUptodate());
+    public void doTestCreate() {
         assertEquals("asdqwe", this.resource.token);
     }
 
     @Override
-    public void testRetrieve() {
-        this.repository.addXmlResponse(RESOURCE_XML);
-
-        final Authentication rsrc = this.factory.get("root",
-                                                     this.countingResourceListener);
-
-        assertEquals(1, this.countingResourceListener.count());
-        assertTrue(this.resource.isUptodate());
-        assertEquals(this.resource.toString(), rsrc.toString());
+    public void testUpdate() {
+        // not applicable
     }
 
     @Override
     public void testRetrieveAll() {
-        this.repository.addXmlResponse(RESOURCES_XML);
-
-        final Resources<Authentication> resources = this.factory.all(this.countingResourcesListener);
-
-        assertEquals(2, this.countingResourcesListener.count());
-        int id = 0;
-        final String[] codes = { "root", "admin" };
-        for (final Authentication rsrc : resources) {
-            assertTrue(this.resource.isUptodate());
-            assertEquals(this.resource.toXml().replace(">root",
-                                                       ">" + codes[id++]),
-                         rsrc.toXml());
-        }
+        // not applicable
     }
 
     @Override
-    public void testUpdate() {
-        this.resource.token = null;
-        this.resource.save();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(this.resource.isUptodate());
+    public void testMarshallingUnmarshallingResources() {
+        // not applicable
     }
 
     @Override
-    public void testDelete() {
-        this.resource.destroy();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(this.resource.isDeleted());
-    }
-
     public void testMarshallingUnmarshallingResource() {
         final Authentication resource = this.factory.newResource();
         resource.login = "asd";
@@ -113,6 +80,59 @@ public class AuthenticationTestGwt extends
 
         assertEquals("<authentication><login>asd</login><password>pwd</password></authentication>",
                      resource.toXml());
+    }
+
+    @Override
+    protected String changedValue() {
+        return "newtoken";
+    }
+
+    @Override
+    protected ResourceFactory<Authentication> factorySetUp() {
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
+        this.userFactory = new UserFactory(this.repository,
+                localeFactory,
+                new RoleFactory(this.repository,
+                        localeFactory,
+                        new VenueFactory(this.repository)));
+        return new AuthenticationFactory(this.repository, this.userFactory);
+    }
+
+    @Override
+    protected String keyValue() {
+        return "asdqwe";
+    }
+
+    @Override
+    protected String marshallingXml() {
+        // obsolete
+        return null;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">asdqwe", ">1234567890");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<authentications>" + resource1Xml() + resource2Xml()
+                + "</authentications>";
+    }
+
+    @Override
+    protected String value() {
+        return "asdqwe";
+    }
+
+    @Override
+    protected void doTestUpdate() {
+        // obsolete
     }
 
 }

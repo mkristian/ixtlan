@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -12,80 +12,69 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
     /**
      * Must refer to a valid module that sources this class.
      */
+    @Override
     public String getModuleName() {
         return "de.saumya.gwt.session.Session";
     }
 
     private Role                resource;
-    private RoleFactory         factory;
-    private static final String RESOURCE_XML  = "<role>"
-                                                      + "<name>root</name>"
-                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                                      + "</role>";
 
-    private static final String RESOURCES_XML = "<roles>"
-                                                      + RESOURCE_XML
-                                                      + RESOURCE_XML.replace(">root<",
-                                                                             ">admin<")
-                                                      + "</roles>";
+    private static final String RESOURCE_XML = "<role>"
+                                                     + "<name>root</name>"
+                                                     + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                                     + "</role>";
 
-    protected void resourceSetUp() {
-        factory = new RoleFactory(repository,
-                new LocaleFactory(repository),
-                new VenueFactory(repository));
-        resource = factory.newResource();
-
-        resource.name = "root";
-
-        repository.addXmlResponse(RESOURCE_XML);
-
-        resource.save();
+    @Override
+    protected String resourceNewXml() {
+        return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
+                                         "");
     }
 
-    public void testCreate() {
-        assertTrue(resource.isUptodate());
-        assertEquals("root", resource.name);
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
     }
 
-    public void testRetrieve() {
-        repository.addXmlResponse(RESOURCE_XML);
-
-        Role rsrc = factory.get("root", countingResourceListener);
-
-        assertEquals(1, countingResourceListener.count());
-        assertTrue(resource.isUptodate());
-        assertEquals(resource.toString(), rsrc.toString());
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">root<", ">admin<");
     }
 
-    public void testRetrieveAll() {
-        repository.addXmlResponse(RESOURCES_XML);
-
-        Resources<Role> resources = factory.all(countingResourcesListener);
-
-        assertEquals(2, countingResourcesListener.count());
-        int id = 0;
-        String[] codes = { "root", "admin" };
-        for (Resource<Role> rsrc : resources) {
-            assertTrue(resource.isUptodate());
-            assertEquals(resource.toXml().replace(">root<",
-                                                  ">" + codes[id++] + "<"),
-                         rsrc.toXml());
-        }
+    @Override
+    protected String resourcesXml() {
+        return "<roles>" + resource1Xml() + resource2Xml() + "</roles>";
     }
 
-    public void testUpdate() {
-        resource.name = null;
-        resource.save();
-
-        // TODO should result in an error since they are immutable
-        assertTrue(resource.isUptodate());
+    @Override
+    protected ResourceFactory<Role> factorySetUp() {
+        return new RoleFactory(this.repository,
+                new LocaleFactory(this.repository),
+                new VenueFactory(this.repository));
     }
 
-    public void testDelete() {
-        this.resource.destroy();
+    @Override
+    protected Resource<Role> resourceSetUp() {
+        this.resource = this.factory.newResource();
 
-        // TODO should result in an error since they are immutable
-        assertTrue(resource.isDeleted());
+        this.resource.name = "root";
+
+        this.repository.addXmlResponse(RESOURCE_XML);
+
+        this.resource.save();
+
+        return this.resource;
+    }
+
+    @Override
+    public void doTestCreate() {
+        assertEquals("root", this.resource.name);
+    }
+
+    @Override
+    public void doTestUpdate() {
+        this.resource.name = changedValue();
+        this.resource.save();
+        assertEquals(this.resource.name, changedValue());
     }
 
     private final static String XML = "<role>"
@@ -105,17 +94,23 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
                                             + "<created_at>2005-07-09 17:14:48.0</created_at>"
                                             + "</role>";
 
-    public void testMarshallingUnmarshallingResource() {
-        Resource<Role> resource = factory.newResource();
-        resource.fromXml(XML);
-
-        assertEquals(XML, resource.toXml());
+    @Override
+    protected String changedValue() {
+        return "superuser";
     }
 
-    public void testMarshallingUnmarshallingResources() {
-        Resources<Role> resources = new Resources<Role>(factory);
-        resources.fromXml(RESOURCES_XML);
+    @Override
+    protected String keyValue() {
+        return "root";
+    }
 
-        assertEquals(RESOURCES_XML, resources.toXml());
+    @Override
+    protected String marshallingXml() {
+        return XML;
+    }
+
+    @Override
+    protected String value() {
+        return "root";
     }
 }

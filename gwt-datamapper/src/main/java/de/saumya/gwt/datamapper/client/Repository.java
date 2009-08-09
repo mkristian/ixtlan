@@ -10,46 +10,52 @@ import com.google.gwt.http.client.RequestException;
 
 public class Repository {
 
-    private final String url = GWT.getHostPageBaseURL();
+    private static final String URL = GWT.getHostPageBaseURL();
 
-    void all(String resourceName, RequestCallback callback) {
-        doIt("GET", url + resourceName + ".xml", null, callback);
+    void all(final String resourceName, final RequestCallback callback) {
+        doIt("GET", URL + resourceName + ".xml", null, callback);
     }
 
-    void get(String resourceName, int id, RequestCallback callback) {
+    void get(final String resourceName, final int id,
+            final RequestCallback callback) {
         get(resourceName, "" + id, callback);
     }
 
-    void get(String resourceName, String id, RequestCallback callback) {
-        doIt("GET", url + resourceName + "/" + id + ".xml", null, callback);
+    void get(final String resourceName, final String id,
+            final RequestCallback callback) {
+        doIt("GET", URL + resourceName + "/" + id + ".xml", null, callback);
     }
 
-    void post(Resource<? extends Resource<?>> resource, RequestCallback callback) {
+    void post(final Resource<? extends Resource<?>> resource,
+            final RequestCallback callback) {
         doIt("POST",
-                url + resource.storageName + ".xml",
-                resource.toXml(),
-                callback);
+             URL + resource.storageName + ".xml",
+             resource.toXml(),
+             callback);
     }
 
-    void put(Resource<? extends Resource<?>> resource, RequestCallback callback) {
+    void put(final Resource<? extends Resource<?>> resource,
+            final RequestCallback callback) {
         doIt("PUT",
-                url + resource.storageName + "/" + resource.key() + ".xml",
-                resource.toXml(),
-                callback);
+             URL + resource.storageName + "/" + resource.key() + ".xml",
+             resource.toXml(),
+             callback);
     }
 
-    void delete(Resource<? extends Resource<?>> resource,
-            RequestCallback callback) {
-        doIt("DELETE", url + resource.storageName + "/" + resource.key()
+    void delete(final Resource<? extends Resource<?>> resource,
+            final RequestCallback callback) {
+        doIt("DELETE", URL + resource.storageName + "/" + resource.key()
                 + ".xml", null, callback);
     }
 
-    void doIt(String method, String url, String data, RequestCallback callback) {
-        RequestBuilder builder = new RestfulRequestBuilder(method, url);
+    void doIt(final String method, final String url, final String data,
+            final RequestCallback callback) {
+        final RequestBuilder builder = new RestfulRequestBuilder(method, url);
         try {
             builder.sendRequest(data, callback);
         }
-        catch (RequestException e) {
+        catch (final RequestException e) {
+            // TODO
             GWT.log("TODO", e);
         }
     }
