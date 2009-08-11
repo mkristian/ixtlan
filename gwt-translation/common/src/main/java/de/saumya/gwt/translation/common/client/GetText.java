@@ -7,28 +7,32 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasMouseUpHandlers;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.Locale;
 
 public class GetText {
 
-    private final WordBundleFactory   bundleFactory;
+    private final WordBundleFactory                bundleFactory;
 
-    private final PhraseBookFactory   bookFactory;
+    private final PhraseBookFactory                bookFactory;
 
-    private final WordFactory         wordFactory;
+    private final WordFactory                      wordFactory;
 
-    private final PhraseFactory       phraseFactory;
+    private final PhraseFactory                    phraseFactory;
 
-    private final Map<String, Word>   wordMap         = new HashMap<String, Word>();
+    private Map<String, Word>                      wordMap         = new HashMap<String, Word>();
 
-    private final Map<String, Phrase> phraseMap       = new HashMap<String, Phrase>();
+    private Map<String, Phrase>                    phraseMap       = new HashMap<String, Phrase>();
 
-    private boolean                   isInTranslation = true;
+    private final Map<String, Map<String, Word>>   wordCache       = new HashMap<String, Map<String, Word>>();
+
+    private final Map<String, Map<String, Phrase>> phraseCache     = new HashMap<String, Map<String, Phrase>>();
+
+    private boolean                                isInTranslation = false;
 
     public GetText(final WordBundleFactory bundleFactory,
             final WordFactory wordFactory, final PhraseBookFactory bookFactory,
@@ -39,8 +43,15 @@ public class GetText {
         this.phraseFactory = phraseFactory;
     }
 
-    public void loadWordBundle(final Locale locale) {
-        this.wordMap.clear();
+    private void loadWordBundle(final Locale locale) {
+        if (!this.wordCache.containsKey(locale.code)) {
+            this.wordMap = new HashMap<String, Word>();
+            this.wordCache.put(locale.code, this.wordMap);
+        }
+        else {
+            this.wordMap = this.wordCache.get(locale.code);
+        }
+        resetTranslatables();
         this.bundleFactory.get(locale.code,
                                new ResourceChangeListener<WordBundle>() {
 
@@ -51,13 +62,22 @@ public class GetText {
                                            GetText.this.wordMap.put(word.code,
                                                                     word);
                                        }
-
+                                       GetText.this.wordCache.put(locale.code,
+                                                                  GetText.this.wordMap);
+                                       resetTranslatables();
                                    }
                                });
     }
 
-    public void loadPhraseBook(final Locale locale) {
-        this.phraseMap.clear();
+    private void loadPhraseBook(final Locale locale) {
+        if (!this.phraseCache.containsKey(locale.code)) {
+            this.phraseMap = new HashMap<String, Phrase>();
+            this.phraseCache.put(locale.code, this.phraseMap);
+        }
+        else {
+            this.phraseMap = this.phraseCache.get(locale.code);
+        }
+        resetTranslatables();
         this.bookFactory.get(locale.code,
                              new ResourceChangeListener<PhraseBook>() {
 
@@ -67,18 +87,21 @@ public class GetText {
                                          GetText.this.phraseMap.put(phrase.code,
                                                                     phrase);
                                      }
-
+                                     GetText.this.phraseCache.put(locale.code,
+                                                                  GetText.this.phraseMap);
+                                     resetTranslatables();
                                  }
                              });
     }
 
-    public Phrase getPhrase(final String code) {
+    private Phrase getPhrase(final String code) {
         Phrase phrase = this.phraseMap.get(code);
         if (phrase == null) {
             phrase = this.phraseFactory.newResource();
             phrase.code = code;
             phrase.toBeApproved = code;
             phrase.save();
+            GWT.log(phrase.toString(), null);
             this.phraseMap.put(code, phrase);
         }
         return phrase;
@@ -97,35 +120,46 @@ public class GetText {
     }
 
     public void load(final Locale locale) {
-        loadWordBundle(locale);
+        load(locale, this.isInTranslation);
     }
 
-    private final List<Translatable> translatables = new ArrayList<Translatable>();
+    public void load(final Locale locale, final boolean isInTranslation) {
+        this.isInTranslation = isInTranslation;
+        if (this.isInTranslation) {
+            loadPhraseBook(locale);
+        }
+        else {
+            loadWordBundle(locale);
+        }
+    }
+
+    private void resetTranslatables() {
+        for (final Translatable translatable : this.translatables) {
+            translatable.reset();
+        }
+    }
+
+    private final List<Translatable>          translatables = new ArrayList<Translatable>();
+    private final WidgetTranslationPopupPanel popupPanel    = new WidgetTranslationPopupPanel();
 
     public void addWidget(final Translatable translatable,
-            final HasClickHandlers widget) {
+            final HasMouseUpHandlers widget) {
         this.translatables.add(translatable);
-        widget.addClickHandler(new ClickHandler() {
+        widget.addMouseUpHandler(new MouseUpHandler() {
 
             @Override
-            public void onClick(final ClickEvent event) {
-                GWT.log(event.getNativeEvent().getButton() + " "
-                        + NativeEvent.BUTTON_RIGHT, null);
+            public void onMouseUp(final MouseUpEvent event) {
                 if (GetText.this.isInTranslation
-                        && event.getNativeEvent().getButton() == NativeEvent.BUTTON_LEFT) {
-                    GWT.log("translate: " + translatable.getCode(), null);
+                        && event.getNativeEvent().getButton() == NativeEvent.BUTTON_MIDDLE) {
+                    final Translatable translatableWidget = (Translatable) event.getSource();
+                    final Phrase phrase = getPhrase(translatableWidget.getCode());
+                    GetText.this.popupPanel.setup(phrase, translatableWidget);
+                    GetText.this.popupPanel.setPopupPosition(event.getClientX(),
+                                                             event.getClientY());
+                    GetText.this.popupPanel.show();
                 }
             }
         });
-    }
-
-    void setTranslateMode(final boolean isInTranslation) {
-        if (this.isInTranslation != isInTranslation) {
-            for (final Translatable translatable : this.translatables) {
-                translatable.reset();
-            }
-        }
-        this.isInTranslation = isInTranslation;
     }
 
     public String get(final String code) {
@@ -133,9 +167,11 @@ public class GetText {
             return "";
         }
         return this.isInTranslation
-                + ": "
-                + (this.isInTranslation
-                        ? getPhrase(code).toBeApproved
-                        : getWord(code).text);
+                ? getPhrase(code).toBeApproved
+                : getWord(code).text;
+    }
+
+    public boolean isInTranslation() {
+        return this.isInTranslation;
     }
 }

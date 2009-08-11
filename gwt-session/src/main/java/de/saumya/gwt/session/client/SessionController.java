@@ -86,7 +86,6 @@ public class SessionController {
     }
 
     public void showSessionScreen(final String welcome) {
-        this.sessionSession.welcome().setText(welcome);
         this.sessionSession.setVisible(true);
         this.loginScreen.setVisible(false);
     }

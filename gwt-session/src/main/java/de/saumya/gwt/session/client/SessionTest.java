@@ -72,11 +72,6 @@ public class SessionTest implements EntryPoint {
             return this.logoutButton;
         }
 
-        @Override
-        public Label welcome() {
-            return this.welcome;
-        }
-
     }
 
     @Override

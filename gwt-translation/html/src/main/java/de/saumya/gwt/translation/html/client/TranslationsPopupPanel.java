@@ -22,20 +22,20 @@ public class TranslationsPopupPanel extends PopupPanel {
 
     final FlowPanel       flow = new FlowPanel();
 
-    public TranslationsPopupPanel(GetText getText) {
+    public TranslationsPopupPanel(final GetText getText) {
         super(true);
         this.getText = getText;
-        add(flow);
+        add(this.flow);
     }
 
-    void setupTextBoxes(final Element element, KeyUpHandler keyUpHandler) {
-        String[] phrases = element.getAttribute("id").split("\\|");
+    void setupTextBoxes(final Element element, final KeyUpHandler keyUpHandler) {
+        final String[] phrases = element.getAttribute("id").split("\\|");
         int index = 0;
-        NodeList<Node> list = element.getChildNodes();
+        final NodeList<Node> list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
-            Node child = list.getItem(i);
+            final Node child = list.getItem(i);
             if (child.getNodeType() == 3) {
-                final Word word = getText.getWord(phrases[index++]);
+                final Word word = this.getText.getWord(phrases[index++]);
                 GWT.log("translate: " + word, null);
                 final TextBox box = new WordNodeTextBox(child, word);
                 box.setText(word.text);
@@ -43,11 +43,11 @@ public class TranslationsPopupPanel extends PopupPanel {
                 box.addKeyUpHandler(keyUpHandler);
                 box.addKeyUpHandler(new KeyUpHandler() {
 
-                    public void onKeyUp(KeyUpEvent event) {
+                    public void onKeyUp(final KeyUpEvent event) {
                         box.setVisibleLength(box.getText().length());
                     }
                 });
-                flow.add(box);
+                this.flow.add(box);
             }
             else {
                 setupTextBoxes(Element.as(child), keyUpHandler);

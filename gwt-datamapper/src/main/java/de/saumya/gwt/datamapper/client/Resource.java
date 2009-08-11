@@ -143,7 +143,9 @@ public abstract class Resource<E extends Resource<E>> {
 
     protected Timestamp getTimestamp(final Element root, final String name) {
         final String value = getString(root, name);
-        return value == null ? null : Timestamp.valueOf(value);
+        return value == null ? null : (value.matches("[0-9]*")
+                ? new Timestamp(Long.parseLong(value))
+                : Timestamp.valueOf(value));
     }
 
     protected Date getDate(final Element root, final String name) {

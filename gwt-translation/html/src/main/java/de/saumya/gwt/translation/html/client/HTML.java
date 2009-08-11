@@ -89,11 +89,6 @@ public class HTML implements EntryPoint {
             return this.logoutButton;
         }
 
-        @Override
-        public Label welcome() {
-            return this.welcome;
-        }
-
     }
 
     @Override
@@ -126,7 +121,7 @@ public class HTML implements EntryPoint {
         // load word lists
         final Locale locale = localeFactory.newResource();
         locale.code = "en";
-        getText.loadWordBundle(locale);
+        getText.load(locale);
 
         // setup the views + controllers
         new TranslationsController(getText,

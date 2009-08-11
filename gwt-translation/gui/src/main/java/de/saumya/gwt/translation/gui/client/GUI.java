@@ -1,10 +1,14 @@
 package de.saumya.gwt.translation.gui.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -20,13 +24,13 @@ import de.saumya.gwt.session.client.PermissionFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
+import de.saumya.gwt.session.client.SessionListener;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.PhraseFactory;
-import de.saumya.gwt.translation.common.client.Translatable;
 import de.saumya.gwt.translation.common.client.TranslationFactory;
 import de.saumya.gwt.translation.common.client.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.WordFactory;
@@ -75,81 +79,86 @@ public class GUI implements EntryPoint {
 
     }
 
-    public static class TranslatableLabel extends Label implements Translatable {
-
-        private String        code = null;
-
-        private final GetText getText;
-
-        public TranslatableLabel(final GetText getText) {
-            this(null, getText);
-        }
-
-        public TranslatableLabel(final String text, final GetText getText) {
-            super();
-            this.getText = getText;
-            this.getText.addWidget(this, this);
-            setText(text);
-        }
-
-        @Override
-        public void setText(final String text) {
-            this.code = text;
-            super.setText(this.getText.get(this.code));
-        }
-
-        public void reset() {
-            setText(this.code);
-        }
-
-        public String getCode() {
-            return this.code;
-        }
-
-    }
-
-    public static class TranslatableButton extends Button implements
-            Translatable {
-
-        private String        code = null;
-
-        private final GetText getText;
-
-        public TranslatableButton(final String text, final GetText getText) {
-            super();
-            this.getText = getText;
-            this.getText.addWidget(this, this);
-            setText(text);
-        }
-
-        @Override
-        public void setText(final String text) {
-            this.code = text;
-            super.setText(this.getText.get(this.code));
-        }
-
-        public void reset() {
-            setText(this.code);
-        }
-
-        public String getCode() {
-            return this.code;
-        }
-
-    }
-
     static class SessionPanel extends HorizontalPanel implements SessionScreen {
 
-        private final Label  welcome;
+        private final Label   welcome;
+        private final Label   userLabel;
 
-        private final Button logoutButton;
+        private final Button  logoutButton;
 
-        SessionPanel(final GetText getText) {
+        private final Session session;
+
+        SessionPanel(final GetText getText, final Session session,
+                final Locale defaultLocale) {
+            this.session = session;
             this.welcome = new TranslatableLabel(getText);
-            add(this.welcome);
+            this.userLabel = new Label();
             this.logoutButton = new TranslatableButton("logout", getText);
-            add(this.logoutButton);
 
+            final ListBox localeBox = new ListBox();
+
+            localeBox.addChangeHandler(new ChangeHandler() {
+
+                @Override
+                public void onChange(final ChangeEvent event) {
+                    final int selected = localeBox.getSelectedIndex();
+                    GWT.log("selected " + selected + " "
+                            + localeBox.getValue(selected), null);
+                    if (selected <= 0) {
+                        getText.load(defaultLocale, false);
+                    }
+                    else {
+                        Locale locale = null;
+                        for (final Locale l : session.getUser()
+                                .getAllowedLocales()) {
+                            if (l.code.equals(localeBox.getValue(selected))) {
+                                locale = l;
+                                break;
+                            }
+                        }
+                        getText.load(locale, true);
+                    }
+                }
+            });
+
+            session.addSessionListern(new SessionListener() {
+
+                @Override
+                public void onSuccessfulLogin() {
+                    if (session.getUser().getAllowedLocales().size() > 0) {
+                        localeBox.clear();
+
+                        localeBox.addItem("normal mode", "en");
+                        for (final Locale locale : session.getUser()
+                                .getAllowedLocales()) {
+                            localeBox.addItem(locale.code + " " + "mode",
+                                              locale.code);
+                        }
+                        localeBox.setVisible(true);
+                    }
+                    else {
+                        localeBox.setVisible(false);
+                    }
+                }
+
+                @Override
+                public void onSessionTimeout() {
+                }
+
+                @Override
+                public void onLoggedOut() {
+                    localeBox.clear();
+                }
+
+                @Override
+                public void onAccessDenied() {
+                }
+            });
+
+            add(this.welcome);
+            add(this.userLabel);
+            add(localeBox);
+            add(this.logoutButton);
         }
 
         @Override
@@ -158,10 +167,14 @@ public class GUI implements EntryPoint {
         }
 
         @Override
-        public Label welcome() {
-            return this.welcome;
+        public void setVisible(final boolean visible) {
+            if (visible) {
+                this.welcome.setText("welcome");
+                this.userLabel.setText("\u00a0" + this.session.getUser().name
+                        + "<" + this.session.getUser().email + ">");
+            }
+            super.setVisible(visible);
         }
-
     }
 
     @Override
@@ -194,10 +207,14 @@ public class GUI implements EntryPoint {
         locale.code = "en";
         getText.load(locale);
 
-        final SessionPanel sessionPanel = new SessionPanel(getText);
+        final Session session = new Session(new AuthenticationFactory(repository,
+                userFactory),
+                permissionFactory);
+        final SessionPanel sessionPanel = new SessionPanel(getText,
+                session,
+                locale);
 
-        new SessionController(new Session(new AuthenticationFactory(repository,
-                userFactory), permissionFactory), loginPanel, sessionPanel);
+        new SessionController(session, loginPanel, sessionPanel);
 
         RootPanel.get().add(loginPanel);
         RootPanel.get().add(sessionPanel);
