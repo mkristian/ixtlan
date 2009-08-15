@@ -56,6 +56,9 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
         final String[] xmls = { resource1Xml(), resource2Xml() };
         for (final Resource<T> rsrc : resources) {
             assertTrue(this.resource.isUptodate());
+            System.out.println(xmls[id]);
+            System.out.println(rsrc.toXml());
+
             assertEquals(xmls[id++], rsrc.toXml());
         }
     }

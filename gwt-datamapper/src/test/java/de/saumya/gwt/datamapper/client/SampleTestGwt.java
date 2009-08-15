@@ -7,12 +7,12 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
         return "de.saumya.gwt.datamapper.Datamapper";
     }
 
-    private Sample       locale;
+    private Sample       sample;
 
-    private final String RESOURCE_XML = "<locale>" + "<id>123</id>"
+    private final String RESOURCE_XML = "<sample>" + "<id>123</id>"
                                               + "<language>en</language>"
                                               + "<country>GE</country>"
-                                              + "</locale>";
+                                              + "</sample>";
 
     @Override
     protected ResourceFactory<Sample> factorySetUp() {
@@ -21,30 +21,30 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
     @Override
     protected Resource<Sample> resourceSetUp() {
-        this.locale = this.factory.newResource();
+        this.sample = this.factory.newResource();
 
-        this.locale.country = "GE";
-        this.locale.language = "en";
+        this.sample.country = "GE";
+        this.sample.language = "en";
 
         this.repository.addXmlResponse(resource1Xml());
 
-        this.locale.save();
+        this.sample.save();
 
-        return this.locale;
+        return this.sample;
     }
 
     @Override
     public void doTestCreate() {
-        assertEquals(123, this.locale.id);
+        assertEquals(123, this.sample.id);
     }
 
     @Override
     protected void doTestUpdate() {
-        this.locale.country = changedValue();
+        this.sample.country = changedValue();
 
-        this.locale.save();
+        this.sample.save();
 
-        assertEquals(changedValue(), this.locale.country);
+        assertEquals(changedValue(), this.sample.country);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
     @Override
     protected String resourcesXml() {
-        return "<locales>" + resource1Xml() + resource2Xml() + "</locales>";
+        return "<samples>" + resource1Xml() + resource2Xml() + "</samples>";
     }
 
     @Override

@@ -11,8 +11,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.datamapper.client.Resources;
 import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
 
@@ -166,17 +164,24 @@ public class Session {
         fireLoggedOut();
     }
 
-    public boolean isAllowed(final String action,
-            final ResourceFactory<? extends Resource<?>> factory,
+    enum Action {
+        CREATE, RETRIEVE, UPDATE, DELETE
+    }
+
+    public boolean isAllowed(final Action action, final String resourceName,
             final String role) {
-        final Role r = findAllowedRole(action, factory, role);
+        return isAllowed(action.toString(), resourceName, role);
+    }
+
+    public boolean isAllowed(final String action, final String resourceName,
+            final String role) {
+        final Role r = findAllowedRole(action, resourceName, role);
         return r != null && r.locales == null && r.venues == null;
     }
 
-    public boolean isAllowed(final String action,
-            final ResourceFactory<? extends Resource<?>> factory,
+    public boolean isAllowed(final String action, final String resourceName,
             final String role, final Locale locale) {
-        final Role r = findAllowedRole(action, factory, role);
+        final Role r = findAllowedRole(action, resourceName, role);
         if (r != null && r.venues == null) {
             for (final Locale l : r.locales) {
                 if (l.code.equals(locale.code)) {
@@ -187,10 +192,9 @@ public class Session {
         return false;
     }
 
-    public boolean isAllowed(final String action,
-            final ResourceFactory<? extends Resource<?>> factory,
+    public boolean isAllowed(final String action, final String resourceName,
             final String role, final Venue venue) {
-        final Role r = findAllowedRole(action, factory, role);
+        final Role r = findAllowedRole(action, resourceName, role);
         if (r != null && r.locales == null) {
             for (final Venue v : r.venues) {
                 if (v.id.equals(venue.id)) {
@@ -202,10 +206,9 @@ public class Session {
     }
 
     private Role findAllowedRole(final String action,
-            final ResourceFactory<? extends Resource<?>> factory,
-            final String role) {
+            final String resourceName, final String role) {
         if (this.authentication != null) {
-            final Map<String, Collection<Role>> permission = this.permissions.get(factory.storageName());
+            final Map<String, Collection<Role>> permission = this.permissions.get(resourceName);
             if (permission != null) {
                 if (permission.containsKey(action)) {
                     for (final Role r : permission.get(action)) {

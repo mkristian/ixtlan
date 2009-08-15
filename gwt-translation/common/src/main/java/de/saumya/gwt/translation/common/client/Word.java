@@ -36,7 +36,7 @@ public class Word extends Resource<Word> {
     }
 
     @Override
-    protected String key() {
+    public String key() {
         return this.code;
     }
 }

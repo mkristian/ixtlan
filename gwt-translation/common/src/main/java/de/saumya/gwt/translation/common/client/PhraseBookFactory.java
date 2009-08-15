@@ -19,6 +19,11 @@ public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
     }
 
     @Override
+    public String keyName() {
+        return "locale";
+    }
+
+    @Override
     public PhraseBook newResource() {
         return new PhraseBook(this.repository, this, this.factory);
     }

@@ -24,7 +24,7 @@ class Authentication extends Resource<Authentication> {
     public User   user;
 
     @Override
-    protected String key() {
+    public String key() {
         return this.token;
     }
 
@@ -39,9 +39,7 @@ class Authentication extends Resource<Authentication> {
         this.token = getString(root, "token");
         this.login = null;
         this.password = null;
-
-        this.user = this.userFactory.newResource();
-        this.user.fromXml(getChildElement(root, "user"));
+        this.user = this.userFactory.getChildResource(root, "user");
     }
 
     @Override

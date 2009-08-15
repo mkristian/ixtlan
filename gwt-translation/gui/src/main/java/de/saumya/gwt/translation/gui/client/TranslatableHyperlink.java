@@ -6,27 +6,25 @@ package de.saumya.gwt.translation.gui.client;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Hyperlink;
 
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.Translatable;
 
-public class TranslatableLabel extends Label implements Translatable {
+public class TranslatableHyperlink extends Hyperlink implements Translatable {
 
     private String        code = null;
 
     private final GetText getText;
 
-    public TranslatableLabel(final GetText getText) {
-        this(null, getText);
-    }
-
-    public TranslatableLabel(final String text, final GetText getText) {
+    public TranslatableHyperlink(final String text, final String path,
+            final GetText getText) {
         super();
         this.getText = getText;
         this.getText.addWidget(this);
+        setTargetHistoryToken(path);
         setText(text);
-        sinkEvents(Event.MOUSEEVENTS);
+        sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK);
     }
 
     @Override
@@ -35,17 +33,8 @@ public class TranslatableLabel extends Label implements Translatable {
                 && event.getButton() == NativeEvent.BUTTON_RIGHT
                 && this.getText.isInTranslation()) {
             this.getText.popupTranslation(event, this);
-            event.stopPropagation();
-            event.preventDefault();
         }
-        else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
-                && this.getText.isInTranslation()) {
-            event.stopPropagation();
-            event.preventDefault();
-        }
-        else {
-            super.onBrowserEvent(event);
-        }
+        super.onBrowserEvent(event);
     }
 
     @Override

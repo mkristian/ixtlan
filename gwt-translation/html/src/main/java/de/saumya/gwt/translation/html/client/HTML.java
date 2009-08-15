@@ -28,6 +28,7 @@ import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.PhraseFactory;
 import de.saumya.gwt.translation.common.client.TranslationFactory;
+import de.saumya.gwt.translation.common.client.WidgetTranslationPopupPanel;
 import de.saumya.gwt.translation.common.client.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.WordFactory;
 
@@ -114,9 +115,12 @@ public class HTML implements EntryPoint {
         final PhraseFactory phraseFactory = new PhraseFactory(repository,
                 userFactory,
                 new TranslationFactory(repository, userFactory));
+
+        final WidgetTranslationPopupPanel popupPanel = new WidgetTranslationPopupPanel();
+
         final GetText getText = new GetText(new WordBundleFactory(repository,
                 wordFactory), wordFactory, new PhraseBookFactory(repository,
-                phraseFactory), phraseFactory);
+                phraseFactory), phraseFactory, popupPanel);
 
         // load word lists
         final Locale locale = localeFactory.newResource();

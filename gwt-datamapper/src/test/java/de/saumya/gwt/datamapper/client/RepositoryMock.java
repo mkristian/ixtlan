@@ -56,7 +56,7 @@ public class RepositoryMock extends Repository {
 
             @Override
             public int getStatusCode() {
-                return 200;
+                return RepositoryMock.this.responses.size() == 0 ? 404 : 200;
             }
 
             @Override

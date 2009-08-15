@@ -17,20 +17,24 @@ import com.google.gwt.xml.client.XMLParser;
 
 public abstract class Resource<E extends Resource<E>> {
 
-    private final List<ResourceChangeListener<E>> listeners = new ArrayList<ResourceChangeListener<E>>();
-    private final Repository                      repository;
-
     enum State {
         NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED
     }
 
-    State        state = State.NEW;
+    private final Repository                      repository;
 
-    final String storageName;
+    private final ResourceFactory<E>              factory;
+
+    private final List<ResourceChangeListener<E>> listeners = new ArrayList<ResourceChangeListener<E>>();
+
+    final String                                  storageName;
+
+    State                                         state     = State.NEW;
 
     protected Resource(final Repository repository,
             final ResourceFactory<E> factory) {
         this.repository = repository;
+        this.factory = factory;
         this.storageName = factory.storageName();
     }
 
@@ -51,13 +55,15 @@ public abstract class Resource<E extends Resource<E>> {
         case NEW:
         case TO_BE_CREATED:
             this.state = State.TO_BE_CREATED;
-            this.repository.post(this, new ResourceRequestCallback(this));
+            this.repository.post(this, new ResourceRequestCallback<E>(this,
+                    this.factory));
             break;
         case UP_TO_DATE:
         case TO_BE_UPDATED:
         case TO_BE_DELETED:
             this.state = State.TO_BE_UPDATED;
-            this.repository.put(this, new ResourceRequestCallback(this));
+            this.repository.put(this, new ResourceRequestCallback<E>(this,
+                    this.factory));
             break;
         default:
             throw new IllegalStateException("can not save with state "
@@ -70,7 +76,8 @@ public abstract class Resource<E extends Resource<E>> {
         case UP_TO_DATE:
         case TO_BE_DELETED:
             this.state = State.TO_BE_DELETED;
-            this.repository.delete(this, new ResourceRequestCallback(this));
+            this.repository.delete(this, new ResourceRequestCallback<E>(this,
+                    this.factory));
             break;
         default:
             throw new IllegalStateException("can not delete with state "
@@ -78,9 +85,13 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void fromXml(final String xml) {
         final Document doc = XMLParser.parse(xml);
         fromXml(doc.getDocumentElement());
+        if (this.state == State.TO_BE_CREATED) {
+            this.factory.putIntoCache((E) this);
+        }
     }
 
     public String toXml() {
@@ -112,6 +123,17 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     protected void append(final StringBuffer buf, final String name,
+            final Resources<?> value) {
+        if (value != null) {
+            value.toXml(buf);
+        }
+        else {
+            buf.append("<").append(name).append(">");
+            buf.append("</").append(name).append(">");
+        }
+    }
+
+    protected void append(final StringBuffer buf, final String name,
             final String value) {
         if (value != null) {
             buf.append("<")
@@ -126,7 +148,9 @@ public abstract class Resource<E extends Resource<E>> {
 
     public void addResourceChangeListener(
             final ResourceChangeListener<E> listener) {
-        this.listeners.add(listener);
+        if (listener != null) {
+            this.listeners.add(listener);
+        }
     }
 
     public void removeResourceChangeListener(
@@ -164,6 +188,9 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     protected String getString(final Element root, final String name) {
+        if (root == null) {
+            return null;
+        }
         final NodeList list = root.getElementsByTagName(name);
         for (int i = 0; i < list.getLength(); i++) {
             final Node node = list.item(i);
@@ -174,10 +201,6 @@ public abstract class Resource<E extends Resource<E>> {
             }
         }
         return null;
-    }
-
-    protected Element getChildElement(final Element root, final String name) {
-        return (Element) root.getElementsByTagName(name).item(0);
     }
 
     @Override
@@ -203,7 +226,7 @@ public abstract class Resource<E extends Resource<E>> {
 
     protected abstract void fromXml(Element root);
 
-    protected abstract String key();
+    public abstract String key();
 
     protected abstract void appendXml(StringBuffer buf);
 

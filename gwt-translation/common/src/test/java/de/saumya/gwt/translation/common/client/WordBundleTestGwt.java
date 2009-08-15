@@ -36,7 +36,7 @@ public class WordBundleTestGwt extends AbstractResourceTestGwt<WordBundle> {
 
     private static final String RESOURCE_XML = "<word_bundle>"
                                                      + "<locale>en</locale>"
-                                                     + "<words>" + "</words>"
+                                                     + "<words></words>"
                                                      + "</word_bundle>";
 
     @Override

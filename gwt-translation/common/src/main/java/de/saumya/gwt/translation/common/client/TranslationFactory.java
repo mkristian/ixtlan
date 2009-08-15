@@ -27,4 +27,9 @@ public class TranslationFactory extends ResourceFactory<Translation> {
         return "translation";
     }
 
+    @Override
+    public String keyName() {
+        return "id";
+    }
+
 }

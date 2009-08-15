@@ -23,6 +23,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                                      + "<login>root</login>"
                                                      + "<name>root user</name>"
                                                      + "<email>root@example.com</email>"
+                                                     + "<roles></roles>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                                      + "</user>";
 
@@ -72,6 +73,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "</locales>"
+                                            + "<venues></venues>"
                                             + "</role>"
                                             + "<role>"
                                             + "<name>root</name>"

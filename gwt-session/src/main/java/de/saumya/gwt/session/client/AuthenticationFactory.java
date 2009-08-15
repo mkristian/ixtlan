@@ -19,6 +19,11 @@ public class AuthenticationFactory extends ResourceFactory<Authentication> {
     }
 
     @Override
+    public String keyName() {
+        return "token";
+    }
+
+    @Override
     public Authentication newResource() {
         return new Authentication(this.repository, this, this.userFactory);
     }

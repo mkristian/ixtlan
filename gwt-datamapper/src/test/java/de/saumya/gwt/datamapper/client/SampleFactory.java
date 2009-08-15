@@ -11,7 +11,12 @@ public class SampleFactory extends ResourceFactory<Sample> {
 
     @Override
     public String storageName() {
-        return "locale";
+        return "sample";
+    }
+
+    @Override
+    public String keyName() {
+        return "id";
     }
 
     @Override

@@ -18,6 +18,11 @@ public class WordFactory extends ResourceFactory<Word> {
     }
 
     @Override
+    public String keyName() {
+        return "code";
+    }
+
+    @Override
     public Word newResource() {
         return new Word(this.repository, this);
     }

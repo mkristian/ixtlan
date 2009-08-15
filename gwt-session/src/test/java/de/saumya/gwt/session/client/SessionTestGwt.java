@@ -136,16 +136,14 @@ public class SessionTestGwt extends GWTTestCase {
     public void testIsAllowed() {
         this.session.login("dhamma", "mudita");
 
-        assertTrue(this.session.isAllowed("create", this.userFactory, "admin"));
+        assertTrue(this.session.isAllowed("create", "user", "admin"));
     }
 
     public void testNotIsAllowed() {
         this.session.login("dhamma", "mudita");
 
-        assertFalse(this.session.isAllowed("update", this.userFactory, "admin"));
-        assertFalse(this.session.isAllowed("create", this.userFactory, "master"));
-        assertFalse(this.session.isAllowed("create",
-                                           this.localeFactory,
-                                           "admin"));
+        assertFalse(this.session.isAllowed("update", "user", "admin"));
+        assertFalse(this.session.isAllowed("create", "user", "master"));
+        assertFalse(this.session.isAllowed("create", "locale", "admin"));
     }
 }

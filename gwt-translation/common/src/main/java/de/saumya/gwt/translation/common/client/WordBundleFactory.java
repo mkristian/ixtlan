@@ -19,6 +19,11 @@ public class WordBundleFactory extends ResourceFactory<WordBundle> {
     }
 
     @Override
+    public String keyName() {
+        return "locale";
+    }
+
+    @Override
     public WordBundle newResource() {
         return new WordBundle(this.repository, this, this.wordFactory);
     }

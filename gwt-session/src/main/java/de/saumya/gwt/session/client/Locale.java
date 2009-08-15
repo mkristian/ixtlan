@@ -16,12 +16,11 @@ public class Locale extends Resource<Locale> {
         super(repository, factory);
     }
 
-    // TODO change 'code' to 'id'
     public String    code;
     public Timestamp createdAt;
 
     @Override
-    protected String key() {
+    public String key() {
         return this.code;
     }
 

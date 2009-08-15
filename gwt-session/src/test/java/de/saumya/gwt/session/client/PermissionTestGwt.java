@@ -26,6 +26,8 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
                                                      + "<action>create</action>"
                                                      + "<roles><role>"
                                                      + "<name>admin</name>"
+                                                     + "<locales></locales>"
+                                                     + "<venues></venues>"
                                                      + "<created_at>2005-07-09 17:14:48.0</created_at>"
                                                      + "</role></roles>"
                                                      + "</permission>";
@@ -44,6 +46,7 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
         this.resource.action = "create";
         final Role role = this.roleFactory.newResource();
         role.name = "admin";
+        this.resource.roles = this.roleFactory.newResources();
         this.resource.roles.add(role);
 
         this.repository.addXmlResponse(RESOURCE_XML);
@@ -72,6 +75,8 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
                                             + "<roles>"
                                             + "<role>"
                                             + "<name>root</name>"
+                                            + "<locales></locales>"
+                                            + "<venues></venues>"
                                             + "<created_at>2005-07-09 17:14:48.0</created_at>"
                                             + "</role>" + "</roles>"
                                             + "</permission>";
@@ -91,7 +96,6 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     @Override
     protected String keyValue() {
-        // TODO Auto-generated method stub
         return null;
     }
 

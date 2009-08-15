@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-class WidgetTranslationPopupPanel extends PopupPanel {
+public class WidgetTranslationPopupPanel extends PopupPanel {
 
     private final VerticalPanel panel     = new VerticalPanel();
 
@@ -24,7 +24,7 @@ class WidgetTranslationPopupPanel extends PopupPanel {
 
     private Translatable        translatable;
 
-    WidgetTranslationPopupPanel() {
+    public WidgetTranslationPopupPanel() {
         super(true);
         final KeyUpHandler keyUpHandler = new KeyUpHandler() {
 

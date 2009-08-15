@@ -20,16 +20,6 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
 
     private final ResourceFactory<E>               factory;
 
-    // private final ResourceChangeListener<E> resourceChangeListener = new
-    // ResourceChangeListener<E>(){
-    //
-    // @Override
-    // public void onChange(E resource) {
-    // fireResourcesChangeEvents(resource);
-    // }
-    //		
-    // };
-
     public Resources(final ResourceFactory<E> factory) {
         this.factory = factory;
     }
@@ -42,14 +32,13 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
     public void fromXml(final Element root) {
         final NodeList list = root.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
-            final E resource = this.factory.newResource();
             if (list.item(i) instanceof Element) {
-                resource.fromXml((Element) list.item(i));
+                final Element element = (Element) list.item(i);
+                final E resource = this.factory.getResource(element);
+                resource.fromXml(element);
                 resource.state = State.UP_TO_DATE;
                 add(resource);
                 fireResourcesChangeEvents(resource);
-
-                // resource.addResourceChangeListener(resourceChangeListener);
             }
         }
         fireResourcesLoadedEvents();
@@ -71,7 +60,9 @@ public class Resources<E extends Resource<E>> extends ArrayList<E> {
 
     public void addResourcesChangeListener(
             final ResourcesChangeListener<E> listener) {
-        this.listeners.add(listener);
+        if (listener != null) {
+            this.listeners.add(listener);
+        }
     }
 
     public void removeResourcesChangeListener(

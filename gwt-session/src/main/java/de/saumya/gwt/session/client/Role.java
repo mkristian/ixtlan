@@ -12,56 +12,54 @@ import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.Resources;
 
 class Role extends Resource<Role> {
-    
-    private final RoleFactory factory;
-    
-    protected Role(Repository repository, RoleFactory factory) {
+
+    private final LocaleFactory localeFactory;
+    private final VenueFactory  venueFactory;
+
+    protected Role(final Repository repository, final RoleFactory factory,
+            final LocaleFactory localeFactory, final VenueFactory venueFactory) {
         super(repository, factory);
-        this.factory = factory;
+        this.localeFactory = localeFactory;
+        this.venueFactory = venueFactory;
     }
 
-    public String name;
-    
-    public Timestamp createdAt;
+    public String            name;
 
-    public Resources<Venue> venues;
+    public Timestamp         createdAt;
+
+    public Resources<Venue>  venues;
     public Resources<Locale> locales;
-    
+
     @Override
-    protected String key() {
-        return name;
+    public String key() {
+        return this.name;
     }
 
-    protected void appendXml(StringBuffer buf) {
-        append(buf, "name", name);
-        if (locales != null)
-            locales.toXml(buf);
-        if (venues != null)
-            venues.toXml(buf);
-        append(buf, "created_at", createdAt);
+    @Override
+    protected void appendXml(final StringBuffer buf) {
+        append(buf, "name", this.name);
+        append(buf, "locales", this.locales);
+        append(buf, "venues", this.venues);
+        append(buf, "created_at", this.createdAt);
     }
 
-    protected void fromXml(Element root) {
-        name = getString(root, "name");
-        Element child = getChildElement(root, "locales");
-        if (child != null){
-            locales = factory.newLocaleResources();
-            locales.fromXml(child);
+    @Override
+    protected void fromXml(final Element root) {
+        this.name = getString(root, "name");
+        this.locales = this.localeFactory.getChildResources(root, "locales");
+        this.venues = this.venueFactory.getChildResources(root, "venues");
+        this.createdAt = getTimestamp(root, "created_at");
+    }
+
+    @Override
+    public void toString(final StringBuffer buf) {
+        buf.append(":name => ").append(this.name);
+        if (this.venues != null) {
+            buf.append(", :venues => ").append(this.venues);
         }
-        child = getChildElement(root, "venues");
-        if (child != null){
-            venues = factory.newVenueResources();
-            venues.fromXml(child);
+        if (this.locales != null) {
+            buf.append(", :locales => ").append(this.locales);
         }
-        createdAt = getTimestamp(root, "created_at");
-    }
-
-    public void toString(StringBuffer buf) {
-        buf.append(":name => ").append(name);
-        if (venues != null)
-            buf.append(", :venues => ").append(venues);
-        if (locales != null)
-            buf.append(", :locales => ").append(locales);            
-        buf.append(", :created_at => ").append(createdAt);
+        buf.append(", :created_at => ").append(this.createdAt);
     }
 }

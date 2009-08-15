@@ -11,7 +11,7 @@ import de.saumya.gwt.session.client.VenueFactory;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
+public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -21,48 +21,53 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
         return "de.saumya.gwt.translation.common.CommonTest";
     }
 
-    private Translation resource;
+    private Phrase resource;
 
     @Override
     protected String resource1Xml() {
-        return "<translation>" + "<id>123</id>" + "<text>some text</text>"
-                + "</translation>";
+        return "<phrase>" + "<id>123</id>"
+                + "<to_be_approved>some text</to_be_approved>" + "</phrase>";
     }
 
     @Override
     protected String resource2Xml() {
-        return "<translation>" + "<id>234</id>"
-                + "<text>some other text</text>" + "</translation>";
+        return "<phrase>" + "<id>345</id>"
+                + "<to_be_approved>some text</to_be_approved>" + "</phrase>";
     }
 
     @Override
     protected String resourcesXml() {
-        return "<translations>" + resource1Xml() + resource2Xml()
-                + "</translations>";
+        return "<phrases>" + resource1Xml() + resource2Xml() + "</phrases>";
     }
 
-    static final String XML = "<translation>"
+    static final String XML = "<phrase>"
                                     + "<id>123</id>"
-                                    + "<text>some text</text>"
-                                    + "<approved_at>2009-07-09 17:14:48.9</approved_at>"
-                                    + "<approved_by><login>root</login><roles></roles></approved_by>"
-                                    + "</translation>";
+                                    + "<to_be_approved>some text</to_be_approved>"
+                                    + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
+                                    + "<updated_by><login>root</login><roles></roles></updated_by>"
+                                    + "</phrase>";
 
     @Override
-    protected ResourceFactory<Translation> factorySetUp() {
-        return new TranslationFactory(this.repository,
+    protected ResourceFactory<Phrase> factorySetUp() {
+        return new PhraseFactory(this.repository,
                 new UserFactory(this.repository,
                         new LocaleFactory(this.repository),
                         new RoleFactory(this.repository,
                                 new LocaleFactory(this.repository),
-                                new VenueFactory(this.repository))));
+                                new VenueFactory(this.repository))),
+                new TranslationFactory(this.repository,
+                        new UserFactory(this.repository,
+                                new LocaleFactory(this.repository),
+                                new RoleFactory(this.repository,
+                                        new LocaleFactory(this.repository),
+                                        new VenueFactory(this.repository)))));
     }
 
     @Override
-    protected Resource<Translation> resourceSetUp() {
+    protected Resource<Phrase> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.text = "some text";
+        this.resource.toBeApproved = "some text";
 
         this.repository.addXmlResponse(resource1Xml());
 
@@ -73,7 +78,7 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
 
     @Override
     protected void doTestCreate() {
-        assertEquals(value(), this.resource.text);
+        assertEquals(value(), this.resource.toBeApproved);
         System.out.println(resourceNewXml());
         System.out.println(this.repository.requests.get(0));
     }
@@ -95,9 +100,9 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
 
     @Override
     protected void doTestUpdate() {
-        this.resource.text = changedValue();
+        this.resource.toBeApproved = changedValue();
         this.resource.save();
-        assertEquals(changedValue(), this.resource.text);
+        assertEquals(changedValue(), this.resource.toBeApproved);
     }
 
     @Override

@@ -15,11 +15,14 @@ import de.saumya.gwt.datamapper.client.Resources;
 
 public class User extends Resource<User> {
 
-    private final UserFactory factory;
+    private final LocaleFactory localeFactory;
+    private final RoleFactory   roleFactory;
 
-    protected User(final Repository repository, final UserFactory factory) {
+    protected User(final Repository repository, final UserFactory factory,
+            final LocaleFactory localeFactory, final RoleFactory roleFactory) {
         super(repository, factory);
-        this.factory = factory;
+        this.localeFactory = localeFactory;
+        this.roleFactory = roleFactory;
     }
 
     public String          login;
@@ -33,7 +36,7 @@ public class User extends Resource<User> {
     public Resources<Role> roles;
 
     @Override
-    protected String key() {
+    public String key() {
         return this.login;
     }
 
@@ -42,12 +45,8 @@ public class User extends Resource<User> {
         append(buf, "login", this.login);
         append(buf, "name", this.name);
         append(buf, "email", this.email);
-        if (this.preferedLanguage != null) {
-            this.preferedLanguage.toXml(buf);
-        }
-        if (this.roles != null) {
-            this.roles.toXml(buf);
-        }
+        append(buf, "preferred_language", this.preferedLanguage);
+        append(buf, "roles", this.roles);
         append(buf, "created_at", this.createdAt);
         append(buf, "updated_at", this.updatedAt);
     }
@@ -57,16 +56,9 @@ public class User extends Resource<User> {
         this.login = getString(root, "login");
         this.name = getString(root, "name");
         this.email = getString(root, "email");
-        final Locale locale = this.factory.newLocaleResource();
-        locale.fromXml(root);
-        if (locale.key() != null) {
-            this.preferedLanguage = locale;
-        }
-        final Element child = getChildElement(root, "roles");
-        if (child != null) {
-            this.roles = this.factory.newRoleResources();
-            this.roles.fromXml(child);
-        }
+        this.preferedLanguage = this.localeFactory.getChildResource(root,
+                                                                    "preferred_language");
+        this.roles = this.roleFactory.getChildResources(root, "roles");
         this.createdAt = getTimestamp(root, "created_at");
         this.updatedAt = getTimestamp(root, "updated_at");
     }
@@ -93,5 +85,12 @@ public class User extends Resource<User> {
             result.addAll(role.locales);
         }
         return result;
+    }
+
+    public String toDisplay() {
+        final StringBuffer buf = new StringBuffer(this.name);
+        buf.append("<").append(this.email).append(">");
+        buf.append(" (").append(this.login).append(")");
+        return buf.toString();
     }
 }

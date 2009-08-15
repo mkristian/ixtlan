@@ -10,35 +10,35 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 public class Venue extends Resource<Venue> {
 
-    Venue(Repository repository, ResourceFactory<Venue> factory) {
+    Venue(final Repository repository, final ResourceFactory<Venue> factory) {
         super(repository, factory);
     }
-    
-    public String id;
+
+    public String    id;
 
     public Timestamp createdAt;
 
     @Override
-    protected void appendXml(StringBuffer buf) {
-        append(buf, "id", id);      
-        append(buf, "created_at", createdAt);
+    protected void appendXml(final StringBuffer buf) {
+        append(buf, "id", this.id);
+        append(buf, "created_at", this.createdAt);
     }
 
     @Override
-    public void fromXml(Element root) {
-        id = getString(root, "id");
-        createdAt = getTimestamp(root, "created_at");
+    public void fromXml(final Element root) {
+        this.id = getString(root, "id");
+        this.createdAt = getTimestamp(root, "created_at");
     }
 
     @Override
-    protected String key() {
-        return id;
+    public String key() {
+        return this.id;
     }
 
     @Override
-    protected void toString(StringBuffer buf) {
-        buf.append("id => ").append(id);
-        buf.append(", :created_at => ").append(createdAt);
+    protected void toString(final StringBuffer buf) {
+        buf.append("id => ").append(this.id);
+        buf.append(", :created_at => ").append(this.createdAt);
     }
 
 }

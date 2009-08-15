@@ -9,39 +9,33 @@ import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.Resources;
 
-class PhraseBook extends Resource<PhraseBook> {
+public class PhraseBook extends Resource<PhraseBook> {
 
-    private final PhraseFactory factory;
+    private final PhraseFactory phraseFactory;
 
     PhraseBook(final Repository repository, final PhraseBookFactory factory,
             final PhraseFactory phraseFactory) {
         super(repository, factory);
-        this.factory = phraseFactory;
+        this.phraseFactory = phraseFactory;
     }
 
-    String            locale;
-    Resources<Phrase> phrases;
+    public String            locale;
+    public Resources<Phrase> phrases;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
         append(buf, "locale", this.locale);
-        if (this.phrases != null) {
-            this.phrases.toXml(buf);
-        }
+        append(buf, "phrases", this.phrases);
     }
 
     @Override
     protected void fromXml(final Element root) {
         this.locale = getString(root, "locale");
-        final Element child = getChildElement(root, "phrases");
-        if (child != null) {
-            this.phrases = this.factory.newResources();
-            this.phrases.fromXml(child);
-        }
+        this.phrases = this.phraseFactory.getChildResources(root, "phrases");
     }
 
     @Override
-    protected String key() {
+    public String key() {
         return this.locale;
     }
 

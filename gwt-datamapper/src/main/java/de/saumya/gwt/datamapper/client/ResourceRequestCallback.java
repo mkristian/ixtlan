@@ -10,18 +10,24 @@ import com.google.gwt.http.client.Response;
 
 import de.saumya.gwt.datamapper.client.Resource.State;
 
-public class ResourceRequestCallback implements RequestCallback {
+public class ResourceRequestCallback<E extends Resource<E>> implements
+        RequestCallback {
 
-    private final Resource<? extends Resource<?>> resource;
+    private final Resource<E>        resource;
 
-    ResourceRequestCallback(final Resource<? extends Resource<?>> resource) {
+    private final ResourceFactory<E> factory;
+
+    ResourceRequestCallback(final Resource<E> resource,
+            final ResourceFactory<E> factory) {
         this.resource = resource;
+        this.factory = factory;
     }
 
     public void onError(final Request request, final Throwable exception) {
         GWT.log("error", exception);
     }
 
+    @SuppressWarnings("unchecked")
     public void onResponseReceived(final Request request,
             final Response response) {
         if (response.getStatusCode() < 300) {
@@ -35,6 +41,7 @@ public class ResourceRequestCallback implements RequestCallback {
                 break;
             case TO_BE_DELETED:
                 this.resource.state = State.DELETED;
+                this.factory.removeFromCache((E) this.resource);
                 break;
             }
             this.resource.fireResourceChangeEvents();

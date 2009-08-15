@@ -1,0 +1,17 @@
+<phrase_book>
+  <locale>en</locale>
+  <phrases>
+    <phrase>
+      <id>1</id>
+      <code>en</code>
+      <to_be_approved>English</to_be_approved>
+      <updated_at>12387981723</updated_at>
+      <updated_by><login>kristian</login><name>Kristian</name><email>kristian@example.com</email></updated_by>
+    </phrase>
+    <phrase>
+      <id>2</id>
+      <code>de</code>
+      <to_be_approved>German</to_be_approved>
+    </phrase>
+  </phrases>
+</phrase_book>

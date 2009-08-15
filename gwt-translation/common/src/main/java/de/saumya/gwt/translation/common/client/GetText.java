@@ -7,9 +7,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.HasMouseUpHandlers;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.Locale;
@@ -24,6 +21,10 @@ public class GetText {
 
     private final PhraseFactory                    phraseFactory;
 
+    private final WidgetTranslationPopupPanel      popupPanel;
+
+    private final List<Translatable>               translatables   = new ArrayList<Translatable>();
+
     private Map<String, Word>                      wordMap         = new HashMap<String, Word>();
 
     private Map<String, Phrase>                    phraseMap       = new HashMap<String, Phrase>();
@@ -36,11 +37,13 @@ public class GetText {
 
     public GetText(final WordBundleFactory bundleFactory,
             final WordFactory wordFactory, final PhraseBookFactory bookFactory,
-            final PhraseFactory phraseFactory) {
+            final PhraseFactory phraseFactory,
+            final WidgetTranslationPopupPanel popupPanel) {
         this.bundleFactory = bundleFactory;
         this.bookFactory = bookFactory;
         this.wordFactory = wordFactory;
         this.phraseFactory = phraseFactory;
+        this.popupPanel = popupPanel;
     }
 
     private void loadWordBundle(final Locale locale) {
@@ -139,27 +142,16 @@ public class GetText {
         }
     }
 
-    private final List<Translatable>          translatables = new ArrayList<Translatable>();
-    private final WidgetTranslationPopupPanel popupPanel    = new WidgetTranslationPopupPanel();
-
-    public void addWidget(final Translatable translatable,
-            final HasMouseUpHandlers widget) {
+    public void addWidget(final Translatable translatable) {
         this.translatables.add(translatable);
-        widget.addMouseUpHandler(new MouseUpHandler() {
+    }
 
-            @Override
-            public void onMouseUp(final MouseUpEvent event) {
-                if (GetText.this.isInTranslation
-                        && event.getNativeEvent().getButton() == NativeEvent.BUTTON_MIDDLE) {
-                    final Translatable translatableWidget = (Translatable) event.getSource();
-                    final Phrase phrase = getPhrase(translatableWidget.getCode());
-                    GetText.this.popupPanel.setup(phrase, translatableWidget);
-                    GetText.this.popupPanel.setPopupPosition(event.getClientX(),
-                                                             event.getClientY());
-                    GetText.this.popupPanel.show();
-                }
-            }
-        });
+    public void popupTranslation(final NativeEvent event,
+            final Translatable translatable) {
+        final Phrase phrase = getPhrase(translatable.getCode());
+        this.popupPanel.setup(phrase, translatable);
+        this.popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
+        this.popupPanel.show();
     }
 
     public String get(final String code) {

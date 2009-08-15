@@ -26,6 +26,11 @@ public class PhraseFactory extends ResourceFactory<Phrase> {
     }
 
     @Override
+    public String keyName() {
+        return "id";
+    }
+
+    @Override
     public Phrase newResource() {
         return new Phrase(this.repository,
                 this,

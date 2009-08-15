@@ -41,11 +41,7 @@ class Translation extends ResourceWithID<Translation> {
         super.fromXml(root);
         this.text = getString(root, "text");
         this.approvedAt = getTimestamp(root, "approved_at");
-        final Element user = getChildElement(root, "approved_by");
-        if (user != null) {
-            this.approvedBy = this.userFactory.newResource();
-            this.approvedBy.fromXml(user);
-        }
+        this.approvedBy = this.userFactory.getChildResource(root, "approved_by");
     }
 
     @Override

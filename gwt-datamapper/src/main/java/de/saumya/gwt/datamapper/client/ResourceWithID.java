@@ -7,27 +7,32 @@ import com.google.gwt.xml.client.Element;
 
 public class ResourceWithID<E extends Resource<E>> extends Resource<E> {
 
-    protected ResourceWithID(Repository repository, ResourceFactory<E> factory) {
+    protected ResourceWithID(final Repository repository,
+            final ResourceFactory<E> factory) {
         super(repository, factory);
     }
 
     public int id;
 
-    protected String key() {
-        return "" + id;
+    @Override
+    public String key() {
+        return "" + this.id;
     }
 
-    protected void appendXml(StringBuffer buf) {
-        if (state != State.TO_BE_CREATED) {
-            append(buf, "id", "" + id);
+    @Override
+    protected void appendXml(final StringBuffer buf) {
+        if (this.state != State.TO_BE_CREATED) {
+            append(buf, "id", "" + this.id);
         }
     }
 
-    protected void fromXml(Element root) {
-        id = getInt(root, "id");
+    @Override
+    protected void fromXml(final Element root) {
+        this.id = getInt(root, "id");
     }
 
-    public void toString(StringBuffer buf) {
-        buf.append("(:id => ").append(id);
+    @Override
+    public void toString(final StringBuffer buf) {
+        buf.append(":id => ").append(this.id);
     }
 }

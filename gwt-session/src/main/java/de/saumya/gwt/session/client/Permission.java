@@ -11,13 +11,12 @@ import de.saumya.gwt.datamapper.client.Resources;
 
 class Permission extends Resource<Permission> {
 
-    private final PermissionFactory factory;
+    private final RoleFactory roleFactory;
 
-    Permission(final Repository repository, final PermissionFactory factory) {
+    Permission(final Repository repository, final PermissionFactory factory,
+            final RoleFactory roleFactory) {
         super(repository, factory);
-        this.factory = factory;
-        // TODO better pass in the role factory
-        this.roles = factory.newRoleResources();
+        this.roleFactory = roleFactory;
     }
 
     String          resourceName;
@@ -28,25 +27,19 @@ class Permission extends Resource<Permission> {
     protected void appendXml(final StringBuffer buf) {
         append(buf, "resource_name", this.resourceName);
         append(buf, "action", this.action);
-        if (this.roles != null) {
-            this.roles.toXml(buf);
-        }
+        append(buf, "roles", this.roles);
     }
 
     @Override
     protected void fromXml(final Element root) {
         this.resourceName = getString(root, "resource_name");
         this.action = getString(root, "action");
-        final Element child = getChildElement(root, "roles");
-        if (child != null) {
-            this.roles = this.factory.newRoleResources();
-            this.roles.fromXml(child);
-        }
+        this.roles = this.roleFactory.getChildResources(root, "roles");
     }
 
     @Override
-    protected String key() {
-        return this.resourceName;
+    public String key() {
+        return null;
     }
 
     @Override

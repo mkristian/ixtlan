@@ -14,14 +14,14 @@ import de.saumya.gwt.session.client.UserFactory;
 
 public class Phrase extends ResourceWithID<Phrase> {
 
-    private final TranslationFactory factory;
+    private final TranslationFactory translationFactory;
     private final UserFactory        userFactory;
 
     Phrase(final Repository repository, final PhraseFactory factory,
             final TranslationFactory translationFactory,
             final UserFactory userFactory) {
         super(repository, factory);
-        this.factory = translationFactory;
+        this.translationFactory = translationFactory;
         this.userFactory = userFactory;
     }
 
@@ -42,22 +42,20 @@ public class Phrase extends ResourceWithID<Phrase> {
         append(buf, "to_be_translated", this.toBeTranslated);
         append(buf, "to_be_approved", this.toBeApproved);
         append(buf, "updated_at", this.updatedAt);
+        append(buf, "updated_by", this.updatedBy);
     }
 
     @Override
     protected void fromXml(final Element root) {
         super.fromXml(root);
         this.code = getString(root, "code");
-        this.origin = this.factory.newResource();
-        this.origin.fromXml(getChildElement(root, "origin"));
-        this.current = this.factory.newResource();
-        this.current.fromXml(getChildElement(root, "current"));
-        this.toBeTranslated = this.factory.newResource();
-        this.toBeTranslated.fromXml(getChildElement(root, "to_be_translated"));
+        this.origin = this.translationFactory.getChildResource(root, "origin");
+        this.current = this.translationFactory.getChildResource(root, "current");
+        this.toBeTranslated = this.translationFactory.getChildResource(root,
+                                                            "to_be_translated");
         this.toBeApproved = getString(root, "to_be_approved");
         this.updatedAt = getTimestamp(root, "updated_at");
-        this.updatedBy = this.userFactory.newResource();
-        this.updatedBy.fromXml(getChildElement(root, "updated_by"));
+        this.updatedBy = this.userFactory.getChildResource(root, "updated_by");
     }
 
     @Override

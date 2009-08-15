@@ -18,8 +18,16 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     }
 
     @Override
+    public String keyName() {
+        return "code";
+    }
+
+    @Override
     public Locale newResource() {
         return new Locale(this.repository, this);
     }
 
+    Locale defaultLocale() {
+        return get("DEFAULT", null);
+    }
 }

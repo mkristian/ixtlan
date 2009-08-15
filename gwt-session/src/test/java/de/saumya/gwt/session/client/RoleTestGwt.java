@@ -21,6 +21,8 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
 
     private static final String RESOURCE_XML = "<role>"
                                                      + "<name>root</name>"
+                                                     + "<locales></locales>"
+                                                     + "<venues></venues>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                                      + "</role>";
 

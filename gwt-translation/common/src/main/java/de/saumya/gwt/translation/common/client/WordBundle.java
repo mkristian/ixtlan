@@ -11,12 +11,12 @@ import de.saumya.gwt.datamapper.client.Resources;
 
 class WordBundle extends Resource<WordBundle> {
 
-    private final WordFactory factory;
+    private final WordFactory wordFactory;
 
     WordBundle(final Repository repository, final WordBundleFactory factory,
             final WordFactory wordFactory) {
         super(repository, factory);
-        this.factory = wordFactory;
+        this.wordFactory = wordFactory;
     }
 
     String          locale;
@@ -25,27 +25,17 @@ class WordBundle extends Resource<WordBundle> {
     @Override
     protected void appendXml(final StringBuffer buf) {
         append(buf, "locale", this.locale);
-        if (this.words != null) {
-            this.words.toXml(buf);
-        }
-        else {
-            // TODO something better
-            buf.append("<words></words>");
-        }
+        append(buf, "words", this.words);
     }
 
     @Override
     protected void fromXml(final Element root) {
         this.locale = getString(root, "locale");
-        this.words = this.factory.newResources();
-        final Element child = getChildElement(root, "words");
-        if (child != null) {
-            this.words.fromXml(child);
-        }
+        this.words = this.wordFactory.getChildResources(root, "words");
     }
 
     @Override
-    protected String key() {
+    public String key() {
         return this.locale;
     }
 
