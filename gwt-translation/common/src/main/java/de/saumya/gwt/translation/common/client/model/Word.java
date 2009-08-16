@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.common.client;
+package de.saumya.gwt.translation.common.client.model;
 
 import com.google.gwt.xml.client.Element;
 

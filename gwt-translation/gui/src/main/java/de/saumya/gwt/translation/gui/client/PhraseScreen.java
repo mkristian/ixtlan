@@ -7,17 +7,22 @@ import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.translation.common.client.GetText;
-import de.saumya.gwt.translation.common.client.Phrase;
-import de.saumya.gwt.translation.common.client.PhraseFactory;
+import de.saumya.gwt.translation.common.client.model.Phrase;
+import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.route.PathFactory;
+import de.saumya.gwt.translation.common.client.route.Screen;
+import de.saumya.gwt.translation.common.client.widget.AttributePanel;
+import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
+import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
-class PhraseScreen extends ResourceScreen<Phrase> implements Screen {
+class PhraseScreen extends ResourceScreen<Phrase> {
 
     private final PhraseFactory     phraseFactory;
 
     private final TranslatableLabel loading;
 
     PhraseScreen(final GetText getText, final PhraseFactory phraseFactory) {
-        super(getText);
+        super(getText, new PathFactory(phraseFactory.storageName()));
         this.phraseFactory = phraseFactory;
         this.loading = new TranslatableLabel("loading", getText);
         setVisible(false);
@@ -25,7 +30,7 @@ class PhraseScreen extends ResourceScreen<Phrase> implements Screen {
         add(new AttributePanel<Phrase>("to be approved", true, getText) {
 
             @Override
-            String value(final Phrase resource) {
+            protected String value(final Phrase resource) {
                 return resource.toBeApproved;
             }
 
@@ -47,13 +52,14 @@ class PhraseScreen extends ResourceScreen<Phrase> implements Screen {
     }
 
     @Override
-    public Screen child(final String key) {
-        throw new UnsupportedOperationException("phrase has no child");
+    public Screen<?> child(final String key) {
+        return null;
+        // throw new UnsupportedOperationException("phrase has no child");
     }
 
     @Override
     public void showAll() {
-        throw new UnsupportedOperationException("phrase does not show list");
+        throw new UnsupportedOperationException("phrase does not show all");
     }
 
     @Override

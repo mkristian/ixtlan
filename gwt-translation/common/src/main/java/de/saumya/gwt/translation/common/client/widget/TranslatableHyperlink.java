@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.DOM;

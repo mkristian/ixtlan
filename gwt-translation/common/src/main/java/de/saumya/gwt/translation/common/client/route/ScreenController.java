@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.common.client.route;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListener;
+import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class ScreenController {
 
@@ -28,7 +30,7 @@ public class ScreenController {
 
     private final List<String>     names      = new ArrayList<String>();
 
-    public ScreenController(final SessionPanel panel, final GetText getText,
+    public ScreenController(final SessionScreen panel, final GetText getText,
             final Session session) {
         this.getText = getText;
         panel.add(this.bodyPanel);
@@ -82,13 +84,14 @@ public class ScreenController {
         });
     }
 
-    public void addScreen(final Screen screen, final String name) {
+    public void addScreen(final Screen<?> screen, final String name) {
         addScreen(screen, new TranslatableHyperlink(name,
                 "/" + name,
                 this.getText));
     }
 
-    public void addScreen(final Screen screen, final TranslatableHyperlink link) {
+    public void addScreen(final Screen<?> screen,
+            final TranslatableHyperlink link) {
         this.bodyPanel.add((Widget) screen, link);
         this.dispatcher.register(link.getCode(), screen);
         this.names.add(link.getCode());

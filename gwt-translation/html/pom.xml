@@ -34,7 +34,6 @@
             <goals>
               <goal>compile</goal>
               <goal>test</goal>
-              <goal>clean</goal>
             </goals>
           </execution>
         </executions>

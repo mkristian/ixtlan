@@ -1,10 +1,14 @@
 <permissions>
   <permission>
-    <resource_name>config</resource_name>
-    <action>create</action>
+    <resource_name>phrase_book</resource_name>
+    <action>retrieve</action>
     <roles>
       <role>
-        <name>admin</name>
+        <name>translator</name>
+        <created_at>123123123</created_at>
+      </role>
+      <role>
+        <name>approver</name>
         <created_at>123123123</created_at>
       </role>
     </roles>

@@ -5,11 +5,11 @@ import junit.framework.TestSuite;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 
-import de.saumya.gwt.translation.common.client.PhraseBookTestGwt;
-import de.saumya.gwt.translation.common.client.PhraseTestGwt;
-import de.saumya.gwt.translation.common.client.TranslationTestGwt;
-import de.saumya.gwt.translation.common.client.WordBundleTestGwt;
-import de.saumya.gwt.translation.common.client.WordTestGwt;
+import de.saumya.gwt.translation.common.client.model.PhraseBookTestGwt;
+import de.saumya.gwt.translation.common.client.model.PhraseTestGwt;
+import de.saumya.gwt.translation.common.client.model.TranslationTestGwt;
+import de.saumya.gwt.translation.common.client.model.WordBundleTestGwt;
+import de.saumya.gwt.translation.common.client.model.WordTestGwt;
 
 public class GwtTestSuite extends GWTTestSuite {
 

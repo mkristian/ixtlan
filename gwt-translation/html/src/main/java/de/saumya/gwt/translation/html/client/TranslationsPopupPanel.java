@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 import de.saumya.gwt.translation.common.client.GetText;
-import de.saumya.gwt.translation.common.client.Word;
+import de.saumya.gwt.translation.common.client.model.Word;
 
 public class TranslationsPopupPanel extends PopupPanel {
 

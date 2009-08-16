@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.common.client.route;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +10,9 @@ import com.google.gwt.core.client.GWT;
 
 public class ScreenDispatcher {
 
-    private final Map<String, Screen> registry = new HashMap<String, Screen>();
+    private final Map<String, Screen<?>> registry = new HashMap<String, Screen<?>>();
 
-    void register(final String controllerName, final Screen screen) {
+    void register(final String controllerName, final Screen<?> screen) {
         this.registry.put(controllerName, screen);
     }
 
@@ -23,7 +23,7 @@ public class ScreenDispatcher {
         dispatch(this.registry.get(path.controllerName), path);
     }
 
-    private void dispatch(final Screen screen, final ScreenPath path) {
+    private void dispatch(final Screen<?> screen, final ScreenPath path) {
         if (screen == null) {
             return;
         }
@@ -31,6 +31,7 @@ public class ScreenDispatcher {
             dispatch(screen.child(path.key), path.child);
         }
         else {
+            screen.child(path.key);// screen.setupPathFactory(null, path.key);
             switch (path.action) {
             case NEW:
                 screen.showNew();

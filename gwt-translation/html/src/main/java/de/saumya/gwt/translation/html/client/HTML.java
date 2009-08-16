@@ -25,12 +25,12 @@ import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
-import de.saumya.gwt.translation.common.client.PhraseBookFactory;
-import de.saumya.gwt.translation.common.client.PhraseFactory;
-import de.saumya.gwt.translation.common.client.TranslationFactory;
 import de.saumya.gwt.translation.common.client.WidgetTranslationPopupPanel;
-import de.saumya.gwt.translation.common.client.WordBundleFactory;
-import de.saumya.gwt.translation.common.client.WordFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.model.TranslationFactory;
+import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
+import de.saumya.gwt.translation.common.client.model.WordFactory;
 
 public class HTML implements EntryPoint {
 

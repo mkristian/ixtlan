@@ -1,10 +1,9 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.common.client.widget;
 
 import java.sql.Timestamp;
-import java.util.Set;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -16,18 +15,42 @@ import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.User;
 import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.route.PathFactory;
+import de.saumya.gwt.translation.common.client.route.Screen;
 
 public abstract class ResourceScreen<E extends Resource<E>> extends
-        VerticalPanel {
+        VerticalPanel implements Screen<E> {
 
     private final ResourceHeaderPanel header;
 
-    protected ResourceScreen(final GetText getText) {
+    private final PathFactory         pathFactory;
+
+    private PathFactory               parentPathFactory;
+
+    protected E                       resource;
+
+    protected ResourceScreen(final GetText getText,
+            final PathFactory pathFactory) {
         this.header = new ResourceHeaderPanel(getText);
         add(this.header);
+        this.pathFactory = pathFactory;
+        this.parentPathFactory = pathFactory;
     }
 
     protected abstract void reset(final E resource);
+
+    @Override
+    public PathFactory getPathFactory() {
+        return this.parentPathFactory;
+    }
+
+    @Override
+    public void setupPathFactory(final PathFactory parentPathFactory,
+            final String key) {
+        this.parentPathFactory = parentPathFactory == null
+                ? this.pathFactory
+                : this.pathFactory.newPathFactory(parentPathFactory.showPath(key));
+    }
 
     @SuppressWarnings("unchecked")
     protected void reset(final E resource, final Timestamp updatedAt,
@@ -43,24 +66,20 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     public static class ResourceActionPanel<E extends Resource<E>> extends
             HorizontalPanel {
 
-        private final GetText     getText;
+        private final GetText getText;
 
-        private final Session     session;
+        private final Session session;
 
-        private final Set<String> allowedRoles;
-
-        private final String      resourceName;
-        private final Button      create;
-        private final Button      save;
-        private final Button      delete;
+        private final String  resourceName;
+        private final Button  create;
+        private final Button  save;
+        private final Button  delete;
 
         public ResourceActionPanel(final GetText getText,
-                final Session session, final String resourceName,
-                final Set<String> roles) {
+                final Session session, final String resourceName) {
             this.getText = getText;
             this.session = session;
             this.resourceName = resourceName;
-            this.allowedRoles = roles;
             this.create = button("create");
             this.save = button("save");
             this.delete = button("delete");
@@ -75,26 +94,17 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
 
         public void reset(final E resource) {
             if (resource.isUptodate()
-                    && this.session.isAllowed("delete",
-                                              this.resourceName,
-                                              this.allowedRoles.iterator()
-                                                      .next())) {
+                    && this.session.isAllowed("delete", this.resourceName)) {
                 this.delete.setVisible(true);
 
             }
             if (resource.isUptodate()
-                    && this.session.isAllowed("edit",
-                                              this.resourceName,
-                                              this.allowedRoles.iterator()
-                                                      .next())) {
+                    && this.session.isAllowed("edit", this.resourceName)) {
                 this.save.setVisible(true);
 
             }
             if (resource.isNew()
-                    && this.session.isAllowed("create",
-                                              this.resourceName,
-                                              this.allowedRoles.iterator()
-                                                      .next())) {
+                    && this.session.isAllowed("create", this.resourceName)) {
                 this.create.setVisible(true);
             }
         }

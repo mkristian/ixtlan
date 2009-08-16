@@ -1,4 +1,4 @@
-package de.saumya.gwt.translation.common.client;
+package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceFactory;

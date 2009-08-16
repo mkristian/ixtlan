@@ -1,4 +1,4 @@
-package de.saumya.gwt.translation.common.client;
+package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
@@ -6,6 +6,10 @@ import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseBook;
+import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.

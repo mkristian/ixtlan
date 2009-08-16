@@ -1,4 +1,4 @@
-package de.saumya.gwt.translation.common.client;
+package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
@@ -7,11 +7,13 @@ import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
+import de.saumya.gwt.translation.common.client.model.Translation;
+import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
+public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -21,53 +23,48 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
         return "de.saumya.gwt.translation.common.CommonTest";
     }
 
-    private Phrase resource;
+    private Translation resource;
 
     @Override
     protected String resource1Xml() {
-        return "<phrase>" + "<id>123</id>"
-                + "<to_be_approved>some text</to_be_approved>" + "</phrase>";
+        return "<translation>" + "<id>123</id>" + "<text>some text</text>"
+                + "</translation>";
     }
 
     @Override
     protected String resource2Xml() {
-        return "<phrase>" + "<id>345</id>"
-                + "<to_be_approved>some text</to_be_approved>" + "</phrase>";
+        return "<translation>" + "<id>234</id>"
+                + "<text>some other text</text>" + "</translation>";
     }
 
     @Override
     protected String resourcesXml() {
-        return "<phrases>" + resource1Xml() + resource2Xml() + "</phrases>";
+        return "<translations>" + resource1Xml() + resource2Xml()
+                + "</translations>";
     }
 
-    static final String XML = "<phrase>"
+    static final String XML = "<translation>"
                                     + "<id>123</id>"
-                                    + "<to_be_approved>some text</to_be_approved>"
-                                    + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
-                                    + "<updated_by><login>root</login><roles></roles></updated_by>"
-                                    + "</phrase>";
+                                    + "<text>some text</text>"
+                                    + "<approved_at>2009-07-09 17:14:48.9</approved_at>"
+                                    + "<approved_by><login>root</login><roles></roles></approved_by>"
+                                    + "</translation>";
 
     @Override
-    protected ResourceFactory<Phrase> factorySetUp() {
-        return new PhraseFactory(this.repository,
+    protected ResourceFactory<Translation> factorySetUp() {
+        return new TranslationFactory(this.repository,
                 new UserFactory(this.repository,
                         new LocaleFactory(this.repository),
                         new RoleFactory(this.repository,
                                 new LocaleFactory(this.repository),
-                                new VenueFactory(this.repository))),
-                new TranslationFactory(this.repository,
-                        new UserFactory(this.repository,
-                                new LocaleFactory(this.repository),
-                                new RoleFactory(this.repository,
-                                        new LocaleFactory(this.repository),
-                                        new VenueFactory(this.repository)))));
+                                new VenueFactory(this.repository))));
     }
 
     @Override
-    protected Resource<Phrase> resourceSetUp() {
+    protected Resource<Translation> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.toBeApproved = "some text";
+        this.resource.text = "some text";
 
         this.repository.addXmlResponse(resource1Xml());
 
@@ -78,7 +75,7 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     @Override
     protected void doTestCreate() {
-        assertEquals(value(), this.resource.toBeApproved);
+        assertEquals(value(), this.resource.text);
         System.out.println(resourceNewXml());
         System.out.println(this.repository.requests.get(0));
     }
@@ -100,9 +97,9 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     @Override
     protected void doTestUpdate() {
-        this.resource.toBeApproved = changedValue();
+        this.resource.text = changedValue();
         this.resource.save();
-        assertEquals(changedValue(), this.resource.toBeApproved);
+        assertEquals(changedValue(), this.resource.text);
     }
 
     @Override

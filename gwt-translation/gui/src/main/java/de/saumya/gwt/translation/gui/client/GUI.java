@@ -1,6 +1,5 @@
 package de.saumya.gwt.translation.gui.client;
 
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
@@ -24,12 +23,14 @@ import de.saumya.gwt.session.client.SessionListener;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
-import de.saumya.gwt.translation.common.client.PhraseBookFactory;
-import de.saumya.gwt.translation.common.client.PhraseFactory;
-import de.saumya.gwt.translation.common.client.TranslationFactory;
 import de.saumya.gwt.translation.common.client.WidgetTranslationPopupPanel;
-import de.saumya.gwt.translation.common.client.WordBundleFactory;
-import de.saumya.gwt.translation.common.client.WordFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.model.TranslationFactory;
+import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
+import de.saumya.gwt.translation.common.client.model.WordFactory;
+import de.saumya.gwt.translation.common.client.route.ScreenController;
+import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class GUI implements EntryPoint {
 
@@ -150,9 +151,9 @@ public class GUI implements EntryPoint {
                 getText,
                 session);
         screenController.addScreen(phraseBookScreen,
-                                    new TranslatableHyperlink("phrases",
-                                            "/phrases/en",
-                                            getText));
+                                   new TranslatableHyperlink("phrase_book",
+                                           "/phrase_book/en",
+                                           getText));
 
         new SessionController(session, loginPanel, sessionPanel);
 

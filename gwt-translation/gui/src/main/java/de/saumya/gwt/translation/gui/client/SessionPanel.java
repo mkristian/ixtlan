@@ -18,6 +18,8 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListener;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
+import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
 class SessionPanel extends VerticalPanel implements SessionScreen {
 

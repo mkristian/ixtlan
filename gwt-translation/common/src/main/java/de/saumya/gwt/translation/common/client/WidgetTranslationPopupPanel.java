@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.saumya.gwt.translation.common.client.model.Phrase;
+
 public class WidgetTranslationPopupPanel extends PopupPanel {
 
     private final VerticalPanel panel     = new VerticalPanel();

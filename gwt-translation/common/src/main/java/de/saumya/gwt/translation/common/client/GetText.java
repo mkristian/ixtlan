@@ -10,6 +10,14 @@ import com.google.gwt.dom.client.NativeEvent;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.Locale;
+import de.saumya.gwt.translation.common.client.model.Phrase;
+import de.saumya.gwt.translation.common.client.model.PhraseBook;
+import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
+import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.model.Word;
+import de.saumya.gwt.translation.common.client.model.WordBundle;
+import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
+import de.saumya.gwt.translation.common.client.model.WordFactory;
 
 public class GetText {
 

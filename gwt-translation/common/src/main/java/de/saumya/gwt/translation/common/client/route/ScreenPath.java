@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.common.client.route;
 
 public class ScreenPath {
 

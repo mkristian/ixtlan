@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.common.client;
+package de.saumya.gwt.translation.common.client.model;
 
 import com.google.gwt.xml.client.Element;
 
@@ -9,7 +9,7 @@ import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.Resources;
 
-class WordBundle extends Resource<WordBundle> {
+public class WordBundle extends Resource<WordBundle> {
 
     private final WordFactory wordFactory;
 
@@ -19,8 +19,8 @@ class WordBundle extends Resource<WordBundle> {
         this.wordFactory = wordFactory;
     }
 
-    String          locale;
-    Resources<Word> words;
+    public String          locale;
+    public Resources<Word> words;
 
     @Override
     protected void appendXml(final StringBuffer buf) {

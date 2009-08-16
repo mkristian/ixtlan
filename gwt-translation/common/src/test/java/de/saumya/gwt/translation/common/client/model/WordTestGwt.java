@@ -1,7 +1,9 @@
-package de.saumya.gwt.translation.common.client;
+package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.translation.common.client.model.Word;
+import de.saumya.gwt.translation.common.client.model.WordFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.

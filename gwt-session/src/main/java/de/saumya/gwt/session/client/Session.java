@@ -165,27 +165,32 @@ public class Session {
     }
 
     enum Action {
-        CREATE, RETRIEVE, UPDATE, DELETE
+        CREATE, RETRIEVE, RETRIEVE_ALL, UPDATE, DELETE
     }
 
-    public boolean isAllowed(final Action action, final String resourceName,
-            final String role) {
-        return isAllowed(action.toString(), resourceName, role);
+    public boolean isAllowed(final Action action, final String resourceName) {
+        return isAllowed(action.toString(), resourceName);
+    }
+
+    public boolean isAllowed(final String action, final String resourceName) {
+        for (final Role role : this.authentication.user.roles) {
+            final Role r = findAllowedRole(action, resourceName, role.name);
+            if (r != null && r.locales == null && r.venues == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isAllowed(final String action, final String resourceName,
-            final String role) {
-        final Role r = findAllowedRole(action, resourceName, role);
-        return r != null && r.locales == null && r.venues == null;
-    }
-
-    public boolean isAllowed(final String action, final String resourceName,
-            final String role, final Locale locale) {
-        final Role r = findAllowedRole(action, resourceName, role);
-        if (r != null && r.venues == null) {
-            for (final Locale l : r.locales) {
-                if (l.code.equals(locale.code)) {
-                    return true;
+            final Locale locale) {
+        for (final Role role : this.authentication.user.roles) {
+            final Role r = findAllowedRole(action, resourceName, role.name);
+            if (r != null) {
+                for (final Locale l : r.locales) {
+                    if (l.code.equals(locale.code)) {
+                        return true;
+                    }
                 }
             }
         }
