@@ -25,7 +25,6 @@ import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
-import de.saumya.gwt.translation.common.client.WidgetTranslationPopupPanel;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.model.TranslationFactory;
@@ -112,15 +111,15 @@ public class HTML implements EntryPoint {
         final Session session = new Session(new AuthenticationFactory(repository,
                 userFactory),
                 permissionFactory);
+        final TranslationFactory translationFactory = new TranslationFactory(repository,
+                userFactory);
         final PhraseFactory phraseFactory = new PhraseFactory(repository,
                 userFactory,
-                new TranslationFactory(repository, userFactory));
-
-        final WidgetTranslationPopupPanel popupPanel = new WidgetTranslationPopupPanel();
+                translationFactory);
 
         final GetText getText = new GetText(new WordBundleFactory(repository,
                 wordFactory), wordFactory, new PhraseBookFactory(repository,
-                phraseFactory), phraseFactory, popupPanel);
+                phraseFactory), phraseFactory, translationFactory);
 
         // load word lists
         final Locale locale = localeFactory.newResource();

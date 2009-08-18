@@ -8,23 +8,23 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Label;
 
-import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.Translatable;
 
 public class TranslatableLabel extends Label implements Translatable {
 
-    private String        code = null;
+    private String                  code = null;
 
-    private final GetText getText;
+    private final GetTextController getText;
 
-    public TranslatableLabel(final GetText getText) {
+    public TranslatableLabel(final GetTextController getText) {
         this(null, getText);
     }
 
-    public TranslatableLabel(final String text, final GetText getText) {
+    public TranslatableLabel(final String text, final GetTextController getText) {
         super();
         this.getText = getText;
-        this.getText.addWidget(this);
+        this.getText.addTranslatable(this);
         setText(text);
         sinkEvents(Event.MOUSEEVENTS);
     }
@@ -32,17 +32,16 @@ public class TranslatableLabel extends Label implements Translatable {
     @Override
     public void onBrowserEvent(final Event event) {
         if (DOM.eventGetType(event) == Event.ONMOUSEUP
-                && event.getButton() == NativeEvent.BUTTON_RIGHT
-                && this.getText.isInTranslation()) {
-            this.getText.popupTranslation(event, this);
+                && event.getButton() == NativeEvent.BUTTON_RIGHT) {
+            this.getText.show(event.getClientX(), event.getClientY(), this);
             event.stopPropagation();
             event.preventDefault();
         }
-        else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
-                && this.getText.isInTranslation()) {
-            event.stopPropagation();
-            event.preventDefault();
-        }
+        // else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
+        // && this.getText.isInTranslation()) {
+        // event.stopPropagation();
+        // event.preventDefault();
+        // }
         else {
             super.onBrowserEvent(event);
         }
@@ -54,16 +53,12 @@ public class TranslatableLabel extends Label implements Translatable {
         super.setText(this.getText.get(this.code));
     }
 
+    @Override
     public void reset() {
-        setText(this.code);
-        if (this.getText.isInTranslation()) {
-            addStyleDependentName("translatable");
-        }
-        else {
-            removeStyleDependentName("translatable");
-        }
+        this.getText.reset(this);
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }

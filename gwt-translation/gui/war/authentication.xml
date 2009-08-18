@@ -33,7 +33,7 @@
     </user>
   </authentication>
   <authentication>
-    <token>123</token>
+    <token>123321</token>
     <user>
       <login>guest</login>
       <name>guest</name>

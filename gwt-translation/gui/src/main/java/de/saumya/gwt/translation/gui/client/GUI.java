@@ -19,11 +19,10 @@ import de.saumya.gwt.session.client.PermissionFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
-import de.saumya.gwt.session.client.SessionListener;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
-import de.saumya.gwt.translation.common.client.WidgetTranslationPopupPanel;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.model.TranslationFactory;
@@ -100,60 +99,42 @@ public class GUI implements EntryPoint {
         final PhraseBookFactory bookFactory = new PhraseBookFactory(repository,
                 phraseFactory);
 
-        final WidgetTranslationPopupPanel popupPanel = new WidgetTranslationPopupPanel();
+        final Session session = new Session(new AuthenticationFactory(repository,
+                userFactory),
+                permissionFactory);
 
         final GetText getText = new GetText(new WordBundleFactory(repository,
                 wordFactory),
                 wordFactory,
                 bookFactory,
                 phraseFactory,
-                popupPanel);
+                translationFactory);
 
+        final GetTextController getTextController = new GetTextController(getText,
+                session);
         final Locale locale = localeFactory.newResource();
         locale.code = "en";
         getText.load(locale);
 
-        final Session session = new Session(new AuthenticationFactory(repository,
-                userFactory),
-                permissionFactory);
-        session.addSessionListern(new SessionListener() {
-
-            @Override
-            public void onSuccessfulLogin() {
-            }
-
-            @Override
-            public void onSessionTimeout() {
-                popupPanel.hide();
-            }
-
-            @Override
-            public void onLoggedOut() {
-            }
-
-            @Override
-            public void onAccessDenied() {
-            }
-        });
-
-        final SessionPanel sessionPanel = new SessionPanel(getText,
+        final SessionPanel sessionPanel = new SessionPanel(getTextController,
+                getText,
                 session,
                 locale);
 
-        final PhraseScreen phraseScreen = new PhraseScreen(getText,
+        final PhraseScreen phraseScreen = new PhraseScreen(getTextController,
                 phraseFactory);
 
         final PhraseBookScreen phraseBookScreen = new PhraseBookScreen(bookFactory,
                 phraseScreen,
-                getText);
+                getTextController);
 
         final ScreenController screenController = new ScreenController(sessionPanel,
-                getText,
+                getTextController,
                 session);
         screenController.addScreen(phraseBookScreen,
                                    new TranslatableHyperlink("phrase_book",
                                            "/phrase_book/en",
-                                           getText));
+                                           getTextController));
 
         new SessionController(session, loginPanel, sessionPanel);
 

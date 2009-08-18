@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.User;
-import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
 
@@ -29,7 +29,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
 
     protected E                       resource;
 
-    protected ResourceScreen(final GetText getText,
+    protected ResourceScreen(final GetTextController getText,
             final PathFactory pathFactory) {
         this.header = new ResourceHeaderPanel(getText);
         add(this.header);
@@ -66,16 +66,16 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     public static class ResourceActionPanel<E extends Resource<E>> extends
             HorizontalPanel {
 
-        private final GetText getText;
+        private final GetTextController getText;
 
-        private final Session session;
+        private final Session           session;
 
-        private final String  resourceName;
-        private final Button  create;
-        private final Button  save;
-        private final Button  delete;
+        private final String            resourceName;
+        private final Button            create;
+        private final Button            save;
+        private final Button            delete;
 
-        public ResourceActionPanel(final GetText getText,
+        public ResourceActionPanel(final GetTextController getText,
                 final Session session, final String resourceName) {
             this.getText = getText;
             this.session = session;
@@ -112,17 +112,17 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
 
     public static class ResourceHeaderPanel extends HorizontalPanel {
 
-        private final GetText getText;
+        private final GetTextController getText;
 
-        private final Label   keyLabel;
-        private final Label   keyValue;
-        private final Label   modifiedAtLabel;
-        private final Label   modifiedAtValue;
-        private final Label   byLabel;
-        private final Label   modifiedByLabel;
-        private final Label   modifiedByValue;
+        private final Label             keyLabel;
+        private final Label             keyValue;
+        private final Label             modifiedAtLabel;
+        private final Label             modifiedAtValue;
+        private final Label             byLabel;
+        private final Label             modifiedByLabel;
+        private final Label             modifiedByValue;
 
-        public ResourceHeaderPanel(final GetText getText) {
+        public ResourceHeaderPanel(final GetTextController getText) {
             this.getText = getText;
             this.keyLabel = label("key");
             this.keyValue = label();

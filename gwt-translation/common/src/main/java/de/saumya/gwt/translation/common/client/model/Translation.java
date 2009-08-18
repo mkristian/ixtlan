@@ -13,7 +13,7 @@ import de.saumya.gwt.datamapper.client.ResourceWithID;
 import de.saumya.gwt.session.client.User;
 import de.saumya.gwt.session.client.UserFactory;
 
-class Translation extends ResourceWithID<Translation> {
+public class Translation extends ResourceWithID<Translation> {
 
     private final UserFactory userFactory;
 

@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PopupPanel;
 
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.SessionListener;
+import de.saumya.gwt.session.client.SessionAdapter;
 import de.saumya.gwt.translation.common.client.GetText;
 
 public class TranslationsController {
@@ -38,11 +38,7 @@ public class TranslationsController {
                 panel.flow.clear();
             }
         });
-        session.addSessionListern(new SessionListener() {
-
-            @Override
-            public void onSuccessfulLogin() {
-            }
+        session.addSessionListern(new SessionAdapter() {
 
             @Override
             public void onSessionTimeout() {
@@ -52,10 +48,6 @@ public class TranslationsController {
             @Override
             public void onLoggedOut() {
                 panel.flow.clear();
-            }
-
-            @Override
-            public void onAccessDenied() {
             }
         });
         this.keyUpHandler = new KeyUpHandler() {

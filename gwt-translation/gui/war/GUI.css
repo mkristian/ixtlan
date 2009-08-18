@@ -1,6 +1,9 @@
-.gwt-Button-translatable, .gwt-Label-translatable {
+.translatable, .translatable  a:visited, .translatable  a{
   color: darkblue;
-  font-weight: bold;
-  text-decoration: underline;
   cursor: pointer;
+}
+
+.to_be_approved, .to_be_approved, .to_be_approved  a:visited, .to_be_approved  a{
+  color: darkgreen;
+  font-weight: bold;
 }

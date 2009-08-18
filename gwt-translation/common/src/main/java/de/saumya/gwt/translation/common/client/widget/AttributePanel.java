@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 
 public abstract class AttributePanel<E extends Resource<E>> extends
         HorizontalPanel {
@@ -15,7 +15,7 @@ public abstract class AttributePanel<E extends Resource<E>> extends
     private final TextBox box = new TextBox();
 
     public AttributePanel(final String name, final boolean isReadOnly,
-            final GetText getText) {
+            final GetTextController getText) {
         add(new TranslatableLabel(name, getText));
         add(this.box);
         this.box.setEnabled(!isReadOnly);

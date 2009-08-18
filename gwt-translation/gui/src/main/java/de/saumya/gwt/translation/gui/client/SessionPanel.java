@@ -15,9 +15,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.session.client.Locale;
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.SessionListener;
+import de.saumya.gwt.session.client.SessionAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
@@ -30,14 +31,15 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
 
     private final Session session;
 
-    SessionPanel(final GetText getText, final Session session,
+    SessionPanel(final GetTextController getTextController,
+            final GetText getText, final Session session,
             final Locale defaultLocale) {
         this.session = session;
         final HorizontalPanel header = new HorizontalPanel();
 
-        this.welcome = new TranslatableLabel(getText);
+        this.welcome = new TranslatableLabel(getTextController);
         this.userLabel = new Label();
-        this.logoutButton = new TranslatableButton("logout", getText);
+        this.logoutButton = new TranslatableButton("logout", getTextController);
 
         final ListBox localeBox = new ListBox();
 
@@ -64,7 +66,7 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
             }
         });
 
-        session.addSessionListern(new SessionListener() {
+        session.addSessionListern(new SessionAdapter() {
 
             @Override
             public void onSuccessfulLogin() {
@@ -86,15 +88,12 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
 
             @Override
             public void onSessionTimeout() {
+                localeBox.clear();
             }
 
             @Override
             public void onLoggedOut() {
                 localeBox.clear();
-            }
-
-            @Override
-            public void onAccessDenied() {
             }
         });
 

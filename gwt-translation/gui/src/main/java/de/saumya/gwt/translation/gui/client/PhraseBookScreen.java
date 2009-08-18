@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
-import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
@@ -28,7 +28,7 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
     private final VerticalPanel     phrasesPanel = new VerticalPanel();
 
     public PhraseBookScreen(final PhraseBookFactory bookFactory,
-            final PhraseScreen phrasePanel, final GetText getText) {
+            final PhraseScreen phrasePanel, final GetTextController getText) {
         super(getText, new PathFactory(bookFactory.storageName()));
         this.bookFactory = bookFactory;
         this.loading = new TranslatableLabel("loading", getText);

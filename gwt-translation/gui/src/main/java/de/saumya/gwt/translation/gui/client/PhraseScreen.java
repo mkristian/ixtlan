@@ -6,7 +6,7 @@ package de.saumya.gwt.translation.gui.client;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
-import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
@@ -21,7 +21,8 @@ class PhraseScreen extends ResourceScreen<Phrase> {
 
     private final TranslatableLabel loading;
 
-    PhraseScreen(final GetText getText, final PhraseFactory phraseFactory) {
+    PhraseScreen(final GetTextController getText,
+            final PhraseFactory phraseFactory) {
         super(getText, new PathFactory(phraseFactory.storageName()));
         this.phraseFactory = phraseFactory;
         this.loading = new TranslatableLabel("loading", getText);

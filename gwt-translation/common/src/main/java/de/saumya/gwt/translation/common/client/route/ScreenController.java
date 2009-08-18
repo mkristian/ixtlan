@@ -15,23 +15,23 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.SessionListener;
+import de.saumya.gwt.session.client.SessionAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
-import de.saumya.gwt.translation.common.client.GetText;
+import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class ScreenController {
 
-    private final TabPanel         bodyPanel  = new TabPanel();
+    private final TabPanel          bodyPanel  = new TabPanel();
 
-    private final GetText          getText;
+    private final GetTextController getText;
 
-    private final ScreenDispatcher dispatcher = new ScreenDispatcher();
+    private final ScreenDispatcher  dispatcher = new ScreenDispatcher();
 
-    private final List<String>     names      = new ArrayList<String>();
+    private final List<String>      names      = new ArrayList<String>();
 
-    public ScreenController(final SessionScreen panel, final GetText getText,
-            final Session session) {
+    public ScreenController(final SessionScreen panel,
+            final GetTextController getText, final Session session) {
         this.getText = getText;
         panel.add(this.bodyPanel);
         this.bodyPanel.add(new Label("welcome"),
@@ -56,7 +56,7 @@ public class ScreenController {
                 }
             }
         });
-        session.addSessionListern(new SessionListener() {
+        session.addSessionListern(new SessionAdapter() {
 
             @Override
             public void onSuccessfulLogin() {
@@ -70,17 +70,6 @@ public class ScreenController {
                 ScreenController.this.dispatcher.dispatch(path);
             }
 
-            @Override
-            public void onSessionTimeout() {
-            }
-
-            @Override
-            public void onLoggedOut() {
-            }
-
-            @Override
-            public void onAccessDenied() {
-            }
         });
     }
 

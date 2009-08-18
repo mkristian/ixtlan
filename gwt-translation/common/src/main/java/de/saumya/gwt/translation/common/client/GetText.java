@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.NativeEvent;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.Locale;
@@ -14,6 +13,7 @@ import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.Word;
 import de.saumya.gwt.translation.common.client.model.WordBundle;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
@@ -29,7 +29,7 @@ public class GetText {
 
     private final PhraseFactory                    phraseFactory;
 
-    private final WidgetTranslationPopupPanel      popupPanel;
+    private final TranslationFactory               translationFactory;
 
     private final List<Translatable>               translatables   = new ArrayList<Translatable>();
 
@@ -46,12 +46,12 @@ public class GetText {
     public GetText(final WordBundleFactory bundleFactory,
             final WordFactory wordFactory, final PhraseBookFactory bookFactory,
             final PhraseFactory phraseFactory,
-            final WidgetTranslationPopupPanel popupPanel) {
+            final TranslationFactory translationFactory) {
         this.bundleFactory = bundleFactory;
         this.bookFactory = bookFactory;
         this.wordFactory = wordFactory;
         this.phraseFactory = phraseFactory;
-        this.popupPanel = popupPanel;
+        this.translationFactory = translationFactory;
     }
 
     private void loadWordBundle(final Locale locale) {
@@ -98,19 +98,21 @@ public class GetText {
                                          GetText.this.phraseMap.put(phrase.code,
                                                                     phrase);
                                      }
-                                     GetText.this.phraseCache.put(locale.code,
+                                     GetText.this.phraseCache.put(resource.locale,
                                                                   GetText.this.phraseMap);
                                      resetTranslatables();
                                  }
                              });
     }
 
-    private Phrase getPhrase(final String code) {
+    Phrase getPhrase(final String code) {
         Phrase phrase = this.phraseMap.get(code);
         if (phrase == null) {
             phrase = this.phraseFactory.newResource();
             phrase.code = code;
-            phrase.toBeApproved = code;
+            phrase.toBeTranslated = this.translationFactory.newResource();
+            phrase.toBeTranslated.text = code;
+            // TODO save the translation and maybe not save the phrase
             phrase.save();
             GWT.log(phrase.toString(), null);
             this.phraseMap.put(code, phrase);
@@ -150,25 +152,25 @@ public class GetText {
         }
     }
 
-    public void addWidget(final Translatable translatable) {
+    public void addTranslatable(final Translatable translatable) {
         this.translatables.add(translatable);
-    }
-
-    public void popupTranslation(final NativeEvent event,
-            final Translatable translatable) {
-        final Phrase phrase = getPhrase(translatable.getCode());
-        this.popupPanel.setup(phrase, translatable);
-        this.popupPanel.setPopupPosition(event.getClientX(), event.getClientY());
-        this.popupPanel.show();
     }
 
     public String get(final String code) {
         if (code == null || code.length() == 0) {
             return "";
         }
-        return this.isInTranslation
-                ? getPhrase(code).toBeApproved
-                : getWord(code).text;
+        if (this.isInTranslation) {
+            final Phrase phrase = getPhrase(code);
+            return phrase.toBeApproved == null
+                    ? phrase.toBeTranslated.text
+                    : phrase.toBeApproved == null
+                            ? phrase.toBeTranslated.text
+                            : phrase.toBeApproved;
+        }
+        else {
+            return getWord(code).text;
+        }
     }
 
     public boolean isInTranslation() {
