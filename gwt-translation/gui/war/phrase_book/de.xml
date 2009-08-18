@@ -1,0 +1,37 @@
+ <phrase_book>
+  <locale>de</locale>
+  <phrases>
+    <phrase>
+      <id>1</id>
+      <code>de_AT</code>
+      <current>erdapfel</current>
+      <text>gesalzener erdapfel</text>
+      <updated_at>12387981723</updated_at>
+      <updated_by>
+        <login>kristian</login>
+        <name>Kristian</name>
+        <email>kristian@example.com</email>
+      </updated_by>
+      <parent>
+        <previous_text>kartoffel</previous_text>
+        <text>salzkartoffel</text>
+        <updated_at>1235687981723</updated_at>
+        <updated_by>
+          <login>bill</login>
+          <name>Bill</name>
+          <email>bill@example.com</email>
+        </updated_by>
+      </parent>
+      <default>
+        <previous_text>potato</previous_text>
+        <text>salted potato</text>
+        <updated_at>1235687981723</updated_at>
+        <updated_by>
+          <login>bill</login>
+          <name>Bill</name>
+          <email>bill@example.com</email>
+        </updated_by>
+      </default>
+    </phrase>
+  </phrases>
+</phrase_book>

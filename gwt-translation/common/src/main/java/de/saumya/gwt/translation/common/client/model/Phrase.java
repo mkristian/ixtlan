@@ -26,10 +26,10 @@ public class Phrase extends ResourceWithID<Phrase> {
     }
 
     public String      code;
-    public Translation origin;
-    public Translation current;
-    public Translation toBeTranslated;
-    public String      toBeApproved;
+    public String      currentText;
+    public String      text;
+    public Translation parent;
+    public Translation defaultTranslation;
     public Timestamp   updatedAt;
     public User        updatedBy;
 
@@ -37,10 +37,10 @@ public class Phrase extends ResourceWithID<Phrase> {
     protected void appendXml(final StringBuffer buf) {
         super.appendXml(buf);
         append(buf, "code", this.code);
-        append(buf, "origin", this.origin);
-        append(buf, "current", this.current);
-        append(buf, "to_be_translated", this.toBeTranslated);
-        append(buf, "to_be_approved", this.toBeApproved);
+        append(buf, "current_text", this.currentText);
+        append(buf, "text", this.text);
+        append(buf, "parent", this.parent);
+        append(buf, "default", this.defaultTranslation);
         append(buf, "updated_at", this.updatedAt);
         append(buf, "updated_by", this.updatedBy);
     }
@@ -49,11 +49,11 @@ public class Phrase extends ResourceWithID<Phrase> {
     protected void fromXml(final Element root) {
         super.fromXml(root);
         this.code = getString(root, "code");
-        this.origin = this.translationFactory.getChildResource(root, "origin");
-        this.current = this.translationFactory.getChildResource(root, "current");
-        this.toBeTranslated = this.translationFactory.getChildResource(root,
-                                                            "to_be_translated");
-        this.toBeApproved = getString(root, "to_be_approved");
+        this.defaultTranslation = this.translationFactory.getChildResource(root,
+                                                                           "default");
+        this.parent = this.translationFactory.getChildResource(root, "parent");
+        this.text = getString(root, "text");
+        this.currentText = getString(root, "current_text");
         this.updatedAt = getTimestamp(root, "updated_at");
         this.updatedBy = this.userFactory.getChildResource(root, "updated_by");
     }
@@ -62,10 +62,15 @@ public class Phrase extends ResourceWithID<Phrase> {
     public void toString(final StringBuffer buf) {
         super.toString(buf);
         buf.append(":code => ").append(this.code);
-        buf.append(", :origin => ").append(this.origin);
-        buf.append(", :current => ").append(this.current);
-        buf.append(", :to_be_translated => ").append(this.toBeTranslated);
-        buf.append(", :to_be_approved => ").append(this.toBeApproved);
+        buf.append(", :current_text => ").append(this.currentText);
+        buf.append(", :text => ").append(this.text);
+        buf.append(", :default => ").append(this.defaultTranslation);
+        buf.append(", :parent => ").append(this.parent);
+        buf.append(", :updated_at => ").append(this.updatedAt);
+        if (this.updatedBy != null) {
+            buf.append(", :updated_by => ");
+            this.updatedBy.toString(buf);
+        }
     }
 
 }

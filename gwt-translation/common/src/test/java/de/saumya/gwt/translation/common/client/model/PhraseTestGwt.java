@@ -7,9 +7,6 @@ import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
-import de.saumya.gwt.translation.common.client.model.Phrase;
-import de.saumya.gwt.translation.common.client.model.PhraseFactory;
-import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -29,13 +26,13 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
     @Override
     protected String resource1Xml() {
         return "<phrase>" + "<id>123</id>"
-                + "<to_be_approved>some text</to_be_approved>" + "</phrase>";
+                + "<current_text>some text</current_text>" + "</phrase>";
     }
 
     @Override
     protected String resource2Xml() {
         return "<phrase>" + "<id>345</id>"
-                + "<to_be_approved>some text</to_be_approved>" + "</phrase>";
+                + "<current_text>some text</current_text>" + "</phrase>";
     }
 
     @Override
@@ -45,32 +42,29 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     static final String XML = "<phrase>"
                                     + "<id>123</id>"
-                                    + "<to_be_approved>some text</to_be_approved>"
+                                    + "<current_text>text</current_text>"
+                                    + "<text>some text</text>"
                                     + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
                                     + "<updated_by><login>root</login><roles></roles></updated_by>"
                                     + "</phrase>";
 
     @Override
     protected ResourceFactory<Phrase> factorySetUp() {
-        return new PhraseFactory(this.repository,
-                new UserFactory(this.repository,
+        final UserFactory userFactory = new UserFactory(this.repository,
+                new LocaleFactory(this.repository),
+                new RoleFactory(this.repository,
                         new LocaleFactory(this.repository),
-                        new RoleFactory(this.repository,
-                                new LocaleFactory(this.repository),
-                                new VenueFactory(this.repository))),
-                new TranslationFactory(this.repository,
-                        new UserFactory(this.repository,
-                                new LocaleFactory(this.repository),
-                                new RoleFactory(this.repository,
-                                        new LocaleFactory(this.repository),
-                                        new VenueFactory(this.repository)))));
+                        new VenueFactory(this.repository)));
+        return new PhraseFactory(this.repository,
+                userFactory,
+                new TranslationFactory(this.repository, userFactory));
     }
 
     @Override
     protected Resource<Phrase> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.toBeApproved = "some text";
+        this.resource.currentText = "some text";
 
         this.repository.addXmlResponse(resource1Xml());
 
@@ -81,9 +75,7 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     @Override
     protected void doTestCreate() {
-        assertEquals(value(), this.resource.toBeApproved);
-        System.out.println(resourceNewXml());
-        System.out.println(this.repository.requests.get(0));
+        assertEquals(value(), this.resource.currentText);
     }
 
     @Override
@@ -103,9 +95,9 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     @Override
     protected void doTestUpdate() {
-        this.resource.toBeApproved = changedValue();
+        this.resource.currentText = changedValue();
         this.resource.save();
-        assertEquals(changedValue(), this.resource.toBeApproved);
+        assertEquals(changedValue(), this.resource.currentText);
     }
 
     @Override

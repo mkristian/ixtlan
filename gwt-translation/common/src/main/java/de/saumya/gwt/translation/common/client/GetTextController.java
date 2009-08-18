@@ -40,11 +40,11 @@ public class GetTextController {
         if (this.getText.isInTranslation()) {
             translatable.addStyleName("translatable");
             final Phrase phrase = this.getText.getPhrase(translatable.getCode());
-            if (phrase.toBeApproved != null
-                    && !phrase.toBeApproved.equals(phrase.toBeTranslated.text)) {
+            if (phrase.text != null
+                    && !phrase.text.equals(phrase.parent.text)) {
                 translatable.addStyleName("to_be_approved");
             }
-            else if (phrase.toBeTranslated != null) {
+            else if (phrase.parent != null) {
                 translatable.removeStyleName("to_be_translated");
             }
         }

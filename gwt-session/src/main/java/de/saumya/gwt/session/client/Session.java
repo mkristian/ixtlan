@@ -137,7 +137,6 @@ public class Session {
                 @Override
                 public void onChange(final Resources<Authentication> resources,
                         final Authentication resource) {
-                    System.out.println(resource);
                     if (resource.user.login.equals(username)) {
                         doLogin(resource);
                     }

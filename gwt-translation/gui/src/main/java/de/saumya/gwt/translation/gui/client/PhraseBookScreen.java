@@ -12,7 +12,6 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
-import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
@@ -29,7 +28,7 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
 
     public PhraseBookScreen(final PhraseBookFactory bookFactory,
             final PhraseScreen phrasePanel, final GetTextController getText) {
-        super(getText, new PathFactory(bookFactory.storageName()));
+        super(getText, bookFactory);
         this.bookFactory = bookFactory;
         this.loading = new TranslatableLabel("loading", getText);
         this.phraseScreen = phrasePanel;

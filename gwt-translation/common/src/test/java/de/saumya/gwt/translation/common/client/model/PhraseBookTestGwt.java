@@ -6,10 +6,6 @@ import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
-import de.saumya.gwt.translation.common.client.model.PhraseBook;
-import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
-import de.saumya.gwt.translation.common.client.model.PhraseFactory;
-import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -110,7 +106,7 @@ public class PhraseBookTestGwt extends AbstractResourceTestGwt<PhraseBook> {
                                             + "<phrase>"
                                             + "<id>1</id>"
                                             + "<code>CODE</code>"
-                                            + "<to_be_approved>code</to_be_approved>"
+                                            + "<current_text>code</current_text>"
                                             + "</phrase>" + "</phrases>"
                                             + "</phrase_book>";
 

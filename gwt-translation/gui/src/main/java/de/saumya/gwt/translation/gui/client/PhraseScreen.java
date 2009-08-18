@@ -3,13 +3,14 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
-import de.saumya.gwt.translation.common.client.route.PathFactory;
+import de.saumya.gwt.translation.common.client.model.Translation;
 import de.saumya.gwt.translation.common.client.route.Screen;
 import de.saumya.gwt.translation.common.client.widget.AttributePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
@@ -21,18 +22,39 @@ class PhraseScreen extends ResourceScreen<Phrase> {
 
     private final TranslatableLabel loading;
 
+    private final Label             defaultText;
+    private final TranslatableLabel defaultLabel;
+
+    private final Label             parentText;
+    private final TranslatableLabel parentLabel;
+
     PhraseScreen(final GetTextController getText,
             final PhraseFactory phraseFactory) {
-        super(getText, new PathFactory(phraseFactory.storageName()));
+        super(getText, phraseFactory);
         this.phraseFactory = phraseFactory;
         this.loading = new TranslatableLabel("loading", getText);
         setVisible(false);
-
-        add(new AttributePanel<Phrase>("to be approved", true, getText) {
+        this.defaultLabel = new TranslatableLabel("DEFAULT", getText);
+        this.defaultText = new Label();
+        this.parentLabel = new TranslatableLabel("DEFAULT", getText);
+        this.parentText = new Label();
+        add(this.defaultLabel);
+        add(this.defaultText);
+        add(this.parentLabel);
+        add(this.parentText);
+        add(new AttributePanel<Phrase>("current text", true, getText) {
 
             @Override
             protected String value(final Phrase resource) {
-                return resource.toBeApproved;
+                return resource.currentText;
+            }
+
+        });
+        add(new AttributePanel<Phrase>("next text", true, getText) {
+
+            @Override
+            protected String value(final Phrase resource) {
+                return resource.text;
             }
 
         });
@@ -50,6 +72,23 @@ class PhraseScreen extends ResourceScreen<Phrase> {
     @Override
     protected void reset(final Phrase resource) {
         super.reset(resource, resource.updatedAt, resource.updatedBy);
+        setupTranslation(resource.defaultTranslation,
+                         this.defaultLabel,
+                         this.defaultText);
+        setupTranslation(resource.parent, this.parentLabel, this.parentText);
+        // parentLabel.setText(resource.)
+    }
+
+    private void setupTranslation(final Translation translation,
+            final Label label, final Label text) {
+
+        final boolean has = translation != null;
+        label.setVisible(has);
+        text.setVisible(has);
+        if (has) {
+            text.setText(translation.previousText + " => " + translation.text
+                    + "(" + translation.approvedBy.name + ")");
+        }
     }
 
     @Override

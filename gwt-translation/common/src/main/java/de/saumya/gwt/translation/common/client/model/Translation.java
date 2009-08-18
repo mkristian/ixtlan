@@ -24,6 +24,7 @@ public class Translation extends ResourceWithID<Translation> {
         this.userFactory = userFactory;
     }
 
+    public String    previousText;
     public String    text;
     public Timestamp approvedAt;
     public User      approvedBy;
@@ -31,6 +32,7 @@ public class Translation extends ResourceWithID<Translation> {
     @Override
     protected void appendXml(final StringBuffer buf) {
         super.appendXml(buf);
+        append(buf, "previous_text", this.previousText);
         append(buf, "text", this.text);
         append(buf, "approved_at", this.approvedAt);
         append(buf, "approved_by", this.approvedBy);
@@ -39,6 +41,7 @@ public class Translation extends ResourceWithID<Translation> {
     @Override
     protected void fromXml(final Element root) {
         super.fromXml(root);
+        this.previousText = getString(root, "previous_text");
         this.text = getString(root, "text");
         this.approvedAt = getTimestamp(root, "approved_at");
         this.approvedBy = this.userFactory.getChildResource(root, "approved_by");
@@ -47,6 +50,7 @@ public class Translation extends ResourceWithID<Translation> {
     @Override
     public void toString(final StringBuffer buf) {
         super.toString(buf);
+        buf.append(":previous_text => ").append(this.previousText);
         buf.append(":text => ").append(this.text);
         buf.append(", :approved_at => ").append(this.approvedAt);
         if (this.approvedBy != null) {
@@ -54,5 +58,4 @@ public class Translation extends ResourceWithID<Translation> {
             this.approvedBy.toString(buf);
         }
     }
-
 }

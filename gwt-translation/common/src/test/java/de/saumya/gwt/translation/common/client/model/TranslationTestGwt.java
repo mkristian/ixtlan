@@ -7,8 +7,6 @@ import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.UserFactory;
 import de.saumya.gwt.session.client.VenueFactory;
-import de.saumya.gwt.translation.common.client.model.Translation;
-import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -27,13 +25,15 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
 
     @Override
     protected String resource1Xml() {
-        return "<translation>" + "<id>123</id>" + "<text>some text</text>"
-                + "</translation>";
+        return "<translation>" + "<id>123</id>"
+                + "<previous_text>text</previous_text>"
+                + "<text>some text</text>" + "</translation>";
     }
 
     @Override
     protected String resource2Xml() {
         return "<translation>" + "<id>234</id>"
+                + "<previous_text>other text</previous_text>"
                 + "<text>some other text</text>" + "</translation>";
     }
 
@@ -45,6 +45,7 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
 
     static final String XML = "<translation>"
                                     + "<id>123</id>"
+                                    + "<previous_text>text</previous_text>"
                                     + "<text>some text</text>"
                                     + "<approved_at>2009-07-09 17:14:48.9</approved_at>"
                                     + "<approved_by><login>root</login><roles></roles></approved_by>"
@@ -65,6 +66,7 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
         this.resource = this.factory.newResource();
 
         this.resource.text = "some text";
+        this.resource.previousText = "text";
 
         this.repository.addXmlResponse(resource1Xml());
 
@@ -76,8 +78,6 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
     @Override
     protected void doTestCreate() {
         assertEquals(value(), this.resource.text);
-        System.out.println(resourceNewXml());
-        System.out.println(this.repository.requests.get(0));
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -30,11 +31,11 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     protected E                       resource;
 
     protected ResourceScreen(final GetTextController getText,
-            final PathFactory pathFactory) {
+            final ResourceFactory<E> factory) {
         this.header = new ResourceHeaderPanel(getText);
         add(this.header);
-        this.pathFactory = pathFactory;
-        this.parentPathFactory = pathFactory;
+        this.pathFactory = new PathFactory(factory.storageName());
+        this.parentPathFactory = this.pathFactory;
     }
 
     protected abstract void reset(final E resource);
@@ -57,7 +58,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
             final User updatedBy) {
         this.header.reset(resource.key(), updatedAt, updatedBy);
         for (final Widget panel : getChildren()) {
-            if (panel != this.header) {
+            if (panel instanceof AttributePanel) {
                 ((AttributePanel<E>) panel).reset(resource);
             }
         }

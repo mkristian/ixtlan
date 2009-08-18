@@ -110,8 +110,8 @@ public class GetText {
         if (phrase == null) {
             phrase = this.phraseFactory.newResource();
             phrase.code = code;
-            phrase.toBeTranslated = this.translationFactory.newResource();
-            phrase.toBeTranslated.text = code;
+            phrase.parent = this.translationFactory.newResource();
+            phrase.parent.text = code;
             // TODO save the translation and maybe not save the phrase
             phrase.save();
             GWT.log(phrase.toString(), null);
@@ -162,11 +162,11 @@ public class GetText {
         }
         if (this.isInTranslation) {
             final Phrase phrase = getPhrase(code);
-            return phrase.toBeApproved == null
-                    ? phrase.toBeTranslated.text
-                    : phrase.toBeApproved == null
-                            ? phrase.toBeTranslated.text
-                            : phrase.toBeApproved;
+            return phrase.text == null
+                    ? phrase.parent.text
+                    : phrase.text == null
+                            ? phrase.parent.text
+                            : phrase.text;
         }
         else {
             return getWord(code).text;

@@ -59,7 +59,7 @@ public class TranslationPopupPanel extends PopupPanel {
             @Override
             public void onClose(final CloseEvent<PopupPanel> event) {
                 if (TranslationPopupPanel.this.box.getText().length() > 0) {
-                    TranslationPopupPanel.this.phrase.toBeApproved = TranslationPopupPanel.this.box.getText();
+                    TranslationPopupPanel.this.phrase.text = TranslationPopupPanel.this.box.getText();
                     TranslationPopupPanel.this.phrase.save();
                     TranslationPopupPanel.this.translatable.reset();
                 }
@@ -83,7 +83,7 @@ public class TranslationPopupPanel extends PopupPanel {
 
             @Override
             public void onClick(final ClickEvent event) {
-                TranslationPopupPanel.this.box.setText(TranslationPopupPanel.this.phrase.toBeTranslated.text);
+                TranslationPopupPanel.this.box.setText(TranslationPopupPanel.this.phrase.parent.text);
             }
         });
         this.approveIt = new TranslatableButton("approve", getText);
@@ -96,10 +96,10 @@ public class TranslationPopupPanel extends PopupPanel {
     public void setup(final Phrase phrase, final Translatable translatable) {
         this.phrase = phrase;
         this.translatable = translatable;
-        this.box.setText(phrase.toBeApproved);
-        this.box.setVisibleLength((phrase.toBeApproved == null
-                ? phrase.toBeTranslated.text
-                : phrase.toBeApproved).length());
+        this.box.setText(phrase.text);
+        this.box.setVisibleLength((phrase.text == null
+                ? phrase.parent.text
+                : phrase.text).length());
 
         this.codeLabel.setText(phrase.code);
         this.approveIt.setVisible(this.session.isAllowed("approver", "phrase"));
