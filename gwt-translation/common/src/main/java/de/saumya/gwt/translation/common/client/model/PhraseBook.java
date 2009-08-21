@@ -46,4 +46,12 @@ public class PhraseBook extends Resource<PhraseBook> {
             buf.append(", :phrases => ").append(this.phrases);
         }
     }
+
+    @Override
+    public String display() {
+        return new StringBuffer("phrasebook(").append(this.locale)
+                .append(")")
+                .toString();
+    }
+
 }

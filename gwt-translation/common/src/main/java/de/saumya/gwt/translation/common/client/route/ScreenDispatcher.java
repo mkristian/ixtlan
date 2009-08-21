@@ -31,7 +31,7 @@ public class ScreenDispatcher {
             dispatch(screen.child(path.key), path.child);
         }
         else {
-            screen.child(path.key);// screen.setupPathFactory(null, path.key);
+            screen.child(path.key);
             switch (path.action) {
             case NEW:
                 screen.showNew();

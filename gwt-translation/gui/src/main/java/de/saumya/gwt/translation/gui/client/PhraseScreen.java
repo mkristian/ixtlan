@@ -3,98 +3,88 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Button;
 
-import de.saumya.gwt.datamapper.client.ResourceChangeListener;
+import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
-import de.saumya.gwt.translation.common.client.model.Translation;
+import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
-import de.saumya.gwt.translation.common.client.widget.AttributePanel;
+import de.saumya.gwt.translation.common.client.widget.ButtonHandler;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.ResourceCollectionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
-import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
 class PhraseScreen extends ResourceScreen<Phrase> {
 
-    private final PhraseFactory     phraseFactory;
+    static class PhraseActions extends ResourceActionPanel<Phrase> {
 
-    private final TranslatableLabel loading;
+        private final Button                approve;
 
-    private final Label             defaultText;
-    private final TranslatableLabel defaultLabel;
+        private final ButtonHandler<Phrase> approveHandler = new ButtonHandler<Phrase>() {
 
-    private final Label             parentText;
-    private final TranslatableLabel parentLabel;
+                                                               @Override
+                                                               protected void action(
+                                                                       final Phrase resource) {
+                                                                   resource.save();
+                                                                   // TODO
+                                                                   // implement
+                                                                   // save("approve")
+                                                               }
+                                                           };
 
-    PhraseScreen(final GetTextController getText,
-            final PhraseFactory phraseFactory) {
-        super(getText, phraseFactory);
-        this.phraseFactory = phraseFactory;
-        this.loading = new TranslatableLabel("loading", getText);
-        setVisible(false);
-        this.defaultLabel = new TranslatableLabel("DEFAULT", getText);
-        this.defaultText = new Label();
-        this.parentLabel = new TranslatableLabel("DEFAULT", getText);
-        this.parentText = new Label();
-        add(this.defaultLabel);
-        add(this.defaultText);
-        add(this.parentLabel);
-        add(this.parentText);
-        add(new AttributePanel<Phrase>("current text", true, getText) {
+        public PhraseActions(final GetTextController getText,
+                final Session session, final PhraseFactory factory) {
+            super(getText, session, factory);
+            this.approve = button("approve", this.approveHandler);
+        }
 
-            @Override
-            protected String value(final Phrase resource) {
-                return resource.currentText;
-            }
+        @Override
+        protected void doReset(final Phrase phrase, final String locale) {
+            this.approveHandler.reset(phrase);
+            GWT.log("approve: "
+                    + this.session.isAllowed("approve",
+                                             this.resourceName,
+                                             locale) + " " + locale, null);
+            this.approve.setVisible(!phrase.isNew()
+                    && !phrase.isDeleted()
+                    && this.session.isAllowed("approve",
+                                              this.resourceName,
+                                              locale));
+        }
 
-        });
-        add(new AttributePanel<Phrase>("next text", true, getText) {
-
-            @Override
-            protected String value(final Phrase resource) {
-                return resource.text;
-            }
-
-        });
     }
 
-    @SuppressWarnings("unchecked")
-    private void setReadOnly(final boolean isReadOnly) {
-        for (final Widget panel : getChildren()) {
-            if (panel instanceof AttributePanel) {
-                ((AttributePanel<Phrase>) panel).setReadOnly(isReadOnly);
-            }
-        }
+    PhraseScreen(final GetTextController getText,
+            final PhraseFactory phraseFactory, final Session session) {
+        super(getText,
+                phraseFactory,
+                session,
+                new PhrasePanel(getText),
+                new ResourceCollectionPanel<Phrase>(session),
+                new PhraseActions(getText, session, phraseFactory));
     }
 
     @Override
     protected void reset(final Phrase resource) {
-        super.reset(resource, resource.updatedAt, resource.updatedBy);
-        setupTranslation(resource.defaultTranslation,
-                         this.defaultLabel,
-                         this.defaultText);
-        setupTranslation(resource.parent, this.parentLabel, this.parentText);
-        // parentLabel.setText(resource.)
+        GWT.log("reset:" + resource, null);
+        reset(resource, resource.updatedAt, resource.updatedBy);
     }
 
-    private void setupTranslation(final Translation translation,
-            final Label label, final Label text) {
-
-        final boolean has = translation != null;
-        label.setVisible(has);
-        text.setVisible(has);
-        if (has) {
-            text.setText(translation.previousText + " => " + translation.text
-                    + "(" + translation.approvedBy.name + ")");
-        }
+    @Override
+    public void setupPathFactory(final PathFactory parentPathFactory,
+            final String locale) {
+        // TODO maybe it is not good to use know that the key is the locale at
+        // that part of the code
+        super.setupPathFactory(parentPathFactory, locale);
+        this.locale = locale;
     }
 
     @Override
     public Screen<?> child(final String key) {
         return null;
-        // throw new UnsupportedOperationException("phrase has no child");
     }
 
     @Override
@@ -102,38 +92,4 @@ class PhraseScreen extends ResourceScreen<Phrase> {
         throw new UnsupportedOperationException("phrase does not show all");
     }
 
-    @Override
-    public void showEdit(final String key) {
-        setReadOnly(false);
-        show(key);
-    }
-
-    @Override
-    public void showNew() {
-        reset(this.phraseFactory.newResource());
-        PhraseScreen.this.loading.setVisible(false);
-        setVisible(true);
-    }
-
-    @Override
-    public void showRead(final String key) {
-        setReadOnly(true);
-        show(key);
-    }
-
-    private void show(final String key) {
-        this.loading.setVisible(true);
-        setVisible(true);
-        final Phrase phrase = this.phraseFactory.get(key,
-                                                     new ResourceChangeListener<Phrase>() {
-
-                                                         @Override
-                                                         public void onChange(
-                                                                 final Phrase resource) {
-                                                             reset(resource);
-                                                             PhraseScreen.this.loading.setVisible(false);
-                                                         }
-                                                     });
-        reset(phrase);
-    }
 }

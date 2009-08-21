@@ -50,4 +50,11 @@ class Permission extends Resource<Permission> {
             buf.append(", :roles => ").append(this.roles);
         }
     }
+
+    @Override
+    public String display() {
+        return new StringBuffer(this.resourceName).append("#")
+                .append(this.action)
+                .toString();
+    }
 }

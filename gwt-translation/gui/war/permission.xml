@@ -1,7 +1,8 @@
+
 <permissions>
   <permission>
-    <resource_name>phrase_book</resource_name>
-    <action>retrieve</action>
+    <resource_name>phrase</resource_name>
+    <action>show</action>
     <roles>
       <role>
         <name>translator</name>
@@ -13,4 +14,76 @@
       </role>
     </roles>
   </permission>
+  <permission>
+    <resource_name>phrase</resource_name>
+    <action>update</action>
+    <roles>
+      <role>
+        <name>translator</name>
+        <created_at>123123123</created_at>
+      </role>
+      <role>
+        <name>approver</name>
+        <created_at>123123123</created_at>
+      </role>
+    </roles>
+  </permission>
+  <permission>
+    <resource_name>phrase</resource_name>
+    <action>approve</action>
+    <roles>
+      <role>
+        <name>approver</name>
+        <created_at>123123123</created_at>
+      </role>
+    </roles>
+  </permission>
+
+  <permission>
+    <resource_name>phrase_book</resource_name>
+    <action>create</action>
+    <roles>
+      <role>
+        <name>locale_admin</name>
+        <created_at>123123123</created_at>
+      </role>
+    </roles>
+  </permission>
+  <permission>
+    <resource_name>phrase_book</resource_name>
+    <action>show</action>
+    <roles>
+      <role>
+        <name>locale_admin</name>
+        <created_at>123123123</created_at>
+      </role>
+      <role>
+        <name>translator</name>
+        <created_at>123123123</created_at>
+      </role>
+      <role>
+        <name>approver</name>
+        <created_at>123123123</created_at>
+      </role>
+    </roles>
+  </permission>
+  <permission>
+    <resource_name>phrase_book</resource_name>
+    <action>index</action>
+    <roles>
+      <role>
+        <name>locale_admin</name>
+        <created_at>123123123</created_at>
+      </role>
+      <role>
+        <name>translator</name>
+        <created_at>123123123</created_at>
+      </role>
+      <role>
+        <name>approver</name>
+        <created_at>123123123</created_at>
+      </role>
+    </roles>
+  </permission>
+
 </permissions>

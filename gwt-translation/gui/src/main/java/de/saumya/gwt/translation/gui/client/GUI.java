@@ -122,11 +122,13 @@ public class GUI implements EntryPoint {
                 locale);
 
         final PhraseScreen phraseScreen = new PhraseScreen(getTextController,
-                phraseFactory);
+                phraseFactory,
+                session);
 
         final PhraseBookScreen phraseBookScreen = new PhraseBookScreen(bookFactory,
                 phraseScreen,
-                getTextController);
+                getTextController,
+                session);
 
         final ScreenController screenController = new ScreenController(sessionPanel,
                 getTextController,

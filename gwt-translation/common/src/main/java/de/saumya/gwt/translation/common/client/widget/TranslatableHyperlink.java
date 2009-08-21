@@ -17,13 +17,18 @@ public class TranslatableHyperlink extends Hyperlink implements Translatable {
 
     private final GetTextController getText;
 
-    public TranslatableHyperlink(final String text, final String path,
+    public TranslatableHyperlink(final String text,
             final GetTextController getText) {
         this.getText = getText;
         this.getText.addTranslatable(this);
-        setTargetHistoryToken(path);
         setText(text);
         sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK);
+    }
+
+    public TranslatableHyperlink(final String text, final String path,
+            final GetTextController getText) {
+        this(text, getText);
+        setTargetHistoryToken(path);
     }
 
     @Override

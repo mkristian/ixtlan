@@ -58,4 +58,13 @@ public class Translation extends ResourceWithID<Translation> {
             this.approvedBy.toString(buf);
         }
     }
+
+    @Override
+    public String display() {
+        return new StringBuffer("translation(").append(this.previousText)
+                .append("=>")
+                .append(this.text)
+                .append(")")
+                .toString();
+    }
 }

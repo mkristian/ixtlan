@@ -46,4 +46,11 @@ public class WordBundle extends Resource<WordBundle> {
             buf.append(", :words => ").append(this.words);
         }
     }
+
+    @Override
+    public String display() {
+        return new StringBuffer("wordbundle(").append(this.locale)
+                .append(")")
+                .toString();
+    }
 }

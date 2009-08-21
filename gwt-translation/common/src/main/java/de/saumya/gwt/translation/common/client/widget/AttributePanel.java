@@ -14,11 +14,10 @@ public abstract class AttributePanel<E extends Resource<E>> extends
 
     private final TextBox box = new TextBox();
 
-    public AttributePanel(final String name, final boolean isReadOnly,
-            final GetTextController getText) {
+    public AttributePanel(final String name, final GetTextController getText) {
         add(new TranslatableLabel(name, getText));
         add(this.box);
-        this.box.setEnabled(!isReadOnly);
+        this.box.setEnabled(false);
     }
 
     String getText() {

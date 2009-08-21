@@ -163,7 +163,7 @@ public class Session {
         fireLoggedOut();
     }
 
-    enum Action {
+    public enum Action {
         CREATE, RETRIEVE, RETRIEVE_ALL, UPDATE, DELETE
     }
 
@@ -182,12 +182,12 @@ public class Session {
     }
 
     public boolean isAllowed(final String action, final String resourceName,
-            final Locale locale) {
+            final String localeCode) {
         for (final Role role : this.authentication.user.roles) {
             final Role r = findAllowedRole(action, resourceName, role.name);
             if (r != null) {
                 for (final Locale l : r.locales) {
-                    if (l.code.equals(locale.code)) {
+                    if (l.code.equals(localeCode)) {
                         return true;
                     }
                 }

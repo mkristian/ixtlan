@@ -232,4 +232,6 @@ public abstract class Resource<E extends Resource<E>> {
 
     protected abstract void toString(StringBuffer buf);
 
+    public abstract String display();
+
 }

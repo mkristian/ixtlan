@@ -5,7 +5,7 @@ package de.saumya.gwt.datamapper.client;
 
 import com.google.gwt.xml.client.Element;
 
-public class ResourceWithID<E extends Resource<E>> extends Resource<E> {
+public abstract class ResourceWithID<E extends Resource<E>> extends Resource<E> {
 
     protected ResourceWithID(final Repository repository,
             final ResourceFactory<E> factory) {

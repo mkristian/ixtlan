@@ -41,4 +41,9 @@ public class Locale extends Resource<Locale> {
         buf.append(":code => ").append(this.code);
         buf.append(", :created_at => ").append(this.createdAt);
     }
+
+    @Override
+    public String display() {
+        return this.code;
+    }
 }

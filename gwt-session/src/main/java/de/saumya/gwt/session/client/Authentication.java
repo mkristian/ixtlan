@@ -53,4 +53,9 @@ class Authentication extends Resource<Authentication> {
             buf.append(this.user.toString());
         }
     }
+
+    @Override
+    public String display() {
+        return this.login == null ? this.user.login : this.login;
+    }
 }

@@ -87,7 +87,8 @@ public class User extends Resource<User> {
         return result;
     }
 
-    public String toDisplay() {
+    @Override
+    public String display() {
         final StringBuffer buf = new StringBuffer(this.name);
         buf.append("<").append(this.email).append(">");
         buf.append(" (").append(this.login).append(")");

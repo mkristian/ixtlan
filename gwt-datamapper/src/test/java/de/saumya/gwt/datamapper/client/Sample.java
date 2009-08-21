@@ -47,4 +47,9 @@ public class Sample extends ResourceWithID<Sample> {
             this.child.toString(buf);
         }
     }
+
+    @Override
+    public String display() {
+        return "sample(" + this.language + "_" + this.country + ")";
+    }
 }

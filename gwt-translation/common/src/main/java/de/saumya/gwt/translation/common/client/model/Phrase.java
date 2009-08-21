@@ -73,4 +73,14 @@ public class Phrase extends ResourceWithID<Phrase> {
         }
     }
 
+    @Override
+    public String display() {
+        return new StringBuffer(this.currentText).append("=>")
+                .append(this.text == null ? "?" : this.text)
+                .append(" <")
+                .append(this.code)
+                .append(">")
+                .toString();
+    }
+
 }

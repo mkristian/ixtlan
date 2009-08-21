@@ -41,4 +41,9 @@ public class Venue extends Resource<Venue> {
         buf.append(", :created_at => ").append(this.createdAt);
     }
 
+    @Override
+    public String display() {
+        return this.id;
+    }
+
 }

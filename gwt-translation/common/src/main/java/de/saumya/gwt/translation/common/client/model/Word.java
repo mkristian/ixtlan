@@ -39,4 +39,12 @@ public class Word extends Resource<Word> {
     public String key() {
         return this.code;
     }
+
+    @Override
+    public String display() {
+        return new StringBuffer(this.text).append("<")
+                .append(this.code)
+                .append(">")
+                .toString();
+    }
 }

@@ -69,4 +69,9 @@ public class Configuration extends Resource<Configuration> {
         buf.append(", :updated_by => ");
         this.updatedBy.toString(buf);
     }
+
+    @Override
+    public String display() {
+        return "configuration";
+    }
 }
