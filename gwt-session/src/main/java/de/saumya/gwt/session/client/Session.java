@@ -51,31 +51,31 @@ public class Session {
         }
     }
 
-    private Authentication                                   authentication = null;
-    private final Timer                                      timer          = new SessionTimer();
-    private final AuthenticationFactory                      authenticationFactory;
-    private final Map<String, Map<String, Collection<Role>>> permissions;
+    private Authentication                                    authentication = null;
+    private final Timer                                       timer          = new SessionTimer();
+    private final AuthenticationFactory                       authenticationFactory;
+    private final Map<String, Map<String, Collection<Group>>> permissions;
 
     public Session(final AuthenticationFactory authenticationFactory,
             final PermissionFactory permissionFactory) {
         this.authenticationFactory = authenticationFactory;
-        this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
+        this.permissions = new HashMap<String, Map<String, Collection<Group>>>();
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
             @Override
             public void onChange(final Resources<Permission> resources,
                     final Permission resource) {
-                final Map<String, Collection<Role>> actions;
+                final Map<String, Collection<Group>> actions;
                 if (Session.this.permissions.containsKey(resource.resourceName)) {
                     actions = Session.this.permissions.get(resource.resourceName);
                 }
                 else {
-                    actions = new HashMap<String, Collection<Role>>();
+                    actions = new HashMap<String, Collection<Group>>();
                     Session.this.permissions.put(resource.resourceName, actions);
                 }
-                actions.put(resource.action, resource.roles);
+                actions.put(resource.action, resource.groups);
                 GWT.log("added permission for '" + resource.resourceName + "#"
-                        + resource.action + ": " + resource.roles, null);
+                        + resource.action + ": " + resource.groups, null);
             }
 
             @Override
@@ -168,25 +168,31 @@ public class Session {
     }
 
     public boolean isAllowed(final Action action, final String resourceName) {
-        return isAllowed(action.toString(), resourceName);
+        return isAllowed(action.toString().toLowerCase(), resourceName);
     }
 
     public boolean isAllowed(final String action, final String resourceName) {
         for (final Role role : this.authentication.user.roles) {
-            final Role r = findAllowedRole(action, resourceName, role.name);
-            if (r != null && r.locales == null && r.venues == null) {
+            if (isAllowed(action, resourceName, role)) {
                 return true;
             }
         }
         return false;
     }
 
+    public boolean isAllowed(final Action action, final String resourceName,
+            final String localeCode) {
+        return isAllowed(action.toString().toLowerCase(),
+                         resourceName,
+                         localeCode);
+    }
+
     public boolean isAllowed(final String action, final String resourceName,
             final String localeCode) {
+        GWT.log(resourceName + "#" + action + " " + localeCode + "?", null);
         for (final Role role : this.authentication.user.roles) {
-            final Role r = findAllowedRole(action, resourceName, role.name);
-            if (r != null) {
-                for (final Locale l : r.locales) {
+            if (isAllowed(action, resourceName, role)) {
+                for (final Locale l : role.locales) {
                     if (l.code.equals(localeCode)) {
                         return true;
                     }
@@ -196,34 +202,21 @@ public class Session {
         return false;
     }
 
-    public boolean isAllowed(final String action, final String resourceName,
-            final String role, final Venue venue) {
-        final Role r = findAllowedRole(action, resourceName, role);
-        if (r != null && r.locales == null) {
-            for (final Venue v : r.venues) {
-                if (v.id.equals(venue.id)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private Role findAllowedRole(final String action,
-            final String resourceName, final String role) {
+    private boolean isAllowed(final String action, final String resourceName,
+            final Role role) {
         if (this.authentication != null) {
-            final Map<String, Collection<Role>> permission = this.permissions.get(resourceName);
+            final Map<String, Collection<Group>> permission = this.permissions.get(resourceName);
             if (permission != null) {
                 if (permission.containsKey(action)) {
-                    for (final Role r : permission.get(action)) {
-                        if (r.name.equals(role)) {
-                            return r;
+                    for (final Group group : permission.get(action)) {
+                        if (group.name.equals(role.name)) {
+                            return true;
                         }
                     }
                 }
             }
         }
-        return null;
+        return false;
     }
 
     public User getUser() {

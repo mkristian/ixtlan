@@ -5,12 +5,12 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 public class PermissionFactory extends ResourceFactory<Permission> {
 
-    private final RoleFactory roleFactory;
+    private final GroupFactory groupFactory;
 
     public PermissionFactory(final Repository repository,
-            final RoleFactory roleFactory) {
+            final GroupFactory groupFactory) {
         super(repository);
-        this.roleFactory = roleFactory;
+        this.groupFactory = groupFactory;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class PermissionFactory extends ResourceFactory<Permission> {
 
     @Override
     public Permission newResource() {
-        return new Permission(this.repository, this, this.roleFactory);
+        return new Permission(this.repository, this, this.groupFactory);
     }
 
 }

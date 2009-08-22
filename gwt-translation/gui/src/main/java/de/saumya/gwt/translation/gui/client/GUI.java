@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
+import de.saumya.gwt.session.client.GroupFactory;
 import de.saumya.gwt.session.client.Locale;
 import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
@@ -79,13 +80,14 @@ public class GUI implements EntryPoint {
     public void onModuleLoad() {
         final LoginPanel loginPanel = new LoginPanel();
         final Repository repository = new Repository();
+        final GroupFactory groupFactory = new GroupFactory(repository);
         final VenueFactory venueFactory = new VenueFactory(repository);
         final LocaleFactory localeFactory = new LocaleFactory(repository);
         final RoleFactory roleFactory = new RoleFactory(repository,
                 localeFactory,
                 venueFactory);
         final PermissionFactory permissionFactory = new PermissionFactory(repository,
-                roleFactory);
+                groupFactory);
         final UserFactory userFactory = new UserFactory(repository,
                 localeFactory,
                 roleFactory);
@@ -135,7 +137,7 @@ public class GUI implements EntryPoint {
                 session);
         screenController.addScreen(phraseBookScreen,
                                    new TranslatableHyperlink("phrase_book",
-                                           "/phrase_book/en",
+                                           "/phrase_book/de",
                                            getTextController));
 
         new SessionController(session, loginPanel, sessionPanel);

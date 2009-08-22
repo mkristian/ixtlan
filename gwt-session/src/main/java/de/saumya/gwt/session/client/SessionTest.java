@@ -80,6 +80,7 @@ public class SessionTest implements EntryPoint {
         final SessionPanel sessionPanel = new SessionPanel();
         final Repository repository = new Repository();
         final LocaleFactory localeFactory = new LocaleFactory(repository);
+        final GroupFactory groupFactory = new GroupFactory(repository);
         final RoleFactory roleFactory = new RoleFactory(repository,
                 localeFactory,
                 new VenueFactory(repository));
@@ -87,7 +88,7 @@ public class SessionTest implements EntryPoint {
                 localeFactory,
                 roleFactory);
         new SessionController(new Session(new AuthenticationFactory(repository,
-                userFactory), new PermissionFactory(repository, roleFactory)),
+                userFactory), new PermissionFactory(repository, groupFactory)),
                 loginPanel,
                 sessionPanel);
 

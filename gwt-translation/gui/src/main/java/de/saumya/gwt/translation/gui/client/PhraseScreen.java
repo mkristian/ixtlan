@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 
 import de.saumya.gwt.session.client.Session;
+import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
@@ -44,17 +45,18 @@ class PhraseScreen extends ResourceScreen<Phrase> {
         @Override
         protected void doReset(final Phrase phrase, final String locale) {
             this.approveHandler.reset(phrase);
-            GWT.log("approve: "
-                    + this.session.isAllowed("approve",
-                                             this.resourceName,
-                                             locale) + " " + locale, null);
             this.approve.setVisible(!phrase.isNew()
                     && !phrase.isDeleted()
                     && this.session.isAllowed("approve",
                                               this.resourceName,
                                               locale));
-        }
+            this.save.setVisible(!phrase.isNew()
+                    && !phrase.isDeleted()
+                    && this.session.isAllowed(Action.UPDATE,
+                                              this.resourceName,
+                                              locale));
 
+        }
     }
 
     PhraseScreen(final GetTextController getText,

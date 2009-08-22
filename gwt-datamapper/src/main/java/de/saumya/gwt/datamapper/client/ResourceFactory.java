@@ -103,11 +103,10 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     public Resources<E> getChildResources(final Element root, final String name) {
         final Element element = (Element) root.getElementsByTagName(name)
                 .item(0);
-        if (element == null) {
-            return null;
-        }
         final Resources<E> resources = newResources();
-        resources.fromXml(element);
+        if (element != null) {
+            resources.fromXml(element);
+        }
         return resources;
     }
 

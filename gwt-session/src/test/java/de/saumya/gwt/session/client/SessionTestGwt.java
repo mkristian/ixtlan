@@ -36,17 +36,18 @@ public class SessionTestGwt extends GWTTestCase {
         final RoleFactory roleFactory = new RoleFactory(this.repository,
                 this.localeFactory,
                 venueFactory);
+        final GroupFactory groupFactory = new GroupFactory(this.repository);
         final PermissionFactory permissionFactory = new PermissionFactory(this.repository,
-                roleFactory);
+                groupFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.localeFactory,
                 roleFactory);
         this.repository.add("<permissions>" + "<permission>"
                 + "<resource_name>user</resource_name>"
-                + "<action>create</action>" + "<roles>" + "<role>"
-                + "<name>admin</name>"
-                + "<created_at>2005-07-09 17:14:48.0</created_at>" + "</role>"
-                + "</roles>" + "</permission>" + "</permissions>");
+                + "<action>create</action>" + "<groups>" + "<group>"
+                + "<name>admin</name>" + "</group>" + "<group>"
+                + "<name>root</name>" + "</group>" + "</groups>"
+                + "</permission>" + "</permissions>");
         this.session = new Session(new AuthenticationFactory(this.repository,
                 this.userFactory), permissionFactory);
         this.listener = new SessionListenerMock();
@@ -57,9 +58,10 @@ public class SessionTestGwt extends GWTTestCase {
         this.repository.add("<authentications>" + "<authentication>"
                 + "<token>1234567890</token>" + "<user><login>dhamma</login>"
                 + "<roles>" + "<role>" + "<name>admin</name>"
-                + "<created_at>2005-07-09 17:14:48.0</created_at>" + "</role>"
-                + "</roles>" + "</user>" + "</authentication>"
-                + "</authentications>");
+                + "<created_at>2005-07-09 17:14:48.0</created_at>"
+                + "<locales>" + "<locale>" + "<code>en</code>" + "</locale>"
+                + "</locales>" + "</role>" + "</roles>" + "</user>"
+                + "</authentication>" + "</authentications>");
     }
 
     static class SessionListenerMock implements SessionListener {
@@ -139,10 +141,24 @@ public class SessionTestGwt extends GWTTestCase {
         assertTrue(this.session.isAllowed("create", "user"));
     }
 
+    public void testIsAllowedWithLocale() {
+        this.session.login("dhamma", "mudita");
+
+        assertTrue(this.session.isAllowed("create", "user", "en"));
+    }
+
     public void testNotIsAllowed() {
         this.session.login("dhamma", "mudita");
 
         assertFalse(this.session.isAllowed("update", "user"));
         assertFalse(this.session.isAllowed("create", "locale"));
+    }
+
+    public void testNotIsAllowedWithLocale() {
+        this.session.login("dhamma", "mudita");
+
+        assertFalse(this.session.isAllowed("create", "user", "de"));
+        assertFalse(this.session.isAllowed("update", "user", "de"));
+        assertFalse(this.session.isAllowed("create", "locale", "de"));
     }
 }

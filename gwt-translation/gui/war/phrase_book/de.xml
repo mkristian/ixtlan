@@ -1,9 +1,9 @@
  <phrase_book>
-  <locale>de</locale>
+  <locale>de_AT</locale>
   <phrases>
     <phrase>
       <id>1</id>
-      <code>de_AT</code>
+      <code>potato</code>
       <current_text>erdapfel</current_text>
       <text>gesalzener erdapfel</text>
       <updated_at>12387981723</updated_at>

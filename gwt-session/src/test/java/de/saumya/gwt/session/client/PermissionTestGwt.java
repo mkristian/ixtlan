@@ -19,17 +19,14 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     private Permission          resource;
 
-    private RoleFactory         roleFactory;
+    private GroupFactory        groupFactory;
 
     private static final String RESOURCE_XML = "<permission>"
                                                      + "<resource_name>config</resource_name>"
                                                      + "<action>create</action>"
-                                                     + "<roles><role>"
+                                                     + "<groups><group>"
                                                      + "<name>admin</name>"
-                                                     + "<locales></locales>"
-                                                     + "<venues></venues>"
-                                                     + "<created_at>2005-07-09 17:14:48.0</created_at>"
-                                                     + "</role></roles>"
+                                                     + "</group></groups>"
                                                      + "</permission>";
 
     @Override
@@ -44,10 +41,10 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
         this.resource.resourceName = "config";
         this.resource.action = "create";
-        final Role role = this.roleFactory.newResource();
-        role.name = "admin";
-        this.resource.roles = this.roleFactory.newResources();
-        this.resource.roles.add(role);
+        final Group group = this.groupFactory.newResource();
+        group.name = "admin";
+        this.resource.groups = this.groupFactory.newResources();
+        this.resource.groups.add(group);
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -72,14 +69,9 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
     private final static String XML = "<permission>"
                                             + "<resource_name>config</resource_name>"
                                             + "<action>create</action>"
-                                            + "<roles>"
-                                            + "<role>"
-                                            + "<name>root</name>"
-                                            + "<locales></locales>"
-                                            + "<venues></venues>"
-                                            + "<created_at>2005-07-09 17:14:48.0</created_at>"
-                                            + "</role>" + "</roles>"
-                                            + "</permission>";
+                                            + "<groups>" + "<group>"
+                                            + "<name>root</name>" + "</group>"
+                                            + "</groups>" + "</permission>";
 
     @Override
     protected String changedValue() {
@@ -88,10 +80,8 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     @Override
     protected ResourceFactory<Permission> factorySetUp() {
-        this.roleFactory = new RoleFactory(this.repository,
-                new LocaleFactory(this.repository),
-                new VenueFactory(this.repository));
-        return new PermissionFactory(this.repository, this.roleFactory);
+        this.groupFactory = new GroupFactory(this.repository);
+        return new PermissionFactory(this.repository, this.groupFactory);
     }
 
     @Override

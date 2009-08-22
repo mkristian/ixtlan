@@ -1,0 +1,94 @@
+package de.saumya.gwt.session.client;
+
+import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
+import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.datamapper.client.ResourceFactory;
+
+/**
+ * GWT JUnit tests must extend GWTTestCase.
+ */
+public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
+
+    /**
+     * Must refer to a valid module that sources this class.
+     */
+    @Override
+    public String getModuleName() {
+        return "de.saumya.gwt.session.Session";
+    }
+
+    private Group               resource;
+
+    private static final String RESOURCE_XML = "<group>" + "<name>root</name>"
+                                                     + "</group>";
+
+    @Override
+    protected String resourceNewXml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource1Xml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String resource2Xml() {
+        return RESOURCE_XML.replace(">root<", ">admin<");
+    }
+
+    @Override
+    protected String resourcesXml() {
+        return "<groups>" + resource1Xml() + resource2Xml() + "</groups>";
+    }
+
+    @Override
+    protected ResourceFactory<Group> factorySetUp() {
+        return new GroupFactory(this.repository);
+    }
+
+    @Override
+    protected Resource<Group> resourceSetUp() {
+        this.resource = this.factory.newResource();
+
+        this.resource.name = "root";
+
+        this.repository.addXmlResponse(RESOURCE_XML);
+
+        this.resource.save();
+
+        return this.resource;
+    }
+
+    @Override
+    public void doTestCreate() {
+        assertEquals("root", this.resource.name);
+    }
+
+    @Override
+    public void doTestUpdate() {
+        this.resource.name = changedValue();
+        this.resource.save();
+        assertEquals(this.resource.name, changedValue());
+    }
+
+    @Override
+    protected String changedValue() {
+        return "superuser";
+    }
+
+    @Override
+    protected String keyValue() {
+        return "root";
+    }
+
+    @Override
+    protected String marshallingXml() {
+        return RESOURCE_XML;
+    }
+
+    @Override
+    protected String value() {
+        return "root";
+    }
+}

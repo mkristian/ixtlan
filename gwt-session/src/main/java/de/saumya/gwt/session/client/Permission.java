@@ -11,30 +11,30 @@ import de.saumya.gwt.datamapper.client.Resources;
 
 class Permission extends Resource<Permission> {
 
-    private final RoleFactory roleFactory;
+    private final GroupFactory groupFactory;
 
     Permission(final Repository repository, final PermissionFactory factory,
-            final RoleFactory roleFactory) {
+            final GroupFactory groupFactory) {
         super(repository, factory);
-        this.roleFactory = roleFactory;
+        this.groupFactory = groupFactory;
     }
 
-    String          resourceName;
-    String          action;
-    Resources<Role> roles;
+    String           resourceName;
+    String           action;
+    Resources<Group> groups;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
         append(buf, "resource_name", this.resourceName);
         append(buf, "action", this.action);
-        append(buf, "roles", this.roles);
+        append(buf, "groups", this.groups);
     }
 
     @Override
     protected void fromXml(final Element root) {
         this.resourceName = getString(root, "resource_name");
         this.action = getString(root, "action");
-        this.roles = this.roleFactory.getChildResources(root, "roles");
+        this.groups = this.groupFactory.getChildResources(root, "groups");
     }
 
     @Override
@@ -46,8 +46,8 @@ class Permission extends Resource<Permission> {
     protected void toString(final StringBuffer buf) {
         buf.append(":resource_name => ").append(this.resourceName);
         buf.append(":action => ").append(this.action);
-        if (this.roles != null) {
-            buf.append(", :roles => ").append(this.roles);
+        if (this.groups != null) {
+            buf.append(", :groups => ").append(this.groups);
         }
     }
 

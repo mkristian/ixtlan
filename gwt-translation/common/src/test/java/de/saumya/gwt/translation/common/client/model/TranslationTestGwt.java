@@ -48,7 +48,8 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
                                     + "<previous_text>text</previous_text>"
                                     + "<text>some text</text>"
                                     + "<approved_at>2009-07-09 17:14:48.9</approved_at>"
-                                    + "<approved_by><login>root</login><roles></roles></approved_by>"
+                                    + "<approved_by>" + "<login>root</login>"
+                                    + "<roles></roles>" + "</approved_by>"
                                     + "</translation>";
 
     @Override

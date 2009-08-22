@@ -45,7 +45,8 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
                                     + "<current_text>text</current_text>"
                                     + "<text>some text</text>"
                                     + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
-                                    + "<updated_by><login>root</login><roles></roles></updated_by>"
+                                    + "<updated_by>" + "<login>root</login>"
+                                    + "<roles></roles>" + "</updated_by>"
                                     + "</phrase>";
 
     @Override
