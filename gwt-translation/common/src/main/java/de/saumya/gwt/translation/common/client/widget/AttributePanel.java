@@ -20,9 +20,9 @@ public abstract class AttributePanel<E extends Resource<E>> extends
         this.box.setEnabled(false);
     }
 
-    String getText() {
-        return this.box.getText();
-    }
+    // String getText() {
+    // return this.box.getText();
+    // }
 
     public void setReadOnly(final boolean isReadOnly) {
         this.box.setEnabled(!isReadOnly);
@@ -31,6 +31,12 @@ public abstract class AttributePanel<E extends Resource<E>> extends
     void reset(final E resource) {
         this.box.setText(value(resource));
     }
+
+    void fill(final E resource) {
+        fill(resource, this.box.getText());
+    }
+
+    protected abstract void fill(E resource, String value);
 
     protected abstract String value(E resource);
 }

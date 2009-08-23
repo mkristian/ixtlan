@@ -3,6 +3,10 @@ package de.saumya.gwt.session.client;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import de.saumya.gwt.datamapper.client.RepositoryMock;
+import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.model.RoleFactory;
+import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.model.VenueFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.

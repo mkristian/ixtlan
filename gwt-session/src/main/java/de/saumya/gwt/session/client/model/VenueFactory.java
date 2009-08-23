@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.session.client;
+package de.saumya.gwt.session.client.model;
 
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceFactory;

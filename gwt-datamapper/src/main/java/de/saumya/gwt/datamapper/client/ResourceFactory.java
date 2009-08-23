@@ -70,6 +70,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     }
 
     E getResource(final String key) {
+        GWT.log(key + " = " + this.cache.toString(), null);
         if (key == null) {
             return newResource();
         }

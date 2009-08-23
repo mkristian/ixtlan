@@ -12,6 +12,10 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.datamapper.client.Repository;
+import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.model.RoleFactory;
+import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.model.VenueFactory;
 
 public class SessionTest implements EntryPoint {
 

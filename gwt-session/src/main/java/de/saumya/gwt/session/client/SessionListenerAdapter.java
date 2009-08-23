@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.session.client;
 
-public class SessionAdapter implements SessionListener {
+public class SessionListenerAdapter implements SessionListener {
 
     @Override
     public void onAccessDenied() {

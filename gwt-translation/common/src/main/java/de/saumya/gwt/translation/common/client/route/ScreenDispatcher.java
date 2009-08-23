@@ -24,14 +24,22 @@ public class ScreenDispatcher {
     }
 
     private void dispatch(final Screen<?> screen, final ScreenPath path) {
+        dispatch(screen, path, null);
+    }
+
+    private void dispatch(final Screen<?> screen, final ScreenPath path,
+            final String parentPath) {
         if (screen == null) {
             return;
         }
         if (path.child != null) {
-            dispatch(screen.child(path.key), path.child);
+            dispatch(screen.child(path.key), path.child, (parentPath == null
+                    ? ""
+                    : parentPath)
+                    + "/" + path);
         }
         else {
-            screen.child(path.key);
+            screen.setup(parentPath);
             switch (path.action) {
             case NEW:
                 screen.showNew();

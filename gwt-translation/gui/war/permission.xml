@@ -40,7 +40,6 @@
     <groups>
       <group>
         <name>locale</name>
-        <created_at>123123123</created_at>
       </group>
     </groups>
   </permission>
@@ -50,15 +49,12 @@
     <groups>
       <group>
         <name>locale</name>
-        <created_at>123123123</created_at>
       </group>
       <group>
         <name>translator</name>
-        <created_at>123123123</created_at>
       </group>
       <group>
         <name>supervisor</name>
-        <created_at>123123123</created_at>
       </group>
     </groups>
   </permission>
@@ -68,15 +64,12 @@
     <groups>
       <group>
         <name>locale</name>
-        <created_at>123123123</created_at>
       </group>
       <group>
         <name>translator</name>
-        <created_at>123123123</created_at>
       </group>
       <group>
         <name>supervisor</name>
-        <created_at>123123123</created_at>
       </group>
     </groups>
   </permission>

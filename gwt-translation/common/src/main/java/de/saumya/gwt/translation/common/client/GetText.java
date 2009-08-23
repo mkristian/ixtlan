@@ -8,7 +8,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 
 import de.saumya.gwt.datamapper.client.ResourceChangeListener;
-import de.saumya.gwt.session.client.Locale;
+import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
@@ -110,8 +110,8 @@ public class GetText {
         if (phrase == null) {
             phrase = this.phraseFactory.newResource();
             phrase.code = code;
-            phrase.parent = this.translationFactory.newResource();
-            phrase.parent.text = code;
+            phrase.parentTranslation = this.translationFactory.newResource();
+            phrase.parentTranslation.text = code;
             // TODO save the translation and maybe not save the phrase
             phrase.save();
             GWT.log(phrase.toString(), null);
@@ -163,9 +163,9 @@ public class GetText {
         if (this.isInTranslation) {
             final Phrase phrase = getPhrase(code);
             return phrase.text == null
-                    ? phrase.parent.text
+                    ? phrase.parentTranslation.text
                     : phrase.text == null
-                            ? phrase.parent.text
+                            ? phrase.parentTranslation.text
                             : phrase.text;
         }
         else {

@@ -1,8 +1,10 @@
-package de.saumya.gwt.session.client;
+package de.saumya.gwt.session.client.model;
 
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.session.client.model.Locale;
+import de.saumya.gwt.session.client.model.LocaleFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.

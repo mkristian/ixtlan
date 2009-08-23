@@ -7,9 +7,11 @@
       <email>locale@example.com</email>
       <roles>
         <role>
+          <id>1</id>
           <name>locale</name>
         </role>
         <role>
+          <id>2</id>
           <name>supervisor</name>
           <locales>
             <locale>
@@ -28,6 +30,7 @@
       <email>de@example.com</email>
       <roles>
         <role>
+          <id>3</id>
           <name>translator</name>
           <locales>
             <locale>
@@ -46,6 +49,7 @@
       <email>de_AT@example.com</email>
       <roles>
         <role>
+          <id>4</id>
           <name>translator</name>
           <locales>
             <locale>
@@ -64,6 +68,7 @@
       <email>en@example.com</email>
       <roles>
         <role>
+          <id>5</id>
           <name>supervisor</name>
           <locales>
             <locale>
@@ -82,6 +87,7 @@
       <email>de@example.com</email>
       <roles>
         <role>
+          <id>6</id>
           <name>supervisor</name>
           <locales>
             <locale>

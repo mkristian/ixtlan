@@ -13,10 +13,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.saumya.gwt.session.client.Locale;
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.SessionAdapter;
+import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
+import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
@@ -66,7 +66,7 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
             }
         });
 
-        session.addSessionListern(new SessionAdapter() {
+        session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
             public void onSuccessfulLogin() {

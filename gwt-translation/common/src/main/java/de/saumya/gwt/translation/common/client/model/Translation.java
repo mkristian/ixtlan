@@ -10,8 +10,8 @@ import com.google.gwt.xml.client.Element;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.datamapper.client.ResourceWithID;
-import de.saumya.gwt.session.client.User;
-import de.saumya.gwt.session.client.UserFactory;
+import de.saumya.gwt.session.client.model.User;
+import de.saumya.gwt.session.client.model.UserFactory;
 
 public class Translation extends ResourceWithID<Translation> {
 

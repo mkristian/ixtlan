@@ -13,15 +13,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
 import de.saumya.gwt.session.client.GroupFactory;
-import de.saumya.gwt.session.client.Locale;
-import de.saumya.gwt.session.client.LocaleFactory;
 import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.PermissionFactory;
-import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
-import de.saumya.gwt.session.client.UserFactory;
-import de.saumya.gwt.session.client.VenueFactory;
+import de.saumya.gwt.session.client.model.Locale;
+import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.model.RoleFactory;
+import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.model.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
@@ -30,7 +30,6 @@ import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.model.WordFactory;
 import de.saumya.gwt.translation.common.client.route.ScreenController;
-import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class GUI implements EntryPoint {
 
@@ -124,6 +123,7 @@ public class GUI implements EntryPoint {
                 locale);
 
         final PhraseScreen phraseScreen = new PhraseScreen(getTextController,
+                new PhrasePanel(getTextController),
                 phraseFactory,
                 session);
 
@@ -135,10 +135,7 @@ public class GUI implements EntryPoint {
         final ScreenController screenController = new ScreenController(sessionPanel,
                 getTextController,
                 session);
-        screenController.addScreen(phraseBookScreen,
-                                   new TranslatableHyperlink("phrase_book",
-                                           "/phrase_book/de",
-                                           getTextController));
+        screenController.addScreen(phraseBookScreen, "phrase_book");
 
         new SessionController(session, loginPanel, sessionPanel);
 

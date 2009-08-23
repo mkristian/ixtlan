@@ -49,9 +49,7 @@ public class PhraseBook extends Resource<PhraseBook> {
 
     @Override
     public String display() {
-        return new StringBuffer("phrasebook(").append(this.locale)
-                .append(")")
-                .toString();
+        return this.locale;
     }
 
 }

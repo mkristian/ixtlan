@@ -1,17 +1,17 @@
 /**
  * 
  */
-package de.saumya.gwt.session.client;
+package de.saumya.gwt.session.client.model;
 
 import java.sql.Timestamp;
 
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.datamapper.client.ResourceWithID;
 import de.saumya.gwt.datamapper.client.Resources;
 
-class Role extends Resource<Role> {
+public class Role extends ResourceWithID<Role> {
 
     private final LocaleFactory localeFactory;
     private final VenueFactory  venueFactory;
@@ -31,12 +31,8 @@ class Role extends Resource<Role> {
     public Resources<Locale> locales;
 
     @Override
-    public String key() {
-        return this.name;
-    }
-
-    @Override
     protected void appendXml(final StringBuffer buf) {
+        super.appendXml(buf);
         append(buf, "name", this.name);
         append(buf, "locales", this.locales);
         append(buf, "venues", this.venues);
@@ -45,6 +41,7 @@ class Role extends Resource<Role> {
 
     @Override
     protected void fromXml(final Element root) {
+        super.fromXml(root);
         this.name = getString(root, "name");
         this.locales = this.localeFactory.getChildResources(root, "locales");
         this.venues = this.venueFactory.getChildResources(root, "venues");
@@ -53,6 +50,7 @@ class Role extends Resource<Role> {
 
     @Override
     public void toString(final StringBuffer buf) {
+        super.toString(buf);
         buf.append(":name => ").append(this.name);
         if (this.venues != null) {
             buf.append(", :venues => ").append(this.venues);

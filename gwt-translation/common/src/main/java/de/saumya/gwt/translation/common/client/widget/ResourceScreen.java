@@ -13,7 +13,7 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.datamapper.client.Resources;
 import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.User;
+import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
@@ -21,11 +21,11 @@ import de.saumya.gwt.translation.common.client.route.Screen;
 public abstract class ResourceScreen<E extends Resource<E>> extends
         VerticalPanel implements Screen<E> {
 
-    private final ResourceHeaderPanel          header;
-
     private final PathFactory                  pathFactory;
 
     private final ResourceFactory<E>           factory;
+
+    protected final ResourceHeaderPanel        header;
 
     protected final ResourceActionPanel<E>     actions;
 
@@ -38,8 +38,6 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     private PathFactory                        parentPathFactory;
 
     protected E                                resource;
-
-    protected String                           locale;
 
     protected ResourceScreen(final GetTextController getText,
             final ResourceFactory<E> factory, final Session session,
@@ -56,6 +54,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         this.loading = new TranslatableLabel("loading", getText);
         this.header = new ResourceHeaderPanel(getText);
         this.actions = actions == null ? new ResourceActionPanel<E>(getText,
+                display,
                 session,
                 factory) : actions;
         this.display = display;
@@ -66,6 +65,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         add(this.actions);
         add(this.header);
         add(this.display);
+        add(this.displayAll);
 
         this.pathFactory = new PathFactory(factory.storageName());
         this.parentPathFactory = this.pathFactory;
@@ -77,11 +77,12 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     }
 
     @Override
-    public void setupPathFactory(final PathFactory parentPathFactory,
-            final String key) {
-        this.parentPathFactory = parentPathFactory == null
+    public void setup(final String parentPath) {
+        this.parentPathFactory = parentPath == null
                 ? this.pathFactory
-                : this.pathFactory.newPathFactory(parentPathFactory.showPath(key));
+                : this.pathFactory.newPathFactory(parentPath);
+        this.actions.setup(getPathFactory());
+        this.displayAll.setup(getPathFactory());
     }
 
     abstract protected void reset(final E resource);
@@ -89,17 +90,15 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     protected final void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
         this.header.reset(resource.key(), updatedAt, updatedBy);
-        this.actions.reset(resource, this.locale);
+        this.actions.reset(resource);
         this.display.reset(resource);
-        this.header.setVisible(true);
-        this.actions.setVisible(true);
-        this.display.setVisible(true);
+
+        this.displayAll.setVisible(false);
         setVisible(true);
     }
 
     @Override
     public void showAll() {
-        this.actions.reset(this.pathFactory);
         final Resources<E> resources = this.factory.all(new ResourcesChangeListener<E>() {
 
             @Override
@@ -114,41 +113,42 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         });
         // TODO should be set be onChange and onError. maybe make an application
         // wide notification widget
-        this.loading.setVisible(false);
+        // this.loading.setVisible(false);
         reset(resources);
     }
 
-    private void reset(final Resources<E> resources) {
-        this.displayAll.reset(resources,
-                              this.pathFactory,
-                              this.factory.storageName());
+    protected void reset(final Resources<E> resources) {
+        this.displayAll.reset(resources);
+        this.actions.reset();
         this.header.setVisible(false);
-        this.actions.setVisible(true);
         this.display.setVisible(false);
+        this.loading.setVisible(false);
         setVisible(true);
     }
 
     @Override
     public void showEdit(final String key) {
-        setReadOnly(false);
+        this.display.setReadOnly(false);
         show(key);
     }
 
     @Override
     public void showNew() {
+        this.display.setReadOnly(false);
+        this.displayAll.setVisible(false);
         reset(this.factory.newResource());
         this.loading.setVisible(false);
     }
 
     @Override
     public void showRead(final String key) {
-        setReadOnly(true);
+        this.display.setReadOnly(true);
         show(key);
+        this.actions.setVisible(false);
     }
 
     protected void show(final String key) {
         this.loading.setVisible(true);
-        this.display.setVisible(true);
         final E resource = this.factory.get(key,
                                             new ResourceChangeListener<E>() {
 
@@ -163,9 +163,5 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         // wide notification widget
         this.loading.setVisible(false);
         reset(resource);
-    }
-
-    private void setReadOnly(final boolean isReadOnly) {
-        this.display.setReadOnly(isReadOnly);
     }
 }

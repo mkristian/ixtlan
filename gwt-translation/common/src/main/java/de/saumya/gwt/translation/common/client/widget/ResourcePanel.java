@@ -33,6 +33,13 @@ public class ResourcePanel<E extends Resource<E>> extends VerticalPanel {
         for (final AttributePanel<E> attribute : this.attributes) {
             attribute.reset(resource);
         }
+        setVisible(true);
+    }
+
+    public void fill(final E resource) {
+        for (final AttributePanel<E> attribute : this.attributes) {
+            attribute.fill(resource);
+        }
     }
 
     public void setReadOnly(final boolean isReadOnly) {

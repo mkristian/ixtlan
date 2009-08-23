@@ -7,6 +7,8 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.session.client.model.User;
+import de.saumya.gwt.session.client.model.UserFactory;
 
 class Authentication extends Resource<Authentication> {
 
@@ -18,10 +20,10 @@ class Authentication extends Resource<Authentication> {
         this.userFactory = userFactory;
     }
 
-    public String login;
-    public String password;
-    public String token;
-    public User   user;
+    String login;
+    String password;
+    String token;
+    User   user;
 
     @Override
     public String key() {

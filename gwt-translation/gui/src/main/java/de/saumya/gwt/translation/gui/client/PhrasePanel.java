@@ -45,25 +45,43 @@ class PhrasePanel extends ResourcePanel<Phrase> {
         }
     }
 
-    PhrasePanel(final GetTextController getText) {
-        this.defaultTranslation = new TranslationPanel("DEFAULT", getText);
-        this.parentTranslation = new TranslationPanel("parent", getText);
+    PhrasePanel(final GetTextController getTextController) {
+        this.defaultTranslation = new TranslationPanel("DEFAULT",
+                getTextController);
+        this.parentTranslation = new TranslationPanel("parentTranslation",
+                getTextController);
 
         add(this.defaultTranslation);
         add(this.parentTranslation);
-        add(new AttributePanel<Phrase>("current text", getText) {
+        add(new AttributePanel<Phrase>("current text", getTextController) {
 
             @Override
             protected String value(final Phrase resource) {
+                setReadOnly(true);
                 return resource.currentText;
             }
 
+            @Override
+            protected void fill(final Phrase resource, final String value) {
+                // resource.currentText = value;
+            }
+
+            @Override
+            public void setReadOnly(final boolean isReadOnly) {
+                super.setReadOnly(true);
+            }
+
         });
-        add(new AttributePanel<Phrase>("next text", getText) {
+        add(new AttributePanel<Phrase>("next text", getTextController) {
 
             @Override
             protected String value(final Phrase resource) {
                 return resource.text;
+            }
+
+            @Override
+            protected void fill(final Phrase resource, final String value) {
+                resource.text = value;
             }
 
         });
@@ -72,7 +90,7 @@ class PhrasePanel extends ResourcePanel<Phrase> {
     @Override
     protected void doReset(final Phrase resource) {
         this.defaultTranslation.reset(resource.defaultTranslation);
-        this.parentTranslation.reset(resource.parent);
+        this.parentTranslation.reset(resource.parentTranslation);
         setVisible(true);
     }
 }

@@ -3,76 +3,60 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.VerticalPanel;
-
-import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
-import de.saumya.gwt.translation.common.client.widget.ResourceCollectionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
 public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
 
-    private final PhraseBookFactory bookFactory;
+    static class PhraseBookPanel extends ResourcePanel<PhraseBook> {
 
-    private final PhraseScreen      phraseScreen;
+        private final PhraseScreen phraseScreen;
 
-    private final VerticalPanel     phrasesPanel = new VerticalPanel();
+        PhraseBookPanel(final PhraseScreen phraseScreen) {
+            this.phraseScreen = phraseScreen;
+            add(phraseScreen);
+        }
 
-    public PhraseBookScreen(final PhraseBookFactory bookFactory,
-            final PhraseScreen phrasePanel, final GetTextController getText,
-            final Session session) {
-        super(getText,
-                bookFactory,
-                session,
-                new ResourcePanel<PhraseBook>(),
-                new ResourceCollectionPanel<PhraseBook>(session));
-        this.bookFactory = bookFactory;
-        this.phraseScreen = phrasePanel;
-
-        this.phraseScreen.setVisible(false);
-        this.phrasesPanel.setVisible(false);
-
-        add(this.phrasesPanel);
-        add(this.phraseScreen);
+        @Override
+        protected void doReset(final PhraseBook resource) {
+            this.phraseScreen.showAll(resource.phrases);
+        }
     }
 
-    @Override
-    protected void show(final String localeCode) {
-        this.phraseScreen.setVisible(false);
-        this.phrasesPanel.setVisible(false);
+    private final PhraseScreen phraseScreen;
 
-        this.bookFactory.get(localeCode,
-                             new ResourceChangeListener<PhraseBook>() {
-
-                                 @Override
-                                 public void onChange(final PhraseBook resource) {
-                                     PhraseBookScreen.this.phrasesPanel.clear();
-                                     final HyperlinkFactory factory = new HyperlinkFactory(PhraseBookScreen.this.phraseScreen.getPathFactory());
-                                     for (final Phrase phrase : resource.phrases) {
-                                         GWT.log(phrase.toString(), null);
-                                         PhraseBookScreen.this.phrasesPanel.add(factory.editResourceHyperklink(phrase));
-                                     }
-                                     PhraseBookScreen.this.phrasesPanel.setVisible(true);
-                                     PhraseBookScreen.this.loading.setVisible(false);
-                                 }
-                             });
+    public PhraseBookScreen(final PhraseBookFactory bookFactory,
+            final PhraseScreen phraseScreen,
+            final GetTextController getTextController, final Session session) {
+        super(getTextController,
+                bookFactory,
+                session,
+                new PhraseBookPanel(phraseScreen),
+                new PhraseBookCollectionPanel(session,
+                        bookFactory,
+                        getTextController));
+        this.phraseScreen = phraseScreen;
     }
 
     @Override
     public Screen<Phrase> child(final String key) {
-        this.loading.setVisible(false);
-        this.phraseScreen.setVisible(false);
-        this.phrasesPanel.setVisible(false);
-        this.phraseScreen.setupPathFactory(getPathFactory(), key);
-        GWT.log("setup child " + key, null);
+        this.phraseScreen.setParentKey(key);
         return this.phraseScreen;
+    }
+
+    @Override
+    public void showRead(final String key) {
+        this.phraseScreen.setParentKey(key);
+        this.phraseScreen.setup(getPathFactory().showPath(key));
+        show(key);
+        this.header.setVisible(false);
+        this.actions.setVisible(false);
     }
 
     @Override

@@ -13,6 +13,9 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 
 import de.saumya.gwt.datamapper.client.Resources;
 import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
+import de.saumya.gwt.session.client.model.Locale;
+import de.saumya.gwt.session.client.model.Role;
+import de.saumya.gwt.session.client.model.User;
 
 public class Session {
 
@@ -164,7 +167,7 @@ public class Session {
     }
 
     public enum Action {
-        CREATE, RETRIEVE, RETRIEVE_ALL, UPDATE, DELETE
+        CREATE, SHOW, INDEX, UPDATE, DESTROY
     }
 
     public boolean isAllowed(final Action action, final String resourceName) {
@@ -191,6 +194,7 @@ public class Session {
             final String localeCode) {
         GWT.log(resourceName + "#" + action + " " + localeCode + "?", null);
         for (final Role role : this.authentication.user.roles) {
+            GWT.log(role.toString(), null);
             if (isAllowed(action, resourceName, role)) {
                 for (final Locale l : role.locales) {
                     if (l.code.equals(localeCode)) {

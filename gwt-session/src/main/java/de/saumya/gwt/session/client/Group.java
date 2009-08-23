@@ -14,7 +14,7 @@ class Group extends Resource<Group> {
         super(repository, factory);
     }
 
-    public String name;
+    String name;
 
     @Override
     public String key() {

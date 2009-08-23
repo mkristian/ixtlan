@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
-import de.saumya.gwt.session.client.User;
+import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
 public class ResourceHeaderPanel extends HorizontalPanel {
@@ -57,6 +57,7 @@ public class ResourceHeaderPanel extends HorizontalPanel {
             this.modifiedByValue.setVisible(true);
             this.modifiedByValue.setText(updatedBy.display());
         }
+        setVisible(true);
     }
 
     private Label label() {

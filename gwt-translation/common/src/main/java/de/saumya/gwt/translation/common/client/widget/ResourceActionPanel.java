@@ -23,34 +23,35 @@ public class ResourceActionPanel<E extends Resource<E>> extends HorizontalPanel 
     protected final Button          save;
     protected final Button          delete;
 
-    private final ButtonHandler<E>  saveHandler    = new ButtonHandler<E>() {
-
-                                                       @Override
-                                                       protected void action(
-                                                               final E resource) {
-                                                           resource.save();
-                                                       }
-
-                                                   };
-    private final ButtonHandler<E>  destroyHandler = new ButtonHandler<E>() {
-
-                                                       @Override
-                                                       protected void action(
-                                                               final E resource) {
-                                                           resource.destroy();
-                                                       }
-
-                                                   };
-
+    private final ButtonHandler<E>  saveHandler;
+    private final ButtonHandler<E>  destroyHandler;
     protected final Session         session;
 
     protected final String          resourceName;
 
     public ResourceActionPanel(final GetTextController getText,
-            final Session session, final ResourceFactory<E> factory) {
+            final ResourcePanel<E> mutator, final Session session,
+            final ResourceFactory<E> factory) {
         this.getText = getText;
         this.session = session;
         this.resourceName = factory.storageName();
+        this.saveHandler = new ButtonHandler<E>(mutator) {
+
+            @Override
+            protected void action(final E resource) {
+                resource.save();
+            }
+
+        };
+        this.destroyHandler = new ButtonHandler<E>(mutator) {
+
+            @Override
+            protected void action(final E resource) {
+                resource.destroy();
+            }
+
+        };
+
         this.fresh = linkbutton("new");
         this.create = button("create", this.saveHandler);
         this.save = button("save", this.saveHandler);
@@ -73,33 +74,42 @@ public class ResourceActionPanel<E extends Resource<E>> extends HorizontalPanel 
         return button;
     }
 
-    public final void reset(final PathFactory pathFactory) {
+    public final void setup(final PathFactory pathFactory) {
         this.fresh.setTargetHistoryToken(pathFactory.newPath());
-        this.fresh.setVisible(this.session.isAllowed(Session.Action.CREATE,
-                                                     this.resourceName));
-        this.create.setVisible(false);
-        this.save.setVisible(false);
-        this.delete.setVisible(false);
-        setVisible(true);
     }
 
-    protected void doReset(final E resource, final String locale) {
+    protected void doReset(final E resource) {
     }
 
-    public final void reset(final E resource, final String locale) {
+    protected void doReset() {
+    }
+
+    public final void reset(final E resource) {
         this.saveHandler.reset(resource);
         this.destroyHandler.reset(resource);
 
         // TODO this stati check needs improvement
         this.delete.setVisible(!resource.isNew()
-                && this.session.isAllowed(Action.DELETE, this.resourceName));
+                && this.session.isAllowed(Action.DESTROY, this.resourceName));
         this.save.setVisible(!resource.isNew() && !resource.isDeleted()
                 && this.session.isAllowed(Action.UPDATE, this.resourceName));
-        this.create.setVisible(!resource.isUptodate() && !resource.isDeleted()
+        this.create.setVisible(resource.isNew()
                 && this.session.isAllowed(Action.CREATE, this.resourceName));
         this.fresh.setVisible(false);
 
-        doReset(resource, locale);
+        doReset(resource);
+
+        setVisible(true);
+    }
+
+    public void reset() {
+        this.create.setVisible(false);
+        this.save.setVisible(false);
+        this.delete.setVisible(false);
+        this.fresh.setVisible(this.session.isAllowed(Session.Action.CREATE,
+                                                     this.resourceName));
+
+        doReset();
 
         setVisible(true);
     }

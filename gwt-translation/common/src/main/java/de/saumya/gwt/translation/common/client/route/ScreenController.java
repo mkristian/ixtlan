@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.SessionAdapter;
+import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
@@ -56,7 +56,7 @@ public class ScreenController {
                 }
             }
         });
-        session.addSessionListern(new SessionAdapter() {
+        session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
             public void onSuccessfulLogin() {

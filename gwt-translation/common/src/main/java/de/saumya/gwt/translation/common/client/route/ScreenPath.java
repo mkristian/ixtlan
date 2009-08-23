@@ -73,4 +73,10 @@ public class ScreenPath {
             this.child = null;
         }
     }
+
+    @Override
+    public String toString() {
+        // TODO use stringbuffer and apply all cases properly
+        return "/" + this.controllerName + "/" + this.key;
+    }
 }

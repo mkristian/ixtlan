@@ -9,8 +9,8 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceWithID;
-import de.saumya.gwt.session.client.User;
-import de.saumya.gwt.session.client.UserFactory;
+import de.saumya.gwt.session.client.model.User;
+import de.saumya.gwt.session.client.model.UserFactory;
 
 public class Phrase extends ResourceWithID<Phrase> {
 
@@ -28,7 +28,7 @@ public class Phrase extends ResourceWithID<Phrase> {
     public String      code;
     public String      currentText;
     public String      text;
-    public Translation parent;
+    public Translation parentTranslation;
     public Translation defaultTranslation;
     public Timestamp   updatedAt;
     public User        updatedBy;
@@ -39,7 +39,7 @@ public class Phrase extends ResourceWithID<Phrase> {
         append(buf, "code", this.code);
         append(buf, "current_text", this.currentText);
         append(buf, "text", this.text);
-        append(buf, "parent", this.parent);
+        append(buf, "parentTranslation", this.parentTranslation);
         append(buf, "default", this.defaultTranslation);
         append(buf, "updated_at", this.updatedAt);
         append(buf, "updated_by", this.updatedBy);
@@ -51,7 +51,7 @@ public class Phrase extends ResourceWithID<Phrase> {
         this.code = getString(root, "code");
         this.defaultTranslation = this.translationFactory.getChildResource(root,
                                                                            "default");
-        this.parent = this.translationFactory.getChildResource(root, "parent");
+        this.parentTranslation = this.translationFactory.getChildResource(root, "parentTranslation");
         this.text = getString(root, "text");
         this.currentText = getString(root, "current_text");
         this.updatedAt = getTimestamp(root, "updated_at");
@@ -65,7 +65,7 @@ public class Phrase extends ResourceWithID<Phrase> {
         buf.append(", :current_text => ").append(this.currentText);
         buf.append(", :text => ").append(this.text);
         buf.append(", :default => ").append(this.defaultTranslation);
-        buf.append(", :parent => ").append(this.parent);
+        buf.append(", :parentTranslation => ").append(this.parentTranslation);
         buf.append(", :updated_at => ").append(this.updatedAt);
         if (this.updatedBy != null) {
             buf.append(", :updated_by => ");

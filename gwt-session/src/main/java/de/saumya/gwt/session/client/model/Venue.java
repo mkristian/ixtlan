@@ -1,4 +1,4 @@
-package de.saumya.gwt.session.client;
+package de.saumya.gwt.session.client.model;
 
 import java.sql.Timestamp;
 

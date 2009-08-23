@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.SessionAdapter;
+import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
 
@@ -67,7 +67,7 @@ public class TranslationPopupPanel extends PopupPanel {
         };
         addCloseHandler(closeHandler);
 
-        session.addSessionListern(new SessionAdapter() {
+        session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
             public void onSessionTimeout() {
@@ -83,7 +83,7 @@ public class TranslationPopupPanel extends PopupPanel {
 
             @Override
             public void onClick(final ClickEvent event) {
-                TranslationPopupPanel.this.box.setText(TranslationPopupPanel.this.phrase.parent.text);
+                TranslationPopupPanel.this.box.setText(TranslationPopupPanel.this.phrase.parentTranslation.text);
             }
         });
         this.approveIt = new TranslatableButton("approve", getText);
@@ -98,7 +98,7 @@ public class TranslationPopupPanel extends PopupPanel {
         this.translatable = translatable;
         this.box.setText(phrase.text);
         this.box.setVisibleLength((phrase.text == null
-                ? phrase.parent.text
+                ? phrase.parentTranslation.text
                 : phrase.text).length());
 
         this.codeLabel.setText(phrase.code);

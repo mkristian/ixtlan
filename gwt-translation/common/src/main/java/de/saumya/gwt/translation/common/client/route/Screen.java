@@ -7,11 +7,11 @@ import de.saumya.gwt.datamapper.client.Resource;
 
 public interface Screen<E extends Resource<E>> {
 
-    Screen<?> child(String key);
+    Screen<?> child(String parentKey);
 
     PathFactory getPathFactory();
 
-    void setupPathFactory(PathFactory pathFactory, String key);
+    void setup(String parentPath);
 
     void showRead(String key);
 
