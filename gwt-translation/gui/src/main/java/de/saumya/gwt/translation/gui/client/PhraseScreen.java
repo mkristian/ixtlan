@@ -9,6 +9,7 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
+import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
 class PhraseScreen extends ResourceScreen<Phrase> {
@@ -16,14 +17,18 @@ class PhraseScreen extends ResourceScreen<Phrase> {
     private final PhraseActions         phraseActions;
     private final PhraseCollectionPanel phraseCollection;
 
-    PhraseScreen(final GetTextController getText, final PhrasePanel panel,
-            final PhraseFactory phraseFactory, final Session session) {
-        super(getText,
+    PhraseScreen(final GetTextController getTextController,
+            final PhraseFactory phraseFactory,
+            final ResourceMutator<Phrase> mutator, final Session session) {
+        super(getTextController,
                 phraseFactory,
                 session,
-                panel,
+                new PhrasePanel(getTextController, mutator),
                 new PhraseCollectionPanel(session, phraseFactory),
-                new PhraseActions(getText, panel, session, phraseFactory));
+                new PhraseActions(getTextController,
+                        mutator,
+                        session,
+                        phraseFactory));
         this.phraseActions = (PhraseActions) this.actions;
         this.phraseCollection = (PhraseCollectionPanel) this.displayAll;
     }

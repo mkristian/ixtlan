@@ -13,28 +13,29 @@ import de.saumya.gwt.datamapper.client.Resource;
 public abstract class ButtonHandler<E extends Resource<E>> implements
         ClickHandler, KeyUpHandler {
 
-    private E                      resource;
+    private E                        resource;
 
-    private final ResourcePanel<E> mutator;
+    private final ResourceMutator<E> mutator;
 
-    public ButtonHandler(final ResourcePanel<E> mutator) {
+    public ButtonHandler(final ResourceMutator<E> mutator) {
         this.mutator = mutator;
     }
 
     public void reset(final E resource) {
         this.resource = resource;
+        this.mutator.pull(resource);
     }
 
     @Override
     public void onClick(final ClickEvent event) {
-        this.mutator.fill(this.resource);
+        this.mutator.push();
         action(this.resource);
     }
 
     @Override
     public void onKeyUp(final KeyUpEvent event) {
         if (event.getNativeKeyCode() == 13) {
-            this.mutator.fill(this.resource);
+            this.mutator.push();
             action(this.resource);
         }
     }

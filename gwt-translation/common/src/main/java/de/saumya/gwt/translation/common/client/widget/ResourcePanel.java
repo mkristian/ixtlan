@@ -3,26 +3,21 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.translation.common.client.GetTextController;
 
 public class ResourcePanel<E extends Resource<E>> extends VerticalPanel {
 
-    protected final Collection<AttributePanel<E>> attributes = new HashSet<AttributePanel<E>>();
+    protected final GetTextController getTextController;
 
-    protected void add(final AttributePanel<E> attributePanel) {
-        super.add(attributePanel);
-        this.attributes.add(attributePanel);
-    }
+    private final ResourceMutator<E>  mutator;
 
-    @Override
-    public void clear() {
-        super.clear();
-        this.attributes.clear();
+    protected ResourcePanel(final GetTextController getTextController,
+            final ResourceMutator<E> mutator) {
+        this.getTextController = getTextController;
+        this.mutator = mutator;
     }
 
     protected void doReset(final E resource) {
@@ -30,21 +25,15 @@ public class ResourcePanel<E extends Resource<E>> extends VerticalPanel {
 
     protected final void reset(final E resource) {
         doReset(resource);
-        for (final AttributePanel<E> attribute : this.attributes) {
-            attribute.reset(resource);
-        }
+        this.mutator.pull(resource);
         setVisible(true);
     }
 
-    public void fill(final E resource) {
-        for (final AttributePanel<E> attribute : this.attributes) {
-            attribute.fill(resource);
-        }
+    public void setReadOnly(final boolean isReadOnly) {
+        this.mutator.setReadOnly(isReadOnly);
     }
 
-    public void setReadOnly(final boolean isReadOnly) {
-        for (final AttributePanel<E> attribute : this.attributes) {
-            attribute.setReadOnly(isReadOnly);
-        }
+    protected void addTranslatableLabel(final String text) {
+        add(new TranslatableLabel(text, this.getTextController));
     }
 }

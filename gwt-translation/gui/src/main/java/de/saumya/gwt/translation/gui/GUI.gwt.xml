@@ -10,6 +10,8 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+  <inherits name="com.google.gwt.user.Debug"/>
+
   <entry-point class='de.saumya.gwt.translation.gui.client.GUI'/>
 
 </module>

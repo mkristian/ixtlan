@@ -30,7 +30,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends HorizontalPanel 
     protected final String          resourceName;
 
     public ResourceActionPanel(final GetTextController getText,
-            final ResourcePanel<E> mutator, final Session session,
+            final ResourceMutator<E> mutator, final Session session,
             final ResourceFactory<E> factory) {
         this.getText = getText;
         this.session = session;
@@ -60,6 +60,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends HorizontalPanel 
 
     protected Button button(final String name, final ButtonHandler<E> handler) {
         final Button button = new TranslatableButton(name, this.getText);
+        button.ensureDebugId(this.resourceName + "-" + name);
         button.setVisible(false);
         button.addClickHandler(handler);
         button.addKeyUpHandler(handler);

@@ -13,7 +13,7 @@ import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.widget.ButtonHandler;
 import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
-import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
+import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
 
 class PhraseActions extends ResourceActionPanel<Phrase> {
 
@@ -24,7 +24,7 @@ class PhraseActions extends ResourceActionPanel<Phrase> {
     private String                      locale;
 
     public PhraseActions(final GetTextController getText,
-            final ResourcePanel<Phrase> mutator, final Session session,
+            final ResourceMutator<Phrase> mutator, final Session session,
             final PhraseFactory factory) {
         super(getText, mutator, session, factory);
         this.approveHandler = new ButtonHandler<Phrase>(mutator) {

@@ -1,0 +1,9 @@
+.translatable, .translatable  a:visited, .translatable  a{
+  color: darkblue;
+  cursor: pointer;
+}
+
+.to_be_approved, .to_be_approved, .to_be_approved  a:visited, .to_be_approved  a{
+  color: darkgreen;
+  font-weight: bold;
+}

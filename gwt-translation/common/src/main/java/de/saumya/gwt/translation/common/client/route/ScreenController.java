@@ -10,7 +10,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -34,22 +33,13 @@ public class ScreenController {
             final GetTextController getText, final Session session) {
         this.getText = getText;
         panel.add(this.bodyPanel);
-        this.bodyPanel.add(new Label("welcome"),
-                           new TranslatableHyperlink("welcome",
-                                   "/welcome",
-                                   getText));
-        this.names.add("welcome");
-
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
 
             @Override
             public void onValueChange(final ValueChangeEvent<String> event) {
-                final String pathValue = event.getValue().length() == 0
-                        ? "/welcome"
-                        : event.getValue();
-                if (session.hasUser()) {
-                    GWT.log(pathValue, null);
-                    final ScreenPath path = new ScreenPath(pathValue);
+                if (event.getValue().length() > 0 && session.hasUser()) {
+                    GWT.log("dispatch: " + event.getValue(), null);
+                    final ScreenPath path = new ScreenPath(event.getValue());
 
                     ScreenController.this.bodyPanel.selectTab(ScreenController.this.names.indexOf(path.controllerName));
                     ScreenController.this.dispatcher.dispatch(path);

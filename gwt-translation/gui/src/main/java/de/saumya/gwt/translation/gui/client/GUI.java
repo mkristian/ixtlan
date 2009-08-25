@@ -24,12 +24,15 @@ import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.model.Phrase;
+import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.model.WordFactory;
 import de.saumya.gwt.translation.common.client.route.ScreenController;
+import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
 
 public class GUI implements EntryPoint {
 
@@ -123,12 +126,13 @@ public class GUI implements EntryPoint {
                 locale);
 
         final PhraseScreen phraseScreen = new PhraseScreen(getTextController,
-                new PhrasePanel(getTextController),
                 phraseFactory,
+                new ResourceMutator<Phrase>(),
                 session);
 
         final PhraseBookScreen phraseBookScreen = new PhraseBookScreen(bookFactory,
                 phraseScreen,
+                new ResourceMutator<PhraseBook>(),
                 getTextController,
                 session);
 

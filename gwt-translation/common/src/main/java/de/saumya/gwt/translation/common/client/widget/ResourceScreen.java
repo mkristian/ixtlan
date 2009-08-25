@@ -42,21 +42,11 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     protected ResourceScreen(final GetTextController getText,
             final ResourceFactory<E> factory, final Session session,
             final ResourcePanel<E> display,
-            final ResourceCollectionPanel<E> displayAll) {
-        this(getText, factory, session, display, displayAll, null);
-    }
-
-    protected ResourceScreen(final GetTextController getText,
-            final ResourceFactory<E> factory, final Session session,
-            final ResourcePanel<E> display,
             final ResourceCollectionPanel<E> displayAll,
             final ResourceActionPanel<E> actions) {
         this.loading = new TranslatableLabel("loading", getText);
         this.header = new ResourceHeaderPanel(getText);
-        this.actions = actions == null ? new ResourceActionPanel<E>(getText,
-                display,
-                session,
-                factory) : actions;
+        this.actions = actions;
         this.display = display;
         this.displayAll = displayAll;
         this.factory = factory;
@@ -89,7 +79,9 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
 
     protected final void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
-        this.header.reset(resource.key(), updatedAt, updatedBy);
+        if (!resource.isNew()) {
+            this.header.reset(resource.key(), updatedAt, updatedBy);
+        }
         this.actions.reset(resource);
         this.display.reset(resource);
 

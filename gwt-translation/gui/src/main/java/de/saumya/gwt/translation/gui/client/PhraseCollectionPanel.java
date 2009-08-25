@@ -29,26 +29,31 @@ class PhraseCollectionPanel extends ResourceCollectionPanel<Phrase> {
     @Override
     protected final void reset(final Resources<Phrase> resources) {
         clear();
-        if (this.session.isAllowed(Action.UPDATE,
-                                   this.resourceName,
-                                   this.locale)) {
-            for (final Phrase resource : resources) {
-                add(new Hyperlink(resource.display(),
-                        getPathFactory().editPath(resource.key())));
-            }
+        if (resources != null) {
+            if (this.session.isAllowed(Action.UPDATE,
+                                       this.resourceName,
+                                       this.locale)) {
+                for (final Phrase resource : resources) {
+                    add(new Hyperlink(resource.display(),
+                            getPathFactory().editPath(resource.key())));
+                }
 
-        }
-        else if (this.session.isAllowed(Action.SHOW, this.resourceName)) {
-            for (final Phrase resource : resources) {
-                add(new Hyperlink(resource.display(),
-                        getPathFactory().showPath(resource.key())));
             }
+            else if (this.session.isAllowed(Action.SHOW, this.resourceName)) {
+                for (final Phrase resource : resources) {
+                    add(new Hyperlink(resource.display(),
+                            getPathFactory().showPath(resource.key())));
+                }
+            }
+            else {
+                for (final Phrase resource : resources) {
+                    add(new Label(resource.display()));
+                }
+            }
+            setVisible(true);
         }
         else {
-            for (final Phrase resource : resources) {
-                add(new Label(resource.display()));
-            }
+            setVisible(false);
         }
-        setVisible(true);
     }
 }

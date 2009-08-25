@@ -39,23 +39,28 @@ public class ResourceCollectionPanel<E extends Resource<E>> extends
 
     protected void reset(final Resources<E> resources) {
         clear();
-        if (this.session.isAllowed(Action.UPDATE, this.resourceName)) {
-            for (final E resource : resources) {
-                add(new Hyperlink(resource.display(),
-                        this.pathFactory.editPath(resource.key())));
+        if (resources != null) {
+            if (this.session.isAllowed(Action.UPDATE, this.resourceName)) {
+                for (final E resource : resources) {
+                    add(new Hyperlink(resource.display(),
+                            this.pathFactory.editPath(resource.key())));
+                }
             }
-        }
-        else if (this.session.isAllowed(Action.SHOW, this.resourceName)) {
-            for (final E resource : resources) {
-                add(new Hyperlink(resource.display(),
-                        this.pathFactory.showPath(resource.key())));
+            else if (this.session.isAllowed(Action.SHOW, this.resourceName)) {
+                for (final E resource : resources) {
+                    add(new Hyperlink(resource.display(),
+                            this.pathFactory.showPath(resource.key())));
+                }
             }
+            else {
+                for (final E resource : resources) {
+                    add(new Label(resource.display()));
+                }
+            }
+            setVisible(true);
         }
         else {
-            for (final E resource : resources) {
-                add(new Label(resource.display()));
-            }
+            setVisible(false);
         }
-        setVisible(true);
     }
 }
