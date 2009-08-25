@@ -10,7 +10,7 @@
   </parent>
   <groupId>de.saumya.gwt.translation</groupId>
   <artifactId>gui</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GWT GUI for managing locale and translations</name>
   <dependencies>
@@ -23,11 +23,16 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
-          <module>de.saumya.gwt.translation.gui.GUI</module>
-          <runTarget>GUI.html</runTarget>
+          <!--inplace>true</inplace>
+          <module>de.saumya.gwt.translation.gui.GUI</module-->
+          <runTarget>de.saumya.gwt.translation.gui.GUI/GUI.html</runTarget>
         </configuration>
         <executions>
           <execution>

@@ -3,10 +3,6 @@ package de.saumya.gwt.session.client.model;
 import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
-import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.Role;
-import de.saumya.gwt.session.client.model.RoleFactory;
-import de.saumya.gwt.session.client.model.VenueFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -24,6 +20,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
     private Role                resource;
 
     private static final String RESOURCE_XML = "<role>"
+                                                     + "<id>1</id>"
                                                      + "<name>root</name>"
                                                      + "<locales></locales>"
                                                      + "<venues></venues>"
@@ -33,7 +30,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
     @Override
     protected String resourceNewXml() {
         return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
-                                         "");
+                                         "").replace("<id>1</id>", "");
     }
 
     @Override
@@ -43,7 +40,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
 
     @Override
     protected String resource2Xml() {
-        return RESOURCE_XML.replace(">root<", ">admin<");
+        return RESOURCE_XML.replace(">root<", ">admin<").replace(">1<", ">2<");
     }
 
     @Override
@@ -62,6 +59,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
     protected Resource<Role> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.id = 1;
         this.resource.name = "root";
 
         this.repository.addXmlResponse(RESOURCE_XML);
@@ -84,6 +82,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
     }
 
     private final static String XML = "<role>"
+                                            + "<id>1</id>"
                                             + "<name>root</name>"
                                             + "<locales>"
                                             + "<locale>"
