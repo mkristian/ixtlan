@@ -26,12 +26,13 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
+          <module>de.saumya.gwt.translation.gui.GUI</module>
           <runTarget>GUI.html</runTarget>
-          <module>de.saumya.gwt.translation.gui.GUI</module> 
         </configuration>
         <executions>
           <execution>
             <goals>
+              <goal>compile</goal>
               <goal>test</goal>
             </goals>
           </execution>
