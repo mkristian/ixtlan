@@ -10,12 +10,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
+import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
@@ -50,8 +52,19 @@ public class ScreenController {
 
             @Override
             public void onSuccessfulLogin() {
+                final TabBar bar = ScreenController.this.bodyPanel.getTabBar();
+                for (int i = 0; i < bar.getTabCount(); i++) {
+                    final String name = ScreenController.this.names.get(i);
+                    // TODO better permissions check !?!?
+                    bar.setTabEnabled(i, session.isAllowed(Action.INDEX, name)
+                            || session.isAllowed(Action.SHOW, name)
+                            || session.isAllowed(Action.UPDATE, name));
+
+                    // TODO something better when no Tab gets enabled
+                    GWT.log(bar.toString(), null);
+                }
                 final String pathValue = History.getToken().length() == 0
-                        ? "/welcome"
+                        ? "/"
                         : History.getToken();
                 GWT.log(pathValue, null);
                 final ScreenPath path = new ScreenPath(pathValue);

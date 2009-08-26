@@ -17,6 +17,8 @@ import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.PermissionFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
+import de.saumya.gwt.session.client.model.Configuration;
+import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.RoleFactory;
@@ -103,6 +105,9 @@ public class GUI implements EntryPoint {
         final PhraseBookFactory bookFactory = new PhraseBookFactory(repository,
                 phraseFactory);
 
+        final ConfigurationFactory configurationFactory = new ConfigurationFactory(repository,
+                userFactory);
+
         final Session session = new Session(new AuthenticationFactory(repository,
                 userFactory),
                 permissionFactory);
@@ -125,6 +130,10 @@ public class GUI implements EntryPoint {
                 session,
                 locale);
 
+        final ScreenController screenController = new ScreenController(sessionPanel,
+                getTextController,
+                session);
+
         final PhraseScreen phraseScreen = new PhraseScreen(getTextController,
                 phraseFactory,
                 new ResourceMutator<Phrase>(),
@@ -136,9 +145,12 @@ public class GUI implements EntryPoint {
                 getTextController,
                 session);
 
-        final ScreenController screenController = new ScreenController(sessionPanel,
+        final ConfigurationScreen configurationScreen = new ConfigurationScreen(configurationFactory,
+                new ResourceMutator<Configuration>(),
                 getTextController,
                 session);
+
+        screenController.addScreen(configurationScreen, "configuration");
         screenController.addScreen(phraseBookScreen, "phrase_book");
 
         new SessionController(session, loginPanel, sessionPanel);

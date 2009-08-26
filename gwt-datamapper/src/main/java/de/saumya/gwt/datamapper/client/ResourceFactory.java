@@ -69,6 +69,15 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return getResource(keyFromXml(root));
     }
 
+    private E singleton;
+
+    E getResource() {
+        if (this.singleton == null) {
+            this.singleton = newResource();
+        }
+        return this.singleton;
+    }
+
     E getResource(final String key) {
         GWT.log(key + " = " + this.cache.toString(), null);
         if (key == null) {
@@ -119,8 +128,16 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return get("" + key, listener);
     }
 
+    public E get(final ResourceChangeListener<E> listener) {
+        final E resource = getResource();
+        resource.state = State.TO_BE_LOADED;
+        resource.addResourceChangeListener(listener);
+        this.repository.get(storageName(),
+                            new ResourceRequestCallback<E>(resource, this));
+        return resource;
+    }
+
     public E get(final String key, final ResourceChangeListener<E> listener) {
-        GWT.log(storageName() + ": " + this.cache.toString(), null);
         final E resource = getResource(key);
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);

@@ -13,6 +13,7 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.datamapper.client.Resources;
 import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
+import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
@@ -23,7 +24,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
 
     private final PathFactory                  pathFactory;
 
-    private final ResourceFactory<E>           factory;
+    protected final ResourceFactory<E>         factory;
 
     protected final ResourceHeaderPanel        header;
 
@@ -32,6 +33,8 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     protected final ResourcePanel<E>           display;
 
     protected final ResourceCollectionPanel<E> displayAll;
+
+    protected final Session                    session;
 
     protected final TranslatableLabel          loading;
 
@@ -50,13 +53,15 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         this.display = display;
         this.displayAll = displayAll;
         this.factory = factory;
+        this.session = session;
 
         add(this.loading);
         add(this.actions);
         add(this.header);
         add(this.display);
-        add(this.displayAll);
-
+        if (displayAll != null) {
+            add(this.displayAll);
+        }
         this.pathFactory = new PathFactory(factory.storageName());
         this.parentPathFactory = this.pathFactory;
     }
@@ -72,7 +77,9 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
                 ? this.pathFactory
                 : this.pathFactory.newPathFactory(parentPath);
         this.actions.setup(getPathFactory());
-        this.displayAll.setup(getPathFactory());
+        if (this.displayAll != null) {
+            this.displayAll.setup(getPathFactory());
+        }
     }
 
     abstract protected void reset(final E resource);
@@ -137,6 +144,31 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         this.display.setReadOnly(true);
         show(key);
         this.actions.setVisible(false);
+    }
+
+    protected void showSingleton() {
+        if (this.session.isAllowed(Action.UPDATE, this.factory.storageName())
+                || this.session.isAllowed(Action.SHOW,
+                                          this.factory.storageName())) {
+
+            this.display.setReadOnly(!this.session.isAllowed(Action.UPDATE,
+                                                             this.factory.storageName()));
+            this.loading.setVisible(true);
+            final E resource = this.factory.get(new ResourceChangeListener<E>() {
+
+                @Override
+                public void onChange(final E resource) {
+                    reset(resource);
+                    ResourceScreen.this.loading.setVisible(false);
+                }
+            });
+            this.loading.setVisible(false);
+            reset(resource);
+        }
+        else {
+            this.loading.setVisible(false);
+            this.display.setVisible(false);
+        }
     }
 
     protected void show(final String key) {

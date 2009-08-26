@@ -7,3 +7,7 @@
   color: darkgreen;
   font-weight: bold;
 }
+
+.gwt-TabBarItem-disabled{
+  display:none;
+}

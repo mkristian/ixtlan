@@ -21,6 +21,10 @@ public class Repository {
         get(resourceName, "" + id, callback);
     }
 
+    void get(final String resourceName, final RequestCallback callback) {
+        doIt("GET", URL + resourceName + ".xml", null, callback);
+    }
+
     void get(final String resourceName, final String id,
             final RequestCallback callback) {
         doIt("GET", URL + resourceName + "/" + id + ".xml", null, callback);
