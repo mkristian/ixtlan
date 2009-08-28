@@ -41,8 +41,7 @@ public class CacheTestGwt extends GWTTestCase {
     public void testGet() {
         final Sample second = this.factory.get(123, null);
 
-        assertEquals(this.sample.language, second.language);
-        assertEquals(this.sample.country, second.country);
+        assertSame(this.sample, second);
         assertEquals(State.TO_BE_LOADED, second.state);
     }
 

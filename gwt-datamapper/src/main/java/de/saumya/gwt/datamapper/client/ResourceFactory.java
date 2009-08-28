@@ -55,13 +55,19 @@ public abstract class ResourceFactory<E extends Resource<E>> {
             }
             this.cache.put(resource.key(), resource);
         }
+        else {
+            this.singleton = resource;
+        }
     }
 
     void removeFromCache(final E resource) {
-        this.cache.remove(resource.key());
+        if (resource.key() != null) {
+            this.cache.remove(resource.key());
+        }
     }
 
     void clearCache() {
+        this.singleton = null;
         this.cache.clear();
     }
 
