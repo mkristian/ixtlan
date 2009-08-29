@@ -23,11 +23,14 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.mortbay.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
-          <runTarget>HTML.html</runTarget>
-          <module>de.saumya.gwt.translation.html.HTML</module>
+          <runTarget>de.saumya.gwt.translation.html.HTML/HTML.html</runTarget>
         </configuration>
         <executions>
           <execution>
@@ -40,12 +43,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

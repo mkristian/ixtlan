@@ -6,7 +6,6 @@ package de.saumya.gwt.datamapper.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -85,7 +84,6 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     }
 
     E getResource(final String key) {
-        GWT.log(key + " = " + this.cache.toString(), null);
         if (key == null) {
             return newResource();
         }
