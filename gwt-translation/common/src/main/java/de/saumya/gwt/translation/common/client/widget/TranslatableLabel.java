@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -11,6 +8,10 @@ import com.google.gwt.user.client.ui.Label;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.Translatable;
 
+/**
+ * @author kristian
+ * @author bill
+ */
 public class TranslatableLabel extends Label implements Translatable {
 
     private String                  code = null;
@@ -26,7 +27,7 @@ public class TranslatableLabel extends Label implements Translatable {
         this.getText = getText;
         this.getText.addTranslatable(this);
         setText(text);
-        sinkEvents(Event.MOUSEEVENTS);
+        sinkEvents(Event.MOUSEEVENTS | Event.ONCONTEXTMENU);
     }
 
     @Override
@@ -34,14 +35,11 @@ public class TranslatableLabel extends Label implements Translatable {
         if (DOM.eventGetType(event) == Event.ONMOUSEUP
                 && event.getButton() == NativeEvent.BUTTON_RIGHT) {
             this.getText.show(event.getClientX(), event.getClientY(), this);
+        }
+        else if (DOM.eventGetType(event) == Event.ONCONTEXTMENU) {
             event.stopPropagation();
             event.preventDefault();
         }
-        // else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
-        // && this.getText.isInTranslation()) {
-        // event.stopPropagation();
-        // event.preventDefault();
-        // }
         else {
             super.onBrowserEvent(event);
         }

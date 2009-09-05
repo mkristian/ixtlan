@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.dom.client.NativeEvent;
@@ -11,6 +8,10 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.Translatable;
 
+/**
+ * @author kristian
+ * @author bill
+ */
 public class TranslatableHyperlink extends Hyperlink implements Translatable {
 
     private String                  code = null;
@@ -22,7 +23,7 @@ public class TranslatableHyperlink extends Hyperlink implements Translatable {
         this.getText = getText;
         this.getText.addTranslatable(this);
         setText(text);
-        sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK);
+        sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.ONCONTEXTMENU);
     }
 
     public TranslatableHyperlink(final String text, final String path,
@@ -36,6 +37,10 @@ public class TranslatableHyperlink extends Hyperlink implements Translatable {
         if (DOM.eventGetType(event) == Event.ONMOUSEUP
                 && event.getButton() == NativeEvent.BUTTON_RIGHT) {
             this.getText.show(event.getClientX(), event.getClientY(), this);
+        }
+        else if (DOM.eventGetType(event) == Event.ONCONTEXTMENU) {
+            event.stopPropagation();
+            event.preventDefault();
         }
         else {
             super.onBrowserEvent(event);
