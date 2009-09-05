@@ -47,7 +47,7 @@ public class ResourceRequestCallback<E extends Resource<E>> implements
             this.resource.fireResourceChangeEvents();
         }
         else {
-            GWT.log("TODO status >= 300", null);
+            GWT.log("TODO status " + this.resource.state + " >= 300", null);
         }
     }
 }
