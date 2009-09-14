@@ -23,6 +23,8 @@ public class SetupElementVisitor implements ElementVisitor {
 
     private final KeyUpHandler keyUpHandler;
 
+    private StringBuilder      builder = new StringBuilder();
+
     public SetupElementVisitor(final GetText getText,
             final KeyUpHandler keyUpHandler, final Panel panel) {
         this.getText = getText;
@@ -37,6 +39,7 @@ public class SetupElementVisitor implements ElementVisitor {
         final String text = phrase.text == null
                 ? phrase.currentText
                 : phrase.text;
+        this.builder.append(phrase.currentText);
         if (text.length() < 30 || text.length() < width) {
             final TextBox box = new TextBoxWithNode(textNode, phrase);
 
@@ -71,5 +74,10 @@ public class SetupElementVisitor implements ElementVisitor {
     @Override
     public void reset() {
         this.panel.clear();
+        this.builder = new StringBuilder();
+    }
+
+    String currentText() {
+        return this.builder.toString();
     }
 }

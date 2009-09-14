@@ -17,10 +17,13 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
@@ -68,11 +71,20 @@ public class TranslationsController {
 
     public TranslationsController(final GetText getText, final Session session) {
         final PopupPanel popup = new PopupPanel(true);
-
+        final ComplexPanel phraseContext = new VerticalPanel();
+        phraseContext.setStyleName("phrase-context");
         final FlowPanel popupTextParts = new FlowPanel();
         final FlowPanel inlineTextParts = new FlowPanel();
 
-        popup.add(popupTextParts);
+        phraseContext.add(popupTextParts);
+
+        final Label currentTextLabel = new Label("current text");
+        currentTextLabel.setStyleName("current-text-label");
+        phraseContext.add(currentTextLabel);
+        final Label currentText = new Label();
+        currentText.setStyleName("current-text");
+        phraseContext.add(currentText);
+        popup.add(phraseContext);
 
         popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 
@@ -115,7 +127,7 @@ public class TranslationsController {
         };
 
         final TreeWalker treeWalker = new TreeWalker();
-        final ElementVisitor popupTextPartsVisitor = new SetupElementVisitor(getText,
+        final SetupElementVisitor popupTextPartsVisitor = new SetupElementVisitor(getText,
                 keyUpHandler,
                 popupTextParts);
         final ElementVisitor inlineTextPartsVisitor = new SetupElementVisitor(getText,
@@ -186,7 +198,7 @@ public class TranslationsController {
                             // it is an element which allows editing
                             switch (event.getNativeEvent().getButton()) {
                             case 1: // left mouse click => inline one or more
-                                    // textboxes
+                                // textboxes
 
                                 // first collect the all text nodes from the
                                 // clicked element as well of its children
@@ -239,6 +251,7 @@ public class TranslationsController {
                                     popupTextPartsVisitor.reset();
                                     treeWalker.accept(clickedElement,
                                                       popupTextPartsVisitor);
+                                    currentText.setText(popupTextPartsVisitor.currentText());
 
                                     // set the position just below the clicked
                                     // element

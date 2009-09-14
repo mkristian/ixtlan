@@ -40,12 +40,16 @@ border: 1px solid darkgreen;
   border-bottom: 1px solid darkblue;
   color: darkblue;
   background-color: #ddddff;
-  opacity: 0.8;
+  opacity: 0.95;
   position:fixed; 
   top: 0em;
   right: 0em;
   left: 0em;
   padding: .5%;
+}
+.login-control input { 
+  color: darkblue;
+  font-weight: bold;
 }
 .login-control * {
   padding-right: .2em;
@@ -60,6 +64,21 @@ border: 1px solid darkgreen;
 }
 .login-control * {
   float: left;
+}
+.phrase-context{ 
+  border: 1px solid darkblue;
+  color: darkblue;
+  background-color: #ddddff;
+  opacity: 0.95;
+}
+.current-text, .current-text-label{
+padding: .2em;
+font-size: 0.8em;
+}
+.current-text-label{
+font-weight: bold;
+border-bottom: 1px solid darkblue;
+border-top: 1px solid darkblue;
 }
 .over {
   cursor: help;
