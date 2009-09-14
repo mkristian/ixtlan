@@ -69,18 +69,19 @@ public class TranslationsController {
     public TranslationsController(final GetText getText, final Session session) {
         final PopupPanel popup = new PopupPanel(true);
 
-        final FlowPanel flow = new FlowPanel();
+        final FlowPanel popupTextParts = new FlowPanel();
+        final FlowPanel inlineTextParts = new FlowPanel();
 
-        popup.add(flow);
+        popup.add(popupTextParts);
 
         popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 
             public void onClose(final CloseEvent<PopupPanel> event) {
-                for (int i = 0; i < flow.getWidgetCount(); i++) {
-                    ((Refresh) flow.getWidget(i)).refresh();
+                for (int i = 0; i < popupTextParts.getWidgetCount(); i++) {
+                    ((Refresh) popupTextParts.getWidget(i)).refresh();
                 }
-                flow.clear();
-                GWT.log(flow.toString(), null);
+                popupTextParts.clear();
+                GWT.log(popupTextParts.toString(), null);
             }
         });
         session.addSessionListern(new SessionListenerAdapter() {
@@ -96,12 +97,12 @@ public class TranslationsController {
 
             @Override
             public void onTimeout() {
-                flow.clear();
+                popupTextParts.clear();
             }
 
             @Override
             public void onLogout() {
-                flow.clear();
+                popupTextParts.clear();
             }
         });
         final KeyUpHandler keyUpHandler = new KeyUpHandler() {
@@ -114,9 +115,12 @@ public class TranslationsController {
         };
 
         final TreeWalker treeWalker = new TreeWalker();
-        final ElementVisitor visitor = new SetupElementVisitor(getText,
+        final ElementVisitor popupTextPartsVisitor = new SetupElementVisitor(getText,
                 keyUpHandler,
-                flow);
+                popupTextParts);
+        final ElementVisitor inlineTextPartsVisitor = new SetupElementVisitor(getText,
+                keyUpHandler,
+                inlineTextParts);
 
         Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
 
@@ -127,31 +131,40 @@ public class TranslationsController {
 
             public void onPreviewNativeEvent(final NativePreviewEvent event) {
                 if (session.hasUser()) {
-                    final Element e = Element.as(event.getNativeEvent()
+                    final Element clickedElement = Element.as(event.getNativeEvent()
                             .getEventTarget());
-                    // if (this.current != null && e ==
-                    // this.current.getElement()) {
-                    // return;
-                    // }
+                    // only click events are handled
                     if (event.getNativeEvent().getType().equals("click")) {
+                        // if we have a current element we need to write back
+                        // the text
                         if (this.current != null) {
+                            // find out whether the click element is child
+                            // element of the current element
                             boolean isChild = false;
-                            final NodeList<Element> list = this.current.getElementsByTagName(e.getNodeName());
+                            final NodeList<Element> list = this.current.getElementsByTagName(clickedElement.getNodeName());
                             for (int i = 0; i < list.getLength(); i++) {
-                                isChild = isChild || (e == list.getItem(i));
+                                isChild = isChild
+                                        || (clickedElement == list.getItem(i));
                             }
 
                             if (!isChild) {
-                                for (int i = 0; i < flow.getWidgetCount(); i++) {
-                                    ((Refresh) flow.getWidget(i)).refresh();
+                                // OK the click was outside so write back the
+                                // text
+                                for (int i = 0; i < inlineTextParts.getWidgetCount(); i++) {
+                                    ((Refresh) inlineTextParts.getWidget(i)).refresh();
                                 }
-                                flow.clear();
                                 this.current.setInnerHTML("");
+
+                                // rebuild the DOM with previous nodes which
+                                // contains the new text now
                                 for (final Node node : this.currentNodes) {
                                     GWT.log("add " + node.getNodeName() + ":"
                                             + node.getNodeValue(), null);
                                     this.current.appendChild(node);
                                 }
+
+                                // put the for attribute of the label tag back
+                                // in place
                                 if (this.current.getNodeName()
                                         .equalsIgnoreCase("label")) {
                                     this.current.setAttribute("for",
@@ -161,89 +174,103 @@ public class TranslationsController {
                                 GWT.log("inline"
                                         + this.current.getParentElement()
                                                 .getInnerHTML(), null);
+
+                                // cleanup
+                                inlineTextParts.clear();
                                 this.current = null;
                                 this.currentNodes.clear();
                             }
                         }
-                        if (treeWalker.isAllowedPosition(e)) {
 
+                        if (treeWalker.isAllowed(clickedElement)) {
+                            // it is an element which allows editing
                             switch (event.getNativeEvent().getButton()) {
-                            case 1:
-                                visitor.reset();
-                                treeWalker.accept(e, visitor);
-                                final NodeList<Node> childNodes = e.getChildNodes();
+                            case 1: // left mouse click => inline one or more
+                                    // textboxes
+
+                                // first collect the all text nodes from the
+                                // clicked element as well of its children
+                                // and setup a text box for each one
+                                inlineTextPartsVisitor.reset();
+                                treeWalker.accept(clickedElement,
+                                                  inlineTextPartsVisitor);
+
+                                // copy the child nodes of the clicked element
+                                // and empty the element
+                                final NodeList<Node> childNodes = clickedElement.getChildNodes();
                                 for (int i = 0; i < childNodes.getLength(); i++) {
                                     final Node node = childNodes.getItem(i);
                                     GWT.log("remove " + node.getNodeName()
                                             + ":" + node.getNodeValue(), null);
                                     this.currentNodes.add(node);
-                                    e.removeChild(node);
+                                    clickedElement.removeChild(node);
                                 }
-                                final Element inner = flow.getElement();
+
+                                // take the DOM from the assembled and allow
+                                // inlining them
+                                final Element inner = inlineTextParts.getElement();
                                 if (!inner.getAttribute("style")
                                         .startsWith("display: inline")) {
                                     inner.setAttribute("style",
                                                        "display: inline;; width: auto;"
                                                                + inner.getAttribute("style"));
                                 }
-                                e.appendChild(inner);
-                                if (e.getNodeName().equalsIgnoreCase("label")) {
-                                    this.currentLabelFor = e.getAttribute("for");
-                                    e.setAttribute("for", null);
+
+                                // attach the new DOM to the clicked element
+                                clickedElement.appendChild(inner);
+                                if (clickedElement.getNodeName()
+                                        .equalsIgnoreCase("label")) {
+                                    this.currentLabelFor = clickedElement.getAttribute("for");
+                                    clickedElement.setAttribute("for", null);
                                 }
-                                this.current = e;
-                                GWT.log("popup"
+
+                                // remember the clicked element for later events
+                                this.current = clickedElement;
+                                GWT.log("input box "
                                         + this.current.getParentElement()
                                                 .getInnerHTML(), null);
 
-                                ((Focusable) flow.getWidget(0)).setFocus(true);
+                                // put the focus into the first text box
+                                ((Focusable) inlineTextParts.getWidget(0)).setFocus(true);
                                 break;
-                            case 2:
+                            case 2: // right mouse click
                                 if (!popup.isShowing()) {
-                                    visitor.reset();
-                                    treeWalker.accept(e, visitor);
-                                    popup.setPopupPosition(e.getAbsoluteLeft(),
-                                                           e.getAbsoluteTop()
-                                                                   + e.getOffsetHeight());
+                                    // first setup the input boxes
+                                    popupTextPartsVisitor.reset();
+                                    treeWalker.accept(clickedElement,
+                                                      popupTextPartsVisitor);
+
+                                    // set the position just below the clicked
+                                    // element
+                                    popup.setPopupPosition(clickedElement.getAbsoluteLeft(),
+                                                           clickedElement.getAbsoluteTop()
+                                                                   + clickedElement.getOffsetHeight());
+                                    // pop it up
                                     popup.setVisible(true);
                                     popup.show();
+
+                                    // scroll it into view and set the focus on
+                                    // the first textbox
                                     popup.getElement().scrollIntoView();
-                                    ((Focusable) flow.getWidget(0)).setFocus(true);
+                                    ((Focusable) popupTextParts.getWidget(0)).setFocus(true);
                                 }
                                 break;
                             default:
-                                GWT.log("no action for button "
+                                GWT.log("no action for mouse button "
                                                 + event.getNativeEvent()
                                                         .getButton(),
                                         null);
                             }
                         }
-                        // for (int i = 0; i < flow.getWidgetCount(); i++) {
-                        // GWT.log(((TextBoxWithNode)
-                        // flow.getWidget(i)).getText(),
-                        // null);
-                        // }
-                        // GWT.log(e.getNodeName() + " " + e.getId(), null);
-
-                        // if (this.current != null
-                        // && e != this.current.getElement()) {
-                        // for (int i = 0; i < flow.getWidgetCount(); i++) {
-                        // ((Refresh) flow.getWidget(i)).refresh();
-                        // }
-                        // }
-                        // visitor.reset();
-                        // treeWalker.accept(e, visitor);
-                        // this.id = "" + System.currentTimeMillis();
-                        // e.setId(this.id);
-                        // this.current = RootPanel.get(this.id);
-                        // this.current.clear();
-                        // this.current.add(flow);
                     }
                     else {
-                        // final Element e = Element.as(event.getNativeEvent()
-                        // .getEventTarget());
-                        if (this.old != e) {
+                        // change the class attribute of editable elements on
+                        // mouse hover
+                        // by added an 'over' class to it
+                        if (this.old != clickedElement) {
                             if (this.old != null) {
+                                // remove the 'over' class from the former
+                                // element
                                 final String name = this.old.getClassName()
                                         .replaceFirst("over$", "")
                                         .trim();
@@ -251,10 +278,11 @@ public class TranslationsController {
                                         ? null
                                         : name);
                             }
-                            this.old = e;
-                            if (treeWalker.isAllowedPosition(e)
+                            this.old = clickedElement;
+                            // set the 'over' class for editable elements
+                            if (treeWalker.isAllowed(clickedElement)
                                     && !popup.isShowing()) {
-                                e.setClassName((e.getClassName() + " over").trim());
+                                clickedElement.setClassName((clickedElement.getClassName() + " over").trim());
                             }
                         }
                     }

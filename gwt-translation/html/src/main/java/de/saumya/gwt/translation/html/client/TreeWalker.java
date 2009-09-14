@@ -41,7 +41,7 @@ public class TreeWalker {
         return null;
     }
 
-    boolean isAllowedPosition(final Element element) {
+    boolean isAllowed(final Element element) {
         return attributeValue(element) != null;
     }
 
