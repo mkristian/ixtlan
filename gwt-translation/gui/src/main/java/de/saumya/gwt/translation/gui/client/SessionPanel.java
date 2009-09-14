@@ -69,7 +69,7 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
         session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
-            public void onSuccessfulLogin() {
+            public void onLogin() {
                 if (session.getUser().getAllowedLocales().size() > 0) {
                     localeBox.clear();
 
@@ -87,12 +87,12 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
             }
 
             @Override
-            public void onSessionTimeout() {
+            public void onTimeout() {
                 localeBox.clear();
             }
 
             @Override
-            public void onLoggedOut() {
+            public void onLogout() {
                 localeBox.clear();
             }
         });

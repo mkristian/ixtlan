@@ -14,7 +14,9 @@ import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
 import de.saumya.gwt.session.client.GroupFactory;
 import de.saumya.gwt.session.client.LoginScreen;
+import de.saumya.gwt.session.client.Notifications;
 import de.saumya.gwt.session.client.PermissionFactory;
+import de.saumya.gwt.session.client.PopupNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.model.Configuration;
@@ -40,13 +42,12 @@ public class GUI implements EntryPoint {
 
     static class LoginPanel extends VerticalPanel implements LoginScreen {
 
-        private final Label   message  = new Label();
-        private final TextBox username = new TextBox();
-        private final TextBox password = new PasswordTextBox();
-        private final Button  loginButton;
+        private final Notifications notifications = new PopupNotifications();
+        private final TextBox       username      = new TextBox();
+        private final TextBox       password      = new PasswordTextBox();
+        private final Button        loginButton;
 
         public LoginPanel() {
-            add(this.message);
             add(new Label("username"));
             this.username.setTabIndex(1);
             add(this.username);
@@ -64,8 +65,8 @@ public class GUI implements EntryPoint {
         }
 
         @Override
-        public Label message() {
-            return this.message;
+        public Notifications notifications() {
+            return this.notifications;
         }
 
         @Override
@@ -113,11 +114,7 @@ public class GUI implements EntryPoint {
                 permissionFactory);
 
         final GetText getText = new GetText(new WordBundleFactory(repository,
-                wordFactory),
-                wordFactory,
-                bookFactory,
-                phraseFactory,
-                translationFactory);
+                wordFactory), wordFactory, bookFactory, phraseFactory);
 
         final GetTextController getTextController = new GetTextController(getText,
                 session);
