@@ -5,11 +5,11 @@ package de.saumya.gwt.session.client;
 
 public interface SessionListener {
 
-    void onSessionTimeout();
+    void onTimeout();
 
     void onAccessDenied();
 
-    void onSuccessfulLogin();
+    void onLogin();
 
-    void onLoggedOut();
+    void onLogout();
 }

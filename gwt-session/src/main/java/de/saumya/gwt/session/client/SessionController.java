@@ -20,26 +20,27 @@ public class SessionController {
         session.addSessionListern(new SessionListener() {
 
             @Override
-            public void onSuccessfulLogin() {
-                showSessionScreen("welcome "
-                        + session.getUser().name
-                        + (session.getUser().email == null ? "" : "<"
-                                + session.getUser().email + ">"));
+            public void onLogin() {
+                showSessionScreen();
+                // "welcome "
+                // + session.getUser().name
+                // + (session.getUser().email == null ? "" : "<"
+                // + session.getUser().email + ">"));
             }
 
             @Override
-            public void onSessionTimeout() {
-                showLoginScreen("session timeout");
+            public void onTimeout() {
+                showLoginScreen("session timeout", false);
             }
 
             @Override
-            public void onLoggedOut() {
-                showLoginScreen("logged out");
+            public void onLogout() {
+                showLoginScreen("logged out", true);
             }
 
             @Override
             public void onAccessDenied() {
-                showLoginScreen("access denied");
+                showLoginScreen("access denied", false);
             }
 
         });
@@ -85,14 +86,19 @@ public class SessionController {
         sessionSession.setVisible(false);
     }
 
-    public void showSessionScreen(final String welcome) {
+    public void showSessionScreen() {
         this.sessionSession.setVisible(true);
         this.loginScreen.setVisible(false);
     }
 
-    public void showLoginScreen(final String msg) {
+    public void showLoginScreen(final String msg, final boolean isInfo) {
         this.loginScreen.passwordTextBox().setText("");
-        this.loginScreen.message().setText(msg);
+        if (isInfo) {
+            this.loginScreen.notifications().info(msg);
+        }
+        else {
+            this.loginScreen.notifications().warn(msg);
+        }
         this.loginScreen.setVisible(true);
         this.sessionSession.setVisible(false);
         this.loginScreen.usernameTextBox()

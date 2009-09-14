@@ -21,12 +21,34 @@ public class SessionTest implements EntryPoint {
 
     static class LoginPanel extends VerticalPanel implements LoginScreen {
 
-        private final Label   message  = new Label();
-        private final TextBox username = new TextBox();
-        private final TextBox password = new PasswordTextBox();
-        private final Button  loginButton;
+        private final Label         message  = new Label();
+        private final TextBox       username = new TextBox();
+        private final TextBox       password = new PasswordTextBox();
+        private final Button        loginButton;
+        private final Notifications notifications;
 
         public LoginPanel() {
+            this.notifications = new Notifications() {
+
+                @Override
+                public void warn(final String message) {
+                    LoginPanel.this.message.setText(message);
+                }
+
+                @Override
+                public void info(final String message) {
+                    LoginPanel.this.message.setText(message);
+                }
+
+                @Override
+                public void clear() {
+                    LoginPanel.this.message.setText("");
+                }
+
+                @Override
+                public void showAll() {
+                }
+            };
             add(this.message);
             add(new Label("username"));
             this.username.setTabIndex(1);
@@ -45,8 +67,8 @@ public class SessionTest implements EntryPoint {
         }
 
         @Override
-        public Label message() {
-            return this.message;
+        public Notifications notifications() {
+            return this.notifications;
         }
 
         @Override

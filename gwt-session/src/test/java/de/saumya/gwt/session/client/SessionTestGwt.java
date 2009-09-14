@@ -75,17 +75,17 @@ public class SessionTestGwt extends GWTTestCase {
         int countLogout       = 0;
 
         @Override
-        public void onSuccessfulLogin() {
+        public void onLogin() {
             this.countSuccess++;
         }
 
         @Override
-        public void onSessionTimeout() {
+        public void onTimeout() {
             fail();
         }
 
         @Override
-        public void onLoggedOut() {
+        public void onLogout() {
             this.countLogout++;
         }
 

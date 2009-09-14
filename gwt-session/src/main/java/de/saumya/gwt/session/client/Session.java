@@ -21,7 +21,7 @@ public class Session {
 
     class SessionTimer extends Timer {
 
-        private final int timeout   = 1;
+        private final int timeout   = 5;
         private int       countDown = this.timeout;
         private boolean   idle      = true;
 
@@ -99,7 +99,7 @@ public class Session {
 
     private void fireSessionTimeout() {
         for (final SessionListener listener : this.listeners) {
-            listener.onSessionTimeout();
+            listener.onTimeout();
         }
     }
 
@@ -111,13 +111,13 @@ public class Session {
 
     private void fireSuccessfulLogin() {
         for (final SessionListener listener : this.listeners) {
-            listener.onSuccessfulLogin();
+            listener.onLogin();
         }
     }
 
     private void fireLoggedOut() {
         for (final SessionListener listener : this.listeners) {
-            listener.onLoggedOut();
+            listener.onLogout();
         }
     }
 

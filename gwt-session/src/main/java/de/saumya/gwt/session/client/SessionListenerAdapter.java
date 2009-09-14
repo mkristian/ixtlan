@@ -10,14 +10,14 @@ public class SessionListenerAdapter implements SessionListener {
     }
 
     @Override
-    public void onLoggedOut() {
+    public void onLogout() {
     }
 
     @Override
-    public void onSessionTimeout() {
+    public void onTimeout() {
     }
 
     @Override
-    public void onSuccessfulLogin() {
+    public void onLogin() {
     }
 }
