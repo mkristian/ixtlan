@@ -13,7 +13,6 @@ import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
-import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.Word;
 import de.saumya.gwt.translation.common.client.model.WordBundle;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
@@ -29,8 +28,6 @@ public class GetText {
 
     private final PhraseFactory                    phraseFactory;
 
-    private final TranslationFactory               translationFactory;
-
     private final List<Translatable>               translatables   = new ArrayList<Translatable>();
 
     private Map<String, Word>                      wordMap         = new HashMap<String, Word>();
@@ -45,13 +42,11 @@ public class GetText {
 
     public GetText(final WordBundleFactory bundleFactory,
             final WordFactory wordFactory, final PhraseBookFactory bookFactory,
-            final PhraseFactory phraseFactory,
-            final TranslationFactory translationFactory) {
+            final PhraseFactory phraseFactory) {
         this.bundleFactory = bundleFactory;
         this.bookFactory = bookFactory;
         this.wordFactory = wordFactory;
         this.phraseFactory = phraseFactory;
-        this.translationFactory = translationFactory;
     }
 
     private void loadWordBundle(final Locale locale) {
@@ -105,19 +100,21 @@ public class GetText {
                              });
     }
 
-    Phrase getPhrase(final String code) {
+    public Phrase getPhrase(final String code, final String defaultPhrase) {
         Phrase phrase = this.phraseMap.get(code);
-        if (phrase == null) {
+        if (phrase == null && defaultPhrase != null) {
             phrase = this.phraseFactory.newResource();
             phrase.code = code;
-            phrase.parentTranslation = this.translationFactory.newResource();
-            phrase.parentTranslation.text = code;
-            // TODO save the translation and maybe not save the phrase
+            phrase.currentText = defaultPhrase;
             phrase.save();
             GWT.log(phrase.toString(), null);
             this.phraseMap.put(code, phrase);
         }
         return phrase;
+    }
+
+    public Phrase getPhrase(final String code) {
+        return getPhrase(code, null);
     }
 
     public Word getWord(final String code) {

@@ -70,7 +70,7 @@ public class TranslationPopupPanel extends PopupPanel {
         session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
-            public void onSessionTimeout() {
+            public void onTimeout() {
                 hide();
             }
         });

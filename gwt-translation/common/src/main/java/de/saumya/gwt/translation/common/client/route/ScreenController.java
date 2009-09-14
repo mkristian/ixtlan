@@ -51,7 +51,7 @@ public class ScreenController {
         session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
-            public void onSuccessfulLogin() {
+            public void onLogin() {
                 final TabBar bar = ScreenController.this.bodyPanel.getTabBar();
                 for (int i = 0; i < bar.getTabCount(); i++) {
                     final String name = ScreenController.this.names.get(i);
