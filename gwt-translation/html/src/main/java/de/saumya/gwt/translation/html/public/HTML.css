@@ -1,34 +1,66 @@
-/** Add css rules here for your application. */
-
-
-/** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
+body {
+  font-family: arial, helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  margin-top: 2em;
+}
+.info-notification, .warn-notification, .showall-notification {
+margin-top: 3em;
+margin-left: 20%;
+margin-right: 20%; 
+opacity: 0.9;
+font-weight: bold;
+padding: 1em;
+width: 60%;
+}
+.info-note, .warn-note{
+font-weight: bold;
+}
+.showall-notification{
+color: darkblue;
+background-color: #ddddff;
+border: 1px solid darkblue;
+}
+.warn-notification, .warn-note{
+color: darkred;
+}
+.warn-notification {
+background-color: #ffdddd;
+border: 1px solid darkred;
+}
+.info-notification, .info-note{
+color: darkgreen;
+}
+.info-notification {
+background-color: #ddffdd;
+border: 1px solid darkgreen;
+}
+.session-control, .login-control {
+  width: 99%;
+  border-bottom: 1px solid darkblue;
+  color: darkblue;
+  background-color: #ddddff;
+  opacity: 0.8;
+  position:fixed; 
+  top: 0em;
+  right: 0em;
+  left: 0em;
+  padding: .5%;
+}
+.login-control * {
+  padding-right: .2em;
+  padding-left: .5em;
+}
+.session-control-button, .login-control-button {
+  color: darkblue;
   font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
 }
-
-.sendButton {
-  display: block;
-  font-size: 16pt;
+.session-control-button {
+  float: right;
 }
-
-/** Most GWT widgets already have a style name defined */
-.gwt-DialogBox {
-  width: 400px;
+.login-control * {
+  float: left;
 }
-
-.dialogVPanel {
-  margin: 5px;
-}
-
-.serverResponseLabelError {
-  color: red;
-}
-
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+.over {
+  cursor: help;
 }
