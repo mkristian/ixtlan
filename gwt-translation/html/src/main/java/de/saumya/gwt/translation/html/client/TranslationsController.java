@@ -70,6 +70,8 @@ public class TranslationsController {
     }
 
     public TranslationsController(final GetText getText, final Session session) {
+        RootPanel.getBodyElement().setAttribute("oncontextmenu",
+                                                "return false;");
         final PopupPanel popup = new PopupPanel(true);
         final ComplexPanel phraseContext = new VerticalPanel();
         phraseContext.setStyleName("phrase-context");
@@ -117,7 +119,7 @@ public class TranslationsController {
                 popupTextParts.clear();
             }
         });
-        final KeyUpHandler keyUpHandler = new KeyUpHandler() {
+        final KeyUpHandler popupKeyUpHandler = new KeyUpHandler() {
 
             public void onKeyUp(final KeyUpEvent event) {
                 if (event.getNativeKeyCode() == 13) {
@@ -128,10 +130,9 @@ public class TranslationsController {
 
         final TreeWalker treeWalker = new TreeWalker();
         final SetupElementVisitor popupTextPartsVisitor = new SetupElementVisitor(getText,
-                keyUpHandler,
-                popupTextParts);
+                popupTextParts,
+                popupKeyUpHandler);
         final ElementVisitor inlineTextPartsVisitor = new SetupElementVisitor(getText,
-                keyUpHandler,
                 inlineTextParts);
 
         Event.addNativePreviewHandler(new Event.NativePreviewHandler() {

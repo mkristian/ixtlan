@@ -26,10 +26,14 @@ public class SetupElementVisitor implements ElementVisitor {
     private StringBuilder      builder = new StringBuilder();
 
     public SetupElementVisitor(final GetText getText,
-            final KeyUpHandler keyUpHandler, final Panel panel) {
+            final Panel panel, final KeyUpHandler keyUpHandler) {
         this.getText = getText;
         this.keyUpHandler = keyUpHandler;
         this.panel = panel;
+    }
+
+    public SetupElementVisitor(final GetText getText, final Panel panel) {
+        this(getText, panel, null);
     }
 
     @Override
@@ -45,13 +49,15 @@ public class SetupElementVisitor implements ElementVisitor {
 
             box.setText(text);
             box.setVisibleLength(text.length());
-            box.addKeyUpHandler(this.keyUpHandler);
-            box.addKeyUpHandler(new KeyUpHandler() {
+            if (this.keyUpHandler != null) {
+                box.addKeyUpHandler(this.keyUpHandler);
+                box.addKeyUpHandler(new KeyUpHandler() {
 
-                public void onKeyUp(final KeyUpEvent event) {
-                    box.setVisibleLength(box.getText().length());
-                }
-            });
+                    public void onKeyUp(final KeyUpEvent event) {
+                        box.setVisibleLength(box.getText().length());
+                    }
+                });
+            }
             this.panel.add(box);
         }
         else {
@@ -66,7 +72,6 @@ public class SetupElementVisitor implements ElementVisitor {
                     null);
             GWT.log("" + ((Element) textNode.getParentNode()).getClientHeight(),
                     null);
-            box.addKeyUpHandler(this.keyUpHandler);
             this.panel.add(box);
         }
     }
