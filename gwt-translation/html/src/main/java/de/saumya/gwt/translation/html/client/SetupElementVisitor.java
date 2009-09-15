@@ -21,14 +21,23 @@ public class SetupElementVisitor implements ElementVisitor {
 
     private final Panel        panel;
 
-    private final KeyUpHandler keyUpHandler;
+    private final KeyUpHandler enterKeyHandler;
+
+    private final KeyUpHandler extendShrinkOnTextChangeKeyHandler;
 
     private StringBuilder      builder = new StringBuilder();
 
     public SetupElementVisitor(final GetText getText, final Panel panel,
-            final KeyUpHandler keyUpHandler) {
+            final KeyUpHandler enterKeyHandler) {
         this.getText = getText;
-        this.keyUpHandler = keyUpHandler;
+        this.enterKeyHandler = enterKeyHandler;
+        this.extendShrinkOnTextChangeKeyHandler = new KeyUpHandler() {
+
+            public void onKeyUp(final KeyUpEvent event) {
+                final TextBox box = (TextBox) event.getSource();
+                box.setVisibleLength(box.getText().length());
+            }
+        };
         this.panel = panel;
     }
 
@@ -38,27 +47,14 @@ public class SetupElementVisitor implements ElementVisitor {
 
     @Override
     public void visit(final Text textNode, final String phraseCode) {
-        final Phrase phrase = this.getText.getPhrase(phraseCode);
         final int width = ((Element) textNode.getParentNode()).getClientWidth() / 8;
+        final Phrase phrase = this.getText.getPhrase(phraseCode);
         final String text = phrase.text == null
                 ? phrase.currentText
                 : phrase.text;
         this.builder.append(phrase.currentText);
-        if (text.length() < 30 || text.length() < width) {
-            final TextBox box = new TextBoxWithNode(textNode, phrase);
-
-            box.setText(text);
-            box.setVisibleLength(text.length());
-            if (this.keyUpHandler != null) {
-                box.addKeyUpHandler(this.keyUpHandler);
-                box.addKeyUpHandler(new KeyUpHandler() {
-
-                    public void onKeyUp(final KeyUpEvent event) {
-                        box.setVisibleLength(box.getText().length());
-                    }
-                });
-            }
-            this.panel.add(box);
+        if (text.length() < 8 || text.length() < width) {
+            setupTextBox(new TextBoxWithNode(textNode, phrase), text);
         }
         else {
             final TextArea box = new TextAreaWithNode(textNode, phrase);
@@ -74,6 +70,17 @@ public class SetupElementVisitor implements ElementVisitor {
                     null);
             this.panel.add(box);
         }
+    }
+
+    private void setupTextBox(final TextBox box, final String text) {
+
+        box.setText(text);
+        box.setVisibleLength(text.length());
+        if (this.enterKeyHandler != null) {
+            box.addKeyUpHandler(this.enterKeyHandler);
+            box.addKeyUpHandler(this.extendShrinkOnTextChangeKeyHandler);
+        }
+        this.panel.add(box);
     }
 
     @Override
@@ -93,18 +100,15 @@ public class SetupElementVisitor implements ElementVisitor {
                 ? phrase.currentText
                 : phrase.text;
         this.builder.append(phrase.currentText);
+
         final TextBox box = new TextBoxWithNode(element, phrase);
+        setupTextBox(box, text);
 
         box.setText(text);
         box.setVisibleLength(text.length());
-        if (this.keyUpHandler != null) {
-            box.addKeyUpHandler(this.keyUpHandler);
-            box.addKeyUpHandler(new KeyUpHandler() {
-
-                public void onKeyUp(final KeyUpEvent event) {
-                    box.setVisibleLength(box.getText().length());
-                }
-            });
+        if (this.enterKeyHandler != null) {
+            box.addKeyUpHandler(this.enterKeyHandler);
+            box.addKeyUpHandler(this.extendShrinkOnTextChangeKeyHandler);
         }
         this.panel.add(box);
     }
