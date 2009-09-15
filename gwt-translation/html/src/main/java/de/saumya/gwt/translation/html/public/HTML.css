@@ -21,6 +21,10 @@ color: darkblue;
 background-color: #ddddff;
 border: 1px solid darkblue;
 }
+.showall-notification .popupContent{
+overflow: scroll;
+height: 20em;
+}
 .warn-notification, .warn-note{
 color: darkred;
 }

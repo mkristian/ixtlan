@@ -11,31 +11,56 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
 
 public class PopupNotifications implements Notifications {
 
     private static class Note implements Comparable<Note> {
         private final Timestamp timestamp;
         private final boolean   isInfo;
-        private final String    message;
+        private final String[]  messages;
+
+        private Note(final String[] messages, final boolean isInfo) {
+            this.timestamp = new Timestamp(System.currentTimeMillis());
+            this.isInfo = isInfo;
+            this.messages = messages;
+        }
 
         private Note(final String message, final boolean isInfo) {
             this.timestamp = new Timestamp(System.currentTimeMillis());
             this.isInfo = isInfo;
-            this.message = message;
+            this.messages = new String[] { message };
+        }
+
+        String toHTML() {
+            final StringBuilder builder = new StringBuilder();
+            appendHTML(builder);
+            return builder.toString();
+        }
+
+        private void appendHTML(final StringBuilder builder) {
+            if (this.messages.length == 1) {
+                builder.append(this.messages[0]);
+            }
+            else {
+                builder.append("<ul>");
+                for (final String msg : this.messages) {
+                    builder.append("<li>").append(msg).append("</li>");
+                }
+                builder.append("</ul>");
+            }
         }
 
         @Override
         public String toString() {
-            final StringBuilder builder = new StringBuilder(this.timestamp.toString());
+            final StringBuilder builder = new StringBuilder(this.timestamp.toString()
+                    .replaceFirst("\\.[0-9]*$", ""));
             builder.append(" [")
                     .append(this.isInfo ? "info" : "warn")
-                    .append("] ")
-                    .append(this.message);
+                    .append("] ");
+            appendHTML(builder);
             return builder.toString();
         }
 
@@ -48,7 +73,7 @@ public class PopupNotifications implements Notifications {
     private final Queue<Note>  notes   = new PriorityQueue<Note>();
     private final ComplexPanel all     = new VerticalPanel();
     private final PopupPanel   popup   = new PopupPanel(true, false); // autohide,not_modal
-    private final Label        message = new Label();
+    private final HTML         message = new HTML();
     {
         this.popup.add(this.message);
         final CloseHandler<PopupPanel> closeHandler = new CloseHandler<PopupPanel>() {
@@ -73,9 +98,21 @@ public class PopupNotifications implements Notifications {
         show(new Note(message, true));
     }
 
+    @Override
+    public void info(final String[] messages) {
+        this.popup.setStyleName("info-notification");
+        show(new Note(messages, true));
+    }
+
     private void show(final PopupNotifications.Note note) {
         this.notes.add(note);
-        this.message.setText(note.message);
+        if (note.messages.length == 1) {
+            this.message.setText(note.toHTML());
+        }
+        else {
+            this.message.setHTML(note.toHTML());
+        }
+
         this.popup.setPopupPosition(0, Window.getScrollTop());
         this.popup.show();
     }
@@ -93,7 +130,7 @@ public class PopupNotifications implements Notifications {
         this.popup.add(this.all);
         this.all.clear();
         for (final PopupNotifications.Note note : this.notes) {
-            final Label noteLabel = new Label(note.toString());
+            final HTML noteLabel = new HTML(note.toString());
             noteLabel.setStyleName(note.isInfo ? "info-note" : "warn-note");
             this.all.add(noteLabel);
         }

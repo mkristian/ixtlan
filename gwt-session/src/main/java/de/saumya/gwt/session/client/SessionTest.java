@@ -48,6 +48,11 @@ public class SessionTest implements EntryPoint {
                 @Override
                 public void showAll() {
                 }
+
+                @Override
+                public void info(final String[] messages) {
+                    throw new UnsupportedOperationException();
+                }
             };
             add(this.message);
             add(new Label("username"));

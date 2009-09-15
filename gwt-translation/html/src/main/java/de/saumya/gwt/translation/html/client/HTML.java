@@ -184,10 +184,12 @@ public class HTML implements EntryPoint {
                                                                  "phrase");
                 approveAll.setVisible(allowApprovals);
                 showApprovals.setVisible(allowApprovals);
-                notifications.info("right mouse click on text will open a popup "
-                        + "which allows to change/translate the text and displays extra infos. "
-                        + "a left mouse click just let's you edit the text inplace. to finalize "
-                        + "editing just click outside of the input field.");
+                notifications.info(new String[] {
+                        "right mouse click on text will open a popup with some context",
+                        "certain emtpy tag (buttons, images) can only be translated with the right mouse click",
+                        "left mouse click let you edit the text inplace",
+                        "clicking outside the textbox/textfield saves the edit",
+                        "pressing enter inside a textfield saves the edit" });
             }
 
         });
