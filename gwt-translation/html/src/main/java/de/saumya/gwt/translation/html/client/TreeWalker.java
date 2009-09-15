@@ -55,20 +55,28 @@ public class TreeWalker {
                 return;
             }
         }
-        final NodeList<Node> list = element.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            final Node child = list.getItem(i);
-            switch (child.getNodeType()) {
-            case 3: // text node
-                if (phrases.hasNext()) {
-                    visitor.visit((Text) child, phrases.next());
+        final String value = element.getAttribute("x-Value");
+        GWT.log("value " + element.getAttribute("x-Value"), null);
+        if (value.length() > 0) {
+            visitor.visit(element, phrases.next());
+        }
+        else {
+            final NodeList<Node> list = element.getChildNodes();
+            for (int i = 0; i < list.getLength(); i++) {
+                final Node child = list.getItem(i);
+                switch (child.getNodeType()) {
+                case 3: // text node
+                    if (phrases.hasNext()) {
+                        visitor.visit((Text) child, phrases.next());
+                    }
+                    break;
+                case 1: // element node
+                    accept(Element.as(child), visitor);
+                    break;
+                default: // type 8 = comment node
+                    GWT.log(child.getNodeName() + " " + child.getNodeType(),
+                            null);
                 }
-                break;
-            case 1: // element node
-                accept(Element.as(child), visitor);
-                break;
-            default: // type 8 = comment node
-                GWT.log(child.getNodeName() + " " + child.getNodeType(), null);
             }
         }
     }

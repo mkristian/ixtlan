@@ -52,8 +52,12 @@ public class TranslationsController {
 
         @Override
         public void visit(final Text text, final String phraseCode) {
-            final Phrase phrase = this.getText.getPhrase(phraseCode,
-                                                         text.getNodeValue());
+            final String textValue = text.getNodeValue();
+            countPhrase(phraseCode, textValue);
+        }
+
+        private void countPhrase(final String phraseCode, final String text) {
+            final Phrase phrase = this.getText.getPhrase(phraseCode, text);
             if (!phrase.isUptodate()) {
                 this.newCount++;
             }
@@ -66,6 +70,13 @@ public class TranslationsController {
 
         int getNewCount() {
             return this.newCount;
+        }
+
+        @Override
+        public void visit(final Element element, final String phraseCode) {
+            countPhrase(phraseCode,
+            // TODO centralize/dry up the x-Value strings !!!
+                        element.getAttribute(element.getAttribute("x-Value")));
         }
     }
 
@@ -183,6 +194,11 @@ public class TranslationsController {
                             case 1: // left mouse click => inline one or more
                                 // textboxes
 
+                                if (clickedElement.getAttribute("x-Value")
+                                        .length() > 0) {
+                                    // disallow empty tags for inlining
+                                    break;
+                                }
                                 // first collect the all text nodes from the
                                 // clicked element as well of its children
                                 // and setup a text box for each one

@@ -25,8 +25,8 @@ public class SetupElementVisitor implements ElementVisitor {
 
     private StringBuilder      builder = new StringBuilder();
 
-    public SetupElementVisitor(final GetText getText,
-            final Panel panel, final KeyUpHandler keyUpHandler) {
+    public SetupElementVisitor(final GetText getText, final Panel panel,
+            final KeyUpHandler keyUpHandler) {
         this.getText = getText;
         this.keyUpHandler = keyUpHandler;
         this.panel = panel;
@@ -84,5 +84,28 @@ public class SetupElementVisitor implements ElementVisitor {
 
     String currentText() {
         return this.builder.toString();
+    }
+
+    @Override
+    public void visit(final Element element, final String phraseCode) {
+        final Phrase phrase = this.getText.getPhrase(phraseCode);
+        final String text = phrase.text == null
+                ? phrase.currentText
+                : phrase.text;
+        this.builder.append(phrase.currentText);
+        final TextBox box = new TextBoxWithNode(element, phrase);
+
+        box.setText(text);
+        box.setVisibleLength(text.length());
+        if (this.keyUpHandler != null) {
+            box.addKeyUpHandler(this.keyUpHandler);
+            box.addKeyUpHandler(new KeyUpHandler() {
+
+                public void onKeyUp(final KeyUpEvent event) {
+                    box.setVisibleLength(box.getText().length());
+                }
+            });
+        }
+        this.panel.add(box);
     }
 }
