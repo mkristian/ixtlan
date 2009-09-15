@@ -146,6 +146,16 @@ public class TranslationsController {
                 if (session.hasUser()) {
                     final Element clickedElement = Element.as(event.getNativeEvent()
                             .getEventTarget());
+                    if (this.current != null) {
+                        if (event.getNativeEvent().getType().contains("key")
+                                && event.getNativeEvent().getKeyCode() == 13) {
+                            if (!"textarea".equalsIgnoreCase(clickedElement.getNodeName())) {
+                                event.getNativeEvent().preventDefault();
+                                event.getNativeEvent().stopPropagation();
+                                writeNewContentBackToDom(inlineTextParts);
+                            }
+                        }
+                    }
                     // only click events are handled
                     if (event.getNativeEvent().getType().equals("click")) {
                         // if we have a current element we need to write back
@@ -163,35 +173,7 @@ public class TranslationsController {
                             if (!isChild) {
                                 // OK the click was outside so write back the
                                 // text
-                                for (int i = 0; i < inlineTextParts.getWidgetCount(); i++) {
-                                    ((Refresh) inlineTextParts.getWidget(i)).refresh();
-                                }
-                                this.current.setInnerHTML("");
-
-                                // rebuild the DOM with previous nodes which
-                                // contains the new text now
-                                for (final Node node : this.currentNodes) {
-                                    GWT.log("add " + node.getNodeName() + ":"
-                                            + node.getNodeValue(), null);
-                                    this.current.appendChild(node);
-                                }
-
-                                // put the for attribute of the label tag back
-                                // in place
-                                if (this.current.getNodeName()
-                                        .equalsIgnoreCase("label")) {
-                                    this.current.setAttribute("for",
-                                                              this.currentLabelFor);
-                                }
-
-                                GWT.log("inline"
-                                        + this.current.getParentElement()
-                                                .getInnerHTML(), null);
-
-                                // cleanup
-                                inlineTextParts.clear();
-                                this.current = null;
-                                this.currentNodes.clear();
+                                writeNewContentBackToDom(inlineTextParts);
                             }
                         }
 
@@ -301,6 +283,36 @@ public class TranslationsController {
                         }
                     }
                 }
+            }
+
+            private void writeNewContentBackToDom(
+                    final FlowPanel inlineTextParts) {
+                for (int i = 0; i < inlineTextParts.getWidgetCount(); i++) {
+                    ((Refresh) inlineTextParts.getWidget(i)).refresh();
+                }
+                this.current.setInnerHTML("");
+
+                // rebuild the DOM with previous nodes which
+                // contains the new text now
+                for (final Node node : this.currentNodes) {
+                    GWT.log("add " + node.getNodeName() + ":"
+                            + node.getNodeValue(), null);
+                    this.current.appendChild(node);
+                }
+
+                // put the for attribute of the label tag back
+                // in place
+                if (this.current.getNodeName().equalsIgnoreCase("label")) {
+                    this.current.setAttribute("for", this.currentLabelFor);
+                }
+
+                GWT.log("inline"
+                        + this.current.getParentElement().getInnerHTML(), null);
+
+                // cleanup
+                inlineTextParts.clear();
+                this.current = null;
+                this.currentNodes.clear();
             }
 
         });
