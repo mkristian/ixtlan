@@ -22,7 +22,7 @@ background-color: #ddddff;
 border: 1px solid darkblue;
 }
 .showall-notification .popupContent{
-overflow: scroll;
+overflow: auto;
 height: 20em;
 }
 .warn-notification, .warn-note{
