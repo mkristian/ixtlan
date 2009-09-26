@@ -9,7 +9,7 @@ module Ixtlan
     property :name, String, :nullable => false, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
     property :email, String, :nullable => false, :format => :email_address, :nullable => false, :length => 8..64, :index => :unique_index, :field => "mail"
     property :language, String, :nullable => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
-    property :hashed_password, String, :nullable => true, :size => 128, :accessor => :private, :field => "userpassword"
+    property :hashed_password, String, :nullable => true, :length => 128, :accessor => :private, :field => "userpassword"
 
     timestamps :at
 
@@ -24,12 +24,21 @@ module Ixtlan
     attribute_set(:hashed_password, Ixtlan::Digest.ssha(@password, "--#{Time.now}--#{login}--"))
   end
 
+  @logger = UserLogger.new(self)
+
   def self.authenticate(login, password)
-    u = first(:login => login) # need to get the salt
-    if u
-      digest = Base64.decode64(u.inspect.sub(/.*hashed_password=..SSHA./, "").sub(/\".*/,''))
+    user = first(:login => login) # need to get the salt
+    if user
+      digest = Base64.decode64(user.inspect.sub(/.*hashed_password=..SSHA./, "").sub(/\".*/,''))
       salt = digest[20,147]
-      u if ::Digest::SHA1.digest("#{password}" + salt) == digest[0,20]
+      if ::Digest::SHA1.digest("#{password}" + salt) == digest[0,20]
+        @logger.log_user(login, "logged in")
+        user
+      else
+        "wrong password"
+      end
+    else
+      "unknown login"
     end
   end
 

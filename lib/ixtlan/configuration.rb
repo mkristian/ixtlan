@@ -11,7 +11,7 @@ module Ixtlan
     timestamps :at
     
     def self.instance
-      @instance ||= get!(1)
+      @instance ||= get(1) || create(:id => 1, session_idle_timeout => 5, :keep_audit_logs => 7)
     end
     
     def to_s

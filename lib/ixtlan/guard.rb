@@ -9,6 +9,7 @@ module Ixtlan
         protected
         
         def guard(locale = nil)
+p session
           guard!(params[:controller], params[:action], locale)
         end
 
@@ -58,6 +59,7 @@ module Ixtlan
             require(File.join(guard_dir, f))
           end
         end
+        logger.info("initialized guard . . .")
       else
         logger.warn("guard directory #{guard_dir} not found, skip loading")
       end
@@ -65,7 +67,7 @@ module Ixtlan
     
     def self.initialize(controller, map)
       msg = map.collect{ |k,v| "\n\t#{k} => [#{v.join(',')}]"}
-      @@logger.info("#{controller} guard: #{msg}")
+      @@logger.debug("#{controller} guard: #{msg}")
       @@map[controller] = map
     end
 

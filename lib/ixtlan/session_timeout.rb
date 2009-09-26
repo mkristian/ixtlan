@@ -1,13 +1,26 @@
 module Ixtlan
   module SessionTimeout
+    
+    private
+
+    def expire_session
+      @session_user_logger ||= UserLogger.new(Ixtlan::SessionTimeout)
+      @session_user_logger.log(self, "session timeout")
+      session.clear
+#      reset_session
+      render_session_timeout
+      return false
+    end
+
+    public
 
     def check_session_expiry
-      if !session[:expiry_time].nil? and session[:expiry_time] < Time.now
+      if !session[:expires_at].nil? and session[:expires_at] < DateTime.now
         # Session has expired.
         expire_session
       else
         # Assign a new expiry time
-        session[:expiry_time] = new_session_timeout
+        session[:expires_at] = new_session_timeout
         return true
       end
     end
@@ -27,14 +40,6 @@ module Ixtlan
       check_session_ip_binding and check_session_expiry
     end
 
-    def expire_session
-      session[:expiry_time] = nil
-      session[:session_ip] = nil
-      reset_session
-      render_session_timeout
-      return false
-    end
-
     # def check_session_browser_signature_binding
     #     if !session[:session_browser_signature].nil? and session[:session_browser_signature] != "something"
     #       # browser signature has changed
@@ -51,8 +56,10 @@ module Ixtlan
     
     def render_session_timeout
       respond_to do |format| 
-        flash[:notice] = "session timeout" unless flash[:notice]
-        format.html {  render :template => "sessions/login" }
+        format.html { 
+          @notice = "session timeout" unless @notice
+          render :template => "sessions/login"
+        }
         format.xml { head :unauthorized }
       end
     end

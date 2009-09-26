@@ -31,21 +31,23 @@ module Ixtlan
       else
         case(request.method)
         when :get   
-          reset_session
-          render_login
+          session.clear
+          render_login_page
         when :post
           user = login_from_params
-          if user
+          if user.instance_of? String
+            @authentication_logger ||= UserLogger.new(Ixtlan::UnrestfulAuthentication)
+            @authentication_logger.log_user(params[:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
+            session.clear
+            render_access_denied
+          else
             #  reset_session
             self.current_user = user
             render_successful_login
-          else
-            reset_session
-            render_access_denied
           end
         when :put
         when :delete
-          reset_session
+          session.clear
           render_access_denied
         end
         false
@@ -61,10 +63,11 @@ module Ixtlan
     end
 
     def logout
-      if(params[:logout] == current_user.id)
-        reset_session
+      if(params[:logout] == current_user.id) 
+        session.clear
+       # reset_session
         current_user = nil
-        render_login
+        render_login_page
         false
       else
         true
@@ -81,14 +84,14 @@ module Ixtlan
     def render_access_denied
       respond_to do |format|
         format.html do
-          flash[:notice] = "access_denied" unless flash[:notice]
+          @notice = "access_denied" unless @notice
           render :template => "sessions/login", :status => :unauthorized
         end
         format.xml { head :unauthorized}
       end
     end
 
-    def render_login
+    def render_login_page
       respond_to do |format|
         format.html { render :template => "sessions/login" }
         format.xml { head :ok }

@@ -20,16 +20,20 @@ gem 'rspec-rails', :lib => false
 # this pulls in rails_datamapper and rack_datamapper
 gem 'datamapper4rails'
 
+# logging
+gem 'logging'
+
 # ixtlan gems
 gem 'ixtlan', :lib => 'guard'
 gem 'ixtlan', :lib => 'unrestful_authentication'
 gem 'ixtlan', :lib => 'session_timeout'
+gem 'ixtlan', :lib => 'audit'
 
 # install all gems
 rake 'gems:install'
 
 # install specs rake tasks
-#generate 'rspec'
+generate 'rspec', '-f'
 
 # install datamapper rake tasks
 generate 'datamapper_install'
@@ -68,10 +72,15 @@ ActionController::Base.session = {
 }
 CODE
 
+# logger config
+initializer '01_loggers.rb', <<-CODE
+require 'ixtlan/logger_config'
+CODE
+
 # load the guard config
-initializer 'guard.rb', <<-CODE
+initializer '02_guard.rb', <<-CODE
 # load the guard config files from RAILS_ROOT/app/guards
-Ixtlan::Guard.load
+Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
 CODE
 
 # setup permissions controller
@@ -141,7 +150,8 @@ Ixtlan::Guard.initialize(:permissions, {:index => []})
 CODE
 
 gsub_file 'app/controllers/application_controller.rb', /^.*#helper/, <<-CODE
-  before :check_session_expiry
+  filter_parameter_logging :password, :login
+  before_filter :check_session_expiry
 
   def new_session_timeout
     Configuration.instance.session_idle_timeout.minutes.from.new
