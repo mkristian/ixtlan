@@ -149,12 +149,12 @@ file 'app/guards/permissions_guard.rb', <<-CODE
 Ixtlan::Guard.initialize(:permissions, {:index => []})
 CODE
 
-gsub_file 'app/controllers/application_controller.rb', /^.*#helper/, <<-CODE
+gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   filter_parameter_logging :password, :login
   before_filter :check_session_expiry
 
   def new_session_timeout
-    Configuration.instance.session_idle_timeout.minutes.from.new
+    Ixtlan::Configuration.instance.session_idle_timeout.minutes.from_now
   end
 CODE
 

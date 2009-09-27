@@ -31,19 +31,19 @@ module Ixtlan
 
     Logging.init :debug, :info, :warn, :error unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
 
-    # setup root logger
-    appender = Logging::Appenders::File.new('default', 
+    # setup rails logger
+    rails_appender = Logging::Appenders::File.new('rails', 
                                             :filename => log_filebase(RAILS_ENV) + ".log")
-    appender.layout = Logging::Layouts::Pattern.new(:pattern => "%-20c\t- %m\n")
+    rails_appender.layout = Logging::Layouts::Pattern.new(:pattern => "%-20c\t- %m\n")
     
-    logger = logger(appender, :root)
+    logger = logger(rails_appender, Rails)
     logger.info "initialized logger ..."
     
     # datamapper + dataobject logger
     appender = rolling_appender('sql')
   
-    DataMapper.logger = logger(appender, DataMapper)
-    
+    DataMapper.logger = logger([appender,rails_appender], DataMapper)
+    #DataMapper.logger.add_appender(rails_appender)
     
     #TODO not working!!!!
     DataObjects.logger = logger(appender, DataObjects)
