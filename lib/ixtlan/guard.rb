@@ -9,7 +9,6 @@ module Ixtlan
         protected
         
         def guard(locale = nil)
-p session
           guard!(params[:controller], params[:action], locale)
         end
 
@@ -46,7 +45,7 @@ p session
           block
         else
           Proc.new do |controller|
-          user = controller.current_user
+          user = controller.send :current_user
           user.groups if user
         end
       end

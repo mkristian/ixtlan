@@ -12,7 +12,7 @@ module Ixtlan
     
     property :created_at, DateTime, :nullable => false, :auto_validation => false
     
-    has n, :locales
+    has n, :locales, :model => "Ixtlan::Locale"
     
     alias :to_x :to_xml_document
     def to_xml_document(opts, doc = nil)

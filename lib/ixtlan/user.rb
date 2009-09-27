@@ -13,34 +13,34 @@ module Ixtlan
 
     timestamps :at
 
-  # Virtual attribute for the plaintext password
-  attr_reader :password
+    # Virtual attribute for the plaintext password
+    attr_reader :password
 
-  validates_is_unique  :login
-  validates_is_unique  :email
+    validates_is_unique  :login
+    validates_is_unique  :email
 
-  def reset_password(len = 12)
-    @password = Ixtlan::Passwords.generate(len)
-    attribute_set(:hashed_password, Ixtlan::Digest.ssha(@password, "--#{Time.now}--#{login}--"))
-  end
-
-  @logger = UserLogger.new(self)
-
-  def self.authenticate(login, password)
-    user = first(:login => login) # need to get the salt
-    if user
-      digest = Base64.decode64(user.inspect.sub(/.*hashed_password=..SSHA./, "").sub(/\".*/,''))
-      salt = digest[20,147]
-      if ::Digest::SHA1.digest("#{password}" + salt) == digest[0,20]
-        @logger.log_user(login, "logged in")
-        user
-      else
-        "wrong password"
-      end
-    else
-      "unknown login"
+    def reset_password(len = 12)
+      @password = Ixtlan::Passwords.generate(len)
+      attribute_set(:hashed_password, Ixtlan::Digest.ssha(@password, "--#{Time.now}--#{login}--"))
+      @password
     end
-  end
+
+    def self.authenticate(login, password)
+      user = first(:login => login) # need to get the salt
+      if user
+        digest = Base64.decode64(user.inspect.sub(/.*hashed_password=..SSHA./, "").sub(/\".*/,''))
+        salt = digest[20,147]
+        if ::Digest::SHA1.digest("#{password}" + salt) == digest[0,20]
+          @logger ||= UserLogger.new(self)
+          @logger.log_user(login, "logged in")
+          user
+        else
+          "wrong password"
+        end
+      else
+        "unknown login"
+      end
+    end
 
     def groups
       groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group))
@@ -57,7 +57,7 @@ module Ixtlan
         
         self
       end
-
+      
       def groups.delete(group) 
         gu = Ixtlan::GroupUser.first(:memberuid => @user.login, :gidnumber => group.id)
         if gu
@@ -67,7 +67,7 @@ module Ixtlan
       end
       groups
     end
-  
+
     # make sure login is immutable
     def login=(new_login)
       attribute_set(:login, new_login) if (login.nil? or login == "'NULL'" or login == "NULL")

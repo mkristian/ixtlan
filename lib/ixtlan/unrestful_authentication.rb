@@ -1,6 +1,14 @@
 module Ixtlan
   module UnrestfulAuthentication
 
+    private
+
+    def authentication_logger
+      @authentication_logger ||= UserLogger.new(Ixtlan::UnrestfulAuthentication)
+    end
+
+    protected
+
     def logged_in?
       !session[:user_id].nil?
     end
@@ -15,10 +23,12 @@ module Ixtlan
       session[:user] = new_user
     end
 
-  def verify_authenticity
-    # TODO handle xml differently then html
-    verify_authenticity_token if logged_in?
-  end
+    def verify_authenticity
+      if request.content_type == 'application/xml'
+        params[request_forgery_protection_token] = request.headers[:authenticity_token]
+      end
+      verify_authenticity_token if logged_in?
+    end
 
     def authenticate
       if logged_in?
@@ -36,17 +46,16 @@ module Ixtlan
         when :post
           user = login_from_params
           if user.instance_of? String
-            @authentication_logger ||= UserLogger.new(Ixtlan::UnrestfulAuthentication)
-            @authentication_logger.log_user(params[:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
+            authentication_logger.log_user(params[:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
             session.clear
             render_access_denied
           else
+            session.clear
             #  reset_session
             self.current_user = user
             render_successful_login
           end
-        when :put
-        when :delete
+        else
           session.clear
           render_access_denied
         end
@@ -63,11 +72,12 @@ module Ixtlan
     end
 
     def logout
-      if(params[:logout] == current_user.id) 
-        session.clear
-       # reset_session
+      if(params[:login] == current_user.login)
+        authentication_logger.log_user(current_user.login, "logged out")
         current_user = nil
-        render_login_page
+        session.clear
+        # reset_session
+        render_logout_page
         false
       else
         true
@@ -77,7 +87,13 @@ module Ixtlan
     def render_successful_login
       respond_to do |format|
         format.html { redirect_to request.url, :status => :moved_permanently}
-        format.xml { head :ok }
+        format.xml do
+          authentication = Authentication.new
+          authentication.login = self.current_user.login
+          authentication.user = self.current_user
+          authentication.token = form_authenticity_token
+          render :xml => authentication.to_xml
+        end
       end
     end
 
@@ -94,6 +110,16 @@ module Ixtlan
     def render_login_page
       respond_to do |format|
         format.html { render :template => "sessions/login" }
+        format.xml { head :unauthorized }
+      end
+    end
+
+    def render_logout_page
+      respond_to do |format|
+        format.html do
+          @notice = "logged out" unless @notice
+          render :template => "sessions/login"
+        end
         format.xml { head :ok }
       end
     end    

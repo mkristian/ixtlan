@@ -1,22 +1,6 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
-
-require 'dm-timestamps'
-require 'ixtlan' / 'user'
-require 'ixtlan' / 'group'
-require 'ixtlan' / 'group_user'
-require 'ixtlan' / 'locale'
-require 'ixtlan' / 'permission'
-require 'ixtlan' / 'role'
-
-require 'logger'
-
-module ActionController
-  module Base
-  end
-end
-
 module ActionView
   module Base
   end
@@ -38,11 +22,7 @@ module Erector
   end
 end
 
-require 'ixtlan' / 'guard'
-
-class Controller 
-  include ActionController::Base
-end
+require 'guard'
 
 describe Ixtlan::Permission do
 
@@ -59,34 +39,15 @@ describe Ixtlan::Permission do
 end
 
 class Controller 
-
-  def initialize
-    @params = {}
-  end
-
-  attr_reader :params
-
-  def current_user
-    u = Ixtlan::User.create(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "all" )
-    g = Ixtlan::Group.create(:name => :admin)
-    u.groups << g
-    g.locales << Ixtlan::Locale.first_or_create(:code => "DEFAULT")
-    g.locales << Ixtlan::Locale.first_or_create(:code => "en")
-    g.save
-p Ixtlan::Group.all[0].locales
-    u
-  end
-
+  include ActionController::Base
 end
 
 describe Ixtlan::Guard do
 
-  before :all do
-    # datamapper needs a default configured !!
-    DataMapper.setup(:default, :adapter => :in_memory)
-  
-    Ixtlan::Guard.load( Logger.new(STDOUT), :root, (Pathname(__FILE__).dirname + 'guards').expand_path )
+  before :each do
+    Ixtlan::Guard.load( Slf4r::LoggerFacade.new(:root), :root, (Pathname(__FILE__).dirname + 'guards').expand_path )
 
+    Ixtlan::Group.all.destroy!
     @controller = Controller.new
     @widget = Erector::Widget.new
     @widget.controller = @controller
@@ -120,35 +81,35 @@ describe Ixtlan::Guard do
     lambda { Ixtlan::Guard.check(@controller, :permissions, :unknown_action) }.should raise_error(Ixtlan::GuardException)
   end
 
-  it 'should pass controller guard' do
+  it 'should pass' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :permissions
 
     @controller.send(:guard).should be_true
   end
 
-  it 'should controller guard deny permission' do
+  it 'should deny permission' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :configurations
 
     lambda {@controller.send(:guard)}.should raise_error( Ixtlan::PermissionDenied)
  end
 
-  it 'should pass controller guard with locale' do
+  it 'should pass with locale' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :permissions
 
     @controller.send(:guard, Ixtlan::Locale.first_or_create(:code => "en")).should be_true
   end
 
-  it 'should controller guard deny permission with locale' do
+  it 'should deny permission with right locale' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :configurations
 
     lambda {@controller.send(:guard, Ixtlan::Locale.first_or_create(:code => "en"))}.should raise_error( Ixtlan::PermissionDenied)
   end
 
-  it 'should controller guard deny permission with locale' do
+  it 'should deny permission with wrong locale' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :permissions
 
