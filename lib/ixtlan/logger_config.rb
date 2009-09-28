@@ -58,7 +58,8 @@ module Ixtlan
                                    Ixtlan::User, 
                                    Ixtlan::Audit, 
                                    Ixtlan::SessionTimeout, 
-                                   Ixtlan::UnrestfulAuthentication
+                                   Ixtlan::UnrestfulAuthentication,
+                                   Ixtlan::ErrorHandling
                                   ] )
     
     # keep the guard messages in a separate file as well

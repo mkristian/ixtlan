@@ -21,6 +21,7 @@ gem 'rspec-rails', :lib => false
 gem 'datamapper4rails'
 
 # logging
+gem 'slf4r'
 gem 'logging'
 
 # ixtlan gems
@@ -28,6 +29,9 @@ gem 'ixtlan', :lib => 'guard'
 gem 'ixtlan', :lib => 'unrestful_authentication'
 gem 'ixtlan', :lib => 'session_timeout'
 gem 'ixtlan', :lib => 'audit'
+gem 'ixtlan', :lib => 'optimistic_persistence'
+gem 'ixtlan', :lib => 'error_handling'
+gem 'ixtlan', :lib => 'models'
 
 # install all gems
 rake 'gems:install'
@@ -72,9 +76,11 @@ ActionController::Base.session = {
 }
 CODE
 
+rake 'dm:automigrate'
+
 # logger config
 initializer '01_loggers.rb', <<-CODE
-require 'ixtlan/logger_config'
+require 'ixtlan/logger_config' if ENV['RAILS_ENV']
 CODE
 
 # load the guard config
@@ -156,8 +162,96 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   def new_session_timeout
     Ixtlan::Configuration.instance.session_idle_timeout.minutes.from_now
   end
+
+  rescue_from DataMapper::StaleResourceError, :with => :stale_resource
+
+  rescue_from DataMapper::ObjectNotFoundError, :with => :page_not_found
+  rescue_from ActionController::RoutingError, :with => :page_not_found
+  rescue_from ActionController::UnknownAction, :with => :page_not_found
+  rescue_from ActionController::MethodNotAllowed, :with => :page_not_found
+  rescue_from ActionController::NotImplemented, :with => :page_not_found
+  rescue_from Ixtlan::GuardException, :with => :page_not_found
+  rescue_from Ixtlan::PermissionDenied, :with => :page_not_found
+
+  unless consider_all_requests_local
+    rescue_from ActionView::MissingTemplate, :with => :internal_server_error
+    rescue_from ActionView::TemplateError, :with => :internal_server_error
+  end
 CODE
 
-rake 'dm:automigrate'
+file 'app/views/errors/error.html.erb', <<-CODE
+<h1><%= @notice %></h1>
+CODE
+
+file 'app/views/errors/stale.html.erb', <<-CODE
+<h1>stale resource</h1>
+
+<p>please reload resource and change it again</p>
+CODE
+
+file 'config/preinitializer.rb', <<-CODE
+require 'yaml'
+require 'erb'
+module Ixtlan
+  class Configurator
+
+    def self.symbolize_keys(h, compact)
+      result = {}
+      
+      h.each do |k, v|
+        v = ' ' if v.nil?
+        if v.is_a?(Hash)
+          result[k.to_sym] = symbolize_keys(v, compact) unless compact and v.size == 0
+        else
+          result[k.to_sym] = v unless compact and k.to_sym == v.to_sym
+        end
+      end
+      
+      result
+    end
+    
+    def self.load(dir, file, compact = true)
+      symbolize_keys(YAML::load(ERB.new(IO.read(File.join(dir, file))).result), compact)
+    end
+  end
+end
+
+CONFIG = Ixtlan::Configurator.load(File.dirname(__FILE__), 'global.yml')
+CODE
+
+file 'config/global.yml', <<-CODE
+# possible example to have a file with all the (production) passwords
+# outside GIT/SUBVERSION/CVS/etc !!!
+mysql:
+  database: example
+  host: mysql.example.com
+  username: rails
+  password: run_it
+
+smtp:
+  address: smtp.gmail.com
+  port: 587
+  domain: example.com
+  authentication: plain
+  user_name: mail@example.com
+  password: mail_it
+CODE
+
+append_file 'config/environments/production.rb', <<-CODE
+
+config.action_mailer.delivery_method = :smtp
+
+require "smtp_tls"
+
+ActionMailer::Base.smtp_settings = {
+:address => CONFIG[:smtp][:address],
+:port => CONFIG[:smtp][:port],
+:domain => CONFIG[:smtp][:domain],
+:authentication => CONFIG[:smtp][:authentication],
+:user_name => CONFIG[:smtp][:user_name],
+:password => CONFIG[:smtp][:password]
+} 
+CODE
+
 rake 'dm:migrate:down VERSION=0'
 rake 'dm:migrate:up VERSION=2'

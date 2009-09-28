@@ -8,6 +8,10 @@ module Ixtlan
     
     property :keep_audit_logs, Integer, :nullable => false 
     
+    property :notification_sender_email, String, :format => :email, :nullable => true 
+
+    property :notification_recipient_email, String, :format => :email, :nullable => true 
+    
     timestamps :at
     
     def self.instance

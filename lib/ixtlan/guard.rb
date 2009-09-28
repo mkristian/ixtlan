@@ -96,8 +96,8 @@ module Ixtlan
         action = action.to_sym
         allowed = @@map[resource][action]
         if (allowed.nil?)
-          @@logger.warn("Guard: unknown action '#{action}' for controller '#{resource}'")
-          raise ::Ixtlan::GuardException.new("GuardException: unknown action '#{action}' for controller '#{resource}'")
+          @@logger.warn("unknown action '#{action}' for controller '#{resource}'")
+          raise ::Ixtlan::GuardException.new("unknown action '#{action}' for controller '#{resource}'")
         else
           allowed << @@superuser unless allowed.member? @@superuser
           for group in groups
@@ -108,8 +108,8 @@ module Ixtlan
           return false
         end
       else
-        @@logger.warn("Guard: unknown controller '#{resource}'")
-        raise ::Ixtlan::GuardException.new("GuardException: unknown controller '#{resource}'")
+        @@logger.warn("unknown controller '#{resource}'")
+        raise ::Ixtlan::GuardException.new("unknown controller '#{resource}'")
       end
     end
   end

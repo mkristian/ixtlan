@@ -1,3 +1,4 @@
+require 'slf4r'
 module Ixtlan
   
   class UserLogger
@@ -19,18 +20,18 @@ module Ixtlan
       log_user(login_from(controller), message, &block)
     end
 
-    def log_action(controller)
+    def log_action(controller, message = nil)
       log_user(login_from(controller)) do
         as_xml = controller.response.content_type == 'application/xml' ? " - xml" : ""
         audits = controller.instance_variable_get("@#{controller.params[:controller].to_sym}")
         if(audits)                                               
-          "#{controller.params[:controller]}##{controller.params[:action]} #{audits.model.to_s.plural}[#{audits.size}]#{as_xml}"
+          "#{controller.params[:controller]}##{controller.params[:action]} #{audits.model.to_s.plural}[#{audits.size}]#{as_xml}#{message}"
         else
           audit = controller.instance_variable_get("@#{controller.params[:controller].singular.to_sym}")
           if(audit)                                               
-            "#{controller.params[:controller]}##{controller.params[:action]} #{audit.model}(#{audit.key})#{as_xml}"
+            "#{controller.params[:controller]}##{controller.params[:action]} #{audit.model}(#{audit.key})#{as_xml}#{message}"
           else
-            "#{controller.params[:controller]}##{controller.params[:action]}#{as_xml}"
+            "#{controller.params[:controller]}##{controller.params[:action]}#{as_xml}#{message}"
           end
         end
       end

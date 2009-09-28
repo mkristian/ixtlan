@@ -1,4 +1,6 @@
 require 'digest'
+#require 'passwords'
+#require 'user_logger'
 module Ixtlan
   class User
     include DataMapper::Resource
