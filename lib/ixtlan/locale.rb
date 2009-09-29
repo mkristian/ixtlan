@@ -4,7 +4,7 @@ module Ixtlan
 
     property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^DEFAULT$/, :length => 7, :key => true
     
-    property :created_at, DateTime, :nullable => false, :auto_validation => false
+    timestamps :created_at
 
     def hash
       attribute_get(:code).hash

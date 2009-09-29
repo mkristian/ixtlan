@@ -2,16 +2,18 @@ module Ixtlan
   class Group
     include DataMapper::Resource
     
-    def storage_name
-      "group"
+    def default_storage_name
+      "Group"
     end
 
     property :id, Serial, :field => "gidnumber"
     
     property :name, String, :nullable => false , :format => /^[^<'&">]*$/, :length => 32, :field => "cn", :unique_index => true
     
-    property :created_at, DateTime, :nullable => false, :auto_validation => false
+    timestamps :created_at
     
+    # modified_by Ixtlan::User
+
     has n, :locales, :model => "Ixtlan::Locale"
     
     alias :to_x :to_xml_document

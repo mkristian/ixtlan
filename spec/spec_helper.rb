@@ -7,6 +7,7 @@ $LOAD_PATH << (Pathname(__FILE__).dirname.parent.expand_path + 'lib').to_s
 require 'dm-timestamps'
 require 'slf4r'
 require 'ixtlan' / 'user_logger'
+require 'ixtlan' / 'modified_by'
 require 'ixtlan' / 'user'
 require 'ixtlan' / 'group'
 require 'ixtlan' / 'group_user'
@@ -48,10 +49,14 @@ class Request
 end
 class Controller
   include ActionController::Base
-
   def initialize
     @params = {}
-    u = Ixtlan::User.first_or_create(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx")
+    u = Ixtlan::User.first
+    if u.nil? 
+      u = Ixtlan::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx")
+      u.current_user = u
+      u.save
+    end
     @password = u.reset_password
     u.save
     g = Ixtlan::Group.first_or_create(:name => :admin)

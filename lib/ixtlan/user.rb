@@ -5,6 +5,10 @@ module Ixtlan
   class User
     include DataMapper::Resource
 
+    def self.default_storage_name
+      "User"
+    end
+
     property :id, Serial, :field => "uidnumber"
 
     property :login, String, :nullable => false , :length => 4..32, :index => :unique_index, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
@@ -14,6 +18,8 @@ module Ixtlan
     property :hashed_password, String, :nullable => true, :length => 128, :accessor => :private, :field => "userpassword"
 
     timestamps :at
+    
+#    modified_by Ixtlan::User
 
     # Virtual attribute for the plaintext password
     attr_reader :password

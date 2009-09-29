@@ -2,6 +2,10 @@ module Ixtlan
   class Permission
     include DataMapper::Resource
 
+    def self.default_storage_name
+      "Permission"
+    end
+
     property :resource, String,:format => /^[a-zA-Z0-9_.]*$/, :key => true
 
     property :action, String, :format => /^[a-zA-Z0-9_.]*$/, :key => true

@@ -1,8 +1,11 @@
 module Ixtlan
   class GroupUser
     include DataMapper::Resource
-    #  include Slf4r::Logger
- 
+
+    def self.default_storage_name
+      "GroupUser"
+    end
+
     # dn_prefix { |group_user| "cn=#{group_user.group.name}" }
     
     #treebase "ou=groups"
