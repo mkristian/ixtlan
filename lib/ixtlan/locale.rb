@@ -2,6 +2,10 @@ module Ixtlan
   class Locale
     include DataMapper::Resource
 
+    def self.default_storage_name
+      "Locale"
+    end
+
     property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^DEFAULT$/, :length => 7, :key => true
     
     timestamps :created_at

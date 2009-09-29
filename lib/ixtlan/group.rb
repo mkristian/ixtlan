@@ -2,7 +2,7 @@ module Ixtlan
   class Group
     include DataMapper::Resource
     
-    def default_storage_name
+    def self.default_storage_name
       "Group"
     end
 

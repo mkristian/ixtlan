@@ -1,3 +1,4 @@
+require 'dm-core'
 module Ixtlan
 
   module ModifiedBy    

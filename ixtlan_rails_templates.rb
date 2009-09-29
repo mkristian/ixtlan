@@ -109,7 +109,10 @@ migration 1, :create_root_user do
     Ixtlan::Group.auto_migrate!
     Ixtlan::GroupUser.auto_migrate!
 
-    u = Ixtlan::User.create(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en')
+    u = Ixtlan::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
+    u.current_user = u
+    u.created_by_id = 1
+    u.updated_by_id = 1
     u.reset_password
     g = Ixtlan::Group.create(:name => 'root')
     u.groups << g
@@ -123,10 +126,10 @@ end
 CODE
 
 file "db/migrate/2_create_configuration.rb", <<-CODE
-migration 1, :create_configuration do
+migration 2, :create_configuration do
   up do
     Ixtlan::Configuration.auto_migrate!
-    Ixtlan::Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3)
+    Ixtlan::Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => Ixtlan::User.first)
   end
 
   down do

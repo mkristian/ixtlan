@@ -18,6 +18,7 @@ lib/ixtlan/group_user.rb
 lib/ixtlan/guard.rb
 lib/ixtlan/locale.rb
 lib/ixtlan/logger_config.rb
+lib/ixtlan/modified_by.rb
 lib/ixtlan/optimistic_persistence.rb
 lib/ixtlan/passwords.rb
 lib/ixtlan/permission.rb

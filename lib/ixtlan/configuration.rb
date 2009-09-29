@@ -1,3 +1,5 @@
+require 'dm-core'
+require 'ixtlan/modified_by'
 module Ixtlan
   class Configuration
     include DataMapper::Resource
@@ -16,12 +18,14 @@ module Ixtlan
 
     property :notification_recipient_email, String, :format => :email, :nullable => true 
     
-    timestamps :at
+    timestamps :updated_at
 
-    modified_by Ixtlan::User
+    modified_by Ixtlan::User, :updated_by
 
     def self.instance
-      @instance ||= get(1) || create(:id => 1, session_idle_timeout => 5, :keep_audit_logs => 7)
+      # HACK return a new object in case there is none in the database
+      # to allow rails rake tasks to work with empty database
+      @instance ||= get(1) || new(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 7, :current_user => Ixtlan::User.first)
     end
   end
 end
