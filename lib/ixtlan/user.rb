@@ -1,4 +1,5 @@
 require 'digest'
+require 'ixtlan/modified_by'
 #require 'passwords'
 #require 'user_logger'
 module Ixtlan
@@ -19,7 +20,7 @@ module Ixtlan
 
     timestamps :at
     
-#    modified_by Ixtlan::User
+    modified_by Ixtlan::User
 
     # Virtual attribute for the plaintext password
     attr_reader :password
@@ -51,7 +52,9 @@ module Ixtlan
     end
 
     def groups
-      groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group))
+      # TODO spec the empty array to make sure new relations are stored
+      # in the database or the groups collection is empty before filling it
+      groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group), [])
       Ixtlan::GroupUser.all(:memberuid => login).each{ |gu| groups << gu.group }
       def groups.user=(user)
         @user = user
@@ -59,7 +62,7 @@ module Ixtlan
       groups.user = self
       def groups.<<(group)
         unless member? group
-          Ixtlan::GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
+          gu = Ixtlan::GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
           super
         end
         
