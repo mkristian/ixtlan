@@ -8,7 +8,7 @@ class Name
 
   property :name, String, :length => 2..255, :key => true
 
-  property :updated_at, DateTime
+  timestamps :updated_at
 end
   
 class Number
@@ -35,7 +35,7 @@ describe Ixtlan::OptimisticPersistence do
     @name.name = "gandalf"
     @name.save.should be_true
     @second.name = "saroman"
-    lambda { @second.save }.should raise_error(DataMapper::StaleResource)
+    lambda { @second.save }.should raise_error(DataMapper::StaleResourceError)
   end
 
   it 'should treat non optimistic resources as usual' do
