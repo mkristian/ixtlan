@@ -256,5 +256,34 @@ ActionMailer::Base.smtp_settings = {
 } 
 CODE
 
+file 'prepare_jruby.sh', <<-CODE
+#!/bin/bash
+
+echo "shall freeze rails and fix a bug which prevents rails to use certain"
+echo "java gems like the dataobjects drivers !!"
+echo
+
+mvn --version
+if [ $? ] ; then
+
+        echo "please install maven >= 2.0.9 from maven.apache.org"
+        exit -1
+fi
+
+mvn de.saumya.mojo:rails-maven-plugin:rails-freeze-gems de.saumya.mojo:rails-maven-plugin:gems-install
+
+echo
+echo "you can run rails with (no need to install jruby !!)"
+echo
+echo "\tmvn de.saumya.mojo:rails-maven-plugin:server"
+echo
+CODE
+
+generate 'ixtlan_datamapper_rspec_scaffold', User
+file 'app/models/user.rb', <<-CODE
+User=Ixtlan::User
+CODE
+
+
 rake 'dm:migrate:down VERSION=0'
 rake 'dm:migrate:up VERSION=2'

@@ -1,7 +1,5 @@
 require 'digest'
 require 'ixtlan/modified_by'
-#require 'passwords'
-#require 'user_logger'
 module Ixtlan
   class User
     include DataMapper::Resource
