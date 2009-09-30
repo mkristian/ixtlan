@@ -1,3 +1,11 @@
+generators/ixtlan_datamapper_model/ixtlan_datamapper_model_generator.rb
+generators/ixtlan_datamapper_model/templates/model.rb
+generators/ixtlan_datamapper_rspec_model/ixtlan_datamapper_rspec_model_generator.rb
+generators/ixtlan_datamapper_rspec_scaffold/ixtlan_datamapper_rspec_scaffold_generator.rb
+generators/ixtlan_datamapper_rspec_scaffold/templates/controller.rb
+generators/ixtlan_datamapper_rspec_scaffold/templates/controller_spec.rb
+generators/ixtlan_datamapper_rspec_scaffold/templates/guard.rb
+generators/ixtlan_datamapper_rspec_scaffold/templates/i18n.rb
 lib/audit.rb
 lib/error_handling.rb
 lib/guard.rb
