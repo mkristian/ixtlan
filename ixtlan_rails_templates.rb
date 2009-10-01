@@ -76,7 +76,7 @@ ActionController::Base.session = {
 }
 CODE
 
-rake 'dm:automigrate'
+rake 'db:automigrate'
 
 # logger config
 initializer '01_loggers.rb', <<-CODE
@@ -87,6 +87,20 @@ CODE
 initializer '02_guard.rb', <<-CODE
 # load the guard config files from RAILS_ROOT/app/guards
 Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
+CODE
+
+initializer 'patches.rb', <<-CODE
+# fix with rails development mode and class reloading
+# not sure where the exact problem is :-(
+module Extlib
+  module Assertions
+    def assert_kind_of(name, value, *klasses)
+      # be less strict and allow matching class names to OK as well
+      klasses.each { |k| return if value.kind_of?(k) or value.class.name == k.name }     
+      raise ArgumentError, "+\#{name}+ should be \#{klasses.map { |k| k.name } * ' or '}, but was \#{value.class.name}", caller(2)
+    end
+  end
+end
 CODE
 
 # setup permissions controller
@@ -162,20 +176,35 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   filter_parameter_logging :password, :login
   before_filter :check_session_expiry
 
+  # override default to use nice User (without namespace)
+  def login_from_params
+    User.authenticate(params[:login], params[:password])
+  end
+
+  def login_from_session
+    User.get(session[:user_id])
+  end
+
+  # override default to use value from configuration
   def new_session_timeout
     Ixtlan::Configuration.instance.session_idle_timeout.minutes.from_now
   end
 
+  # needs 'optimistic_persistence'
   rescue_from DataMapper::StaleResourceError, :with => :stale_resource
 
+  # needs 'guard'
+  rescue_from Ixtlan::GuardException, :with => :page_not_found
+  rescue_from Ixtlan::PermissionDenied, :with => :page_not_found
+
+  # rest is standard rails or datamapper
   rescue_from DataMapper::ObjectNotFoundError, :with => :page_not_found
   rescue_from ActionController::RoutingError, :with => :page_not_found
   rescue_from ActionController::UnknownAction, :with => :page_not_found
   rescue_from ActionController::MethodNotAllowed, :with => :page_not_found
   rescue_from ActionController::NotImplemented, :with => :page_not_found
-  rescue_from Ixtlan::GuardException, :with => :page_not_found
-  rescue_from Ixtlan::PermissionDenied, :with => :page_not_found
 
+  # have nice stacktraces in development mode
   unless consider_all_requests_local
     rescue_from ActionView::MissingTemplate, :with => :internal_server_error
     rescue_from ActionView::TemplateError, :with => :internal_server_error
@@ -259,12 +288,13 @@ CODE
 file 'prepare_jruby.sh', <<-CODE
 #!/bin/bash
 
+echo
 echo "shall freeze rails and fix a bug which prevents rails to use certain"
 echo "java gems like the dataobjects drivers !!"
 echo
 
 mvn --version
-if [ $? ] ; then
+if [ $? -ne 0 ] ; then
 
         echo "please install maven >= 2.0.9 from maven.apache.org"
         exit -1
@@ -279,11 +309,21 @@ echo "\tmvn de.saumya.mojo:rails-maven-plugin:server"
 echo
 CODE
 
-generate 'ixtlan_datamapper_rspec_scaffold', User
+generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
 file 'app/models/user.rb', <<-CODE
-User=Ixtlan::User
+class User < Ixtlan::User; end
+CODE
+
+generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'Group', 'name:string'
+file 'app/models/group.rb', <<-CODE
+class Group < Ixtlan::Group; end
 CODE
 
 
-rake 'dm:migrate:down VERSION=0'
-rake 'dm:migrate:up VERSION=2'
+generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'Locale', 'code:string'
+file 'app/models/locale.rb', <<-CODE
+class Locale < Ixtlan::Locale; end
+CODE
+
+rake 'db:migrate:down VERSION=0'
+rake 'db:migrate'
