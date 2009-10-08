@@ -307,6 +307,10 @@ echo "you can run rails with (no need to install jruby !!)"
 echo
 echo "\tmvn de.saumya.mojo:rails-maven-plugin:server"
 echo
+echo "more info on"
+echo "\tgithub.org/mkristian/rails-maven-plugin"
+echo
+echo
 CODE
 
 generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
