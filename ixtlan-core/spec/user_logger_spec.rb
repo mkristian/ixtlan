@@ -80,10 +80,10 @@ describe Ixtlan::UserLogger do
     @controller.params[:action] = "index"
     @controller.instance_variable_set(:@resource, @controller.current_user.groups[0])
     @logger.log_action(@controller)
-    @log.string.should =~ /\[marvin\] resources#index Ixtlan::Group\(1\)\s*$/
+    @log.string.should =~ /\[marvin\] resources#index .*Group\(1\)\s*$/
     @controller.response.content_type = "application/xml"
     @logger.log_action(@controller)
-    @log.string.should =~ /\[marvin\] resources#index Ixtlan::Group\(1\) - xml\s*$/
+    @log.string.should =~ /\[marvin\] resources#index .*Group\(1\) - xml\s*$/
   end
 
   it 'should log action - resources variable' do
@@ -92,10 +92,10 @@ describe Ixtlan::UserLogger do
     @controller.instance_variable_set(:@resources, @controller.current_user.groups)
     size = @controller.current_user.groups.size
     @logger.log_action(@controller)
-    @log.string.should =~ /\[marvin\] resources#index Ixtlan::Groups\[#{size}\]\s*$/
+    @log.string.should =~ /\[marvin\] resources#index .*Groups\[#{size}\]\s*$/
     @controller.response.content_type = "application/xml"
     @logger.log_action(@controller)
-    @log.string.should =~ /\[marvin\] resources#index Ixtlan::Groups\[#{size}\] - xml\s*$/
+    @log.string.should =~ /\[marvin\] resources#index .*Groups\[#{size}\] - xml\s*$/
   end
 
 end

@@ -47,7 +47,6 @@ describe Ixtlan::Guard do
   before :each do
     Ixtlan::Guard.load( Slf4r::LoggerFacade.new(:root), :root, (Pathname(__FILE__).dirname + 'guards').expand_path )
 
-    Ixtlan::Group.all.destroy!
     @controller = Controller.new
     @widget = Erector::Widget.new
     @widget.controller = @controller

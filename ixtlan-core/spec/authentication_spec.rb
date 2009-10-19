@@ -15,8 +15,11 @@ DataMapper.setup(:default, :adapter => :in_memory)
 describe Ixtlan::Authentication do
 
   before :each do
-    group = Ixtlan::Group.create :name => 'root'
-    user  = Ixtlan::User.create(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "all" )
+    user  = Ixtlan::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+    user.created_by_id = 1
+    user.updated_by_id = 1
+    user.save!
+    group = Ixtlan::Group.create :name => 'root', :current_user => user
     group.locales << Ixtlan::Locale.create(:code => "DEFAULT")
     group.locales << Ixtlan::Locale.create(:code => "en")
     group.save

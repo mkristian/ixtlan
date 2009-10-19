@@ -2,6 +2,15 @@ module Ixtlan
   class Locale
     include DataMapper::Resource
 
+
+    def self.name
+      "Locale"
+    end
+
+    def self.to_s
+      "Locale"
+    end
+
     def self.default_storage_name
       "Locale"
     end
@@ -21,7 +30,7 @@ module Ixtlan
 
     alias :to_x :to_xml_document
     def to_xml_document(opts, doc = nil)
-      opts.merge!({:element_name => 'locale', :exclude => [:group_id]})
+      opts.merge!({:exclude => [:group_id]})
       to_x(opts, doc)
     end
   end

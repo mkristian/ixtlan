@@ -9,8 +9,9 @@ require 'spec/rake/spectask'
 require 'pathname'
 require 'yard'
 
-Hoe.new('ixtlan', Ixtlan::VERSION) do |p|
+Hoe.spec('ixtlan') do |p|
   p.developer('mkristian', 'm.kristian@web.de')
+  p.rspec_options << '--options' << 'spec/spec.opts'
 end
 
 desc 'Install the package as a gem.'
@@ -19,12 +20,15 @@ task :install => [:clean, :package] do
   sh "gem install --local #{gem} --no-ri --no-rdoc"
 end
 
-desc 'Run specifications'
-Spec::Rake::SpecTask.new(:spec) do |t|
-  if File.exists?('spec/spec.opts')
-    t.spec_opts << '--options' << 'spec/spec.opts'
+desc 'generate rails using all generators and run the specs'
+task :integration_tests => [:spec, :install] do
+  require 'datamapper4rails/integration_test'
+  Datamapper4Rails::IntegrationTest.new do |t|
+    t.rails_template = 'ixtlan_rails_templates.rb'
+    t.generate "ixtlan_datamapper_model name name:string"
+    t.generate "ixtlan_datamapper_rspec_model domain name:string"
+    t.generate "ixtlan_datamapper_rspec_scaffold word name:string"
   end
-  t.spec_files = Pathname.glob('./spec/**/*_spec.rb')
 end
 
 YARD::Rake::YardocTask.new

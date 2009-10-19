@@ -4,6 +4,14 @@ module Ixtlan
   class User
     include DataMapper::Resource
 
+    def self.name
+      "User"
+    end
+
+    def self.to_sh
+      "User"
+    end
+
     def self.default_storage_name
       "User"
     end
@@ -18,7 +26,7 @@ module Ixtlan
 
     timestamps :at
     
-    modified_by Ixtlan::User
+    modified_by "::Ixtlan::User"
 
     # Virtual attribute for the plaintext password
     attr_reader :password
@@ -52,13 +60,13 @@ module Ixtlan
     def groups
       # TODO spec the empty array to make sure new relations are stored
       # in the database or the groups collection is empty before filling it
-      groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group), [])
-      Ixtlan::GroupUser.all(:memberuid => login).each{ |gu| groups << gu.group }
-      def groups.user=(user)
+      _groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group), [])
+      Ixtlan::GroupUser.all(:memberuid => login).each{ |gu| _groups << gu.group }
+      def _groups.user=(user)
         @user = user
       end
-      groups.user = self
-      def groups.<<(group)
+      _groups.user = self
+      def _groups.<<(group)
         unless member? group
           gu = Ixtlan::GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
           super
@@ -67,14 +75,14 @@ module Ixtlan
         self
       end
       
-      def groups.delete(group) 
+      def _groups.delete(group) 
         gu = Ixtlan::GroupUser.first(:memberuid => @user.login, :gidnumber => group.id)
         if gu
           gu.destroy
-          super
         end
+        super
       end
-      groups
+      _groups
     end
 
     # make sure login is immutable
@@ -84,7 +92,7 @@ module Ixtlan
     
     alias :to_x :to_xml_document
     def to_xml_document(opts={}, doc = nil)
-      opts.merge!({:exclude => [:hashed_password], :element_name => 'user', :methods => [:groups], :groups => {:collection_element_name => 'groups'}})
+      opts.merge!({:exclude => [:hashed_password], :methods => [:groups]})
       to_x(opts, doc)
     end
   end

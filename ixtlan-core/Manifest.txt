@@ -1,6 +1,7 @@
 generators/ixtlan_datamapper_model/ixtlan_datamapper_model_generator.rb
 generators/ixtlan_datamapper_model/templates/model.rb
 generators/ixtlan_datamapper_rspec_model/ixtlan_datamapper_rspec_model_generator.rb
+generators/ixtlan_datamapper_rspec_model/templates/model_spec.rb
 generators/ixtlan_datamapper_rspec_scaffold/ixtlan_datamapper_rspec_scaffold_generator.rb
 generators/ixtlan_datamapper_rspec_scaffold/templates/controller.rb
 generators/ixtlan_datamapper_rspec_scaffold/templates/controller_spec.rb
@@ -22,6 +23,7 @@ lib/ixtlan/digest.rb
 lib/ixtlan/error_handling.rb
 lib/ixtlan/error_notifier/error_notification.rhtml
 lib/ixtlan/group.rb
+lib/ixtlan/group_locale.rb
 lib/ixtlan/group_user.rb
 lib/ixtlan/guard.rb
 lib/ixtlan/locale.rb
@@ -40,10 +42,9 @@ lib/ixtlan/user.rb
 lib/ixtlan/version.rb
 Manifest.txt
 Rakefile
-README
+README.txt
 spec/authentication_spec.rb
 spec/guard_spec.rb
 spec/guards/samples.rb
 spec/spec_helper.rb
 spec/spec.opts
-templates.rb

@@ -3,6 +3,10 @@ require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
 require 'session_timeout'
 
+class Controller
+  include Ixtlan::SessionTimeout
+end
+
 describe Ixtlan::SessionTimeout do
 
   before :each do

@@ -12,7 +12,9 @@ end
 class AuditedName
   include DataMapper::Resource
 
-  property :name, String, :length => 2..255, :key => true
+  # TODO remove serial
+  property :id, Serial
+  property :name, String, :length => 2..255#, :key => true
 
   modified_by User
 end

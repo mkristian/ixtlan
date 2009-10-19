@@ -9,9 +9,10 @@ require 'slf4r'
 require 'ixtlan' / 'user_logger'
 require 'ixtlan' / 'modified_by'
 require 'ixtlan' / 'user'
+require 'ixtlan' / 'group_locale'
+require 'ixtlan' / 'locale'
 require 'ixtlan' / 'group'
 require 'ixtlan' / 'group_user'
-require 'ixtlan' / 'locale'
 require 'ixtlan' / 'permission'
 require 'ixtlan' / 'role'
 require 'ixtlan' / 'passwords'
@@ -53,13 +54,19 @@ class Controller
     @params = {}
     u = Ixtlan::User.first
     if u.nil? 
-      u = Ixtlan::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx")
-      u.current_user = u
-      u.save
+      u = Ixtlan::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+      if(u.respond_to? :created_by_id)
+      u.created_by_id = 1
+      u.updated_by_id = 1
+      end
+      u.save!
     end
     @password = u.reset_password
-    u.save
-    g = Ixtlan::Group.first_or_create(:name => :admin)
+    u.save!
+    g = Ixtlan::Group.first(:name => :admin) || Ixtlan::Group.create(:name => :admin, :current_user => u)
+    # clear up old relations
+    Ixtlan::GroupUser.all.destroy!
+
     u.groups << g
     g.locales << Ixtlan::Locale.first_or_create(:code => "DEFAULT")
     g.locales << Ixtlan::Locale.first_or_create(:code => "en")
@@ -67,7 +74,7 @@ class Controller
     @user = u
   end
 
-  attr_reader :params, :password, :user
+  attr_reader :params, :password, :user, :rendered
 
   def current_user
     @user

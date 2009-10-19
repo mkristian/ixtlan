@@ -6,7 +6,7 @@ require 'optimistic_persistence'
 class Name
   include DataMapper::Resource
 
-  property :name, String, :length => 2..255, :key => true
+  property :name, String, :length => 2..255, :key =>  true
 
   timestamps :updated_at
 end
@@ -14,15 +14,16 @@ end
 class Number
   include DataMapper::Resource
 
-  property :number, Integer, :key => true
+  property :id, Serial
+  property :number, Integer
 end
   
-describe Ixtlan::OptimisticPersistence do
+describe "Ixtlan::OptimisticPersistence" do
 
   before :each do
     @name = Name.create(:name => "frodo")
     @second = Name.first
-    @number = Number.create(:number => 123)
+    @number = Number.first_or_create(:number => 123)
     @other = Number.first
   end
 

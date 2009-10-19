@@ -4,6 +4,10 @@ module Ixtlan
   class Configuration
     include DataMapper::Resource
 
+    def self.name
+      "Configuration"
+    end
+
     def self.default_storage_name
       "Configuration"
     end
@@ -20,7 +24,7 @@ module Ixtlan
     
     timestamps :updated_at
 
-    modified_by Ixtlan::User, :updated_by
+    modified_by "::Ixtlan::User", :updated_by
 
     def self.instance
       # HACK return a new object in case there is none in the database

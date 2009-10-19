@@ -1,7 +1,7 @@
 module Ixtlan
   module ActionController #:nodoc:
     module Guard #:nodoc:
-      def self.included(base)
+      def self.included(base)      
         base.send(:include, InstanceMethods)
       end
       module InstanceMethods #:nodoc:

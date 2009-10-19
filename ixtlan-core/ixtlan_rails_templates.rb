@@ -10,8 +10,8 @@ gem 'do_sqlite3'
 # serialization, validations and timestamps in your models
 gem 'dm-validations'
 gem 'dm-timestamps'
-gem 'dm-serializer'
 gem 'dm-migrations'
+gem 'dm-serializer' # to allow xml interface to work
 
 # assume you prefer rspec over unit tests
 gem 'rspec', :lib => false
@@ -37,10 +37,10 @@ gem 'ixtlan', :lib => 'models'
 rake 'gems:install'
 
 # install specs rake tasks
-generate 'rspec', '-f'
+generate('rspec', '-f')
 
 # install datamapper rake tasks
-generate 'datamapper_install'
+generate('datamapper_install')
 
 # fix config files to work with datamapper instead of active_record
 environment ''
@@ -49,9 +49,13 @@ environment '# deactive active_record'
 gsub_file 'spec/spec_helper.rb', /^\s*config[.]/, '  #\0'
 gsub_file 'test/test_helper.rb', /^[^#]*fixtures/, '  #\0'
 
+file 'spec/support/datamapper.rb', <<-CODE
+require 'datamapper4rails/rspec'
+CODE
+
 # add middleware
 def middleware(name)
-  log "middleware", name
+  log 'middleware', name
   environment "config.middleware.use '#{name}'"
 end
 
@@ -76,20 +80,16 @@ ActionController::Base.session = {
 }
 CODE
 
-rake 'db:automigrate'
-
-# logger config
-initializer '01_loggers.rb', <<-CODE
-require 'ixtlan/logger_config' if ENV['RAILS_ENV']
-CODE
-
-# load the guard config
-initializer '02_guard.rb', <<-CODE
-# load the guard config files from RAILS_ROOT/app/guards
-Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
-CODE
-
-initializer 'patches.rb', <<-CODE
+# gzip fix for jruby
+initializer 'monkey_patches.rb', <<-CODE
+if RUBY_PLATFORM =~ /java/
+  require 'zlib'
+  class Zlib::GzipWriter
+    def <<(arg)
+      write(arg)
+    end
+  end
+end
 # fix with rails development mode and class reloading
 # not sure where the exact problem is :-(
 module Extlib
@@ -101,6 +101,19 @@ module Extlib
     end
   end
 end
+CODE
+
+rake 'db:automigrate', "-r config/environment.rb"
+
+# logger config
+initializer '01_loggers.rb', <<-CODE
+require 'ixtlan/logger_config' if ENV['RAILS_ENV']
+CODE
+
+# load the guard config
+initializer '02_guard.rb', <<-CODE
+# load the guard config files from RAILS_ROOT/app/guards
+Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
 CODE
 
 # setup permissions controller
@@ -124,11 +137,14 @@ migration 1, :create_root_user do
     Ixtlan::GroupUser.auto_migrate!
 
     u = Ixtlan::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
-    u.current_user = u
+    #u.current_user = u
+    u.created_at = DateTime.now
+    u.updated_at = u.created_at
     u.created_by_id = 1
     u.updated_by_id = 1
     u.reset_password
-    g = Ixtlan::Group.create(:name => 'root')
+    u.save!
+    g = Ixtlan::Group.create(:name => 'root', :current_user => u)
     u.groups << g
     u.save
     STDERR.puts "\#{u.login} \#{u.password}"
@@ -308,7 +324,7 @@ echo
 echo "\tmvn de.saumya.mojo:rails-maven-plugin:server"
 echo
 echo "more info on"
-echo "\tgithub.org/mkristian/rails-maven-plugin"
+echo "\thttp://github.org/mkristian/rails-maven-plugin"
 echo
 echo
 CODE
@@ -317,6 +333,10 @@ generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'User', 'login:
 file 'app/models/user.rb', <<-CODE
 class User < Ixtlan::User; end
 CODE
+gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
+gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
+gsub_file 'spec/models/user_spec.rb', /value for email/, 'value@for.email'
+gsub_file 'spec/models/user_spec.rb', /value for language/, 'vl'
 
 generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'Group', 'name:string'
 file 'app/models/group.rb', <<-CODE
@@ -324,9 +344,17 @@ class Group < Ixtlan::Group; end
 CODE
 
 
-generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'Locale', 'code:string'
+generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
 file 'app/models/locale.rb', <<-CODE
 class Locale < Ixtlan::Locale; end
+CODE
+gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
+file 'spec/support/locale.rb', <<-CODE
+module Ixtlan
+  class Locale
+    property :id, Integer
+  end
+end
 CODE
 
 rake 'db:migrate:down VERSION=0'

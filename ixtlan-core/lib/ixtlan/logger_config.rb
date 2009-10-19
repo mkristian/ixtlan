@@ -43,14 +43,10 @@ module Ixtlan
     appender = rolling_appender('sql')
   
     DataMapper.logger = logger([appender,rails_appender], DataMapper)
-    #DataMapper.logger.add_appender(rails_appender)
     
-    #TODO not working!!!!
-    DataObjects.logger = logger(appender, DataObjects)
-    #TODO not working!!!!
-    
-    #DataObjects::Logger.new("#{RAILS_ROOT}/log/sqls.log", ENV['RAILS_ENV'] == 'production' ? :debug : :debug, " - ", true)
-    
+    #TODO better find out which database !!!
+    DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
+
     # configure audit logger
     Ixtlan::AuditConfig.configure(Ixtlan::Configuration.instance.keep_audit_logs, 
                                   log_filebase('audit'), 
