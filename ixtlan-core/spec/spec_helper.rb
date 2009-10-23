@@ -42,10 +42,11 @@ module ActionController
   end
 end
 class Request
-  attr_accessor :headers, :method
+  attr_accessor :headers, :method, :content_type
   def initialize
     @headers = {}
     @method = :get
+    @content_type = 'text/html'
   end
 end
 class Controller

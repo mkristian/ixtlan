@@ -15,7 +15,7 @@ module Ixtlan
       "Locale"
     end
 
-    property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^DEFAULT$/, :length => 7, :key => true
+    property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^DEFAULT$|^\*$/, :length => 7, :key => true
     
     timestamps :created_at
 

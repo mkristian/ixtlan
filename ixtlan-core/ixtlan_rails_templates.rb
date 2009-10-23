@@ -63,6 +63,7 @@ environment ''
 middleware 'DataMapper::RestfulTransactions'
 middleware 'DataMapper::IdentityMaps'
 middleware 'Rack::Deflater'
+environment "#config.middleware.use 'Ixtlan::CmsScript'"
 environment '# add middleware'
 
 # init a session store
