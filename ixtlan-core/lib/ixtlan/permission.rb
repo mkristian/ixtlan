@@ -23,7 +23,6 @@ module Ixtlan
 
     alias :to_x :to_xml_document
     def to_xml_document(opts, doc = nil)
-      #element_name is hack for dm-serializer
       opts.merge!({:methods => [:roles]})
       to_x(opts, doc)
     end
