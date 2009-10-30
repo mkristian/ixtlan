@@ -15,7 +15,7 @@ module Ixtlan
       "Locale"
     end
 
-    property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^DEFAULT$|^\*$/, :length => 7, :key => true
+    property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^DEFAULT$|^ALL$/, :length => 7, :key => true
     
     timestamps :created_at
 
@@ -28,10 +28,10 @@ module Ixtlan
       attribute_get(:code).eql?(other.attribute_get(:code))
     end
 
-    alias :to_x :to_xml_document
-    def to_xml_document(opts, doc = nil)
-      opts.merge!({:exclude => [:group_id]})
-      to_x(opts, doc)
-    end
+#    alias :to_x :to_xml_document
+#    def to_xml_document(opts, doc = nil)
+#      opts.merge!({:exclude => [:group_id]})
+#      to_x(opts, doc)
+#    end
   end
 end
