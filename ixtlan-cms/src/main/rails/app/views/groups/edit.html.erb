@@ -1,0 +1,16 @@
+<h1>Editing group</h1>
+
+<% form_for(:group, :url => group_path(@group.key), :html => {:method => :put}) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', group_path(@group.key) %> |
+<%= link_to 'Back', groups_path %>

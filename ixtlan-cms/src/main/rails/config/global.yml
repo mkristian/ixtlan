@@ -1,0 +1,15 @@
+# possible example to have a file with all the (production) passwords
+# outside GIT/SUBVERSION/CVS/etc !!!
+mysql:
+  database: example
+  host: mysql.example.com
+  username: rails
+  password: run_it
+
+smtp:
+  address: smtp.gmail.com
+  port: 587
+  domain: example.com
+  authentication: plain
+  user_name: mail@example.com
+  password: mail_it

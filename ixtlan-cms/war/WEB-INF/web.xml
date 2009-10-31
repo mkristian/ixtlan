@@ -1,0 +1,17 @@
+<!DOCTYPE web-app PUBLIC
+"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+"http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>XMLProxyServlet</servlet-name>
+    <servlet-class>de.saumya.gwt.datamapper.server.ProxyServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>XMLProxyServlet</servlet-name>
+    <url-pattern>*.xml</url-pattern>
+  </servlet-mapping>
+
+</web-app>

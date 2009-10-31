@@ -1,0 +1,16 @@
+<h1>Editing locale</h1>
+
+<% form_for(:locale, :url => locale_path(@locale.key), :html => {:method => :put}) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :code %><br />
+    <%= f.text_field :code %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', locale_path(@locale.key) %> |
+<%= link_to 'Back', locales_path %>

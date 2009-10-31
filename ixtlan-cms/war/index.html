@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>ixtlan cms demo</title>
+    <style type="text/css">
+      body {
+      font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif;
+      font-size: .9em;
+      margin-left: 15%;
+      margin-right: 15%;
+      margin-bottom: 1em;
+      border: 1px solid darkgreen;
+      padding: 1em;
+      }
+      h1,h2 {
+      width: 100%;
+      border-bottom: 1px solid green;
+
+      }
+      b {
+      color: #006;
+      }
+    </style>
+  <link type='text/css' rel='stylesheet' href='/ixtlan/ixtlan.css'></link><script type='text/javascript' language='javascript' src='/ixtlan/ixtlan.nocache.js'></script></head>
+  <body>
+    <h1 id="header" class="ixtlan">edit text inline</h1>
+    <p id="mouse_clicks">
+      just left or right mouse click on some text (after login). the right mouse click displays the current published text as well.
+    </p>
+    <p>login with</p>
+    <ul>
+      <li id="username">username: admin</li>
+      <li id="password">password: mudita</li>
+    </ul>
+    <h2 id="ids">id attributes</h2>
+    <p id="tag_has|attribute_and|attribute_value|ixtlan_edit" class="ixtlan">
+      where ever a tag has an <b id="id" class="ixtlan">id</b>-attribute and an
+      <b id="class" class="ixtlan">class</b>-attribute with value <b id="value" class="ixtlan">ixtlan</b>. these tags can be edited via ixtlan.
+    </p>
+    <p id="nested|attribute_is|list_of_ids" class="ixtlan">
+      if there are nested tags then the <b id="id" class="ixtlan">id</b>-attribute is a <b>|</b>-separated list of ids - each id for each text node the tag contains.
+    </p>
+    <h2 id="title_tag" class="ixtlan">title tag</h2>
+    <p id="title_tag_key|datacentric">
+      the title tag carries the default key <b id="default_key" class="ixtlan">title</b>. but the value of thatkey can be changed only in the datacentric <a href="admin.html" id="admin_interface">admin interface</a>
+    </p>
+     <h2 id="namespace" class="ixtlan">namespace</h2>
+     <p id="unique_namespace">
+       each page gets its unique namespace for ids, i.e. the ids need to be unique within a page but different pages can have the same ids. 
+     </p>
+  </body>
+</html>
