@@ -4,7 +4,7 @@ import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.RoleFactory;
+import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 
@@ -53,7 +53,7 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
     protected ResourceFactory<Phrase> factorySetUp() {
         final UserFactory userFactory = new UserFactory(this.repository,
                 new LocaleFactory(this.repository),
-                new RoleFactory(this.repository,
+                new GroupFactory(this.repository,
                         new LocaleFactory(this.repository),
                         new VenueFactory(this.repository)));
         return new PhraseFactory(this.repository,

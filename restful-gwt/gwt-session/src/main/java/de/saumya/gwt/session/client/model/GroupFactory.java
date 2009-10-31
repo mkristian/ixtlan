@@ -3,12 +3,12 @@ package de.saumya.gwt.session.client.model;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
 
-public class RoleFactory extends ResourceFactory<Role> {
+public class GroupFactory extends ResourceFactory<Group> {
 
     private final LocaleFactory localeFactory;
     private final VenueFactory  venueFactory;
 
-    public RoleFactory(final Repository repository,
+    public GroupFactory(final Repository repository,
             final LocaleFactory localeFactory, final VenueFactory venueFactory) {
         super(repository);
         this.localeFactory = localeFactory;
@@ -17,7 +17,7 @@ public class RoleFactory extends ResourceFactory<Role> {
 
     @Override
     public String storageName() {
-        return "role";
+        return "group";
     }
 
     @Override
@@ -26,8 +26,8 @@ public class RoleFactory extends ResourceFactory<Role> {
     }
 
     @Override
-    public Role newResource() {
-        return new Role(this.repository,
+    public Group newResource() {
+        return new Group(this.repository,
                 this,
                 this.localeFactory,
                 this.venueFactory);

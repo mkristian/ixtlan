@@ -161,6 +161,12 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
                     reset(resource);
                     ResourceScreen.this.loading.setVisible(false);
                 }
+
+                @Override
+                public void onError(final E resource, final int status) {
+                    // TODO Auto-generated method stub
+
+                }
             });
             this.loading.setVisible(false);
             reset(resource);
@@ -181,6 +187,15 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
                                                         final E resource) {
                                                     reset(resource);
                                                     ResourceScreen.this.loading.setVisible(false);
+                                                }
+
+                                                @Override
+                                                public void onError(
+                                                        final E resource,
+                                                        final int status) {
+                                                    // TODO Auto-generated
+                                                    // method stub
+
                                                 }
                                             });
         // TODO should be set be onChange and onError. maybe make an application

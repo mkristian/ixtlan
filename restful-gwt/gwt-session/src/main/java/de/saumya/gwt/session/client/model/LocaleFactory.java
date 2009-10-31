@@ -30,4 +30,8 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     Locale defaultLocale() {
         return get("DEFAULT", null);
     }
+
+    Locale allLocale() {
+        return get("*", null);
+    }
 }

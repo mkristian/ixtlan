@@ -11,30 +11,30 @@ import de.saumya.gwt.datamapper.client.Resources;
 
 class Permission extends Resource<Permission> {
 
-    private final GroupFactory groupFactory;
+    private final RoleFactory roleFactory;
 
     Permission(final Repository repository, final PermissionFactory factory,
-            final GroupFactory groupFactory) {
+            final RoleFactory roleFactory) {
         super(repository, factory);
-        this.groupFactory = groupFactory;
+        this.roleFactory = roleFactory;
     }
 
-    String           resourceName;
-    String           action;
-    Resources<Group> groups;
+    String          resource;
+    String          action;
+    Resources<Role> roles;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
-        append(buf, "resource_name", this.resourceName);
+        append(buf, "resource", this.resource);
         append(buf, "action", this.action);
-        append(buf, "groups", this.groups);
+        append(buf, "roles", this.roles);
     }
 
     @Override
     protected void fromXml(final Element root) {
-        this.resourceName = getString(root, "resource_name");
+        this.resource = getString(root, "resource");
         this.action = getString(root, "action");
-        this.groups = this.groupFactory.getChildResources(root, "groups");
+        this.roles = this.roleFactory.getChildResources(root, "roles");
     }
 
     @Override
@@ -44,16 +44,16 @@ class Permission extends Resource<Permission> {
 
     @Override
     protected void toString(final StringBuffer buf) {
-        buf.append(":resource_name => ").append(this.resourceName);
+        buf.append(":resource => ").append(this.resource);
         buf.append(":action => ").append(this.action);
-        if (this.groups != null) {
-            buf.append(", :groups => ").append(this.groups);
+        if (this.roles != null) {
+            buf.append(", :roles => ").append(this.roles);
         }
     }
 
     @Override
     public String display() {
-        return new StringBuffer(this.resourceName).append("#")
+        return new StringBuffer(this.resource).append("#")
                 .append(this.action)
                 .toString();
     }

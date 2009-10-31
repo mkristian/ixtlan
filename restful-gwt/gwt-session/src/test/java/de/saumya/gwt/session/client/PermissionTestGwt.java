@@ -19,14 +19,14 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     private Permission          resource;
 
-    private GroupFactory        groupFactory;
+    private RoleFactory         roleFactory;
 
     private static final String RESOURCE_XML = "<permission>"
                                                      + "<resource_name>config</resource_name>"
                                                      + "<action>create</action>"
-                                                     + "<groups><group>"
+                                                     + "<roles><role>"
                                                      + "<name>admin</name>"
-                                                     + "</group></groups>"
+                                                     + "</role></roles>"
                                                      + "</permission>";
 
     @Override
@@ -39,12 +39,12 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
     protected Resource<Permission> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.resourceName = "config";
+        this.resource.resource = "config";
         this.resource.action = "create";
-        final Group group = this.groupFactory.newResource();
-        group.name = "admin";
-        this.resource.groups = this.groupFactory.newResources();
-        this.resource.groups.add(group);
+        final Role role = this.roleFactory.newResource();
+        role.name = "admin";
+        this.resource.roles = this.roleFactory.newResources();
+        this.resource.roles.add(role);
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -55,7 +55,7 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     @Override
     public void doTestCreate() {
-        assertEquals("config", this.resource.resourceName);
+        assertEquals("config", this.resource.resource);
         assertEquals("create", this.resource.action);
     }
 
@@ -69,9 +69,9 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
     private final static String XML = "<permission>"
                                             + "<resource_name>config</resource_name>"
                                             + "<action>create</action>"
-                                            + "<groups>" + "<group>"
-                                            + "<name>root</name>" + "</group>"
-                                            + "</groups>" + "</permission>";
+                                            + "<roles>" + "<role>"
+                                            + "<name>root</name>" + "</role>"
+                                            + "</roles>" + "</permission>";
 
     @Override
     protected String changedValue() {
@@ -80,8 +80,8 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     @Override
     protected ResourceFactory<Permission> factorySetUp() {
-        this.groupFactory = new GroupFactory(this.repository);
-        return new PermissionFactory(this.repository, this.groupFactory);
+        this.roleFactory = new RoleFactory(this.repository);
+        return new PermissionFactory(this.repository, this.roleFactory);
     }
 
     @Override

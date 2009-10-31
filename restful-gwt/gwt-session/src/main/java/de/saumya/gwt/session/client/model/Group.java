@@ -11,12 +11,12 @@ import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.ResourceWithID;
 import de.saumya.gwt.datamapper.client.Resources;
 
-public class Role extends ResourceWithID<Role> {
+public class Group extends ResourceWithID<Group> {
 
     private final LocaleFactory localeFactory;
     private final VenueFactory  venueFactory;
 
-    protected Role(final Repository repository, final RoleFactory factory,
+    protected Group(final Repository repository, final GroupFactory factory,
             final LocaleFactory localeFactory, final VenueFactory venueFactory) {
         super(repository, factory);
         this.localeFactory = localeFactory;

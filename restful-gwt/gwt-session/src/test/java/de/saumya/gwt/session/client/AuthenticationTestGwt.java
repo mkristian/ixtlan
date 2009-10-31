@@ -4,7 +4,7 @@ import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
 import de.saumya.gwt.datamapper.client.Resource;
 import de.saumya.gwt.datamapper.client.ResourceFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.RoleFactory;
+import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 
@@ -96,7 +96,7 @@ public class AuthenticationTestGwt extends
         final LocaleFactory localeFactory = new LocaleFactory(this.repository);
         this.userFactory = new UserFactory(this.repository,
                 localeFactory,
-                new RoleFactory(this.repository,
+                new GroupFactory(this.repository,
                         localeFactory,
                         new VenueFactory(this.repository)));
         return new AuthenticationFactory(this.repository, this.userFactory);

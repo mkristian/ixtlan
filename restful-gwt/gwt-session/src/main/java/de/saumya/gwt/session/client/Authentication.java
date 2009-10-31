@@ -27,7 +27,7 @@ class Authentication extends Resource<Authentication> {
 
     @Override
     public String key() {
-        return this.token;
+        return null;
     }
 
     @Override

@@ -116,7 +116,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository);
         return new UserFactory(this.repository,
                 localeFactory,
-                new RoleFactory(this.repository,
+                new GroupFactory(this.repository,
                         localeFactory,
                         new VenueFactory(this.repository)));
     }

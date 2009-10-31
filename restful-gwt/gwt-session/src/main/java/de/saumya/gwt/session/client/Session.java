@@ -11,10 +11,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 
+import de.saumya.gwt.datamapper.client.Repository;
+import de.saumya.gwt.datamapper.client.ResourceChangeListener;
 import de.saumya.gwt.datamapper.client.Resources;
 import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
+import de.saumya.gwt.session.client.model.Group;
 import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.Role;
 import de.saumya.gwt.session.client.model.User;
 
 public class Session {
@@ -54,31 +56,34 @@ public class Session {
         }
     }
 
-    private Authentication                                    authentication = null;
-    private final Timer                                       timer          = new SessionTimer();
-    private final AuthenticationFactory                       authenticationFactory;
-    private final Map<String, Map<String, Collection<Group>>> permissions;
+    private Authentication                                   authentication = null;
+    private final Timer                                      timer          = new SessionTimer();
+    private final AuthenticationFactory                      authenticationFactory;
+    private final Map<String, Map<String, Collection<Role>>> permissions;
+    private final Repository                                 repository;
 
-    public Session(final AuthenticationFactory authenticationFactory,
+    public Session(final Repository repository,
+            final AuthenticationFactory authenticationFactory,
             final PermissionFactory permissionFactory) {
+        this.repository = repository;
         this.authenticationFactory = authenticationFactory;
-        this.permissions = new HashMap<String, Map<String, Collection<Group>>>();
+        this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
             @Override
             public void onChange(final Resources<Permission> resources,
                     final Permission resource) {
-                final Map<String, Collection<Group>> actions;
-                if (Session.this.permissions.containsKey(resource.resourceName)) {
-                    actions = Session.this.permissions.get(resource.resourceName);
+                final Map<String, Collection<Role>> actions;
+                if (Session.this.permissions.containsKey(resource.resource)) {
+                    actions = Session.this.permissions.get(resource.resource);
                 }
                 else {
-                    actions = new HashMap<String, Collection<Group>>();
-                    Session.this.permissions.put(resource.resourceName, actions);
+                    actions = new HashMap<String, Collection<Role>>();
+                    Session.this.permissions.put(resource.resource, actions);
                 }
-                actions.put(resource.action, resource.groups);
-                GWT.log("added permission for '" + resource.resourceName + "#"
-                        + resource.action + ": " + resource.groups, null);
+                actions.put(resource.action, resource.roles);
+                GWT.log("added permission for '" + resource.resource + "#"
+                        + resource.action + ": " + resource.roles, null);
             }
 
             @Override
@@ -134,6 +139,40 @@ public class Session {
     }
 
     void login(final String username, final String password) {
+        final Authentication authentication = this.authenticationFactory.newResource();
+        authentication.login = username;
+        authentication.password = password;
+        authentication.addResourceChangeListener(new ResourceChangeListener<Authentication>() {
+
+            @Override
+            public void onChange(final Authentication resource) {
+                if (resource.user.login.equals(username)) {
+                    if (resource.isUptodate()) {
+                        doLogin(resource);
+                        GWT.log(resource.toString(), null);
+                        Session.this.repository.setAuthenticationToken(resource.token);
+                    }
+                }
+                else {
+                    doAccessDenied();
+                }
+            }
+
+            @Override
+            public void onError(final Authentication resource, final int status) {
+                if (status < 500) {
+                    doAccessDenied();
+                }
+                else {
+                    // TODO better something like doSomethingWentWrong()
+                    doAccessDenied();
+                }
+            }
+        });
+        authentication.save();
+        if (true) {
+            return;
+        }
         if ("mudita".equals(password)) {
             this.authenticationFactory.all(new ResourcesChangeListener<Authentication>() {
 
@@ -175,7 +214,7 @@ public class Session {
     }
 
     public boolean isAllowed(final String action, final String resourceName) {
-        for (final Role role : this.authentication.user.roles) {
+        for (final Group role : this.authentication.user.groups) {
             if (isAllowed(action, resourceName, role)) {
                 return true;
             }
@@ -193,7 +232,7 @@ public class Session {
     public boolean isAllowed(final String action, final String resourceName,
             final String localeCode) {
         GWT.log(resourceName + "#" + action + " " + localeCode + "?", null);
-        for (final Role role : this.authentication.user.roles) {
+        for (final Group role : this.authentication.user.groups) {
             GWT.log(role.toString(), null);
             if (isAllowed(action, resourceName, role)) {
                 for (final Locale l : role.locales) {
@@ -207,13 +246,13 @@ public class Session {
     }
 
     private boolean isAllowed(final String action, final String resourceName,
-            final Role role) {
+            final Group group) {
         if (this.authentication != null) {
-            final Map<String, Collection<Group>> permission = this.permissions.get(resourceName);
+            final Map<String, Collection<Role>> permission = this.permissions.get(resourceName);
             if (permission != null) {
                 if (permission.containsKey(action)) {
-                    for (final Group group : permission.get(action)) {
-                        if (group.name.equals(role.name)) {
+                    for (final Role role : permission.get(action)) {
+                        if (role.name.equals(group.name)) {
                             return true;
                         }
                     }

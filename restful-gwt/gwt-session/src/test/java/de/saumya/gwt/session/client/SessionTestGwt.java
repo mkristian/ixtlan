@@ -3,8 +3,8 @@ package de.saumya.gwt.session.client;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import de.saumya.gwt.datamapper.client.RepositoryMock;
+import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.RoleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 
@@ -37,23 +37,24 @@ public class SessionTestGwt extends GWTTestCase {
         this.repository.reset();
         final VenueFactory venueFactory = new VenueFactory(this.repository);
         this.localeFactory = new LocaleFactory(this.repository);
-        final RoleFactory roleFactory = new RoleFactory(this.repository,
+        final GroupFactory groupFactory = new GroupFactory(this.repository,
                 this.localeFactory,
                 venueFactory);
-        final GroupFactory groupFactory = new GroupFactory(this.repository);
+        final RoleFactory roleFactory = new RoleFactory(this.repository);
         final PermissionFactory permissionFactory = new PermissionFactory(this.repository,
-                groupFactory);
+                roleFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.localeFactory,
-                roleFactory);
+                groupFactory);
         this.repository.add("<permissions>" + "<permission>"
                 + "<resource_name>user</resource_name>"
-                + "<action>create</action>" + "<groups>" + "<group>"
-                + "<name>admin</name>" + "</group>" + "<group>"
-                + "<name>root</name>" + "</group>" + "</groups>"
+                + "<action>create</action>" + "<roles>" + "<role>"
+                + "<name>admin</name>" + "</role>" + "<role>"
+                + "<name>root</name>" + "</role>" + "</roles>"
                 + "</permission>" + "</permissions>");
-        this.session = new Session(new AuthenticationFactory(this.repository,
-                this.userFactory), permissionFactory);
+        this.session = new Session(this.repository,
+                new AuthenticationFactory(this.repository, this.userFactory),
+                permissionFactory);
         this.listener = new SessionListenerMock();
         this.session.addSessionListern(this.listener);
 
@@ -61,10 +62,10 @@ public class SessionTestGwt extends GWTTestCase {
 
         this.repository.add("<authentications>" + "<authentication>"
                 + "<token>1234567890</token>" + "<user><login>dhamma</login>"
-                + "<roles>" + "<role>" + "<name>admin</name>"
+                + "<groups>" + "<group>" + "<name>admin</name>"
                 + "<created_at>2005-07-09 17:14:48.0</created_at>"
                 + "<locales>" + "<locale>" + "<code>en</code>" + "</locale>"
-                + "</locales>" + "</role>" + "</roles>" + "</user>"
+                + "</locales>" + "</group>" + "</groups>" + "</user>"
                 + "</authentication>" + "</authentications>");
     }
 

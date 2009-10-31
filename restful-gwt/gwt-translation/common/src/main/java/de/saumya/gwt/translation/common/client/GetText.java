@@ -72,6 +72,14 @@ public class GetText {
                                                                   GetText.this.wordMap);
                                        resetTranslatables();
                                    }
+
+                                   @Override
+                                   public void onError(
+                                           final WordBundle resource,
+                                           final int status) {
+                                       // TODO Auto-generated method stub
+
+                                   }
                                });
     }
 
@@ -96,6 +104,13 @@ public class GetText {
                                      GetText.this.phraseCache.put(resource.locale,
                                                                   GetText.this.phraseMap);
                                      resetTranslatables();
+                                 }
+
+                                 @Override
+                                 public void onError(final PhraseBook resource,
+                                         final int status) {
+                                     // TODO Auto-generated method stub
+
                                  }
                              });
     }

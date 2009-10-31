@@ -7,7 +7,7 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
+public class GroupTestGwt extends AbstractResourceTestGwt<Role> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -17,7 +17,7 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
         return "de.saumya.gwt.session.Session";
     }
 
-    private Group               resource;
+    private Role               resource;
 
     private static final String RESOURCE_XML = "<group>" + "<name>root</name>"
                                                      + "</group>";
@@ -43,12 +43,12 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
     }
 
     @Override
-    protected ResourceFactory<Group> factorySetUp() {
-        return new GroupFactory(this.repository);
+    protected ResourceFactory<Role> factorySetUp() {
+        return new RoleFactory(this.repository);
     }
 
     @Override
-    protected Resource<Group> resourceSetUp() {
+    protected Resource<Role> resourceSetUp() {
         this.resource = this.factory.newResource();
 
         this.resource.name = "root";

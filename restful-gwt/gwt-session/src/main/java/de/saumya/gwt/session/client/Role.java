@@ -8,9 +8,9 @@ import com.google.gwt.xml.client.Element;
 import de.saumya.gwt.datamapper.client.Repository;
 import de.saumya.gwt.datamapper.client.Resource;
 
-class Group extends Resource<Group> {
+class Role extends Resource<Role> {
 
-    protected Group(final Repository repository, final GroupFactory factory) {
+    protected Role(final Repository repository, final RoleFactory factory) {
         super(repository, factory);
     }
 

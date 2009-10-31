@@ -6,10 +6,10 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 public class UserFactory extends ResourceFactory<User> {
 
     private final LocaleFactory localeFactory;
-    private final RoleFactory   roleFactory;
+    private final GroupFactory   roleFactory;
 
     public UserFactory(final Repository repository,
-            final LocaleFactory localeFactory, final RoleFactory roleFactory) {
+            final LocaleFactory localeFactory, final GroupFactory roleFactory) {
         super(repository);
         this.localeFactory = localeFactory;
         this.roleFactory = roleFactory;

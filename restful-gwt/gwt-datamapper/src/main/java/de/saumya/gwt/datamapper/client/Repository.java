@@ -12,6 +12,12 @@ public class Repository {
 
     private static final String URL = GWT.getHostPageBaseURL();
 
+    private String              authenticationToken;
+
+    public void setAuthenticationToken(final String authenticationToken) {
+        this.authenticationToken = authenticationToken;
+    }
+
     void all(final String resourceName, final RequestCallback callback) {
         doIt("GET", URL + resourceName + ".xml", null, callback);
     }
@@ -48,13 +54,20 @@ public class Repository {
 
     void delete(final Resource<? extends Resource<?>> resource,
             final RequestCallback callback) {
-        doIt("DELETE", URL + resource.storageName + "/" + resource.key()
-                + ".xml", null, callback);
+        if (resource.key() != null) {
+            doIt("DELETE", URL + resource.storageName + "/" + resource.key()
+                    + ".xml", null, callback);
+        }
+        else { // singleton
+            doIt("DELETE", URL + resource.storageName + ".xml", null, callback);
+        }
     }
 
     void doIt(final String method, final String url, final String data,
             final RequestCallback callback) {
-        final RequestBuilder builder = new RestfulRequestBuilder(method, url);
+        final RequestBuilder builder = new RestfulRequestBuilder(method,
+                url,
+                this.authenticationToken);
         try {
             builder.sendRequest(data, callback);
         }

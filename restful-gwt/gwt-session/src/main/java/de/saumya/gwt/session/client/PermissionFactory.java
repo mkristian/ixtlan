@@ -5,17 +5,17 @@ import de.saumya.gwt.datamapper.client.ResourceFactory;
 
 public class PermissionFactory extends ResourceFactory<Permission> {
 
-    private final GroupFactory groupFactory;
+    private final RoleFactory groupFactory;
 
     public PermissionFactory(final Repository repository,
-            final GroupFactory groupFactory) {
+            final RoleFactory groupFactory) {
         super(repository);
         this.groupFactory = groupFactory;
     }
 
     @Override
     public String storageName() {
-        return "permission";
+        return "permissions";
     }
 
     @Override

@@ -165,11 +165,45 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    void fireResourceErrorEvents(final int status) {
+        for (final ResourceChangeListener<E> listener : this.listeners) {
+            listener.onError((E) this, status);
+        }
+    }
+
     protected Timestamp getTimestamp(final Element root, final String name) {
         final String value = getString(root, name);
         return value == null ? null : (value.matches("[0-9]*")
                 ? new Timestamp(Long.parseLong(value))
-                : Timestamp.valueOf(value));
+                : new TimestampFactory(value).toTimestamp());
+    }
+
+    static class TimestampFactory {
+        final String value;
+
+        TimestampFactory(final String value) {
+            this.value = value;
+        }
+
+        @SuppressWarnings("deprecation")
+        Timestamp toTimestamp() {
+            return new Timestamp(toInt(0, 4),
+                    toInt(5),
+                    toInt(8),
+                    toInt(11),
+                    toInt(14),
+                    toInt(17),
+                    0);
+        }
+
+        private int toInt(final int from) {
+            return toInt(from, 2);
+        }
+
+        private int toInt(final int from, final int len) {
+            return Integer.parseInt(this.value.substring(from, from + len));
+        }
     }
 
     protected Date getDate(final Element root, final String name) {

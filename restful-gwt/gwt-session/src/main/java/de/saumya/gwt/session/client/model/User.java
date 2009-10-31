@@ -16,24 +16,24 @@ import de.saumya.gwt.datamapper.client.Resources;
 public class User extends Resource<User> {
 
     private final LocaleFactory localeFactory;
-    private final RoleFactory   roleFactory;
+    private final GroupFactory  groupFactory;
 
     protected User(final Repository repository, final UserFactory factory,
-            final LocaleFactory localeFactory, final RoleFactory roleFactory) {
+            final LocaleFactory localeFactory, final GroupFactory groupFactory) {
         super(repository, factory);
         this.localeFactory = localeFactory;
-        this.roleFactory = roleFactory;
+        this.groupFactory = groupFactory;
     }
 
-    public String          login;
-    public String          email;
-    public String          name;
-    public Locale          preferedLanguage;
+    public String           login;
+    public String           email;
+    public String           name;
+    public Locale           preferedLanguage;
 
-    public Timestamp       createdAt;
-    public Timestamp       updatedAt;
+    public Timestamp        createdAt;
+    public Timestamp        updatedAt;
 
-    public Resources<Role> roles;
+    public Resources<Group> groups;
 
     @Override
     public String key() {
@@ -46,7 +46,7 @@ public class User extends Resource<User> {
         append(buf, "name", this.name);
         append(buf, "email", this.email);
         append(buf, "preferred_language", this.preferedLanguage);
-        append(buf, "roles", this.roles);
+        append(buf, "groups", this.groups);
         append(buf, "created_at", this.createdAt);
         append(buf, "updated_at", this.updatedAt);
     }
@@ -58,7 +58,7 @@ public class User extends Resource<User> {
         this.email = getString(root, "email");
         this.preferedLanguage = this.localeFactory.getChildResource(root,
                                                                     "preferred_language");
-        this.roles = this.roleFactory.getChildResources(root, "roles");
+        this.groups = this.groupFactory.getChildResources(root, "groups");
         this.createdAt = getTimestamp(root, "created_at");
         this.updatedAt = getTimestamp(root, "updated_at");
     }
@@ -72,8 +72,8 @@ public class User extends Resource<User> {
             buf.append(", :preferedLanguage => ");
             this.preferedLanguage.toString(buf);
         }
-        if (this.roles != null) {
-            buf.append(", :roles => ").append(this.roles);
+        if (this.groups != null) {
+            buf.append(", :groups => ").append(this.groups);
         }
         buf.append(", :created_at => ").append(this.createdAt);
         buf.append(", :updated_at => ").append(this.updatedAt);
@@ -81,8 +81,8 @@ public class User extends Resource<User> {
 
     public Collection<Locale> getAllowedLocales() {
         final Collection<Locale> result = new HashSet<Locale>();
-        for (final Role role : this.roles) {
-            result.addAll(role.locales);
+        for (final Group group : this.groups) {
+            result.addAll(group.locales);
         }
         return result;
     }
