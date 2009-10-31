@@ -58,31 +58,37 @@ module Ixtlan
     end
 
     def groups
-      # TODO spec the empty array to make sure new relations are stored
-      # in the database or the groups collection is empty before filling it
-      _groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group), [])
-      Ixtlan::GroupUser.all(:memberuid => login).each{ |gu| _groups << gu.group }
-      def _groups.user=(user)
-        @user = user
-      end
-      _groups.user = self
-      def _groups.<<(group)
-        unless member? group
-          gu = Ixtlan::GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
+      if @groups.nil?
+        # TODO spec the empty array to make sure new relations are stored
+        # in the database or the groups collection is empty before filling it
+        @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Group), [])
+        Ixtlan::GroupUser.all(:memberuid => login).each do |gu| 
+          @groups << gu.group
+        end
+        def @groups.user=(user)
+          @user = user
+        end
+        @groups.user = self
+        def @groups.<<(group)
+          group.locales(@user)
+          unless member? group
+            gu = Ixtlan::GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
+            super
+          end
+          
+          self
+        end
+      
+        def @groups.delete(group) 
+          gu = Ixtlan::GroupUser.first(:memberuid => @user.login, :gidnumber => group.id)
+          if gu
+            gu.destroy
+          end
           super
         end
-        
-        self
+        @groups.each {|g| g.locales(self) }
       end
-      
-      def _groups.delete(group) 
-        gu = Ixtlan::GroupUser.first(:memberuid => @user.login, :gidnumber => group.id)
-        if gu
-          gu.destroy
-        end
-        super
-      end
-      _groups
+      @groups
     end
 
     # make sure login is immutable
