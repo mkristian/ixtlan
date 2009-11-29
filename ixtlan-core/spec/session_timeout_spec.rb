@@ -10,6 +10,7 @@ end
 describe Ixtlan::SessionTimeout do
 
   before :each do
+    Ixtlan::Models::User.all.destroy!
     @controller = Controller.new
     @log = StringIO.new
     Slf4r::LoggerFacade4RubyLogger.file = @log

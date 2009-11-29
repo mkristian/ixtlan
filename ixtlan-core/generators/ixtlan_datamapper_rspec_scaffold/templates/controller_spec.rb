@@ -27,13 +27,13 @@ describe <%= controller_class_name %>Controller do
 
 <% unless options[:skip_guard] -%>
   before(:each) do
-    user = Ixtlan::User.new(:id => 1, :login => 'root')
+    user = Ixtlan::Models::User.new(:id => 1, :login => 'root')
     def user.groups
-      [Ixtlan::Group.new(:name => "root")]
+      [Ixtlan::Models::Group.new(:name => "root")]
     end
     controller.send(:current_user=, user)
-    mock_configuration = mock_model(Ixtlan::Configuration,{})
-    Ixtlan::Configuration.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
+    mock_configuration = mock_model(Ixtlan::Models::Configuration,{})
+    Ixtlan::Models::Configuration.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
     mock_configuration.should_receive(:session_idle_timeout).any_number_of_times.and_return(1)
   end
 <% end -%>

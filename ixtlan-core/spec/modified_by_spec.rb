@@ -1,6 +1,5 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
-require 'dm-core'
 require 'ixtlan' / 'modified_by'
 
 class User

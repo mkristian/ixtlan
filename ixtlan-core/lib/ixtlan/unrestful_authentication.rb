@@ -64,11 +64,11 @@ module Ixtlan
     end
 
     def login_from_params
-      Ixtlan::User.authenticate(params[:login], params[:password])
+      Models::User.authenticate(params[:login], params[:password])
     end
 
     def login_from_session
-      Ixtlan::User.get(session[:user_id])
+      Models::User.get(session[:user_id])
     end
 
     def logout
@@ -88,7 +88,7 @@ module Ixtlan
       respond_to do |format|
         format.html { redirect_to request.url, :status => :moved_permanently}
         format.xml do
-          authentication = Authentication.new
+          authentication = Models::Authentication.new
           authentication.login = self.current_user.login
           authentication.user = self.current_user
           authentication.token = form_authenticity_token

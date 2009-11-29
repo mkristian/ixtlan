@@ -3,9 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '<%= '/..' * class_nesting_dep
 describe <%= class_name %> do
   before(:each) do
 <% unless options[:skip_modified_by] -%>
-    user = Ixtlan::User.first
+    user = Ixtlan::Models::User.first
     unless user
-      user = Ixtlan::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+      user = Ixtlan::Models::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
       user.created_by_id = 1
       user.updated_by_id = 1
       user.save!

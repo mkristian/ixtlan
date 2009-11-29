@@ -17,8 +17,12 @@ end
 
 describe Ixtlan::UserLogger do
 
-  before :each do
+  before :all do
     @controller = Controller.new
+  end
+
+  before :each do
+    @controller.response.content_type = "text/html"
     @log = StringIO.new
     Slf4r::LoggerFacade4RubyLogger.file = @log
     @logger = Ixtlan::UserLogger.new(:root)

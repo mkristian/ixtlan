@@ -1,8 +1,8 @@
 # inspired by http://www.rowtheboat.com/archives/32
 ###################################################
 
-# get all datamapper related gems
-gem 'addressable', :lib => 'addressable/uri'
+# this pulls in rails_datamapper and rack_datamapper
+gem 'datamapper4rails'
 
 # assume sqlite3 to be database
 gem 'do_sqlite3'
@@ -12,13 +12,14 @@ gem 'dm-validations'
 gem 'dm-timestamps'
 gem 'dm-migrations'
 gem 'dm-serializer' # to allow xml interface to work
+gem 'dm-core'
+
+# get all datamapper related gems
+gem 'addressable', :lib => 'addressable/uri'
 
 # assume you prefer rspec over unit tests
 gem 'rspec', :lib => false
 gem 'rspec-rails', :lib => false
-
-# this pulls in rails_datamapper and rack_datamapper
-gem 'datamapper4rails'
 
 # logging
 gem 'slf4r'
@@ -81,7 +82,7 @@ ActionController::Base.session = {
 }
 CODE
 
-# gzip fix for jruby
+# gzip fix for jruby, validation fix for jruby
 initializer 'monkey_patches.rb', <<-CODE
 if RUBY_PLATFORM =~ /java/
   require 'zlib'
@@ -102,6 +103,25 @@ module Extlib
     end
   end
 end
+if RUBY_PLATFORM =~ /java/
+  module DataMapper
+    module Validate
+      class NumericValidator
+        
+        def validate_with_comparison(value, cmp, expected, error_message_name, errors, negated = false)
+          return if expected.nil?
+          if cmp == :=~ 
+              return value =~ expected
+          end
+          comparison = value.send(cmp, expected)
+          return if negated ? !comparison : comparison
+          
+          errors << ValidationErrors.default_error_message(error_message_name, field_name, expected)
+        end
+      end
+    end
+  end
+end
 CODE
 
 rake 'db:automigrate', "-r config/environment.rb"
@@ -115,6 +135,10 @@ CODE
 initializer '02_guard.rb', <<-CODE
 # load the guard config files from RAILS_ROOT/app/guards
 Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
+CODE
+
+initializer 'time_formats.rb', <<-CODE
+Time::DATE_FORMATS[:xml] = lambda { |time| time.utc.strftime("%Y-%m-%d %H:%M:%S") }
 CODE
 
 # setup permissions controller
@@ -132,12 +156,12 @@ route "map.resources :permissions"
 file "db/migrate/1_create_root_user.rb", <<-CODE
 migration 1, :create_root_user do
   up do
-    Ixtlan::User.auto_migrate!
-    Ixtlan::Locale.auto_migrate!
-    Ixtlan::Group.auto_migrate!
-    Ixtlan::GroupUser.auto_migrate!
+    Ixtlan::Models::User.auto_migrate!
+    Ixtlan::Models::Locale.auto_migrate!
+    Ixtlan::Models::Group.auto_migrate!
+    Ixtlan::Models::GroupUser.auto_migrate!
 
-    u = Ixtlan::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
+    u = Ixtlan::Models::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
     #u.current_user = u
     u.created_at = DateTime.now
     u.updated_at = u.created_at
@@ -145,7 +169,7 @@ migration 1, :create_root_user do
     u.updated_by_id = 1
     u.reset_password
     u.save!
-    g = Ixtlan::Group.create(:name => 'root', :current_user => u)
+    g = Ixtlan::Models::Group.create(:name => 'root', :current_user => u)
     u.groups << g
     u.save
     STDERR.puts "\#{u.login} \#{u.password}"
@@ -159,8 +183,8 @@ CODE
 file "db/migrate/2_create_configuration.rb", <<-CODE
 migration 2, :create_configuration do
   up do
-    Ixtlan::Configuration.auto_migrate!
-    Ixtlan::Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => Ixtlan::User.first)
+    Ixtlan::Models::Configuration.auto_migrate!
+    Ixtlan::Models::Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => Ixtlan::Models::User.first)
   end
 
   down do
@@ -204,7 +228,7 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
 
   # override default to use value from configuration
   def new_session_timeout
-    Ixtlan::Configuration.instance.session_idle_timeout.minutes.from_now
+    Ixtlan::Models::Configuration.instance.session_idle_timeout.minutes.from_now
   end
 
   # needs 'optimistic_persistence'
@@ -317,12 +341,12 @@ if [ $? -ne 0 ] ; then
         exit -1
 fi
 
-mvn de.saumya.mojo:rails-maven-plugin:rails-freeze-gems de.saumya.mojo:rails-maven-plugin:gems-install
+mvn de.saumya.mojo:rails-maven-plugin:gems-install de.saumya.mojo:rails-maven-plugin:rails-freeze-gems de.saumya.mojo:rails-maven-plugin:gems-install -Djruby.fork=false
 
 echo
 echo "you can run rails with (no need to install jruby !!)"
 echo
-echo "\tmvn de.saumya.mojo:rails-maven-plugin:server"
+echo "\tmvn de.saumya.mojo:rails-maven-plugin:server -Djruby.fork=false"
 echo
 echo "more info on"
 echo "\thttp://github.org/mkristian/rails-maven-plugin"
@@ -330,9 +354,24 @@ echo
 echo
 CODE
 
+rake 'db:sessions:create'
+
+logger.info 
+logger.info 
+logger.info "info mavenized rails application"
+logger.info "\thttp://github.org/mkristian/rails-maven-plugin"
+logger.info 
+logger.info "if you want to run jruby please run again after uninstalling"
+logger.info "the native extension of do_sqlite3"
+logger.info "\truby -S gem uninstall do_sqlite3"
+logger.info "\tjruby -S rake gems:install"
+logger.info "rake gems:unpack does NOT work with jruby due to a bug in rail <=2.3.4"
+logger.info "you can try the prepare-jruby.sh script and see if this works for you"
+logger.info 
+
 generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
 file 'app/models/user.rb', <<-CODE
-class User < Ixtlan::User; end
+class User < Ixtlan::Models::User; end
 CODE
 gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
 gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
@@ -341,19 +380,20 @@ gsub_file 'spec/models/user_spec.rb', /value for language/, 'vl'
 
 generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'Group', 'name:string'
 file 'app/models/group.rb', <<-CODE
-class Group < Ixtlan::Group; end
+class Group < Ixtlan::Models::Group; end
 CODE
-
 
 generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
 file 'app/models/locale.rb', <<-CODE
-class Locale < Ixtlan::Locale; end
+class Locale < Ixtlan::Models::Locale; end
 CODE
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
 file 'spec/support/locale.rb', <<-CODE
 module Ixtlan
-  class Locale
-    property :id, Integer
+  module Models
+    class Locale
+      property :id, Integer
+    end
   end
 end
 CODE

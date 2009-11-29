@@ -11,7 +11,7 @@ class <%= class_name %>
 <% end -%>
 
 <% unless options[:skip_modified_by] -%>
-  modified_by "Ixtlan::User"
+  modified_by "Ixtlan::Models::User"
 <% end -%>
 
 end

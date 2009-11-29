@@ -8,7 +8,7 @@ module Ixtlan
     end
 
     def internal_server_error(exception)
-      dump_error(exception, Ixtlan::Configuration.instance)
+      dump_error(exception, Ixtlan::Models::Configuration.instance)
       status = :internal_server_error
       error_page(:internal_server_error, exception) do |exception|
         "internal server error: #{exception.class.name}"
