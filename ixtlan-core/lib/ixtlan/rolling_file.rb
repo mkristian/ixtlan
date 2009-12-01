@@ -43,10 +43,16 @@ module Ixtlan
       if roll_required?(str)
         return roll unless @lockfile
 
-        @lockfile.lock {
+        begin
+          @lockfile.lock {
+            check_logfile
+            roll if roll_required?
+          }
+        rescue
+          # just do it without lock !!
           check_logfile
           roll if roll_required?
-        }
+        end
       end
       super(str)
     end

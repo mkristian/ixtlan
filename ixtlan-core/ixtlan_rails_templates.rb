@@ -193,6 +193,8 @@ end
 CODE
 
 file "app/views/sessions/login.html.erb", <<-CODE
+<p style="color: darkgreen"><%= @notice %></p>
+
 <form method="post">
  
   <p>
@@ -326,32 +328,43 @@ ActionMailer::Base.smtp_settings = {
 } 
 CODE
 
-file 'prepare_jruby.sh', <<-CODE
-#!/bin/bash
-
-echo
-echo "shall freeze rails and fix a bug which prevents rails to use certain"
-echo "java gems like the dataobjects drivers !!"
-echo
-
-mvn --version
-if [ $? -ne 0 ] ; then
-
-        echo "please install maven >= 2.0.9 from maven.apache.org"
-        exit -1
-fi
-
-mvn de.saumya.mojo:rails-maven-plugin:gems-install de.saumya.mojo:rails-maven-plugin:rails-freeze-gems de.saumya.mojo:rails-maven-plugin:gems-install -Djruby.fork=false
-
-echo
-echo "you can run rails with (no need to install jruby !!)"
-echo
-echo "\tmvn de.saumya.mojo:rails-maven-plugin:server -Djruby.fork=false"
-echo
-echo "more info on"
-echo "\thttp://github.org/mkristian/rails-maven-plugin"
-echo
-echo
+file 'pom.xml', <<-CODE
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>demo</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>rails datamapper demo</name>
+  <url>http://github.com/mkristian/rails-templates/blob/master/datamapper.rb</url>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>saumya</id>
+      <name>Saumyas Plugins</name>
+      <url>http://mojo.saumya.de</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>rails-maven-plugin</artifactId>
+	<version>0.3.0</version>
+      </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>jruby-maven-plugin</artifactId>
+	<version>0.3.0</version>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <jruby.fork>false</jruby.fork>
+  </properties>
+</project>
 CODE
 
 rake 'db:sessions:create'
@@ -397,6 +410,49 @@ module Ixtlan
   end
 end
 CODE
+
+file 'app/models/configuration.rb', <<-CODE
+class Configuration < Ixtlan::Models::Configuration; end
+CODE
+file 'app/controllers/configuration_controller.rb', <<-CODE
+class ConfigurationController < ApplicationController
+
+  # GET /configuration
+  # GET /configuration.xml
+  def show
+    @configuration = Configuration.instance
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @configuration }
+    end
+  end
+
+  # GET /configuration/edit
+  def edit
+    @configuration = Configuration.instance
+  end
+
+  # PUT /configuration
+  # PUT /configuration.xml
+  def update
+    @configuration = Configuration.instance
+    @configuration.current_user = current_user
+
+    respond_to do |format|
+      if @configuration.update(params[:user]) or not @configuration.dirty?
+        flash[:notice] = 'Configuration was successfully updated.'
+        format.html { redirect_to(configuration_url) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @configuration.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+end
+CODE
+route "map.resource :configuration"
 
 rake 'db:migrate:down VERSION=0'
 rake 'db:migrate'

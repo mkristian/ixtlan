@@ -12,7 +12,7 @@ module Ixtlan
     end
     
     def data
-      Marshal.load(::Base64.decode64(attribute_get(:data))).merge({:user => @user, :flash => @flash})
+      Marshal.load(::Base64.decode64(attribute_get(:data))).merge({:user => @user, :flash => @flash, :expires_at => @expires_at})
     end
   end
 end

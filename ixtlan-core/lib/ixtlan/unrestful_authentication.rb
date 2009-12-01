@@ -100,7 +100,7 @@ module Ixtlan
     def render_access_denied
       respond_to do |format|
         format.html do
-          @notice = "access_denied" unless @notice
+          @notice = "access denied" unless @notice
           render :template => "sessions/login", :status => :unauthorized
         end
         format.xml { head :unauthorized}

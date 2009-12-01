@@ -56,7 +56,7 @@ module Ixtlan
       def self.instance
         # HACK: return a new object in case there is none in the database
         # to allow rails rake tasks to work with an empty database
-        @instance ||= get(1) || new(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 7, :current_user => User.first)
+        get(1) || new(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 7, :current_user => User.first)
       end
 
       alias :to_x :to_xml_document
