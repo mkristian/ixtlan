@@ -14,7 +14,7 @@ module Ixtlan
       
       timestamps :created_at
       
-      modified_by User.to_s
+      modified_by Models::USER
 
       def locales(user = nil)
 #        return ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Locale), [])
@@ -22,7 +22,7 @@ module Ixtlan
           
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the locales collection is empty before filling it
-          @locales = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Locale), [])
+          @locales = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Models::Locale), [])
 
           return @locales if user.nil?
 

@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <%% if controller.send :current_user %>
-  <meta http-equiv="refresh" content="<%= Ixtlan::Models::Configuration.instance.session_idle_timeout * 60 %>" />
+  <meta http-equiv="refresh" content="<%= helper.controller.send(:session_timeout) * 60 %>" />
   <%% end -%>
   <title><%= controller_class_name %>: <%%= controller.action_name %></title>
   <%%= stylesheet_link_tag 'scaffold' %>

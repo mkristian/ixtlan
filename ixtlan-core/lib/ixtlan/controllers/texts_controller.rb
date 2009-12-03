@@ -2,6 +2,9 @@ module Ixtlan
   module Controllers
     module TextsController
 
+      LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
+      TEXT = Object.full_const_get(::Ixtlan::Models::TEXT)
+      
       private
       
       def locale_guard
@@ -13,22 +16,22 @@ module Ixtlan
       def index
         version = params[:version]
 
-        @texts = Text.all(:locale => Ixtlan::Locale.get!(params[:locale]))
+        @texts = TEXT.all(:locale => LOCALE.get!(params[:locale]))
       end
 
       def create
         phrase = params[:phrase]
 
-        locale = Ixtlan::Locale.get!(phrase.delete(:locale))
+        locale = LOCALE.get!(phrase.delete(:locale))
 
-        if(Text.count(:version => nil, :code => phrase[:code], :locale => locale) == 1)
+        if(TEXT.count(:version => nil, :code => phrase[:code], :locale => locale) == 1)
           raise "TODO precondition failed"
         end
 
         phrase[:text] ||= phrase.delete(:current_text)
         phrase[:locale] = locale
 
-        @text = Text.new(phrase)
+        @text = TEXT.new(phrase)
 
         respond_to do |format|
           if @text.save

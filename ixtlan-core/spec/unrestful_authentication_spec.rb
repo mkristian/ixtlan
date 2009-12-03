@@ -3,11 +3,11 @@ require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
 require 'ixtlan' / 'models' / 'authentication'
-require 'ixtlan' / 'unrestful_authentication'
+require 'ixtlan' / 'rails' / 'unrestful_authentication'
 
 class Controller
 
-  include Ixtlan::UnrestfulAuthentication
+  include Ixtlan::Rails::UnrestfulAuthentication
 
   attr_reader :rendered
 

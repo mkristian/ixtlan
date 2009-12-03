@@ -22,7 +22,7 @@ module Erector
   end
 end
 
-require 'guard'
+require 'ixtlan/rails/guard'
 
 describe Ixtlan::Models::Permission do
 

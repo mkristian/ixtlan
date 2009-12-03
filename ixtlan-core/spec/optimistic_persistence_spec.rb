@@ -1,7 +1,7 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
-require 'optimistic_persistence'
+require 'ixtlan/optimistic_persistence'
 
 class Name
   include DataMapper::Resource

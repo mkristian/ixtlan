@@ -1,10 +1,15 @@
 module Ixtlan
+module Rails
   module UnrestfulAuthentication
 
     private
 
+    USER = Object.full_const_get(Ixtlan::Models::USER)
+
+    AUTHENTICATION = Object.full_const_get(Ixtlan::Models::AUTHENTICATION)
+
     def authentication_logger
-      @authentication_logger ||= UserLogger.new(Ixtlan::UnrestfulAuthentication)
+      @authentication_logger ||= UserLogger.new(Ixtlan::Rails::UnrestfulAuthentication)
     end
 
     protected
@@ -64,11 +69,11 @@ module Ixtlan
     end
 
     def login_from_params
-      Models::User.authenticate(params[:login], params[:password])
+      USER.authenticate(params[:login], params[:password])
     end
 
     def login_from_session
-      Models::User.get(session[:user_id])
+      USER.get(session[:user_id])
     end
 
     def logout
@@ -88,7 +93,7 @@ module Ixtlan
       respond_to do |format|
         format.html { redirect_to request.url, :status => :moved_permanently}
         format.xml do
-          authentication = Models::Authentication.new
+          authentication = AUTHENTICATION.new
           authentication.login = self.current_user.login
           authentication.user = self.current_user
           authentication.token = form_authenticity_token
@@ -125,3 +130,7 @@ module Ixtlan
     end    
   end
 end
+end
+
+ActionController::Base.send(:include, Ixtlan::Rails::UnrestfulAuthentication)
+ActionController::Base.send(:prepend_before_filter, :authenticate)

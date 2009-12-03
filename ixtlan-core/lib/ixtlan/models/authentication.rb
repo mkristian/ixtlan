@@ -13,12 +13,17 @@ module Ixtlan
       
       attr_accessor :token
       
-      belongs_to :user, :model => "::Ixtlan::Models::User".to_s
-      
-      alias :to_x :to_xml_document
-      def to_xml_document(opts, doc = nil)
-        opts.merge!({:exclude => [:password,:user_id], :methods => [:token, :user]})
-        to_x(opts, doc)
+      belongs_to :user, :model => Models::USER
+
+      if protected_instance_methods.find {|m| m == 'to_x'}.nil?
+       
+        protected
+
+        alias :to_x :to_xml_document
+        def to_xml_document(opts, doc = nil)
+          opts.merge!({:exclude => [:password,:user_id], :methods => [:token, :user]})
+          to_x(opts, doc)
+        end
       end
     end
   end

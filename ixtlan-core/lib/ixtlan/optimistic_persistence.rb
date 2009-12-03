@@ -1,21 +1,20 @@
-module Ixtlan
-  module OptimisticPersistence    
-    def stale?
-      if(prop = properties[:updated_at] and dirty?)
-        updated_at = original_attributes[prop]|| properties[:updated_at].get!(self)
-        c = model.key_conditions(repository, key)
-        qu = {}
-        c.each {|p,v| qu[p.name] = v}
-        
-        s = self.model.first(qu)
-        # HACK for jruby with sqlite3 (and maybe others)
-        # ignore timezone by cutting it off
-        s.nil? ? false : s.updated_at.to_s.sub(/\+.*/,'') != updated_at.to_s.sub(/\+.*/,'')
+require 'ixtlan/optimistic_persistence_module'
+require 'dm-core'
+module DataMapper
 
-        #self.model.first(qu).nil?
-      else
-        false
+  class StaleResourceError < StandardError; end
+
+end
+
+module Ixtlan   
+  module OptimisticPersistence
+    
+    def self.included(base)
+      base.send(:include, ::Ixtlan::OptimisticPersistenceModule)
+      base.before :update do
+        raise ::DataMapper::StaleResourceError.new(model.name + "(#{key}) was stale") if stale?
       end
     end
+    ::DataMapper::Model.append_inclusions self
   end
 end

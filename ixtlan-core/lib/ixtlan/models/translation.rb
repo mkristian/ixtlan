@@ -15,7 +15,7 @@ module Ixtlan
       
       property :approved_at, DateTime, :nullable => false, :auto_validation => false
       
-      belongs_to :approved_by, :model => User.to_s
+      belongs_to :approved_by, :model => Models::USER
       
       def self.map_for(args = {})
         map = {}

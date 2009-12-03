@@ -22,7 +22,7 @@ module Ixtlan
     end
 
     def self.log_filebase(name)
-      Rails.root.join('log', name).to_s
+      ::Rails.root.join('log', name).to_s
     end
 
     def self.log_level(level = :warn)
@@ -53,9 +53,9 @@ module Ixtlan
                                   [
                                    Ixtlan::Models::User, 
                                    Ixtlan::Audit, 
-                                   Ixtlan::SessionTimeout, 
-                                   Ixtlan::UnrestfulAuthentication,
-                                   Ixtlan::ErrorHandling
+                                   Ixtlan::Rails::SessionTimeout, 
+                                   Ixtlan::Rails::UnrestfulAuthentication,
+                                   Ixtlan::Rails::ErrorHandling
                                   ] )
     
     # keep the guard messages in a separate file as well

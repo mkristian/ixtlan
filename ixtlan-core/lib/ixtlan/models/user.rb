@@ -24,11 +24,8 @@ module Ixtlan
       property :hashed_password, String, :nullable => true, :length => 128, :accessor => :private, :field => "userpassword"
 
       timestamps :at
-      
-      modified_by User.to_s
 
-#      property :created_by_id, Integer, :nullable => false
-#      property :updated_by_id, Integer, :nullable => false
+      modified_by ::Ixtlan::Models::USER
 
       # Virtual attribute for the plaintext password
       attr_reader :password
@@ -67,7 +64,7 @@ module Ixtlan
         if @groups.nil?
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the groups collection is empty before filling it
-          @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Group), [])
+          @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Models::Group), [])
           GroupUser.all(:memberuid => login).each do |gu| 
             @groups << gu.group
           end

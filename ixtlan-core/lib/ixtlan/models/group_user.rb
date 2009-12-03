@@ -20,7 +20,7 @@ module Ixtlan
       property :gidnumber, Integer, :key => true
       
       def group
-        Group.get!(gidnumber)
+        Object.full_const_get(Models::GROUP).get!(gidnumber)
       end
       
       def group=(group)
@@ -28,7 +28,7 @@ module Ixtlan
       end
       
       def user
-        User.first(:login => memberuid)
+        Object.full_const_get(Models::USER).first(:login => memberuid)
       end
       
       def user=(user)

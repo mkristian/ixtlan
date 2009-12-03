@@ -1,13 +1,13 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
-require 'session_timeout'
+require 'ixtlan/rails/session_timeout'
 
 class Controller
-  include Ixtlan::SessionTimeout
+  include Ixtlan::Rails::SessionTimeout
 end
 
-describe Ixtlan::SessionTimeout do
+describe Ixtlan::Rails::SessionTimeout do
 
   before :each do
     Ixtlan::Models::User.all.destroy!

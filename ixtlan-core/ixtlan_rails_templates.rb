@@ -11,7 +11,6 @@ gem 'do_sqlite3'
 gem 'dm-validations'
 gem 'dm-timestamps'
 gem 'dm-migrations'
-gem 'dm-serializer' # to allow xml interface to work
 gem 'dm-core'
 
 # get all datamapper related gems
@@ -26,13 +25,7 @@ gem 'slf4r'
 gem 'logging'
 
 # ixtlan gems
-gem 'ixtlan', :lib => 'guard'
-gem 'ixtlan', :lib => 'unrestful_authentication'
-gem 'ixtlan', :lib => 'session_timeout'
-gem 'ixtlan', :lib => 'audit'
-gem 'ixtlan', :lib => 'optimistic_persistence'
-gem 'ixtlan', :lib => 'error_handling'
-gem 'ixtlan', :lib => 'models'
+gem 'ixtlan'
 
 # install all gems
 rake 'gems:install'
@@ -82,57 +75,40 @@ ActionController::Base.session = {
 }
 CODE
 
-# gzip fix for jruby, validation fix for jruby
-initializer 'monkey_patches.rb', <<-CODE
-if RUBY_PLATFORM =~ /java/
-  require 'zlib'
-  class Zlib::GzipWriter
-    def <<(arg)
-      write(arg)
-    end
-  end
-end
-# fix with rails development mode and class reloading
-# not sure where the exact problem is :-(
-module Extlib
-  module Assertions
-    def assert_kind_of(name, value, *klasses)
-      # be less strict and allow matching class names to OK as well
-      klasses.each { |k| return if value.kind_of?(k) or value.class.name == k.name }     
-      raise ArgumentError, "+\#{name}+ should be \#{klasses.map { |k| k.name } * ' or '}, but was \#{value.class.name}", caller(2)
-    end
-  end
-end
-if RUBY_PLATFORM =~ /java/
-  module DataMapper
-    module Validate
-      class NumericValidator
-        
-        def validate_with_comparison(value, cmp, expected, error_message_name, errors, negated = false)
-          return if expected.nil?
-          if cmp == :=~ 
-              return value =~ expected
-          end
-          comparison = value.send(cmp, expected)
-          return if negated ? !comparison : comparison
-          
-          errors << ValidationErrors.default_error_message(error_message_name, field_name, expected)
-        end
-      end
-    end
+# define locale model names
+initializer '00_models.rb', <<-CODE
+module Ixtlan
+  module Models
+    USER = "User"
+    GROUP = "Group"
+    LOCALE = "Locale"
+    CONFIGURATION = "Configuration"
   end
 end
 CODE
 
-rake 'db:automigrate', "-r config/environment.rb"
+# load ixtlan classes
+initializer '01_ixtlan.rb', <<-CODE
+require 'ixtlan/modified_by'
+if ENV['RAILS_ENV']
+  require 'models'
+  require 'ixtlan/rails/error_handling'
+  require 'ixtlan/optimistic_persistence'
+  require 'ixtlan/audit'
+  require 'ixtlan/rails/session_timeout'
+  require 'ixtlan/rails/unrestful_authentication'
+  require 'ixtlan/guard'
+  require 'ixtlan/monkey_patches'
+end
+CODE
 
 # logger config
-initializer '01_loggers.rb', <<-CODE
+initializer '02_loggers.rb', <<-CODE
 require 'ixtlan/logger_config' if ENV['RAILS_ENV']
 CODE
 
 # load the guard config
-initializer '02_guard.rb', <<-CODE
+initializer '03_guard.rb', <<-CODE
 # load the guard config files from RAILS_ROOT/app/guards
 Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
 CODE
@@ -156,12 +132,13 @@ route "map.resources :permissions"
 file "db/migrate/1_create_root_user.rb", <<-CODE
 migration 1, :create_root_user do
   up do
-    Ixtlan::Models::User.auto_migrate!
-    Ixtlan::Models::Locale.auto_migrate!
-    Ixtlan::Models::Group.auto_migrate!
+    User.auto_migrate!
+    Locale.auto_migrate!
+    Group.auto_migrate!
     Ixtlan::Models::GroupUser.auto_migrate!
+    Ixtlan::Models::GroupLocaleUser.auto_migrate!
 
-    u = Ixtlan::Models::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
+    u = User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
     #u.current_user = u
     u.created_at = DateTime.now
     u.updated_at = u.created_at
@@ -169,7 +146,7 @@ migration 1, :create_root_user do
     u.updated_by_id = 1
     u.reset_password
     u.save!
-    g = Ixtlan::Models::Group.create(:name => 'root', :current_user => u)
+    g = Group.create(:name => 'root', :current_user => u)
     u.groups << g
     u.save
     STDERR.puts "\#{u.login} \#{u.password}"
@@ -183,8 +160,8 @@ CODE
 file "db/migrate/2_create_configuration.rb", <<-CODE
 migration 2, :create_configuration do
   up do
-    Ixtlan::Models::Configuration.auto_migrate!
-    Ixtlan::Models::Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => Ixtlan::Models::User.first)
+    Configuration.auto_migrate!
+    Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => User.first)
   end
 
   down do
@@ -220,18 +197,18 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   before_filter :check_session_expiry
 
   # override default to use nice User (without namespace)
-  def login_from_params
-    User.authenticate(params[:login], params[:password])
-  end
+  #def login_from_params
+  #  User.authenticate(params[:login], params[:password])
+  #end
 
-  def login_from_session
-    User.get(session[:user_id])
-  end
+  #def login_from_session
+  #  User.get(session[:user_id])
+  #end
 
   # override default to use value from configuration
-  def new_session_timeout
-    Ixtlan::Models::Configuration.instance.session_idle_timeout.minutes.from_now
-  end
+  #def session_timeout
+  #  Configuration.instance.session_idle_timeout
+  #end
 
   # needs 'optimistic_persistence'
   rescue_from DataMapper::StaleResourceError, :with => :stale_resource
@@ -352,12 +329,17 @@ file 'pom.xml', <<-CODE
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>rails-maven-plugin</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.1</version>
       </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>jruby-maven-plugin</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.1</version>
+      </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+	<version>0.3.1</version>
       </plugin>
     </plugins>
   </build>
@@ -366,8 +348,6 @@ file 'pom.xml', <<-CODE
   </properties>
 </project>
 CODE
-
-rake 'db:sessions:create'
 
 logger.info 
 logger.info 
@@ -378,8 +358,11 @@ logger.info "if you want to run jruby please run again after uninstalling"
 logger.info "the native extension of do_sqlite3"
 logger.info "\truby -S gem uninstall do_sqlite3"
 logger.info "\tjruby -S rake gems:install"
-logger.info "rake gems:unpack does NOT work with jruby due to a bug in rail <=2.3.4"
-logger.info "you can try the prepare-jruby.sh script and see if this works for you"
+logger.info "rake gems:unpack does NOT work with jruby due to a bug in rail <=2.3.5"
+logger.info "you can try"
+logger.info "\tmvn rails:rails-freeze-gems"
+logger.info "which patches rails after freezing it"
+logger.info 
 logger.info 
 
 generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
@@ -412,7 +395,11 @@ end
 CODE
 
 file 'app/models/configuration.rb', <<-CODE
-class Configuration < Ixtlan::Models::Configuration; end
+class Configuration < Ixtlan::Models::Configuration
+  def self.instance
+    Ixtlan::Models::Configuration.instance
+  end
+end
 CODE
 file 'app/controllers/configuration_controller.rb', <<-CODE
 class ConfigurationController < ApplicationController
@@ -455,4 +442,11 @@ CODE
 route "map.resource :configuration"
 
 rake 'db:migrate:down VERSION=0'
+rake 'db:sessions:create'
 rake 'db:migrate'
+
+logger.info
+logger.info
+logger.info "for dm-core version 0.10.2 there are a lot of deprecated warning but everything works as expected"
+logger.info
+logger.info

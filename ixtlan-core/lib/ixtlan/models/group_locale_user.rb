@@ -14,9 +14,9 @@ module Ixtlan
       
       property :locale_code, String, :key => true
 
-      belongs_to :group, :model => Group.to_s
-      belongs_to :user, :model => User.to_s
-      belongs_to :locale, :model => Locale.to_s
+      belongs_to :group, :model => Models::GROUP
+      belongs_to :user, :model => Models::USER
+      belongs_to :locale, :model => Models::LOCALE
     end
   end
 end

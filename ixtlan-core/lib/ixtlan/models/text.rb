@@ -21,13 +21,13 @@ module Ixtlan
 
       property :updated_at, DateTime, :nullable => false, :auto_validation => false
       
-      belongs_to :updated_by, :model => User.to_s
+      belongs_to :updated_by, :model => Models::USER
       
       property :approved_at, DateTime, :nullable => true
       
-      belongs_to :approved_by, :model => User.to_s, :nullable => true
+      belongs_to :approved_by, :model => Models::USER, :nullable => true
       
-      belongs_to :locale, :model => Locale.to_s
+      belongs_to :locale, :model => Models::LOCALE
 
       validates_with_method :invariant
 

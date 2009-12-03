@@ -21,13 +21,13 @@ module Ixtlan
       
       timestamps :updated_at
 
-      modified_by User.to_s, :updated_by
+      modified_by ::Ixtlan::Models::USER, :updated_by
 
       def locales
         if @locales.nil? 
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the locales collection is empty before filling it
-          @locales = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Locale), [])
+          @locales = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Object.full_const_get(::Ixtlan::Models::LOCALE)), [])
           ConfigurationLocale.all(:configuration_id => id).each{ |cl| @locales << cl.locale }
           def @locales.configuration=(configuration)
             @configuration = configuration
@@ -56,7 +56,12 @@ module Ixtlan
       def self.instance
         # HACK: return a new object in case there is none in the database
         # to allow rails rake tasks to work with an empty database
-        get(1) || new(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 7, :current_user => User.first)
+        begin
+          get(1) || new(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 7)
+        rescue
+          auto_migrate!
+          new(:id => 1, :session_idle_timeout => 5, :keep_audit_logs => 7)
+        end
       end
 
       alias :to_x :to_xml_document

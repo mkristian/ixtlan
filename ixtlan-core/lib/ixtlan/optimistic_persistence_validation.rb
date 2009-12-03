@@ -1,4 +1,4 @@
-require 'ixtlan/optimistic_persistence'
+require 'ixtlan/optimistic_persistence_module'
 
 module DataMapper
 
@@ -7,7 +7,7 @@ module DataMapper
   module OptimisticPersistenceValidation
     
     def self.included(base)
-      base.send(:include, ::Ixtlan::OptimisticPersistence)
+      base.send(:include, ::Ixtlan::OptimisticPersistenceModule)
       base.validates_with_block :stale do
         if(stale?)
           [false, "stale resource, please reload the resource"]

@@ -12,8 +12,8 @@ module Ixtlan
       
       property :locale_code, String, :key => true
 
-      belongs_to :configuration, :model => Configuration.to_s
-      belongs_to :locale, :model => Locale.to_s
+      belongs_to :configuration, :model => Models::CONFIGURATION
+      belongs_to :locale, :model => Models::LOCALE
     end
   end
 end

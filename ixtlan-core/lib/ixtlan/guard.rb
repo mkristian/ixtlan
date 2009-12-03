@@ -72,21 +72,23 @@ module Ixtlan
 
     def self.export_xml
       repository(:guard_memory) do
-        root = Models::Role.create(:name => @@superuser)
+        role_const = Object.full_const_get(Models::ROLE)
+        permission_const = Object.full_const_get(Models::PERMISSION)
+        root = role_const.create(:name => @@superuser)
         @@map.each do |controller, actions|
           actions.each do |action, roles|
-            permission = Models::Permission.create(:resource => controller, :action => action)
+            permission = permission_const.create(:resource => controller, :action => action)
             permission.roles << root
             roles.each do |role|
-              r = Models::Role.create(:name => role)
+              r = role_const.create(:name => role)
               permission.roles << r unless permission.roles.member? r
             end
             permission.save
           end
         end
-        xml = Models::Permission.all.to_xml
-        Models::Permission.all.destroy!
-        Models::Role.all.destroy!
+        xml = permission_const.all.to_xml
+        permission_const.all.destroy!
+        role_const.all.destroy!
         xml
       end   
     end

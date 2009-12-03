@@ -17,13 +17,13 @@ module Ixtlan
       
       property :updated_at, DateTime, :nullable => false, :auto_validation => false
       
-      belongs_to :updated_by, :model => User.to_s
+      belongs_to :updated_by, :model => Models::USER
       
-      belongs_to :locale, :model => Locale.to_s
+      belongs_to :locale, :model => Models::LOCALE
       
-      belongs_to :default_translation, :model => Ixtlan::Models::Translation.to_s, :nullable => true
+      belongs_to :default_translation, :model => Models::TRANSLATION, :nullable => true
 
-      belongs_to :parent_translation, :model => Ixtlan::Models::Translation.to_s, :nullable => true
+      belongs_to :parent_translation, :model => Models::TRANSLATION, :nullable => true
 
       alias :to_x :to_xml_document
       def to_xml_document(opts = {}, doc = nil)

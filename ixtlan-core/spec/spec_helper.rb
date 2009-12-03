@@ -9,15 +9,18 @@ require 'dm-timestamps'
 
 require 'slf4r'
 
+require 'ixtlan' / 'models'
 require 'ixtlan' / 'user_logger'
 require 'ixtlan' / 'modified_by'
 require 'ixtlan' / 'models' / 'user'
 require 'ixtlan' / 'models' / 'locale'
 require 'ixtlan' / 'models' / 'group'
+require 'ixtlan' / 'models' / 'configuration'
 require 'ixtlan' / 'models' / 'group_user'
 require 'ixtlan' / 'models' / 'group_locale_user'
 require 'ixtlan' / 'models' / 'permission'
 require 'ixtlan' / 'models' / 'role'
+require 'ixtlan' / 'models' / 'text'
 require 'ixtlan' / 'passwords'
 require 'ixtlan' / 'digest'
 
@@ -34,6 +37,10 @@ end
 
 module ActionController
   module Base
+
+    def self.prepend_before_filter(*args)
+    end
+
     def self.before_filter(filter)
       @filters ||= []
       @filters << filter
@@ -61,7 +68,7 @@ class Controller
       u = Ixtlan::Models::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
       if(u.respond_to? :created_by_id)
         u.created_by_id = 1
-       u.updated_by_id = 1
+        u.updated_by_id = 1
       end
       u.save!
     end
@@ -74,6 +81,7 @@ class Controller
 #p gg.errors
     # clear up old relations
     Ixtlan::Models::GroupUser.all.destroy!
+    Ixtlan::Models::GroupLocaleUser.all.destroy!
     u.groups << g
     g.locales << Ixtlan::Models::Locale.default
     g.locales << Ixtlan::Models::Locale.first_or_create(:code => "en")
@@ -91,8 +99,16 @@ class Controller
     @rendered = true
   end
 
-  def new_session_timeout
-    DateTime.now
+  def session_timeout
+    a = Object.new
+    def a.minutes
+      b = Object.new
+      def b.from_now
+        DateTime.now
+      end
+      b
+    end
+    a
   end
 
   def session
@@ -139,4 +155,16 @@ class DateTime
     to_s_old
   end
 
+end
+
+class Object
+  def self.full_const_get(clazz, ref = Object)
+    if clazz =~ /::/
+      clazz.sub!(/^::/, '')
+      ref = ref.const_get(clazz.sub(/::.*/, ''))
+      self.full_const_get(clazz.sub(/[^:]*::/, ''), ref)
+    else
+      ref.const_get(clazz)
+    end
+  end
 end

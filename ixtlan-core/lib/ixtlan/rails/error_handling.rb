@@ -1,5 +1,5 @@
 module Ixtlan
-
+  module Rails
   module ErrorHandling
 
     def log_user_error(exception)
@@ -8,7 +8,7 @@ module Ixtlan
     end
 
     def internal_server_error(exception)
-      dump_error(exception, Ixtlan::Models::Configuration.instance)
+      dump_error(exception, Object.full_const_get(::Ixtlan::Models.CONFIGURATION).instance)
       status = :internal_server_error
       error_page(:internal_server_error, exception) do |exception|
         "internal server error: #{exception.class.name}"
@@ -125,5 +125,7 @@ module Ixtlan
     end
 
   end
-
 end
+end
+
+ActionController::Base.send(:include, Ixtlan::Rails::ErrorHandling)
