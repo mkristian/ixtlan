@@ -4,9 +4,9 @@ import java.sql.Timestamp;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 
 public class Venue extends Resource<Venue> {
 

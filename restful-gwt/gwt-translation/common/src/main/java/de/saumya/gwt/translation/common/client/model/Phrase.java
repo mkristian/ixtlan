@@ -7,8 +7,10 @@ import java.sql.Timestamp;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.ResourceWithID;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceWithID;
+import de.saumya.gwt.session.client.model.Locale;
+import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.session.client.model.UserFactory;
 
@@ -16,13 +18,15 @@ public class Phrase extends ResourceWithID<Phrase> {
 
     private final TranslationFactory translationFactory;
     private final UserFactory        userFactory;
+    private final LocaleFactory      localeFactory;
 
     Phrase(final Repository repository, final PhraseFactory factory,
             final TranslationFactory translationFactory,
-            final UserFactory userFactory) {
+            final UserFactory userFactory, final LocaleFactory localeFactory) {
         super(repository, factory);
         this.translationFactory = translationFactory;
         this.userFactory = userFactory;
+        this.localeFactory = localeFactory;
     }
 
     public String      code;
@@ -32,6 +36,7 @@ public class Phrase extends ResourceWithID<Phrase> {
     public Translation defaultTranslation;
     public Timestamp   updatedAt;
     public User        updatedBy;
+    public Locale      locale;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
@@ -41,6 +46,7 @@ public class Phrase extends ResourceWithID<Phrase> {
         append(buf, "text", this.text);
         append(buf, "parentTranslation", this.parentTranslation);
         append(buf, "default", this.defaultTranslation);
+        append(buf, "locale", this.locale);
         append(buf, "updated_at", this.updatedAt);
         append(buf, "updated_by", this.updatedBy);
     }
@@ -51,9 +57,11 @@ public class Phrase extends ResourceWithID<Phrase> {
         this.code = getString(root, "code");
         this.defaultTranslation = this.translationFactory.getChildResource(root,
                                                                            "default");
-        this.parentTranslation = this.translationFactory.getChildResource(root, "parentTranslation");
+        this.parentTranslation = this.translationFactory.getChildResource(root,
+                                                                          "parentTranslation");
         this.text = getString(root, "text");
         this.currentText = getString(root, "current_text");
+        this.locale = this.localeFactory.getChildResource(root, "locale");
         this.updatedAt = getTimestamp(root, "updated_at");
         this.updatedBy = this.userFactory.getChildResource(root, "updated_by");
     }
@@ -66,6 +74,7 @@ public class Phrase extends ResourceWithID<Phrase> {
         buf.append(", :text => ").append(this.text);
         buf.append(", :default => ").append(this.defaultTranslation);
         buf.append(", :parentTranslation => ").append(this.parentTranslation);
+        buf.append(", :locale => ").append(this.locale);
         buf.append(", :updated_at => ").append(this.updatedAt);
         if (this.updatedBy != null) {
             buf.append(", :updated_by => ");
@@ -79,6 +88,8 @@ public class Phrase extends ResourceWithID<Phrase> {
                 .append(this.text == null ? "?" : this.text)
                 .append(" <")
                 .append(this.code)
+                .append(":")
+                .append(this.locale)
                 .append(">")
                 .toString();
     }

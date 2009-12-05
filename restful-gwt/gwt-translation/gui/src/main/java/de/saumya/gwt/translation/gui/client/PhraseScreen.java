@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.persistence.client.Resources;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;

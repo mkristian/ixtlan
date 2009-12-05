@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.ResourceWithID;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceWithID;
+import de.saumya.gwt.persistence.client.Resources;
 
 public class Group extends ResourceWithID<Group> {
 

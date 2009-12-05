@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
-import de.saumya.gwt.datamapper.client.RepositoryMock;
+import de.saumya.gwt.persistence.client.RepositoryMock;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;

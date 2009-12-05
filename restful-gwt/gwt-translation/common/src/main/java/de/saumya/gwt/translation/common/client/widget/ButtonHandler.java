@@ -8,7 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Resource;
 
 public abstract class ButtonHandler<E extends Resource<E>> implements
         ClickHandler, KeyUpHandler {

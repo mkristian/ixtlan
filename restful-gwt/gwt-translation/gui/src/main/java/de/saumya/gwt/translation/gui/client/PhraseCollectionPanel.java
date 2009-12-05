@@ -6,7 +6,7 @@ package de.saumya.gwt.translation.gui.client;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.persistence.client.Resources;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.model.Phrase;

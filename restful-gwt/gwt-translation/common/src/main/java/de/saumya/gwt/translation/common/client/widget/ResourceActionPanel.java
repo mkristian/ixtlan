@@ -4,17 +4,17 @@
 package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 
-public class ResourceActionPanel<E extends Resource<E>> extends HorizontalPanel {
+public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
 
     private final GetTextController getText;
 
@@ -32,9 +32,10 @@ public class ResourceActionPanel<E extends Resource<E>> extends HorizontalPanel 
     public ResourceActionPanel(final GetTextController getText,
             final ResourceMutator<E> mutator, final Session session,
             final ResourceFactory<E> factory) {
+        setStyleName("action-panel");
         this.getText = getText;
         this.session = session;
-        this.resourceName = factory.storageName();
+        this.resourceName = factory.storagePluralName();
         this.saveHandler = new ButtonHandler<E>(mutator) {
 
             @Override

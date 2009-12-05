@@ -1,7 +1,7 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.model.WordBundle;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.model.WordFactory;

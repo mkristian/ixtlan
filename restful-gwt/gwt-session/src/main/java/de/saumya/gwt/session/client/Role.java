@@ -5,8 +5,8 @@ package de.saumya.gwt.session.client;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.Resource;
 
 class Role extends Resource<Role> {
 

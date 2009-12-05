@@ -5,13 +5,13 @@ package de.saumya.gwt.translation.common.client.widget;
 
 import java.sql.Timestamp;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-public class ResourceHeaderPanel extends HorizontalPanel {
+public class ResourceHeaderPanel extends FlowPanel {
 
     private final GetTextController getText;
 
@@ -24,6 +24,7 @@ public class ResourceHeaderPanel extends HorizontalPanel {
     private final Label             modifiedByValue;
 
     public ResourceHeaderPanel(final GetTextController getText) {
+        setStyleName("header-panel");
         this.getText = getText;
         this.keyLabel = label("key");
         this.keyValue = label();

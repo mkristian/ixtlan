@@ -5,8 +5,8 @@ package de.saumya.gwt.translation.common.client.model;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.Resource;
 
 public class Word extends Resource<Word> {
 

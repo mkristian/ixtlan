@@ -3,8 +3,8 @@
  */
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 
 public class TranslationFactory extends ResourceFactory<Translation> {

@@ -10,6 +10,6 @@
 
   <inherits name="com.google.gwt.xml.XML"/>
 
-  <inherits name="de.saumya.gwt.datamapper.Datamapper"/>
+  <inherits name="de.saumya.gwt.persistence.Persistence"/>
 
 </module>

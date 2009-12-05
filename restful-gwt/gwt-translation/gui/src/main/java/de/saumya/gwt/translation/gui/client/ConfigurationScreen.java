@@ -21,7 +21,7 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
         ConfigurationPanel(final GetTextController getTextController,
                 final ResourceMutator<Configuration> mutator) {
             super(getTextController, mutator);
-            addTranslatableLabel("idle session timeout");
+            addTranslatableLabel("idle session timeout (in minutes)");
             add(new TextBoxMutator<Configuration>(mutator) {
 
                 @Override
@@ -34,7 +34,7 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                     resource.idleSessionTimeout = Integer.parseInt(getText());
                 }
             });
-            addTranslatableLabel("audit log rotation");
+            addTranslatableLabel("audit log rotation (in days)");
             add(new TextBoxMutator<Configuration>(mutator) {
 
                 @Override
@@ -47,7 +47,7 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                     resource.auditLogRotation = Integer.parseInt(getText());
                 }
             });
-            addTranslatableLabel("email for error notification");
+            addTranslatableLabel("email recipients for error notification (comma separated list of emails)");
             add(new TextBoxMutator<Configuration>(mutator) {
 
                 @Override
@@ -70,15 +70,21 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                 configFactory,
                 session,
                 new ConfigurationPanel(getTextController, mutator),
+                // no displayAll panel
                 null,
+                // default action panel (save, delete, new, etc buttons)
                 new ResourceActionPanel<Configuration>(getTextController,
                         mutator,
                         session,
                         configFactory));
     }
 
+    // TODO put all these methods below except reset(...) into
+    // SingletonResourceScreen
     @Override
     public void showAll() {
+        // singletons act on urls which look like a collection of resources =>
+        // no showNew, showRead, showEdit. only showAll
         showSingleton();
     }
 

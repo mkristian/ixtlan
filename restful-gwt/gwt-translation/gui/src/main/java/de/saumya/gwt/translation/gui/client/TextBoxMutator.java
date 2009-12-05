@@ -5,7 +5,7 @@ package de.saumya.gwt.translation.gui.client;
 
 import com.google.gwt.user.client.ui.TextBox;
 
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
 import de.saumya.gwt.translation.common.client.widget.ResourceMutator.Mutator;
 

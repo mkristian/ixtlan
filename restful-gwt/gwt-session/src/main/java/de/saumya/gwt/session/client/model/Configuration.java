@@ -9,8 +9,8 @@ import java.util.Collection;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.Resource;
 
 public class Configuration extends Resource<Configuration> {
 
@@ -36,11 +36,11 @@ public class Configuration extends Resource<Configuration> {
 
     @Override
     protected void appendXml(final StringBuffer buf) {
-        append(buf, "idle_session_timeout", this.idleSessionTimeout);
-        append(buf, "audit_log_rotation", this.auditLogRotation);
-        append(buf, "available_locales", this.availableLocales);
+        append(buf, "session_idle_timeout", this.idleSessionTimeout);
+        append(buf, "keep_audit_logs", this.auditLogRotation);
+        append(buf, "locales", this.availableLocales);
         append(buf,
-               "email_for_error_notification",
+               "notification_recipient_emails",
                this.emailForErrorNotification);
         append(buf, "updated_at", this.updatedAt);
         append(buf, "updated_by", this.updatedBy);
@@ -48,12 +48,14 @@ public class Configuration extends Resource<Configuration> {
 
     @Override
     protected void fromXml(final Element root) {
-        this.idleSessionTimeout = getInt(root, "idle_session_timeout");
-        this.auditLogRotation = getInt(root, "audit_log_rotation");
-        this.availableLocales = Arrays.asList(getString(root,
-                                                        "available_locales").split(","));
+        this.idleSessionTimeout = getInt(root, "session_idle_timeout");
+        this.auditLogRotation = getInt(root, "keep_audit_logs");
+        final String locales = getString(root, "locales");
+        if (locales != null) {
+            this.availableLocales = Arrays.asList(locales.split(","));
+        }
         this.emailForErrorNotification = getString(root,
-                                                   "email_for_error_notification");
+                                                   "notification_recipient_emails");
         this.updatedAt = getTimestamp(root, "updated_at");
         this.updatedBy = this.userFactory.getChildResource(root, "updated_by");
     }
@@ -61,13 +63,15 @@ public class Configuration extends Resource<Configuration> {
     @Override
     public void toString(final StringBuffer buf) {
         buf.append(":idle_session_timeout => ").append(this.idleSessionTimeout);
-        buf.append(":audit_log_rotation => ").append(this.auditLogRotation);
-        buf.append(":available_locales => ").append(this.availableLocales);
-        buf.append(":email_for_error_notification => ")
+        buf.append(", :audit_log_rotation => ").append(this.auditLogRotation);
+        buf.append(", :available_locales => ").append(this.availableLocales);
+        buf.append(", :email_for_error_notification => ")
                 .append(this.emailForErrorNotification);
         buf.append(", :updated_at => ").append(this.updatedAt);
-        buf.append(", :updated_by => ");
-        this.updatedBy.toString(buf);
+        if (this.updatedBy != null) {
+            buf.append(", :updated_by => ");
+            this.updatedBy.toString(buf);
+        }
     }
 
     @Override

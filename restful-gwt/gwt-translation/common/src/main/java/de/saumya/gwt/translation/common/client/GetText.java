@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 
-import de.saumya.gwt.datamapper.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
@@ -39,6 +39,8 @@ public class GetText {
     private final Map<String, Map<String, Phrase>> phraseCache     = new HashMap<String, Map<String, Phrase>>();
 
     private boolean                                isInTranslation = false;
+
+    private Locale                                 locale;
 
     public GetText(final WordBundleFactory bundleFactory,
             final WordFactory wordFactory, final PhraseBookFactory bookFactory,
@@ -121,6 +123,7 @@ public class GetText {
             phrase = this.phraseFactory.newResource();
             phrase.code = code;
             phrase.currentText = defaultPhrase;
+            phrase.locale = this.locale;
             phrase.save();
             GWT.log(phrase.toString(), null);
             this.phraseMap.put(code, phrase);
@@ -138,6 +141,7 @@ public class GetText {
             word = this.wordFactory.newResource();
             word.code = code;
             word.text = code;
+            // word.l
             word.save();
             this.wordMap.put(code, word);
         }
@@ -150,6 +154,7 @@ public class GetText {
 
     public void load(final Locale locale, final boolean isInTranslation) {
         this.isInTranslation = isInTranslation;
+        this.locale = locale;
         if (this.isInTranslation) {
             loadPhraseBook(locale);
         }

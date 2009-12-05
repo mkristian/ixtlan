@@ -1,7 +1,7 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
@@ -54,6 +54,7 @@ public class PhraseBookTestGwt extends AbstractResourceTestGwt<PhraseBook> {
         return new PhraseBookFactory(this.repository,
                 new PhraseFactory(this.repository,
                         userFactory,
+                        localeFactory,
                         new TranslationFactory(this.repository, userFactory)));
     }
 

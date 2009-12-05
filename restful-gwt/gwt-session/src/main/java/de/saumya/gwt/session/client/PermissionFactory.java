@@ -1,7 +1,7 @@
 package de.saumya.gwt.session.client;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 
 public class PermissionFactory extends ResourceFactory<Permission> {
 

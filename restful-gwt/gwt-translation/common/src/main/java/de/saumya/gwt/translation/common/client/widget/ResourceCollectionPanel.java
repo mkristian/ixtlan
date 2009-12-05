@@ -7,9 +7,9 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.Resources;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.route.PathFactory;

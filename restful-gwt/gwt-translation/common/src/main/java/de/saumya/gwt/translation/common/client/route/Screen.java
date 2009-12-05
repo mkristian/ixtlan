@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.translation.common.client.route;
 
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Resource;
 
 public interface Screen<E extends Resource<E>> {
 

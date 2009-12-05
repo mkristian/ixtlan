@@ -1,10 +1,10 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
-import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
+import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 
@@ -49,7 +49,7 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
                                     + "<text>some text</text>"
                                     + "<approved_at>2009-07-09 17:14:48.9</approved_at>"
                                     + "<approved_by>" + "<login>root</login>"
-                                    + "<roles></roles>" + "</approved_by>"
+                                    + "<groups></groups>" + "</approved_by>"
                                     + "</translation>";
 
     @Override

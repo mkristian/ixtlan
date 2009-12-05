@@ -5,7 +5,7 @@ package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
 public class ResourcePanel<E extends Resource<E>> extends VerticalPanel {
@@ -16,6 +16,7 @@ public class ResourcePanel<E extends Resource<E>> extends VerticalPanel {
 
     protected ResourcePanel(final GetTextController getTextController,
             final ResourceMutator<E> mutator) {
+        setStyleName("resource-panel");
         this.getTextController = getTextController;
         this.mutator = mutator;
     }

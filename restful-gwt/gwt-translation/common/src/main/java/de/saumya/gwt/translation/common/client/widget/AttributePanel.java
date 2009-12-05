@@ -6,7 +6,7 @@ package de.saumya.gwt.translation.common.client.widget;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
 public abstract class AttributePanel<E extends Resource<E>> extends

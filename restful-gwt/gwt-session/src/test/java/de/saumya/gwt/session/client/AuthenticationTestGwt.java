@@ -1,8 +1,8 @@
 package de.saumya.gwt.session.client;
 
-import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.UserFactory;

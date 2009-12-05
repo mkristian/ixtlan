@@ -3,7 +3,7 @@ package de.saumya.gwt.translation.common.client.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.saumya.gwt.datamapper.client.Resource;
+import de.saumya.gwt.persistence.client.Resource;
 
 public class ResourceMutator<E extends Resource<E>> {
 

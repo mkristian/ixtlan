@@ -9,9 +9,9 @@ import java.util.HashSet;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.Resources;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.Resources;
 
 public class User extends Resource<User> {
 

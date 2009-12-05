@@ -11,10 +11,10 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 
-import de.saumya.gwt.datamapper.client.Repository;
-import de.saumya.gwt.datamapper.client.ResourceChangeListener;
-import de.saumya.gwt.datamapper.client.Resources;
-import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.model.Group;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.User;
@@ -170,31 +170,6 @@ public class Session {
             }
         });
         authentication.save();
-        if (true) {
-            return;
-        }
-        if ("mudita".equals(password)) {
-            this.authenticationFactory.all(new ResourcesChangeListener<Authentication>() {
-
-                @Override
-                public void onChange(final Resources<Authentication> resources,
-                        final Authentication resource) {
-                    if (resource.user.login.equals(username)) {
-                        doLogin(resource);
-                    }
-                }
-
-                @Override
-                public void onLoaded(final Resources<Authentication> resources) {
-                    if (!hasUser()) {
-                        doAccessDenied();
-                    }
-                }
-            });
-        }
-        else {
-            doAccessDenied();
-        }
     }
 
     void logout() {

@@ -8,7 +8,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -22,7 +23,7 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
-class SessionPanel extends VerticalPanel implements SessionScreen {
+public class SessionPanel extends VerticalPanel implements SessionScreen {
 
     private final Label   welcome;
     private final Label   userLabel;
@@ -31,12 +32,13 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
 
     private final Session session;
 
-    SessionPanel(final GetTextController getTextController,
+    public SessionPanel(final GetTextController getTextController,
             final GetText getText, final Session session,
             final Locale defaultLocale) {
+        setStyleName("session");
         this.session = session;
-        final HorizontalPanel header = new HorizontalPanel();
-
+        final ComplexPanel header = new FlowPanel();
+        header.setStyleName("session-header");
         this.welcome = new TranslatableLabel(getTextController);
         this.userLabel = new Label();
         this.logoutButton = new TranslatableButton("logout", getTextController);
@@ -65,7 +67,7 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
                 }
             }
         });
-
+        getText.load(defaultLocale);
         session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
@@ -97,10 +99,10 @@ class SessionPanel extends VerticalPanel implements SessionScreen {
             }
         });
 
-        header.add(this.welcome);
-        header.add(this.userLabel);
-        header.add(localeBox);
         header.add(this.logoutButton);
+        header.add(localeBox);
+        header.add(this.userLabel);
+        header.add(this.welcome);
 
         add(header);
     }

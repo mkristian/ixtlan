@@ -5,13 +5,13 @@ package de.saumya.gwt.translation.common.client.widget;
 
 import java.sql.Timestamp;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceChangeListener;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
-import de.saumya.gwt.datamapper.client.Resources;
-import de.saumya.gwt.datamapper.client.ResourcesChangeListener;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.session.client.model.User;
@@ -19,8 +19,8 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
 
-public abstract class ResourceScreen<E extends Resource<E>> extends
-        VerticalPanel implements Screen<E> {
+public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
+        implements Screen<E> {
 
     private final PathFactory                  pathFactory;
 
@@ -47,7 +47,8 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
             final ResourcePanel<E> display,
             final ResourceCollectionPanel<E> displayAll,
             final ResourceActionPanel<E> actions) {
-        this.loading = new TranslatableLabel("loading", getText);
+        setStyleName("screen");
+        this.loading = new TranslatableLabel("loading ...", getText);
         this.header = new ResourceHeaderPanel(getText);
         this.actions = actions;
         this.display = display;
@@ -56,8 +57,8 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         this.session = session;
 
         add(this.loading);
-        add(this.actions);
         add(this.header);
+        add(this.actions);
         add(this.display);
         if (displayAll != null) {
             add(this.displayAll);
@@ -82,6 +83,14 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         }
     }
 
+    /**
+     * only the resource knows whether it has updated Timestamp and/or updatedBy
+     * User. an implementation needs to forward the respective info to the
+     * {@link ResourceScreen#reset(Resource, Timestamp, User)} using null where
+     * the info does not exists
+     * 
+     * @param resource
+     */
     abstract protected void reset(final E resource);
 
     protected final void reset(final E resource, final Timestamp updatedAt,
@@ -92,7 +101,9 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
         this.actions.reset(resource);
         this.display.reset(resource);
 
-        this.displayAll.setVisible(false);
+        if (this.displayAll != null) {
+            this.displayAll.setVisible(false);
+        }
         setVisible(true);
     }
 
@@ -149,10 +160,10 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
     protected void showSingleton() {
         if (this.session.isAllowed(Action.UPDATE, this.factory.storageName())
                 || this.session.isAllowed(Action.SHOW,
-                                          this.factory.storageName())) {
+                                          this.factory.storagePluralName())) {
 
             this.display.setReadOnly(!this.session.isAllowed(Action.UPDATE,
-                                                             this.factory.storageName()));
+                                                             this.factory.storagePluralName()));
             this.loading.setVisible(true);
             final E resource = this.factory.get(new ResourceChangeListener<E>() {
 
@@ -186,7 +197,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
                                                 public void onChange(
                                                         final E resource) {
                                                     reset(resource);
-                                                    ResourceScreen.this.loading.setVisible(false);
+                                                    // ResourceScreen.this.loading.setVisible(false);
                                                 }
 
                                                 @Override
@@ -200,7 +211,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends
                                             });
         // TODO should be set be onChange and onError. maybe make an application
         // wide notification widget
-        this.loading.setVisible(false);
+        // this.loading.setVisible(false);
         reset(resource);
     }
 }

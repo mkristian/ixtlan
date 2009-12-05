@@ -15,13 +15,13 @@
   <dependencies>
     <dependency>
       <groupId>de.saumya.gwt</groupId>
-      <artifactId>datamapper</artifactId>
-      <version>${pom.version}</version> 
+      <artifactId>persistence</artifactId>
+      <version>${project.version}</version> 
     </dependency>
     <dependency>
       <groupId>de.saumya.gwt</groupId>
-      <artifactId>datamapper</artifactId>
-      <version>${pom.version}</version> 
+      <artifactId>persistence</artifactId>
+      <version>${project.version}</version> 
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -32,22 +32,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <!--configuration>
-          <runTarget>Session.html</runTarget> 
-        </configuration>
-        <executions>
-          <execution>
-            <configuration>
-              <module>de.saumya.gwt.session.SessionTests</module> 
-            </configuration>
-            <goals>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId-->
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>

@@ -1,10 +1,10 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.datamapper.client.AbstractResourceTestGwt;
-import de.saumya.gwt.datamapper.client.Resource;
-import de.saumya.gwt.datamapper.client.ResourceFactory;
-import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
+import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
+import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 
@@ -46,18 +46,20 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
                                     + "<text>some text</text>"
                                     + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
                                     + "<updated_by>" + "<login>root</login>"
-                                    + "<roles></roles>" + "</updated_by>"
+                                    + "<groups></groups>" + "</updated_by>"
                                     + "</phrase>";
 
     @Override
     protected ResourceFactory<Phrase> factorySetUp() {
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
         final UserFactory userFactory = new UserFactory(this.repository,
-                new LocaleFactory(this.repository),
+                localeFactory,
                 new GroupFactory(this.repository,
-                        new LocaleFactory(this.repository),
+                        localeFactory,
                         new VenueFactory(this.repository)));
         return new PhraseFactory(this.repository,
                 userFactory,
+                localeFactory,
                 new TranslationFactory(this.repository, userFactory));
     }
 

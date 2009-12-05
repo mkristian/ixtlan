@@ -10,14 +10,14 @@
   </parent>
   <groupId>de.saumya.gwt.translation</groupId>
   <artifactId>gui</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>GWT GUI for managing locale and translations</name>
   <dependencies>
     <dependency>
       <groupId>de.saumya.gwt.translation</groupId>
       <artifactId>common</artifactId>
-      <version>${pom.version}</version> 
+      <version>${project.version}</version> 
     </dependency>
   </dependencies>
   <build>
@@ -29,19 +29,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <configuration>
-          <!--inplace>true</inplace>
-          <module>de.saumya.gwt.translation.gui.GUI</module-->
-          <runTarget>de.saumya.gwt.translation.gui.GUI/GUI.html</runTarget>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
