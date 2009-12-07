@@ -317,7 +317,7 @@ file 'pom.xml', <<-CODE
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.example</groupId>
-  <artifactId>demo</artifactId>
+  <artifactId>#{File.basename(root)}</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>rails datamapper demo</name>
@@ -493,7 +493,7 @@ logger.info "you find the root password in the file 'root'"
 logger.info
 logger.info "if you have maven installed you can preview the GWT interface"
 if yes?("install GWT interface ?")
-  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.1.0 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNPAHOT -B")
+  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.1.0 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNAPSHOT -B")
   logger.info
   logger.info "first start rails in one console"
   logger.info "\tscript/server"

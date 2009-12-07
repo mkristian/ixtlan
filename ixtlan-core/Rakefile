@@ -25,6 +25,7 @@ desc 'generate rails using all generators and run the specs'
 task :integration_tests => [:spec, :install] do
   require 'datamapper4rails/integration_test'
   Datamapper4Rails::IntegrationTest.new do |t|
+    t.directory = 'temp'
     t.rails_template = 'ixtlan_rails_templates.rb'
     t.generate "ixtlan_datamapper_model name name:string"
     t.generate "ixtlan_datamapper_rspec_model domain name:string"
