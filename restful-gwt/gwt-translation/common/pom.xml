@@ -6,12 +6,12 @@
   <parent>
     <groupId>de.saumya.gwt</groupId>
     <artifactId>translation</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
   <groupId>de.saumya.gwt.translation</groupId>
   <artifactId>common</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>GWT common services for i18n/l10n</name>
   <dependencies>
     <dependency>
