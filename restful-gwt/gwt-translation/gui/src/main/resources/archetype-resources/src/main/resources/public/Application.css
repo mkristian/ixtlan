@@ -1,0 +1,100 @@
+.translatable, .translatable  a:visited, .translatable  a{
+  color: darkblue;
+  cursor: pointer;
+}
+
+.to_be_approved, .to_be_approved, .to_be_approved  a:visited, .to_be_approved  a{
+  color: darkgreen;
+  font-weight: bold;
+}
+
+.gwt-TabBarItem-disabled{
+  display:none;
+}
+
+
+
+.login {
+margin-top: 3%;
+margin-left: 35%;
+margin-right: 35%;
+width:30%;
+padding: 1em;
+border: .2em solid lightblue;
+}
+.gwt-button {
+font-weight: bold;
+color: darkblue;
+}
+.login td {
+padding: .2em;
+}
+.info-notification, .warn-notification, .showall-notification {
+margin-top: .5em;
+margin-left: 20%;
+margin-right: 20%; 
+opacity: 0.9;
+font-weight: bold;
+padding: 1em;
+width: 60%;
+}
+.info-note, .warn-note{
+font-weight: bold;
+}
+.showall-notification{
+color: darkblue;
+background-color: #ddddff;
+border: 1px solid darkblue;
+}
+.showall-notification .popupContent{
+overflow: auto;
+height: 20em;
+}
+.warn-notification, .warn-note{
+color: darkred;
+}
+.warn-notification {
+background-color: #ffdddd;
+border: 1px solid darkred;
+}
+.info-notification, .info-note{
+color: darkgreen;
+}
+.info-notification {
+background-color: #ddffdd;
+border: 1px solid darkgreen;
+}
+.session {
+margin-top: .2em;
+margin-right: 1%;
+margin-left: 1%;
+width: 98%;
+}
+.session-header * {
+float: right;
+}
+.session-header button{
+font-size: .9em;
+}
+.session-header div{
+margin-top: .2em;
+}
+.session-header div, .session-header button{
+margin-left: .2em;
+}
+.gwt-TabPanel{
+width: 100%
+}
+.header-panel {
+float:right;
+}
+.header-panel div {
+display:inline;
+}
+.action-panel {
+float: left;
+}
+.screen table {
+margin-top: .5em;
+clear: both;
+}

@@ -6,23 +6,25 @@
   <parent>
     <groupId>de.saumya.gwt</groupId>
     <artifactId>gwt</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
   <artifactId>translation</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>GWT translation parent</name>
   <dependencies>
     <dependency>
       <groupId>de.saumya.gwt</groupId>
       <artifactId>session</artifactId>
-      <version>${pom.version}</version> 
+      <version>${project.version}</version> 
     </dependency>
   </dependencies>
   <modules>
     <module>common</module>
     <module>gui</module>
-    <module>html</module>
+  <!--
+  <module>html</module>
+-->
   </modules>
 
 </project>

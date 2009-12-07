@@ -6,7 +6,7 @@
   <groupId>de.saumya.gwt</groupId>
   <artifactId>gwt</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>ixtlan collection of GWT related libraries</name>
   <url>http://github.com/mkristian/ixtlan</url>
   <properties>
@@ -71,6 +71,14 @@
     </pluginManagement>    
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>1.6</source>
@@ -80,6 +88,9 @@
     </plugins>
     <outputDirectory>war/WEB-INF/classes</outputDirectory> 
     <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
       <resource>
         <directory>src/main/java</directory>
         <includes>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype>
+  <id>ixtlan-maven-archetype</id>
+  <sources>
+    <source>src/main/java/client/Application.java</source>
+  </sources>
+  <testSources>
+    <source>src/test/java/client/GwtTestSample.java</source>
+  </testSources>
+  <resources>
+    <source>src/main/resource/Application.gwt.xml</source>
+    <source>src/main/resource/public/Application.css</source>
+    <source>src/main/resource/public/Application.html</source>
+    <resource>src/main/webapp/WEB-INF/web.xml</resource>
+    <resource>src/main/webapp/index.html</resource>
+    <resource>war/WEB-INF/web.xml</resource>
+  </resources>
+</archetype>

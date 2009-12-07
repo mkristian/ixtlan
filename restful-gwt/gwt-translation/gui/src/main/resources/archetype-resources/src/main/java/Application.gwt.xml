@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "//gwt-module/" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.2/distro-source/core/src/gwt-module.dtd">
+<module>
+
+      <!-- Inherit the core restful GWT stuff -->    
+      <inherits name="de.saumya.gwt.session.Session"/>
+      <inherits name="de.saumya.gwt.translation.common.Common"/>
+      <inherits name="de.saumya.gwt.translation.gui.GUI"/>
+
+      <!--  inherit css based theme -->
+      <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+
+      <!-- Specify the app entry point class.                         -->
+      <entry-point class='${package}.client.Application'/>
+
+      <!-- have Ids for selenium acceptance testing -->
+      <inherits name="com.google.gwt.user.Debug"/>
+
+      <!-- Specify the application specific style sheet.              -->
+      <stylesheet src='Application.css' />
+
+</module>
