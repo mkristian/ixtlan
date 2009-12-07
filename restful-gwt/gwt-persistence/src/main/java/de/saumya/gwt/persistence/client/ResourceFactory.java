@@ -154,7 +154,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     public Resources<E> all(final ResourcesChangeListener<E> listener) {
         final Resources<E> list = new Resources<E>(this);
         list.addResourcesChangeListener(listener);
-        this.repository.all(storageName(),
+        this.repository.all(storagePluralName(),
                             new ResourceListRequestCallback(list));
         return list;
     }

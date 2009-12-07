@@ -56,9 +56,9 @@ public class Session {
         }
     }
 
-    private Authentication                                   authentication = null;
-    private final Timer                                      timer          = new SessionTimer();
-    private final AuthenticationFactory                      authenticationFactory;
+    Authentication                                           authentication = null;
+    final Timer                                              timer          = new SessionTimer();
+    final AuthenticationFactory                              authenticationFactory;
     private final Map<String, Map<String, Collection<Role>>> permissions;
     private final Repository                                 repository;
 
@@ -120,20 +120,20 @@ public class Session {
         }
     }
 
-    private void fireLoggedOut() {
+    void fireLoggedOut() {
         for (final SessionListener listener : this.listeners) {
             listener.onLogout();
         }
     }
 
-    private void doLogin(final Authentication authentication) {
+    void doLogin(final Authentication authentication) {
         this.authentication = authentication;
         this.timer.scheduleRepeating(10000);
         GWT.log("login of " + authentication.user.login, null);
         fireSuccessfulLogin();
     }
 
-    private void doAccessDenied() {
+    void doAccessDenied() {
         this.authentication = null;
         fireAccessDenied();
     }
@@ -207,10 +207,10 @@ public class Session {
     public boolean isAllowed(final String action, final String resourceName,
             final String localeCode) {
         GWT.log(resourceName + "#" + action + " " + localeCode + "?", null);
-        for (final Group role : this.authentication.user.groups) {
-            GWT.log(role.toString(), null);
-            if (isAllowed(action, resourceName, role)) {
-                for (final Locale l : role.locales) {
+        for (final Group group : this.authentication.user.groups) {
+            GWT.log(group.toString(), null);
+            if (isAllowed(action, resourceName, group)) {
+                for (final Locale l : group.locales) {
                     if (l.code.equals(localeCode)) {
                         return true;
                     }

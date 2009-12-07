@@ -22,7 +22,7 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
     private RoleFactory         roleFactory;
 
     private static final String RESOURCE_XML = "<permission>"
-                                                     + "<resource_name>config</resource_name>"
+                                                     + "<resource>config</resource>"
                                                      + "<action>create</action>"
                                                      + "<roles><role>"
                                                      + "<name>admin</name>"
@@ -67,7 +67,7 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
     }
 
     private final static String XML = "<permission>"
-                                            + "<resource_name>config</resource_name>"
+                                            + "<resource>config</resource>"
                                             + "<action>create</action>"
                                             + "<roles>" + "<role>"
                                             + "<name>root</name>" + "</role>"

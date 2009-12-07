@@ -1,10 +1,14 @@
 package de.saumya.gwt.session.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import de.saumya.gwt.persistence.client.RepositoryMock;
+import de.saumya.gwt.session.client.model.Group;
 import de.saumya.gwt.session.client.model.GroupFactory;
+import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.session.client.model.VenueFactory;
 
@@ -47,14 +51,50 @@ public class SessionTestGwt extends GWTTestCase {
                 this.localeFactory,
                 groupFactory);
         this.repository.add("<permissions>" + "<permission>"
-                + "<resource_name>user</resource_name>"
-                + "<action>create</action>" + "<roles>" + "<role>"
-                + "<name>admin</name>" + "</role>" + "<role>"
-                + "<name>root</name>" + "</role>" + "</roles>"
+                + "<resource>user</resource>" + "<action>create</action>"
+                + "<roles>" + "<role>" + "<name>admin</name>" + "</role>"
+                + "<role>" + "<name>root</name>" + "</role>" + "</roles>"
                 + "</permission>" + "</permissions>");
+        // TODO maybe the whole mockup here is not neccessary and instead the
+        // repository mock with authentication xml is sufficient
         this.session = new Session(this.repository,
                 new AuthenticationFactory(this.repository, this.userFactory),
-                permissionFactory);
+                permissionFactory) {
+
+            @Override
+            void login(final String username, final String password) {
+                if ("dhamma".equals(username) && "mudita".equals(password)) {
+                    final Authentication authentication = this.authenticationFactory.newResource();
+                    authentication.login = username;
+                    final User user = SessionTestGwt.this.userFactory.newResource();
+                    user.login = username;
+                    authentication.user = user;
+                    authentication.token = "blabla123";
+                    user.groups = groupFactory.newResources();
+                    final Group root = groupFactory.newResource();
+                    root.name = "root";
+                    root.locales = SessionTestGwt.this.localeFactory.newResources();
+                    final Locale en = SessionTestGwt.this.localeFactory.newResource();
+                    en.code = "en";
+                    root.locales = SessionTestGwt.this.localeFactory.newResources();
+                    root.locales.add(en);
+                    user.groups.add(root);
+                    doLogin(authentication);
+                }
+                else {
+                    doAccessDenied();
+                }
+            }
+
+            @Override
+            void logout() {
+                this.timer.cancel();
+                GWT.log("log out " + this.authentication.user.login, null);
+                this.authentication = null;
+                fireLoggedOut();
+            }
+
+        };
         this.listener = new SessionListenerMock();
         this.session.addSessionListern(this.listener);
 

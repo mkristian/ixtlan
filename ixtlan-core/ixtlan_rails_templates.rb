@@ -79,6 +79,7 @@ CODE
 initializer '00_models.rb', <<-CODE
 module Ixtlan
   module Models
+    AUTHENTICATION = "Authentication"
     USER = "User"
     GROUP = "Group"
     LOCALE = "Locale"
@@ -98,6 +99,7 @@ if ENV['RAILS_ENV']
   require 'ixtlan/rails/session_timeout'
   require 'ixtlan/rails/unrestful_authentication'
   require 'ixtlan/guard'
+  require 'ixtlan/rails/timestamps_modified_by_filter'
   require 'ixtlan/monkey_patches'
 end
 CODE
@@ -120,6 +122,9 @@ CODE
 # setup permissions controller
 file "app/controllers/permissions_controller.rb", <<-CODE
 class PermissionsController < ApplicationController
+
+  # TODO the authenticate should NOT be there, i.e. it leaks too much info
+  skip_before_filter :authenticate, :guard
 
   def index
      render :xml => Ixtlan::Guard.export_xml
@@ -325,6 +330,8 @@ file 'pom.xml', <<-CODE
     </pluginRepository>
   </pluginRepositories>
   <build>
+    <!-- allow the gwt plugin to work with this pom -->
+    <outputDirectory>war/WEB-INF/classes</outputDirectory> 
     <plugins>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
@@ -401,8 +408,14 @@ class Configuration < Ixtlan::Models::Configuration
   end
 end
 CODE
-file 'app/controllers/configuration_controller.rb', <<-CODE
-class ConfigurationController < ApplicationController
+file 'app/guards/configurations_guard.rb', <<-CODE
+Ixtlan::Guard.initialize(:configurations, 
+                 { :show => [], 
+                   :edit => [], 
+                   :update => [] })
+CODE
+file 'app/controllers/configurations_controller.rb', <<-CODE
+class ConfigurationsController < ApplicationController
 
   # GET /configuration
   # GET /configuration.xml
@@ -425,12 +438,13 @@ class ConfigurationController < ApplicationController
   def update
     @configuration = Configuration.instance
     @configuration.current_user = current_user
-
+    #TODO something with updating the locales
+    locales =  params[:configuration].delete(:locales)
     respond_to do |format|
-      if @configuration.update(params[:user]) or not @configuration.dirty?
+      if @configuration.update(params[:configuration]) or not @configuration.dirty?
         flash[:notice] = 'Configuration was successfully updated.'
         format.html { redirect_to(configuration_url) }
-        format.xml  { head :ok }
+        format.xml  { render :xml => @configuration }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @configuration.errors, :status => :unprocessable_entity }
@@ -441,9 +455,42 @@ end
 CODE
 route "map.resource :configuration"
 
+file 'app/models/authentication.rb', <<-CODE
+class Authentication < Ixtlan::Models::Authentication; end
+CODE
+file 'app/controllers/authentications_controller.rb', <<-CODE
+class AuthenticationsController < ApplicationController
+
+  skip_before_filter :guard
+  
+  protected
+  def login_from_params
+    auth = params[:authentication]
+    User.authenticate(auth[:login], auth[:password])
+  end
+
+  public
+  def create
+    render_successful_login
+  end
+
+  def destroy
+    authentication_logger.log_user(current_user.nil? ? nil : current_user.login, "already logged out")
+    session.clear
+    head :ok
+  end
+end
+CODE
+route "map.resource :authentication"
+
+
 rake 'db:migrate:down VERSION=0'
 rake 'db:sessions:create'
 rake 'db:migrate'
+
+if yes?("if you have maven installed you can preview the GWT interface ?")
+  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.1.0 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNPAHOT -B")
+end
 
 logger.info
 logger.info

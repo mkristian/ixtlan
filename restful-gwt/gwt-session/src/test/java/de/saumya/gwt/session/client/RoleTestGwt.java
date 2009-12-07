@@ -7,7 +7,7 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class GroupTestGwt extends AbstractResourceTestGwt<Role> {
+public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -17,10 +17,10 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Role> {
         return "de.saumya.gwt.session.Session";
     }
 
-    private Role               resource;
+    private Role                resource;
 
-    private static final String RESOURCE_XML = "<group>" + "<name>root</name>"
-                                                     + "</group>";
+    private static final String RESOURCE_XML = "<role>" + "<name>root</name>"
+                                                     + "</role>";
 
     @Override
     protected String resourceNewXml() {
@@ -39,7 +39,7 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Role> {
 
     @Override
     protected String resourcesXml() {
-        return "<groups>" + resource1Xml() + resource2Xml() + "</groups>";
+        return "<roles>" + resource1Xml() + resource2Xml() + "</roles>";
     }
 
     @Override

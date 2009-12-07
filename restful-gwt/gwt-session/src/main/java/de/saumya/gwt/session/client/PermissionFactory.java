@@ -15,7 +15,7 @@ public class PermissionFactory extends ResourceFactory<Permission> {
 
     @Override
     public String storageName() {
-        return "permissions";
+        return "permission";
     }
 
     @Override

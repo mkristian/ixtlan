@@ -7,7 +7,7 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class RoleTestGwt extends AbstractResourceTestGwt<Group> {
+public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -17,15 +17,15 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Group> {
         return "de.saumya.gwt.session.Session";
     }
 
-    private Group                resource;
+    private Group               resource;
 
-    private static final String RESOURCE_XML = "<role>"
+    private static final String RESOURCE_XML = "<group>"
                                                      + "<id>1</id>"
                                                      + "<name>root</name>"
                                                      + "<locales></locales>"
                                                      + "<venues></venues>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                                     + "</role>";
+                                                     + "</group>";
 
     @Override
     protected String resourceNewXml() {
@@ -45,7 +45,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Group> {
 
     @Override
     protected String resourcesXml() {
-        return "<roles>" + resource1Xml() + resource2Xml() + "</roles>";
+        return "<groups>" + resource1Xml() + resource2Xml() + "</groups>";
     }
 
     @Override
@@ -81,7 +81,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Group> {
         assertEquals(this.resource.name, changedValue());
     }
 
-    private final static String XML = "<role>"
+    private final static String XML = "<group>"
                                             + "<id>1</id>"
                                             + "<name>root</name>"
                                             + "<locales>"
@@ -97,7 +97,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Group> {
                                             + "</venue>"
                                             + "</venues>"
                                             + "<created_at>2005-07-09 17:14:48.0</created_at>"
-                                            + "</role>";
+                                            + "</group>";
 
     @Override
     protected String changedValue() {
