@@ -11,7 +11,7 @@ module Ixtlan
     
     def self.included(base)
       base.send(:include, ::Ixtlan::OptimisticPersistenceModule)
-      base.before :update do
+      base.before :valid? do
         raise ::DataMapper::StaleResourceError.new(model.name + "(#{key}) was stale") if stale?
       end
     end

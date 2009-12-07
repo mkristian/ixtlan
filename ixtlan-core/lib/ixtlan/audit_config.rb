@@ -1,11 +1,11 @@
 require 'ixtlan/audit'
 
-Logging.init :debug, :info, :warn, :error unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
+Logging.init :debug, :info, :warn, :error, :fatal unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
 
 module Ixtlan
   class AuditConfig
 
-    @logger = Slf4r::LoggerFacade.new(self)
+    @logger = Logging::Logger[self]
 
     def self.configure(keep, file, categories)
       @@categories = categories

@@ -16,7 +16,8 @@ module Ixtlan
               parameters.delete(:created_at)
               parameters.delete(:created_on)
               parameters.delete(:created_by)
-              # do not delete this for optimistic persistence
+              # do not delete the updated_at so that optimistic persistence
+              # can work !!!!
               #parameters.delete(:updated_at)
               parameters.delete(:updated_on)
               parameters.delete(:updated_by)

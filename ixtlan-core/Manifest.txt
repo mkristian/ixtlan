@@ -35,7 +35,6 @@ lib/ixtlan/cms_script.rb
 lib/ixtlan/logger_config.rb
 lib/ixtlan/models.rb
 lib/ixtlan/audit_config.rb
-lib/ixtlan/audit.rb
 lib/ixtlan/session.rb
 lib/ixtlan/optimistic_persistence.rb
 lib/ixtlan/monkey_patches.rb
@@ -49,6 +48,7 @@ lib/ixtlan/rails/audit.rb
 lib/ixtlan/rails/error_handling.rb
 lib/ixtlan/rails/unrestful_authentication.rb
 lib/ixtlan/rails/session_timeout.rb
+lib/ixtlan/rails/timestamps_modified_by_filter.rb
 lib/ixtlan/rails/guard.rb
 lib/ixtlan/passwords.rb
 lib/ixtlan/digest.rb

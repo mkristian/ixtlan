@@ -55,6 +55,7 @@ module Rails
             session.clear
             render_access_denied
           else
+            authentication_logger.log_user(user.login, "logged in")
             session.clear
             #  reset_session
             self.current_user = user

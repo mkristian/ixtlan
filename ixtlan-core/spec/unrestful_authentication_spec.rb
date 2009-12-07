@@ -35,16 +35,17 @@ end
 
 describe Ixtlan::Models::Authentication do
 
+  before :all do
+    @controller = Controller.new
+    @log = StringIO.new
+    Slf4r::LoggerFacade4RubyLogger.file = @log
+  end
+
   describe "login" do
 
-    before :all do
-      @controller = Controller.new
-    end
-
     before :each do
-      @log = StringIO.new
-      Slf4r::LoggerFacade4RubyLogger.file = @log
       @controller.reset
+      @log.reopen
     end
 
     it 'should show login page' do
@@ -78,7 +79,7 @@ describe Ixtlan::Models::Authentication do
       @controller.request.method = :post
       @controller.params[:password] = @controller.password
       @controller.send(:authenticate).should be_false
-#      @log.string.should =~ /\[\?\?\?\] unknown login from IP/
+      @log.string.should =~ /\[\?\?\?\] unknown login from IP/
       @controller.session.empty?.should be_true
       @controller.rendered.should == :access_denied
     end
@@ -87,8 +88,8 @@ describe Ixtlan::Models::Authentication do
       @controller.request.method = :post
       @controller.params[:login] = @controller.user.login
       @controller.send(:authenticate).should be_false
-#      @log.string.should =~ /\[#{@controller.user.login}\] wrong password from IP/
-        @controller.session.empty?.should be_true
+      @log.string.should =~ /\[#{@controller.user.login}\] wrong password from IP/
+      @controller.session.empty?.should be_true
       @controller.rendered.should == :access_denied
     end
 
@@ -105,27 +106,25 @@ describe Ixtlan::Models::Authentication do
 
   describe 'logout' do
 
-    before :all do
-      @controller = Controller.new
-    end
-
     before :each do
-      @log = StringIO.new
-      Slf4r::LoggerFacade4RubyLogger.file = @log
       @controller.request.method = :post
       @controller.params[:password] = @controller.password
       @controller.params[:login] = @controller.user.login
       @controller.send :authenticate
       @controller.reset
+      @log.reopen
     end
 
     it 'should do nothing' do
       @controller.request.method = :get
       @controller.send(:authenticate).should be_true
+      @log.string.should == ''
       @controller.request.method = :post
       @controller.send(:authenticate).should be_true
+      @log.string.should == ''
       @controller.request.method = :put
       @controller.send(:authenticate).should be_true
+      @log.string.should == ''
       @controller.request.method = :delete
       @controller.send(:authenticate).should be_true
       @log.string.should == ''

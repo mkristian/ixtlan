@@ -51,7 +51,7 @@ class <%= controller_class_name %>Controller < ApplicationController
         flash[:notice] = <% if options[:i18n] -%>t('<%= plural_name %>.<%= singular_name %>_created')<% else -%>'<%= class_name %> was successfully created.'<% end -%>
 
         format.html { redirect_to(<%= file_name %>_url(@<%= file_name %>.id)) }
-        format.xml  { render :xml => @<%= file_name %>, :status => :created, :location => @<%= file_name %> }
+        format.xml  { render :xml => @<%= file_name %>, :status => :created, :location => <%= file_name %>_url(@<%= file_name %>.id) + ".xml" }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @<%= file_name %>.errors, :status => :unprocessable_entity }
@@ -72,7 +72,7 @@ class <%= controller_class_name %>Controller < ApplicationController
         flash[:notice] = <% if options[:i18n] -%>t('<%= plural_name %>.<%= singular_name %>_updated')<% else -%>'<%= class_name %> was successfully updated.'<% end -%>
 
         format.html { redirect_to(<%= file_name %>_url(@<%= file_name %>.id)) }
-        format.xml  { head :ok }
+        format.xml  { render :xml => @<%= file_name %> }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @<%= file_name %>.errors, :status => :unprocessable_entity }

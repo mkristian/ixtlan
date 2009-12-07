@@ -154,7 +154,7 @@ migration 1, :create_root_user do
     g = Group.create(:name => 'root', :current_user => u)
     u.groups << g
     u.save
-    STDERR.puts "\#{u.login} \#{u.password}"
+    File.open("root", 'w') { |f| f.puts "\#{u.password}" }
   end
 
   down do
@@ -361,7 +361,7 @@ logger.info
 logger.info "info mavenized rails application"
 logger.info "\thttp://github.org/mkristian/rails-maven-plugin"
 logger.info 
-logger.info "if you want to run jruby please run again after uninstalling"
+logger.info "if you want to run jruby please run after uninstalling"
 logger.info "the native extension of do_sqlite3"
 logger.info "\truby -S gem uninstall do_sqlite3"
 logger.info "\tjruby -S rake gems:install"
@@ -487,13 +487,23 @@ route "map.resource :authentication"
 rake 'db:migrate:down VERSION=0'
 rake 'db:sessions:create'
 rake 'db:migrate'
-
-if yes?("if you have maven installed you can preview the GWT interface ?")
+rake 'db:autoupgrade RAILS_ENV=development'
+logger.info
+logger.info "you find the root password in the file 'root'"
+logger.info
+logger.info "if you have maven installed you can preview the GWT interface"
+if yes?("install GWT interface ?")
   run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.1.0 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNPAHOT -B")
+  logger.info
+  logger.info "first start rails in one console"
+  logger.info "\tscript/server"
+  logger.info
+  logger.info "and then start the GWT gui in another console"
+  logger.info "\tmvn gwt:run"
 end
 
 logger.info
 logger.info
-logger.info "for dm-core version 0.10.2 there are a lot of deprecated warning but everything works as expected"
+logger.info "for dm-core version 0.10.2 there are a lot of deprecated warnings but everything works as expected"
 logger.info
 logger.info

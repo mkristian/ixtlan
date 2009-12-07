@@ -13,7 +13,7 @@ module Ixtlan
       
       attr_accessor :token
       
-      belongs_to :user, :model => Models::USER
+      belongs_to :user, :model => ::Ixtlan::Models::USER
 
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?
        

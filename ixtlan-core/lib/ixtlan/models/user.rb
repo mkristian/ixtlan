@@ -49,8 +49,6 @@ module Ixtlan
           digest = user.digest
           salt = digest[20,147]
           if ::Digest::SHA1.digest("#{password}" + salt) == digest[0,20]
-            @logger ||= Ixtlan::UserLogger.new(self)
-            @logger.log_user(login, "logged in")
             user
           else
             "wrong password"

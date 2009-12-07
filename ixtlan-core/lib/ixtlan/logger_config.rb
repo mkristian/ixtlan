@@ -29,7 +29,7 @@ module Ixtlan
       ENV['RAILS_ENV'] == 'production' ? level : :debug 
     end
 
-    Logging.init :debug, :info, :warn, :error unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
+    Logging.init :debug, :info, :warn, :error, :fatal unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
 
     # setup rails logger
     rails_appender = Logging::Appenders::File.new('rails', 
@@ -51,13 +51,13 @@ module Ixtlan
     Ixtlan::AuditConfig.configure(Ixtlan::Models::Configuration.instance.keep_audit_logs, 
                                   log_filebase('audit'), 
                                   [
-                                   Ixtlan::Models::User, 
-                                   Ixtlan::Audit, 
-                                   Ixtlan::Rails::SessionTimeout, 
+                                   Ixtlan::Models::User,
+                                   Ixtlan::Rails::Audit,
+                                   Ixtlan::Rails::SessionTimeout,
                                    Ixtlan::Rails::UnrestfulAuthentication,
                                    Ixtlan::Rails::ErrorHandling
                                   ] )
-    
+
     # keep the guard messages in a separate file as well
     logger(rolling_appender('guard'), Ixtlan::Guard, :info)
   end

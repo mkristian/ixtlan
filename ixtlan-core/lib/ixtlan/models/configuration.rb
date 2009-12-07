@@ -15,9 +15,9 @@ module Ixtlan
       
       property :keep_audit_logs, Integer, :nullable => false 
       
-      property :notification_sender_email, String, :format => :email, :nullable => true 
+      property :notification_sender_email, String, :format => :email, :nullable => true, :length => 64
 
-      property :notification_recipient_email, String, :format => :email, :nullable => true 
+      property :notification_recipient_emails, String, :format => Proc.new { |email| emails = email.split(','); emails.find_all { |e| e =~ DataMapper::Validate::Format::Email::EmailAddress }.size == emails.size}, :nullable => true, :length => 254 #honour mysql max varchar length
       
       timestamps :updated_at
 
@@ -66,7 +66,7 @@ module Ixtlan
 
       alias :to_x :to_xml_document
       def to_xml_document(opts, doc = nil)
-        opts.merge!({:methods => [:updated_by, :locales]})
+        opts.merge!({:methods => [:updated_by, :locales], :exclude => [:updated_by_id, :id]})
         to_x(opts, doc)
       end
     end
