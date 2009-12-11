@@ -26,7 +26,7 @@ public class ResourceCollectionPanel<E extends Resource<E>> extends
     public ResourceCollectionPanel(final Session session,
             final ResourceFactory<E> factory) {
         this.session = session;
-        this.resourceName = factory.storageName();
+        this.resourceName = factory.storagePluralName();
     }
 
     protected void setup(final PathFactory pathFactory) {

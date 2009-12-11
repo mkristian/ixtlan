@@ -49,6 +49,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
             final ResourceActionPanel<E> actions) {
         setStyleName("screen");
         this.loading = new TranslatableLabel("loading ...", getText);
+        this.loading.setStyleName("loading");
         this.header = new ResourceHeaderPanel(getText);
         this.actions = actions;
         this.display = display;
@@ -62,8 +63,11 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         add(this.display);
         if (displayAll != null) {
             add(this.displayAll);
+            this.pathFactory = new PathFactory(factory.storagePluralName());
         }
-        this.pathFactory = new PathFactory(factory.storageName());
+        else {
+            this.pathFactory = new PathFactory(factory.storageName());
+        }
         this.parentPathFactory = this.pathFactory;
     }
 
@@ -95,10 +99,10 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
     protected final void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
-        if (!resource.isNew()) {
-            this.header.reset(resource.key(), updatedAt, updatedBy);
-        }
-        this.actions.reset(resource);
+        this.header.reset(resource.isNew() ? null : resource.key(),
+                          updatedAt,
+                          updatedBy);
+        this.actions.reset(resource, this.display.isReadOnly());
         this.display.reset(resource);
 
         if (this.displayAll != null) {
@@ -179,7 +183,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
                 }
             });
-            this.loading.setVisible(false);
+            // this.loading.setVisible(false);
             reset(resource);
         }
         else {
@@ -197,7 +201,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
                                                 public void onChange(
                                                         final E resource) {
                                                     reset(resource);
-                                                    // ResourceScreen.this.loading.setVisible(false);
+                                                    ResourceScreen.this.loading.setVisible(false);
                                                 }
 
                                                 @Override

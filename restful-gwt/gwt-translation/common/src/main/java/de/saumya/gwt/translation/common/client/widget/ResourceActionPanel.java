@@ -3,11 +3,12 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 
 import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
@@ -16,18 +17,28 @@ import de.saumya.gwt.translation.common.client.route.PathFactory;
 
 public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
 
-    private final GetTextController getText;
+    private final GetTextController         getText;
 
-    protected final Hyperlink       fresh;
-    protected final Button          create;
-    protected final Button          save;
-    protected final Button          delete;
+    protected final Button                  fresh;
+    protected final Button                  create;
+    protected final Button                  save;
+    protected final Button                  edit;
+    protected final Button                  reload;
+    protected final Button                  delete;
 
-    private final ButtonHandler<E>  saveHandler;
-    private final ButtonHandler<E>  destroyHandler;
-    protected final Session         session;
+    private final ButtonHandler<E>          newHandler;
+    private final ButtonHandler<E>          createHandler;
+    private final ButtonHandler<E>          reloadHandler;
+    private final ButtonHandler<E>          editHandler;
+    private final ButtonHandler<E>          saveHandler;
+    private final ButtonHandler<E>          destroyHandler;
+    protected final Session                 session;
 
-    protected final String          resourceName;
+    protected final String                  resourceName;
+
+    private final ResourceChangeListener<E> createdListener;
+
+    private PathFactory                     pathFactory;
 
     public ResourceActionPanel(final GetTextController getText,
             final ResourceMutator<E> mutator, final Session session,
@@ -36,6 +47,71 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
         this.getText = getText;
         this.session = session;
         this.resourceName = factory.storagePluralName();
+        this.createdListener = new ResourceChangeListener<E>() {
+
+            @Override
+            public void onChange(final E resource) {
+                if (resource.isUptodate()
+                        && History.getToken()
+                                .equals(ResourceActionPanel.this.pathFactory.newPath())) {
+                    History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                }
+            }
+
+            @Override
+            public void onError(final E resource, final int status) {
+                // TODO Auto-generated method stub
+            }
+        };
+        this.newHandler = new ButtonHandler<E>(mutator) {
+
+            @Override
+            protected void action(final E resource) {
+                History.newItem(ResourceActionPanel.this.pathFactory.newPath());
+            }
+
+        };
+        this.reloadHandler = new ButtonHandler<E>(mutator) {
+
+            @Override
+            protected void action(final E resource) {
+                resource.reload();
+            }
+
+        };
+
+        this.editHandler = new ButtonHandler<E>(mutator) {
+
+            @Override
+            protected void action(final E resource) {
+                History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.key()));
+            }
+
+        };
+
+        this.createHandler = new ButtonHandler<E>(mutator) {
+
+            @Override
+            protected void action(final E resource) {
+                resource.addResourceChangeListener(new ResourceChangeListener<E>() {
+
+                    @Override
+                    public void onChange(final E resource) {
+                        if (resource.isUptodate()
+                                && History.getToken()
+                                        .equals(ResourceActionPanel.this.pathFactory.newPath())) {
+                            History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                        }
+                    }
+
+                    @Override
+                    public void onError(final E resource, final int status) {
+                        // TODO Auto-generated method stub
+                    }
+                });
+                resource.save();
+            }
+        };
         this.saveHandler = new ButtonHandler<E>(mutator) {
 
             @Override
@@ -49,12 +125,15 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
             @Override
             protected void action(final E resource) {
                 resource.destroy();
+                History.newItem(ResourceActionPanel.this.pathFactory.showAllPath());
             }
 
         };
 
-        this.fresh = linkbutton("new");
-        this.create = button("create", this.saveHandler);
+        this.fresh = button("new", this.newHandler);
+        this.create = button("create", this.createHandler);
+        this.reload = button("reload", this.reloadHandler);
+        this.edit = button("edit", this.editHandler);
         this.save = button("save", this.saveHandler);
         this.delete = button("delete", this.destroyHandler);
     }
@@ -69,15 +148,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
         return button;
     }
 
-    protected Hyperlink linkbutton(final String name) {
-        final Hyperlink button = new TranslatableHyperlink(name, this.getText);
-        button.setVisible(false);
-        add(button);
-        return button;
-    }
-
     public final void setup(final PathFactory pathFactory) {
-        this.fresh.setTargetHistoryToken(pathFactory.newPath());
+        this.pathFactory = pathFactory;
     }
 
     protected void doReset(final E resource) {
@@ -86,25 +158,38 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
     protected void doReset() {
     }
 
-    public final void reset(final E resource) {
+    public final void reset(final E resource, final boolean readOnly) {
+        this.newHandler.reset(resource);
+        this.reloadHandler.reset(resource);
+        this.createHandler.reset(resource);
+        this.editHandler.reset(resource);
         this.saveHandler.reset(resource);
         this.destroyHandler.reset(resource);
 
-        // TODO this stati check needs improvement
-        this.delete.setVisible(!resource.isNew()
+        resource.addResourceChangeListener(this.createdListener);
+
+        // TODO this status check needs improvement
+        this.delete.setVisible(!resource.isNew() && !resource.isDeleted()
                 && this.session.isAllowed(Action.DESTROY, this.resourceName));
-        this.save.setVisible(!resource.isNew() && !resource.isDeleted()
+        this.reload.setVisible(!resource.isNew() && !resource.isDeleted()
+                && this.session.isAllowed(Action.SHOW, this.resourceName));
+        this.edit.setVisible(readOnly && !resource.isNew()
+                && !resource.isDeleted()
+                && this.session.isAllowed(Action.UPDATE, this.resourceName));
+        this.save.setVisible(!readOnly && !resource.isNew()
+                && !resource.isDeleted()
                 && this.session.isAllowed(Action.UPDATE, this.resourceName));
         this.create.setVisible(resource.isNew()
                 && this.session.isAllowed(Action.CREATE, this.resourceName));
-        this.fresh.setVisible(false);
+        this.fresh.setVisible(!resource.isNew()
+                && this.session.isAllowed(Action.CREATE, this.resourceName));
 
         doReset(resource);
 
         setVisible(true);
     }
 
-    public void reset() {
+    public final void reset() {
         this.create.setVisible(false);
         this.save.setVisible(false);
         this.delete.setVisible(false);
