@@ -28,6 +28,7 @@
   </dependencies>
 
   <build>
+    <finalName>ixtlan-gwt-session</finalName>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

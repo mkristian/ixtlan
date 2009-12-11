@@ -34,26 +34,11 @@
   </dependencies>
 
   <build>
+    <finalName>ixtlan-gwt-translation-common</finalName>
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
-        <!--configuration>
-          <runTarget>Common.html</runTarget>
-        </configuration>
-        <executions>
-          <execution>
-            <configuration>
-              <module>de.saumya.gwt.translation.common.CommonTests</module> 
-            </configuration>
-            <goals>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId-->
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
