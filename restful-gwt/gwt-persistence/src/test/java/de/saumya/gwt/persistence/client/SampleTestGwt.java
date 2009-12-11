@@ -1,6 +1,5 @@
 package de.saumya.gwt.persistence.client;
 
-
 public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
     @Override
@@ -13,7 +12,10 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
     private final String RESOURCE_XML = "<sample>" + "<id>123</id>"
                                               + "<language>en</language>"
                                               + "<country>GE</country>"
-                                              + "</sample>";
+                                              + "<child>" + "<id>0</id>"
+                                              // + "<language>en</language>"
+                                              // + "<country>AT</country>"
+                                              + "</child>" + "</sample>";
 
     @Override
     protected ResourceFactory<Sample> factorySetUp() {
@@ -26,6 +28,7 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
         this.sample.country = "GE";
         this.sample.language = "en";
+        this.sample.child = this.factory.newResource();
 
         this.repository.addXmlResponse(resource1Xml());
 

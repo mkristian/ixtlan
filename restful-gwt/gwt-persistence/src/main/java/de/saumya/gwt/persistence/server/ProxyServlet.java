@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,30 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class ProxyServlet extends HttpServlet {
 
-    String base;
-
-    @Override
-    public void init(final ServletConfig config) throws ServletException {
-        super.init(config);
-
-        this.base = config.getInitParameter("base");
-        if (this.base == null) {
-            this.base = "";
-            log("using no base url");
-        }
-        else {
-            log("using base url: " + this.base);
-        }
-        log(getServletContext().getContextPath());
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     protected void service(final HttpServletRequest req,
             final HttpServletResponse resp) throws ServletException,
             IOException {
         final URL url = new URL("http://localhost:3000"
-                + req.getRequestURI().replace(this.base, ""));
+                + req.getRequestURI().replaceFirst("/[a-z.]*/", "/"));
         final HttpURLConnection con = ((HttpURLConnection) url.openConnection());
         con.setRequestMethod(req.getMethod());
         con.setDoInput(true);

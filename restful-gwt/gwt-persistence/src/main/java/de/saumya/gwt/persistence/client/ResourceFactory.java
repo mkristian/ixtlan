@@ -145,7 +145,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource(key);
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
-        this.repository.get(storageName(),
+        this.repository.get(storagePluralName(),
                             key,
                             new ResourceRequestCallback<E>(resource, this));
         return resource;

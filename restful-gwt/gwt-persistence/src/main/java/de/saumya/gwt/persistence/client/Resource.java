@@ -6,8 +6,8 @@ package de.saumya.gwt.persistence.client;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Document;
@@ -22,21 +22,18 @@ public abstract class Resource<E extends Resource<E>> {
         NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED
     }
 
-    private final Repository                      repository;
+    private final Repository                     repository;
 
-    private final ResourceFactory<E>              factory;
+    private final Set<ResourceChangeListener<E>> listeners = new HashSet<ResourceChangeListener<E>>();
 
-    private final List<ResourceChangeListener<E>> listeners = new ArrayList<ResourceChangeListener<E>>();
+    final ResourceFactory<E>                     factory;
 
-    final String                                  storageName;
-
-    State                                         state     = State.NEW;
+    State                                        state     = State.NEW;
 
     protected Resource(final Repository repository,
             final ResourceFactory<E> factory) {
         this.repository = repository;
         this.factory = factory;
-        this.storageName = factory.storageName();
     }
 
     public boolean isNew() {
@@ -86,6 +83,16 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
+    public void reload() {
+        // TODO switch on state
+        if (key() == null) {
+            this.factory.get(null);
+        }
+        else {
+            this.factory.get(key(), null);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public void fromXml(final String xml) {
         final Document doc = XMLParser.parse(xml);
@@ -103,9 +110,9 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public void toXml(final StringBuffer buf) {
-        buf.append("<").append(this.storageName).append(">");
+        buf.append("<").append(this.factory.storageName()).append(">");
         appendXml(buf);
-        buf.append("</").append(this.storageName).append(">");
+        buf.append("</").append(this.factory.storageName()).append(">");
     }
 
     protected void append(final StringBuffer buf, final String name,

@@ -38,21 +38,29 @@ public class Repository {
 
     void post(final Resource<? extends Resource<?>> resource,
             final RequestCallback callback) {
-        doIt("POST",
-             URL + resource.storageName + ".xml",
-             resource.toXml(),
-             callback);
+        if (resource.key() != null) {
+            doIt("POST",
+                 URL + resource.factory.storagePluralName() + ".xml",
+                 resource.toXml(),
+                 callback);
+        }
+        else {
+            doIt("POST",
+                 URL + resource.factory.storageName() + ".xml",
+                 resource.toXml(),
+                 callback);
+        }
     }
 
     void put(final Resource<? extends Resource<?>> resource,
             final RequestCallback callback) {
         if (resource.key() != null) {
-            doIt("PUT", URL + resource.storageName + "/" + resource.key()
-                    + ".xml", resource.toXml(), callback);
+            doIt("PUT", URL + resource.factory.storagePluralName() + "/"
+                    + resource.key() + ".xml", resource.toXml(), callback);
         }
         else { // singleton
             doIt("PUT",
-                 URL + resource.storageName + ".xml",
+                 URL + resource.factory.storageName() + ".xml",
                  resource.toXml(),
                  callback);
         }
@@ -61,11 +69,14 @@ public class Repository {
     void delete(final Resource<? extends Resource<?>> resource,
             final RequestCallback callback) {
         if (resource.key() != null) {
-            doIt("DELETE", URL + resource.storageName + "/" + resource.key()
-                    + ".xml", null, callback);
+            doIt("DELETE", URL + resource.factory.storagePluralName() + "/"
+                    + resource.key() + ".xml", null, callback);
         }
         else { // singleton
-            doIt("DELETE", URL + resource.storageName + ".xml", null, callback);
+            doIt("DELETE",
+                 URL + resource.factory.storageName() + ".xml",
+                 null,
+                 callback);
         }
     }
 

@@ -38,6 +38,7 @@ public class ResourceRequestCallback<E extends Resource<E>> implements
             case TO_BE_UPDATED:
                 this.resource.fromXml(response.getText());
                 this.resource.state = State.UP_TO_DATE;
+                GWT.log(this.resource.toString(), null);
                 break;
             case TO_BE_DELETED:
                 this.resource.state = State.DELETED;
@@ -48,6 +49,7 @@ public class ResourceRequestCallback<E extends Resource<E>> implements
         }
         else {
             this.resource.fireResourceErrorEvents(response.getStatusCode());
+            GWT.log(response.getText(), null);
             // GWT.log("TODO status " + this.resource.state + " >= 300", null);
         }
     }
