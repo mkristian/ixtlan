@@ -78,7 +78,7 @@ module Rails
     end
 
     def logout
-      if(params[:login] == current_user.login or request.content_type == 'application/xml')
+      if(params[:login] == current_user.login && request.content_type != 'application/xml')
         authentication_logger.log_user(current_user.login, "logged out")
         current_user = nil
         session.clear

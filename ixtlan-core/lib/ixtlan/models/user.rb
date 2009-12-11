@@ -94,7 +94,7 @@ module Ixtlan
 
       # make sure login is immutable
       def login=(new_login)
-        attribute_set(:login, new_login) if (login.nil? or login == "'NULL'" or login == "NULL")
+        attribute_set(:login, new_login) if login.nil?
       end
 
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?
