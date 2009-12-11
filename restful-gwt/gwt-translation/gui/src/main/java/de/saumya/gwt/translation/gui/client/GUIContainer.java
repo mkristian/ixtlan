@@ -7,7 +7,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
+import de.saumya.gwt.session.client.Notifications;
 import de.saumya.gwt.session.client.PermissionFactory;
+import de.saumya.gwt.session.client.PopupNotifications;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
@@ -83,11 +85,10 @@ public class GUIContainer {
     public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.configurationFactory,
                                                                    // default
                                                                    // mutator
-                                                                   // for
-                                                                   // Configuration
                                                                    new ResourceMutator<Configuration>(),
                                                                    this.getTextController,
                                                                    this.session);
+    public final Notifications        notifications        = new PopupNotifications();
 
     public GUIContainer() {
     }
@@ -108,7 +109,7 @@ public class GUIContainer {
         screenController.addScreen(this.configurationScreen, "configurations");
         screenController.addScreen(this.phraseBookScreen, "phrase_book");
 
-        final LoginPanel loginPanel = new LoginPanel();
+        final LoginPanel loginPanel = new LoginPanel(this.notifications);
         new SessionController(this.session, loginPanel, sessionPanel);
 
         RootPanel.get().add(loginPanel);
