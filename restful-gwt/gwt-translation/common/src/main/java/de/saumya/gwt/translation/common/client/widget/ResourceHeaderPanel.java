@@ -38,26 +38,28 @@ public class ResourceHeaderPanel extends FlowPanel {
     public void reset(final String keyValue, final Timestamp updatedAt,
             final User updatedBy) {
         if (keyValue != null) {
-            this.keyLabel.setVisible(true);
             this.keyValue.setText("\u00a0" + keyValue + "\u00a0");
-            this.keyValue.setVisible(true);
         }
+        this.keyValue.setVisible(keyValue != null);
+        this.keyLabel.setVisible(keyValue != null);
+        this.modifiedByLabel.setVisible(false);
+        this.byLabel.setVisible(false);
         if (updatedAt != null) {
-            this.modifiedAtLabel.setVisible(true);
-            this.modifiedAtValue.setVisible(true);
             this.modifiedAtValue.setText("\u00a0" + updatedAt.toString()
                     + "\u00a0");
             if (updatedBy != null) {
                 this.byLabel.setVisible(true);
-                this.modifiedByValue.setVisible(true);
                 this.modifiedByValue.setText("\u00a0" + updatedBy.display());
             }
         }
         else if (updatedBy != null) {
             this.modifiedByLabel.setVisible(true);
-            this.modifiedByValue.setVisible(true);
             this.modifiedByValue.setText(updatedBy.display());
         }
+        this.modifiedByValue.setVisible(updatedBy != null);
+        this.modifiedAtLabel.setVisible(updatedAt != null);
+        this.modifiedAtValue.setVisible(updatedAt != null);
+
         setVisible(true);
     }
 
