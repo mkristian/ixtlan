@@ -18,16 +18,18 @@ public class ResourceMutator<E extends Resource<E>> {
 
     private E                      resource;
 
+    private boolean                readOnly;
+
     private final List<Mutator<E>> mutators = new ArrayList<Mutator<E>>();
 
-    public void pull(final E resource) {
+    public void pullFromResource(final E resource) {
         this.resource = resource;
         for (final Mutator<E> mutator : this.mutators) {
             mutator.pull(resource);
         }
     }
 
-    public void push() {
+    public void pushIntoResource() {
         for (final Mutator<E> mutator : this.mutators) {
             mutator.push(this.resource);
         }
@@ -37,6 +39,11 @@ public class ResourceMutator<E extends Resource<E>> {
         for (final Mutator<E> mutator : this.mutators) {
             mutator.setEnabled(!isReadOnly);
         }
+        this.readOnly = isReadOnly;
+    }
+
+    public boolean isReadOnly() {
+        return this.readOnly;
     }
 
     public void add(final Mutator<E> mutator) {

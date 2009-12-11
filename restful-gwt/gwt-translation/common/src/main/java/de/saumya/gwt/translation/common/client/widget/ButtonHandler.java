@@ -23,19 +23,21 @@ public abstract class ButtonHandler<E extends Resource<E>> implements
 
     public void reset(final E resource) {
         this.resource = resource;
-        this.mutator.pull(resource);
+        this.mutator.pullFromResource(resource);
     }
 
     @Override
     public void onClick(final ClickEvent event) {
-        this.mutator.push();
+        if (this.resource != null) {
+            this.mutator.pushIntoResource();
+        }
         action(this.resource);
     }
 
     @Override
     public void onKeyUp(final KeyUpEvent event) {
         if (event.getNativeKeyCode() == 13) {
-            this.mutator.push();
+            this.mutator.pushIntoResource();
             action(this.resource);
         }
     }
