@@ -1,30 +1,15 @@
 package de.saumya.gwt.translation.gui.client;
 
 import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.translation.common.client.widget.IntegerTextBox;
 import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
+import de.saumya.gwt.translation.common.client.widget.ResourceMutator.Mutator;
 
 public abstract class IntegerTextBoxMutator<T extends Resource<T>> extends
-        TextBoxMutator<T> {
+        IntegerTextBox implements Mutator<T> {
 
     public IntegerTextBoxMutator(final ResourceMutator<T> resourceMutator) {
-        super(resourceMutator);
+        resourceMutator.add(this);
     }
 
-    public int getTextAsInt() {
-        return Integer.parseInt(getText());
-    }
-
-    public boolean isNumber() {
-        try {
-            getTextAsInt();
-            return true;
-        }
-        catch (final RuntimeException e) {
-            return false;
-        }
-    }
-
-    public void setText(final int n) {
-        setText("" + n);
-    }
 }
