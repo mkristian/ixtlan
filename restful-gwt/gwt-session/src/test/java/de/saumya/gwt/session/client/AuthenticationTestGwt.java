@@ -3,10 +3,10 @@ package de.saumya.gwt.session.client;
 import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
+import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
-import de.saumya.gwt.session.client.model.VenueFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -93,13 +93,18 @@ public class AuthenticationTestGwt extends
 
     @Override
     protected ResourceFactory<Authentication> factorySetUp() {
-        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository,
+                this.notification);
         this.userFactory = new UserFactory(this.repository,
+                this.notification,
                 localeFactory,
                 new GroupFactory(this.repository,
+                        this.notification,
                         localeFactory,
-                        new VenueFactory(this.repository)));
-        return new AuthenticationFactory(this.repository, this.userFactory);
+                        new DomainFactory(this.repository, this.notification)));
+        return new AuthenticationFactory(this.repository,
+                this.notification,
+                this.userFactory);
     }
 
     @Override

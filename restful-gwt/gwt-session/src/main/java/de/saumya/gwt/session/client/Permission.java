@@ -15,7 +15,7 @@ class Permission extends Resource<Permission> {
 
     Permission(final Repository repository, final PermissionFactory factory,
             final RoleFactory roleFactory) {
-        super(repository, factory);
+        super(repository, factory, null);
         this.roleFactory = roleFactory;
     }
 

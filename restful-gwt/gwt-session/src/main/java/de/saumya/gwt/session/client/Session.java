@@ -145,7 +145,7 @@ public class Session {
         authentication.addResourceChangeListener(new ResourceChangeListener<Authentication>() {
 
             @Override
-            public void onChange(final Authentication resource) {
+            public void onChange(final Authentication resource, String message) {
                 if (resource.user.login.equals(username)) {
                     if (resource.isUptodate()) {
                         doLogin(resource);
@@ -159,7 +159,7 @@ public class Session {
             }
 
             @Override
-            public void onError(final Authentication resource, final int status) {
+            public void onError(final Authentication resource, final int status, String statusText) {
                 if (status < 500) {
                     doAccessDenied();
                 }

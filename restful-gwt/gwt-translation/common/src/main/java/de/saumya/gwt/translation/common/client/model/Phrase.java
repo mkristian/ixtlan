@@ -23,7 +23,7 @@ public class Phrase extends ResourceWithID<Phrase> {
     Phrase(final Repository repository, final PhraseFactory factory,
             final TranslationFactory translationFactory,
             final UserFactory userFactory, final LocaleFactory localeFactory) {
-        super(repository, factory);
+        super(repository, factory, null);
         this.translationFactory = translationFactory;
         this.userFactory = userFactory;
         this.localeFactory = localeFactory;

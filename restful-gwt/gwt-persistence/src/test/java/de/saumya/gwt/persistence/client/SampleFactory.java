@@ -3,13 +3,12 @@
  */
 package de.saumya.gwt.persistence.client;
 
-import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 
 public class SampleFactory extends ResourceFactory<Sample> {
 
-    public SampleFactory(final Repository repository) {
-        super(repository);
+    public SampleFactory(final Repository repository,
+            final ResourceNotification notification) {
+        super(repository, notification);
     }
 
     @Override

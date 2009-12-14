@@ -5,11 +5,13 @@ package de.saumya.gwt.session.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 
 public class LocaleFactory extends ResourceFactory<Locale> {
 
-    public LocaleFactory(final Repository repository) {
-        super(repository);
+    public LocaleFactory(final Repository repository,
+            final ResourceNotification notification) {
+        super(repository, notification);
     }
 
     @Override

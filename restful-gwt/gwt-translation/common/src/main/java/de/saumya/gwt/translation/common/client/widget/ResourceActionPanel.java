@@ -3,9 +3,14 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextBoxBase;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
@@ -50,7 +55,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
         this.createdListener = new ResourceChangeListener<E>() {
 
             @Override
-            public void onChange(final E resource) {
+            public void onChange(final E resource, final String message) {
                 if (resource.isUptodate()
                         && History.getToken()
                                 .equals(ResourceActionPanel.this.pathFactory.newPath())) {
@@ -59,7 +64,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
             }
 
             @Override
-            public void onError(final E resource, final int status) {
+            public void onError(final E resource, final int status,
+                    final String statusText) {
                 // TODO Auto-generated method stub
             }
         };
@@ -96,7 +102,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                 resource.addResourceChangeListener(new ResourceChangeListener<E>() {
 
                     @Override
-                    public void onChange(final E resource) {
+                    public void onChange(final E resource, final String message) {
                         if (resource.isUptodate()
                                 && History.getToken()
                                         .equals(ResourceActionPanel.this.pathFactory.newPath())) {
@@ -105,7 +111,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                     }
 
                     @Override
-                    public void onError(final E resource, final int status) {
+                    public void onError(final E resource, final int status,
+                            final String statusText) {
                         // TODO Auto-generated method stub
                     }
                 });
@@ -130,15 +137,72 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
 
         };
 
+        add(new TranslatableLabel("search", getText));
+        final TextBox box = boxWithButton("similar",
+                                          new TextBoxButtonHandler() {
+
+                                              @Override
+                                              protected void action(
+                                                      final TextBoxBase textBox) {
+                                                  // TODO
+                                                  GWT.log("TODO fuzzy search",
+                                                          null);
+                                              }
+                                          });
+        final TranslatableTextBoxButton button = new TranslatableTextBoxButton(box,
+                "exact",
+                this.getText);
+        button.add(new TextBoxButtonHandler() {
+
+            @Override
+            protected void action(final TextBoxBase textBox) {
+                // TODO
+                GWT.log("TODO exact search", null);
+            }
+        });
+        add(button);
+
+        boxWithButton("get by ID", new TextBoxButtonHandler() {
+
+            @Override
+            protected void action(final TextBoxBase textBox) {
+                if (ResourceActionPanel.this.session.isAllowed(Action.UPDATE,
+                                                               ResourceActionPanel.this.resourceName)) {
+                    History.newItem(ResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
+                }
+                else {
+                    History.newItem(ResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
+                }
+                textBox.setText("");
+            }
+
+        });
+
         this.fresh = button("new", this.newHandler);
+        this.fresh.addStyleName("break");
         this.create = button("create", this.createHandler);
+        this.create.addStyleName("break");
         this.reload = button("reload", this.reloadHandler);
         this.edit = button("edit", this.editHandler);
         this.save = button("save", this.saveHandler);
         this.delete = button("delete", this.destroyHandler);
     }
 
-    protected Button button(final String name, final ButtonHandler<E> handler) {
+    private TextBox boxWithButton(final String name,
+            final TextBoxButtonHandler handler) {
+        final TextBox box = new TextBox();
+        box.setStyleName(name + "-box");
+        final TranslatableTextBoxButton button = new TranslatableTextBoxButton(box,
+                name,
+                this.getText);
+        button.add(handler);
+        add(box);
+        add(button);
+        return box;
+    }
+
+    protected <T extends ClickHandler & KeyUpHandler> Button button(
+            final String name, final T handler) {
         final Button button = new TranslatableButton(name, this.getText);
         button.ensureDebugId(this.resourceName + "-" + name);
         button.setVisible(false);
@@ -191,6 +255,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
 
     public final void reset() {
         this.create.setVisible(false);
+        this.reload.setVisible(false);
+        this.edit.setVisible(false);
         this.save.setVisible(false);
         this.delete.setVisible(false);
         this.fresh.setVisible(this.session.isAllowed(Session.Action.CREATE,

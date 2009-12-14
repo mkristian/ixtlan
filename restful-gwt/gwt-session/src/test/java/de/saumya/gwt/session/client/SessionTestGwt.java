@@ -3,29 +3,33 @@ package de.saumya.gwt.session.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 
+import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.RepositoryMock;
+import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.Group;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.session.client.model.UserFactory;
-import de.saumya.gwt.session.client.model.VenueFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
 public class SessionTestGwt extends GWTTestCase {
 
-    protected RepositoryMock      repository;
+    protected RepositoryMock       repository;
 
-    protected Session             session;
+    protected ResourceNotification notification;
 
-    protected SessionListenerMock listener;
+    protected Session              session;
 
-    protected UserFactory         userFactory;
+    protected SessionListenerMock  listener;
 
-    protected LocaleFactory       localeFactory;
+    protected UserFactory          userFactory;
+
+    protected LocaleFactory        localeFactory;
 
     /**
      * Must refer to a valid module that sources this class.
@@ -38,16 +42,23 @@ public class SessionTestGwt extends GWTTestCase {
     @Override
     protected void gwtSetUp() {
         this.repository = new RepositoryMock();
+        this.notification = new GWTResourceNotification();
         this.repository.reset();
-        final VenueFactory venueFactory = new VenueFactory(this.repository);
-        this.localeFactory = new LocaleFactory(this.repository);
+        final DomainFactory venueFactory = new DomainFactory(this.repository,
+                this.notification);
+        this.localeFactory = new LocaleFactory(this.repository,
+                this.notification);
         final GroupFactory groupFactory = new GroupFactory(this.repository,
+                this.notification,
                 this.localeFactory,
                 venueFactory);
-        final RoleFactory roleFactory = new RoleFactory(this.repository);
+        final RoleFactory roleFactory = new RoleFactory(this.repository,
+                this.notification);
         final PermissionFactory permissionFactory = new PermissionFactory(this.repository,
+                this.notification,
                 roleFactory);
         this.userFactory = new UserFactory(this.repository,
+                this.notification,
                 this.localeFactory,
                 groupFactory);
         this.repository.add("<permissions>" + "<permission>"
@@ -58,7 +69,9 @@ public class SessionTestGwt extends GWTTestCase {
         // TODO maybe the whole mockup here is not neccessary and instead the
         // repository mock with authentication xml is sufficient
         this.session = new Session(this.repository,
-                new AuthenticationFactory(this.repository, this.userFactory),
+                new AuthenticationFactory(this.repository,
+                        this.notification,
+                        this.userFactory),
                 permissionFactory) {
 
             @Override

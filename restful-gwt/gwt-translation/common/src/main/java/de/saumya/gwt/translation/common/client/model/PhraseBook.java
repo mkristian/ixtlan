@@ -15,7 +15,7 @@ public class PhraseBook extends Resource<PhraseBook> {
 
     PhraseBook(final Repository repository, final PhraseBookFactory factory,
             final PhraseFactory phraseFactory) {
-        super(repository, factory);
+        super(repository, factory, null);
         this.phraseFactory = phraseFactory;
     }
 

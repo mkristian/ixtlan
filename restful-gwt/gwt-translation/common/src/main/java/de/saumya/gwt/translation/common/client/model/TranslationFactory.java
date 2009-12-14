@@ -5,6 +5,7 @@ package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 import de.saumya.gwt.session.client.model.UserFactory;
 
 public class TranslationFactory extends ResourceFactory<Translation> {
@@ -12,8 +13,9 @@ public class TranslationFactory extends ResourceFactory<Translation> {
     private final UserFactory userFactory;
 
     public TranslationFactory(final Repository repository,
+            final ResourceNotification notification,
             final UserFactory userFactory) {
-        super(repository);
+        super(repository, notification);
         this.userFactory = userFactory;
     }
 

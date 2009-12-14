@@ -2,15 +2,17 @@ package de.saumya.gwt.session.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 
 public class GroupFactory extends ResourceFactory<Group> {
 
     private final LocaleFactory localeFactory;
-    private final VenueFactory  venueFactory;
+    private final DomainFactory  venueFactory;
 
     public GroupFactory(final Repository repository,
-            final LocaleFactory localeFactory, final VenueFactory venueFactory) {
-        super(repository);
+            final ResourceNotification notification,
+            final LocaleFactory localeFactory, final DomainFactory venueFactory) {
+        super(repository, notification);
         this.localeFactory = localeFactory;
         this.venueFactory = venueFactory;
     }

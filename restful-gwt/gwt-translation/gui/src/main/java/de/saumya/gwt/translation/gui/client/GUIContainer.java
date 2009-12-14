@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
-import de.saumya.gwt.session.client.Notifications;
 import de.saumya.gwt.session.client.PermissionFactory;
 import de.saumya.gwt.session.client.PopupNotifications;
 import de.saumya.gwt.session.client.RoleFactory;
@@ -15,11 +14,11 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.model.Configuration;
 import de.saumya.gwt.session.client.model.ConfigurationFactory;
+import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
-import de.saumya.gwt.session.client.model.VenueFactory;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
@@ -34,37 +33,51 @@ import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
 
 public class GUIContainer {
     public final Repository           repository           = new Repository();
-    public final VenueFactory         venueFactory         = new VenueFactory(this.repository);
-    public final LocaleFactory        localeFactory        = new LocaleFactory(this.repository);
+    public final PopupNotifications   notifications        = new PopupNotifications();
+    public final DomainFactory        venueFactory         = new DomainFactory(this.repository,
+                                                                   this.notifications);
+    public final LocaleFactory        localeFactory        = new LocaleFactory(this.repository,
+                                                                   this.notifications);
     public final GroupFactory         groupFactory         = new GroupFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.localeFactory,
                                                                    this.venueFactory);
-    public final RoleFactory          roleFactory          = new RoleFactory(this.repository);
+    public final RoleFactory          roleFactory          = new RoleFactory(this.repository,
+                                                                   this.notifications);
     public final PermissionFactory    permissionFactory    = new PermissionFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.roleFactory);
     public final UserFactory          userFactory          = new UserFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.localeFactory,
                                                                    this.groupFactory);
 
-    public final WordFactory          wordFactory          = new WordFactory(this.repository);
+    public final WordFactory          wordFactory          = new WordFactory(this.repository,
+                                                                   this.notifications);
     public final TranslationFactory   translationFactory   = new TranslationFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.userFactory);
     public final PhraseFactory        phraseFactory        = new PhraseFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.userFactory,
                                                                    this.localeFactory,
                                                                    this.translationFactory);
     public final PhraseBookFactory    bookFactory          = new PhraseBookFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.phraseFactory);
 
     public final ConfigurationFactory configurationFactory = new ConfigurationFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.userFactory);
 
     public final Session              session              = new Session(this.repository,
                                                                    new AuthenticationFactory(this.repository,
+                                                                           this.notifications,
                                                                            this.userFactory),
                                                                    this.permissionFactory);
 
     public final GetText              getText              = new GetText(new WordBundleFactory(this.repository,
+                                                                   this.notifications,
                                                                    this.wordFactory),
                                                                    this.wordFactory,
                                                                    this.bookFactory,
@@ -88,7 +101,6 @@ public class GUIContainer {
                                                                    new ResourceMutator<Configuration>(),
                                                                    this.getTextController,
                                                                    this.session);
-    public final Notifications        notifications        = new PopupNotifications();
 
     public GUIContainer() {
     }

@@ -15,7 +15,7 @@ public class WordBundle extends Resource<WordBundle> {
 
     WordBundle(final Repository repository, final WordBundleFactory factory,
             final WordFactory wordFactory) {
-        super(repository, factory);
+        super(repository, factory, null);
         this.wordFactory = wordFactory;
     }
 

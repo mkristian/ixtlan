@@ -9,7 +9,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     public static class Singleton extends Resource<Singleton> {
 
         Singleton(final Repository repository, final SingletonFactory factory) {
-            super(repository, factory);
+            super(repository, factory, null);
         }
 
         String name;
@@ -43,7 +43,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     public static class SingletonFactory extends ResourceFactory<Singleton> {
 
         public SingletonFactory(final Repository repository) {
-            super(repository);
+            super(repository, null);
         }
 
         @Override

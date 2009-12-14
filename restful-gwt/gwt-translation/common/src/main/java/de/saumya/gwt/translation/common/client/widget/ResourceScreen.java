@@ -58,8 +58,8 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         this.session = session;
 
         add(this.loading);
-        add(this.header);
         add(this.actions);
+        add(this.header);
         add(this.display);
         if (displayAll != null) {
             add(this.displayAll);
@@ -99,7 +99,10 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
     protected final void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
-        this.header.reset(resource.isNew() ? null : resource.key(),
+        this.header.reset(resource.isNew() || resource.isDeleted()
+                                  || !resource.isUptodate()
+                                  ? null
+                                  : resource.key(),
                           updatedAt,
                           updatedBy);
         this.actions.reset(resource, this.display.isReadOnly());
@@ -168,22 +171,9 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
             this.display.setReadOnly(!this.session.isAllowed(Action.UPDATE,
                                                              this.factory.storagePluralName()));
+
             this.loading.setVisible(true);
-            final E resource = this.factory.get(new ResourceChangeListener<E>() {
-
-                @Override
-                public void onChange(final E resource) {
-                    reset(resource);
-                    ResourceScreen.this.loading.setVisible(false);
-                }
-
-                @Override
-                public void onError(final E resource, final int status) {
-                    // TODO Auto-generated method stub
-
-                }
-            });
-            // this.loading.setVisible(false);
+            final E resource = this.factory.get(this.resourceChangeListener);
             reset(resource);
         }
         else {
@@ -192,30 +182,39 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         }
     }
 
+    ResourceChangeListener<E> resourceChangeListener = new ResourceChangeListener<E>() {
+
+                                                         @Override
+                                                         public void onChange(
+                                                                 final E resource,
+                                                                 final String message) {
+                                                             reset(resource);
+                                                             ResourceScreen.this.loading.setVisible(false);
+                                                             // ResourceScreen.this.notifications.info("loaded: "
+                                                             // +
+                                                             // resource.display());
+
+                                                         }
+
+                                                         @Override
+                                                         public void onError(
+                                                                 final E resource,
+                                                                 final int status,
+                                                                 final String statusText) {
+                                                             ResourceScreen.this.loading.setVisible(false);
+                                                             // ResourceScreen.this.notifications.warn(status
+                                                             // + ": "
+                                                             // + statusText
+                                                             // + ": "
+                                                             // +
+                                                             // resource.display());
+                                                             reset(resource);
+                                                         }
+                                                     };
+
     protected void show(final String key) {
         this.loading.setVisible(true);
-        final E resource = this.factory.get(key,
-                                            new ResourceChangeListener<E>() {
-
-                                                @Override
-                                                public void onChange(
-                                                        final E resource) {
-                                                    reset(resource);
-                                                    ResourceScreen.this.loading.setVisible(false);
-                                                }
-
-                                                @Override
-                                                public void onError(
-                                                        final E resource,
-                                                        final int status) {
-                                                    // TODO Auto-generated
-                                                    // method stub
-
-                                                }
-                                            });
-        // TODO should be set be onChange and onError. maybe make an application
-        // wide notification widget
-        // this.loading.setVisible(false);
+        final E resource = this.factory.get(key, this.resourceChangeListener);
         reset(resource);
     }
 }

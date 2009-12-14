@@ -5,11 +5,13 @@ package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 
 public class WordFactory extends ResourceFactory<Word> {
 
-    public WordFactory(final Repository repository) {
-        super(repository);
+    public WordFactory(final Repository repository,
+            final ResourceNotification notification) {
+        super(repository, notification);
     }
 
     @Override

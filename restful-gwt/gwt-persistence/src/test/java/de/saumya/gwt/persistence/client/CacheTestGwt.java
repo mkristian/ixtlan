@@ -19,7 +19,8 @@ public class CacheTestGwt extends PersistenceTestGwt {
     @Override
     protected void gwtSetUp() {
         this.repository = new RepositoryMock();
-        this.factory = new SampleFactory(this.repository);
+        this.factory = new SampleFactory(this.repository,
+                new GWTResourceNotification());
         this.sample = this.factory.newResource();
 
         this.sample.country = "GE";

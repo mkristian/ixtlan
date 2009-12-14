@@ -80,8 +80,10 @@ public class PermissionTestGwt extends AbstractResourceTestGwt<Permission> {
 
     @Override
     protected ResourceFactory<Permission> factorySetUp() {
-        this.roleFactory = new RoleFactory(this.repository);
-        return new PermissionFactory(this.repository, this.roleFactory);
+        this.roleFactory = new RoleFactory(this.repository, this.notification);
+        return new PermissionFactory(this.repository,
+                this.notification,
+                this.roleFactory);
     }
 
     @Override

@@ -11,11 +11,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
-import de.saumya.gwt.session.client.model.VenueFactory;
 
 public class SessionTest implements EntryPoint {
 
@@ -110,17 +112,22 @@ public class SessionTest implements EntryPoint {
         final LoginPanel loginPanel = new LoginPanel();
         final SessionPanel sessionPanel = new SessionPanel();
         final Repository repository = new Repository();
-        final LocaleFactory localeFactory = new LocaleFactory(repository);
-        final RoleFactory roleFactory = new RoleFactory(repository);
+        final ResourceNotification notification = new GWTResourceNotification();
+        final LocaleFactory localeFactory = new LocaleFactory(repository,
+                notification);
+        final RoleFactory roleFactory = new RoleFactory(repository,
+                notification);
         final GroupFactory groupFactory = new GroupFactory(repository,
+                notification,
                 localeFactory,
-                new VenueFactory(repository));
+                new DomainFactory(repository, notification));
         final UserFactory userFactory = new UserFactory(repository,
+                notification,
                 localeFactory,
                 groupFactory);
         new SessionController(new Session(repository,
-                new AuthenticationFactory(repository, userFactory),
-                new PermissionFactory(repository, roleFactory)),
+                new AuthenticationFactory(repository, notification, userFactory),
+                new PermissionFactory(repository, notification, roleFactory)),
                 loginPanel,
                 sessionPanel);
 

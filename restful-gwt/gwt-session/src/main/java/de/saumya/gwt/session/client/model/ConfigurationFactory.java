@@ -5,14 +5,16 @@ package de.saumya.gwt.session.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 
 public class ConfigurationFactory extends ResourceFactory<Configuration> {
 
     private final UserFactory userFactory;
 
     public ConfigurationFactory(final Repository repository,
+            final ResourceNotification notification,
             final UserFactory userFactory) {
-        super(repository);
+        super(repository, notification);
         this.userFactory = userFactory;
     }
 

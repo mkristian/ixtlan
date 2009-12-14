@@ -13,6 +13,7 @@ public class RestfulRequestBuilder extends RequestBuilder {
             final String authenticationToken) {
         super(httpMethod, url);
         setHeader("content-type", "application/xml");
+        setHeader("If-None-Match", "blahblah");
         if (authenticationToken != null) {
             setHeader("authenticity-token", authenticationToken);
         }

@@ -36,7 +36,7 @@ public abstract class ButtonHandler<E extends Resource<E>> implements
 
     @Override
     public void onKeyUp(final KeyUpEvent event) {
-        if (event.getNativeKeyCode() == 13) {
+        if (event.getNativeKeyCode() == 32) {
             this.mutator.pushIntoResource();
             action(this.resource);
         }

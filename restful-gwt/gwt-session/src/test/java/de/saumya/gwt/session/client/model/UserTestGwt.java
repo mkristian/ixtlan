@@ -113,12 +113,15 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
 
     @Override
     protected ResourceFactory<User> factorySetUp() {
-        final LocaleFactory localeFactory = new LocaleFactory(this.repository);
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository,
+                this.notification);
         return new UserFactory(this.repository,
+                this.notification,
                 localeFactory,
                 new GroupFactory(this.repository,
+                        this.notification,
                         localeFactory,
-                        new VenueFactory(this.repository)));
+                        new DomainFactory(this.repository, this.notification)));
     }
 
     @Override

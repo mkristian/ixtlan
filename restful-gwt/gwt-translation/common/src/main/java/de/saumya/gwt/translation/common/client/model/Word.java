@@ -11,7 +11,7 @@ import de.saumya.gwt.persistence.client.Resource;
 public class Word extends Resource<Word> {
 
     Word(final Repository repository, final WordFactory factory) {
-        super(repository, factory);
+        super(repository, factory, null);
     }
 
     public String code;

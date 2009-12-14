@@ -14,11 +14,11 @@ import de.saumya.gwt.persistence.client.Resources;
 public class Group extends ResourceWithID<Group> {
 
     private final LocaleFactory localeFactory;
-    private final VenueFactory  venueFactory;
+    private final DomainFactory  venueFactory;
 
     protected Group(final Repository repository, final GroupFactory factory,
-            final LocaleFactory localeFactory, final VenueFactory venueFactory) {
-        super(repository, factory);
+            final LocaleFactory localeFactory, final DomainFactory venueFactory) {
+        super(repository, factory, null);
         this.localeFactory = localeFactory;
         this.venueFactory = venueFactory;
     }
@@ -27,7 +27,7 @@ public class Group extends ResourceWithID<Group> {
 
     public Timestamp         createdAt;
 
-    public Resources<Venue>  venues;
+    public Resources<Domain>  venues;
     public Resources<Locale> locales;
 
     @Override

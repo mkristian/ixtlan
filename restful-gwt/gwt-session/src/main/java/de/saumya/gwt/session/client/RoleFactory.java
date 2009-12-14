@@ -2,11 +2,13 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 
 public class RoleFactory extends ResourceFactory<Role> {
 
-    public RoleFactory(final Repository repository) {
-        super(repository);
+    public RoleFactory(final Repository repository,
+            final ResourceNotification notification) {
+        super(repository, notification);
     }
 
     @Override

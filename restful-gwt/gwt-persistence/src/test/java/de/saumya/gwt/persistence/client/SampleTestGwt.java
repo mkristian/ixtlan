@@ -19,7 +19,7 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
 
     @Override
     protected ResourceFactory<Sample> factorySetUp() {
-        return new SampleFactory(this.repository);
+        return new SampleFactory(this.repository, new GWTResourceNotification());
     }
 
     @Override

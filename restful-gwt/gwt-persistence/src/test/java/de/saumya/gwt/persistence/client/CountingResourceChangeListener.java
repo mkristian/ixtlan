@@ -14,7 +14,7 @@ public class CountingResourceChangeListener<T extends Resource<T>> implements
     private int errors = 0;
 
     @Override
-    public void onChange(final T resource) {
+    public void onChange(final T resource, String message) {
         this.count++;
     }
 
@@ -32,7 +32,7 @@ public class CountingResourceChangeListener<T extends Resource<T>> implements
     }
 
     @Override
-    public void onError(final T resource, final int status) {
+    public void onError(final T resource, final int status, String statusText) {
         this.errors++;
     }
 }

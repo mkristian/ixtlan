@@ -2,8 +2,6 @@ package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.translation.common.client.model.Word;
-import de.saumya.gwt.translation.common.client.model.WordFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -38,7 +36,7 @@ public class WordTestGwt extends AbstractResourceTestGwt<Word> {
 
     @Override
     protected WordFactory factorySetUp() {
-        return new WordFactory(this.repository);
+        return new WordFactory(this.repository, this.notification);
     }
 
     @Override

@@ -18,8 +18,19 @@ import com.google.gwt.xml.client.XMLParser;
 
 public abstract class Resource<E extends Resource<E>> {
 
-    enum State {
-        NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED
+    protected enum State {
+        NEW, TO_BE_CREATED("created"), TO_BE_UPDATED("updated"), UP_TO_DATE, TO_BE_DELETED(
+                "deleted"), DELETED, TO_BE_LOADED("loaded"), STALE;
+
+        final String message;
+
+        State() {
+            this.message = null;
+        }
+
+        State(final String message) {
+            this.message = message;
+        }
     }
 
     private final Repository                     repository;
@@ -28,16 +39,21 @@ public abstract class Resource<E extends Resource<E>> {
 
     final ResourceFactory<E>                     factory;
 
-    State                                        state     = State.NEW;
+    protected State                              state     = State.NEW;
 
     protected Resource(final Repository repository,
-            final ResourceFactory<E> factory) {
+            final ResourceFactory<E> factory,
+            final ResourceChangeListener<E> listener) {
+        // final ResourceChangeListener<E> resourceChangeListener) {
         this.repository = repository;
         this.factory = factory;
+        if (listener != null) {
+            addResourceChangeListener(listener);
+        }
     }
 
     public boolean isNew() {
-        return this.state == State.NEW;
+        return this.state == State.NEW; // || this.state == State.TO_BE_CREATED;
     }
 
     public boolean isUptodate() {
@@ -169,16 +185,16 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     @SuppressWarnings("unchecked")
-    void fireResourceChangeEvents() {
+    void fireResourceChangeEvents(final String message) {
         for (final ResourceChangeListener<E> listener : this.listeners) {
-            listener.onChange((E) this);
+            listener.onChange((E) this, message);
         }
     }
 
     @SuppressWarnings("unchecked")
-    void fireResourceErrorEvents(final int status) {
+    void fireResourceErrorEvents(final int status, final String statusText) {
         for (final ResourceChangeListener<E> listener : this.listeners) {
-            listener.onError((E) this, status);
+            listener.onError((E) this, status, statusText);
         }
     }
 

@@ -16,7 +16,7 @@ class Authentication extends Resource<Authentication> {
 
     protected Authentication(final Repository repository,
             final AuthenticationFactory factory, final UserFactory userFactory) {
-        super(repository, factory);
+        super(repository, factory, null);
         this.userFactory = userFactory;
     }
 

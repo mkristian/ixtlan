@@ -3,10 +3,10 @@ package de.saumya.gwt.translation.common.client.model;
 import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
-import de.saumya.gwt.session.client.model.VenueFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -55,11 +55,16 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
     @Override
     protected ResourceFactory<Translation> factorySetUp() {
         return new TranslationFactory(this.repository,
+                this.notification,
                 new UserFactory(this.repository,
-                        new LocaleFactory(this.repository),
+                        this.notification,
+                        new LocaleFactory(this.repository, this.notification),
                         new GroupFactory(this.repository,
-                                new LocaleFactory(this.repository),
-                                new VenueFactory(this.repository))));
+                                this.notification,
+                                new LocaleFactory(this.repository,
+                                        this.notification),
+                                new DomainFactory(this.repository,
+                                        this.notification))));
     }
 
     @Override

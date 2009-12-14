@@ -8,8 +8,9 @@ import com.google.gwt.xml.client.Element;
 public abstract class ResourceWithID<E extends Resource<E>> extends Resource<E> {
 
     protected ResourceWithID(final Repository repository,
-            final ResourceFactory<E> factory) {
-        super(repository, factory);
+            final ResourceFactory<E> factory,
+            final ResourceChangeListener<E> listener) {
+        super(repository, factory, listener);
     }
 
     public int id;

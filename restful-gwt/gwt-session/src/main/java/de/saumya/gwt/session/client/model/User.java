@@ -20,7 +20,7 @@ public class User extends Resource<User> {
 
     protected User(final Repository repository, final UserFactory factory,
             final LocaleFactory localeFactory, final GroupFactory groupFactory) {
-        super(repository, factory);
+        super(repository, factory, null);
         this.localeFactory = localeFactory;
         this.groupFactory = groupFactory;
     }

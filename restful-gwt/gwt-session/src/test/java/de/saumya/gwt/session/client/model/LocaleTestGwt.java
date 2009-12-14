@@ -3,8 +3,6 @@ package de.saumya.gwt.session.client.model;
 import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.LocaleFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -64,7 +62,7 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     protected ResourceFactory<Locale> factorySetUp() {
-        return new LocaleFactory(this.repository);
+        return new LocaleFactory(this.repository, this.notification);
     }
 
     @Override

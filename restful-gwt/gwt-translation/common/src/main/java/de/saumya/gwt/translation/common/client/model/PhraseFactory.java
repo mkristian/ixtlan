@@ -5,6 +5,7 @@ package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotification;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 
@@ -15,9 +16,10 @@ public class PhraseFactory extends ResourceFactory<Phrase> {
     private final LocaleFactory      localeFactory;
 
     public PhraseFactory(final Repository repository,
-            final UserFactory factory, final LocaleFactory localeFactory,
+            final ResourceNotification notification, final UserFactory factory,
+            final LocaleFactory localeFactory,
             final TranslationFactory translationFactory) {
-        super(repository);
+        super(repository, notification);
         this.factory = factory;
         this.translationFactory = translationFactory;
         this.localeFactory = localeFactory;

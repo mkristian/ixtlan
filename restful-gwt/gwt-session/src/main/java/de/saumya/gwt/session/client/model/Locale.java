@@ -13,7 +13,7 @@ import de.saumya.gwt.persistence.client.Resource;
 public class Locale extends Resource<Locale> {
 
     Locale(final Repository repository, final LocaleFactory factory) {
-        super(repository, factory);
+        super(repository, factory, null);
     }
 
     public String    code;

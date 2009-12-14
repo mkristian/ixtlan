@@ -2,10 +2,6 @@ package de.saumya.gwt.persistence.client;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.Resources;
-
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
@@ -13,6 +9,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
         GWTTestCase {
 
     protected RepositoryMock                     repository;
+    protected ResourceNotification               notification;
     protected CountingResourceChangeListener<T>  countingResourceListener;
     protected CountingResourcesChangeListener<T> countingResourcesListener;
 
@@ -22,6 +19,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
     @Override
     protected void gwtSetUp() {
         this.repository = new RepositoryMock();
+        this.notification = new GWTResourceNotification();
         this.factory = factorySetUp();
 
         this.countingResourceListener = new CountingResourceChangeListener<T>();
