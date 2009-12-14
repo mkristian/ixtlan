@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
@@ -137,8 +138,11 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
 
         };
 
-        add(new TranslatableLabel("search", getText));
-        final TextBox box = boxWithButton("similar",
+        final ComplexPanel search = new FlowPanel();
+        search.setStyleName("search");
+        search.add(new TranslatableLabel("search", getText));
+        final TextBox box = boxWithButton(search,
+                                          "similar",
                                           new TextBoxButtonHandler() {
 
                                               @Override
@@ -160,35 +164,48 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                 GWT.log("TODO exact search", null);
             }
         });
-        add(button);
+        search.add(button);
 
-        boxWithButton("get by ID", new TextBoxButtonHandler() {
+        final ComplexPanel getBy = new FlowPanel();
+        getBy.setStyleName("get-by");
+        boxWithButton(getBy,
+                      "get by " + this.resourceName + " key",
+                      new TextBoxButtonHandler() {
 
-            @Override
-            protected void action(final TextBoxBase textBox) {
-                if (ResourceActionPanel.this.session.isAllowed(Action.UPDATE,
-                                                               ResourceActionPanel.this.resourceName)) {
-                    History.newItem(ResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
-                }
-                else {
-                    History.newItem(ResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
-                }
-                textBox.setText("");
-            }
+                          @Override
+                          protected void action(final TextBoxBase textBox) {
+                              if (ResourceActionPanel.this.session.isAllowed(Action.UPDATE,
+                                                                             ResourceActionPanel.this.resourceName)) {
+                                  History.newItem(ResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
+                              }
+                              else {
+                                  History.newItem(ResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
+                              }
+                              textBox.setText("");
+                          }
 
-        });
+                      });
 
-        this.fresh = button("new", this.newHandler);
-        this.fresh.addStyleName("break");
-        this.create = button("create", this.createHandler);
-        this.create.addStyleName("break");
-        this.reload = button("reload", this.reloadHandler);
-        this.edit = button("edit", this.editHandler);
-        this.save = button("save", this.saveHandler);
-        this.delete = button("delete", this.destroyHandler);
+        final ComplexPanel newCreate = new FlowPanel();
+        newCreate.setStyleName("new-create");
+        this.fresh = button(newCreate, "new", this.newHandler);
+        this.create = button(newCreate, "create", this.createHandler);
+        final ComplexPanel actionButtons = new FlowPanel();
+        actionButtons.setStyleName("action-buttons");
+        this.reload = button(actionButtons, "reload", this.reloadHandler);
+        this.edit = button(actionButtons, "edit", this.editHandler);
+        this.save = button(actionButtons, "save", this.saveHandler);
+        this.delete = button(actionButtons, "delete", this.destroyHandler);
+
+        if (factory.keyName() != null) { // unless it is a singleton resource
+            add(search);
+            add(getBy);
+        }
+        add(newCreate);
+        add(actionButtons);
     }
 
-    private TextBox boxWithButton(final String name,
+    private TextBox boxWithButton(final ComplexPanel panel, final String name,
             final TextBoxButtonHandler handler) {
         final TextBox box = new TextBox();
         box.setStyleName(name + "-box");
@@ -196,19 +213,19 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                 name,
                 this.getText);
         button.add(handler);
-        add(box);
-        add(button);
+        panel.add(box);
+        panel.add(button);
         return box;
     }
 
     protected <T extends ClickHandler & KeyUpHandler> Button button(
-            final String name, final T handler) {
+            final ComplexPanel panel, final String name, final T handler) {
         final Button button = new TranslatableButton(name, this.getText);
         button.ensureDebugId(this.resourceName + "-" + name);
         button.setVisible(false);
         button.addClickHandler(handler);
         button.addKeyUpHandler(handler);
-        add(button);
+        panel.add(button);
         return button;
     }
 

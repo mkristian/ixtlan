@@ -35,7 +35,7 @@ class PhraseActions extends ResourceActionPanel<Phrase> {
                 resource.save();
             }
         };
-        this.approve = button("approve", this.approveHandler);
+        this.approve = button(this, "approve", this.approveHandler);
     }
 
     void setLocale(final String locale) {

@@ -21,45 +21,50 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
         ConfigurationPanel(final GetTextController getTextController,
                 final ResourceMutator<Configuration> mutator) {
             super(getTextController, mutator);
-            addTranslatableLabel("idle session timeout (in minutes)");
-            add(new TextBoxMutator<Configuration>(mutator) {
+            add("idle session timeout (in minutes)",
+                new IntegerTextBoxMutator<Configuration>(mutator) {
 
-                @Override
-                public void pull(final Configuration resource) {
-                    setText(resource.idleSessionTimeout + "");
-                }
+                    @Override
+                    public void pull(final Configuration resource) {
+                        setText(resource.idleSessionTimeout + "");
+                    }
 
-                @Override
-                public void push(final Configuration resource) {
-                    resource.idleSessionTimeout = Integer.parseInt(getText());
-                }
-            });
-            addTranslatableLabel("audit log rotation (in days)");
-            add(new TextBoxMutator<Configuration>(mutator) {
+                    @Override
+                    public void push(final Configuration resource) {
+                        resource.idleSessionTimeout = Integer.parseInt(getText());
+                    }
+                },
+                1,
+                Integer.MAX_VALUE);
+            add("audit log rotation (in days)",
+                new IntegerTextBoxMutator<Configuration>(mutator) {
 
-                @Override
-                public void pull(final Configuration resource) {
-                    setText(resource.auditLogRotation + "");
-                }
+                    @Override
+                    public void pull(final Configuration resource) {
+                        setText(resource.auditLogRotation + "");
+                    }
 
-                @Override
-                public void push(final Configuration resource) {
-                    resource.auditLogRotation = Integer.parseInt(getText());
-                }
-            });
-            addTranslatableLabel("email recipients for error notification (comma separated list of emails)");
-            add(new TextBoxMutator<Configuration>(mutator) {
+                    @Override
+                    public void push(final Configuration resource) {
+                        resource.auditLogRotation = Integer.parseInt(getText());
+                    }
+                },
+                1,
+                Integer.MAX_VALUE);
+            add("email recipients for error notification (comma separated list of emails)",
+                new TextBoxMutator<Configuration>(mutator) {
 
-                @Override
-                public void pull(final Configuration resource) {
-                    setText(resource.emailForErrorNotification);
-                }
+                    @Override
+                    public void pull(final Configuration resource) {
+                        setText(resource.emailForErrorNotification);
+                    }
 
-                @Override
-                public void push(final Configuration resource) {
-                    resource.emailForErrorNotification = getText();
-                }
-            });
+                    @Override
+                    public void push(final Configuration resource) {
+                        resource.emailForErrorNotification = getText();
+                    }
+                },
+                254);
         }
     }
 
