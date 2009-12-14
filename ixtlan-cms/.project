@@ -16,12 +16,12 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<name>com.google.gwt.eclipse.core.gwtProjectValidator</name>
 			<arguments>
 			</arguments>
 		</buildCommand>

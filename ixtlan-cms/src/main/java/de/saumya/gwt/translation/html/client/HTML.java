@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
-import de.saumya.gwt.datamapper.client.Repository;
+import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
 import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.Notifications;
@@ -129,6 +129,7 @@ public class HTML implements EntryPoint {
                 userFactory);
         final PhraseFactory phraseFactory = new PhraseFactory(repository,
                 userFactory,
+                localeFactory,
                 translationFactory);
 
         final GetText getText = new GetText(new WordBundleFactory(repository,
