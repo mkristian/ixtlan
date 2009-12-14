@@ -3,13 +3,11 @@ package de.saumya.gwt.session.client.model;
 import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.model.Venue;
-import de.saumya.gwt.session.client.model.VenueFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class VenueTestGwt extends AbstractResourceTestGwt<Venue> {
+public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -19,12 +17,12 @@ public class VenueTestGwt extends AbstractResourceTestGwt<Venue> {
         return "de.saumya.gwt.session.Session";
     }
 
-    private Venue               resource;
+    private Domain              resource;
 
-    private static final String RESOURCE_XML = "<venue>"
+    private static final String RESOURCE_XML = "<domain>"
                                                      + "<id>dhara</id>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                                     + "</venue>";
+                                                     + "</domain>";
 
     @Override
     protected String resourceNewXml() {
@@ -33,7 +31,7 @@ public class VenueTestGwt extends AbstractResourceTestGwt<Venue> {
     }
 
     @Override
-    protected Resource<Venue> resourceSetUp() {
+    protected Resource<Domain> resourceSetUp() {
         this.resource = this.factory.newResource();
 
         this.resource.id = "dhara";
@@ -64,8 +62,8 @@ public class VenueTestGwt extends AbstractResourceTestGwt<Venue> {
     }
 
     @Override
-    protected ResourceFactory<Venue> factorySetUp() {
-        return new VenueFactory(this.repository);
+    protected ResourceFactory<Domain> factorySetUp() {
+        return new DomainFactory(this.repository, this.notification);
     }
 
     @Override
@@ -90,7 +88,7 @@ public class VenueTestGwt extends AbstractResourceTestGwt<Venue> {
 
     @Override
     protected String resourcesXml() {
-        return "<venues>" + resource1Xml() + resource2Xml() + "</venues>";
+        return "<domains>" + resource1Xml() + resource2Xml() + "</domains>";
     }
 
     @Override

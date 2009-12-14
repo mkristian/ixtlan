@@ -8,10 +8,10 @@ import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 
-public class Venue extends Resource<Venue> {
+public class Domain extends Resource<Domain> {
 
-    Venue(final Repository repository, final ResourceFactory<Venue> factory) {
-        super(repository, factory);
+    Domain(final Repository repository, final ResourceFactory<Domain> factory) {
+        super(repository, factory, null);
     }
 
     public String    id;
