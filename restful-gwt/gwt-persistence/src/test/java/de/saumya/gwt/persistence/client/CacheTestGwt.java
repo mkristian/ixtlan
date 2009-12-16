@@ -33,10 +33,11 @@ public class CacheTestGwt extends PersistenceTestGwt {
     }
 
     public void testGet() {
+        this.repository.addXmlResponse(RESOURCE_XML);
         final Sample second = this.factory.get(123, null);
 
         assertSame(this.sample, second);
-        assertEquals(State.TO_BE_LOADED, second.state);
+        assertEquals(State.UP_TO_DATE, second.state);
     }
 
     public void testGetAll() {

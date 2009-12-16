@@ -14,36 +14,32 @@ import de.saumya.gwt.persistence.client.Resource.State;
 
 public abstract class ResourceFactory<E extends Resource<E>> {
 
-    private final Map<String, E>              cache                  = new HashMap<String, E>();
+    private final Map<String, E>              cache = new HashMap<String, E>();
 
     protected final Repository                repository;
     private final ResourceNotification        notification;
 
-    protected final ResourceChangeListener<E> resourceChangeListener = new ResourceChangeListener<E>() {
-
-                                                                         @Override
-                                                                         public void onChange(
-                                                                                 final E resource,
-                                                                                 final String message) {
-                                                                             ResourceFactory.this.notification.info(message,
-                                                                                                                    resource);
-                                                                         }
-
-                                                                         @Override
-                                                                         public void onError(
-                                                                                 final E resource,
-                                                                                 final int status,
-                                                                                 final String statusText) {
-                                                                             ResourceFactory.this.notification.error(status,
-                                                                                                                     statusText,
-                                                                                                                     resource);
-                                                                         }
-                                                                     };
+    protected final ResourceChangeListener<E> resourceChangeListener;
 
     public ResourceFactory(final Repository repository,
             final ResourceNotification notification) {
         this.repository = repository;
         this.notification = notification;
+        this.resourceChangeListener = new ResourceChangeListener<E>() {
+
+            @Override
+            public void onChange(final E resource, final String message) {
+                ResourceFactory.this.notification.info(message, resource);
+            }
+
+            @Override
+            public void onError(final E resource, final int status,
+                    final String statusText) {
+                ResourceFactory.this.notification.error(status,
+                                                        statusText,
+                                                        resource);
+            }
+        };
     }
 
     abstract public String storageName();

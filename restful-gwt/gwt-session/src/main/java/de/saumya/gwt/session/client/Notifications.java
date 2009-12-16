@@ -14,5 +14,4 @@ public interface Notifications {
     void clear();
 
     void showAll();
-
 }

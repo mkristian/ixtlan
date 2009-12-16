@@ -42,8 +42,9 @@ public class SingletonTestGwt extends PersistenceTestGwt {
 
     public static class SingletonFactory extends ResourceFactory<Singleton> {
 
-        public SingletonFactory(final Repository repository) {
-            super(repository, null);
+        public SingletonFactory(final Repository repository,
+                final ResourceNotification notification) {
+            super(repository, notification);
         }
 
         @Override
@@ -76,7 +77,8 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     @Override
     protected void gwtSetUp() {
         this.repository = new RepositoryMock();
-        this.factory = new SingletonFactory(this.repository);
+        this.factory = new SingletonFactory(this.repository,
+                new GWTResourceNotification());
         this.singleton = this.factory.newResource();
 
         this.singleton.name = "god";
@@ -88,10 +90,11 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     }
 
     public void testGet() {
+        this.repository.addXmlResponse(RESOURCE_XML);
         final Singleton second = this.factory.get(null);
 
         assertSame(this.singleton, second);
-        assertEquals(State.TO_BE_LOADED, second.state);
+        assertEquals(State.UP_TO_DATE, second.state);
     }
 
     public void testDelete() {

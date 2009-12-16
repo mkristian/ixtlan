@@ -7,11 +7,14 @@ import java.sql.Timestamp;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -73,10 +76,10 @@ public class PopupNotifications implements Notifications, ResourceNotification {
         }
     }
 
-    private final Queue<Note>  notes   = new PriorityQueue<Note>();
-    private final ComplexPanel all     = new VerticalPanel();
-    private final PopupPanel   popup   = new PopupPanel(true, false); // autohide,not_modal
-    private final HTML         message = new HTML();
+    private final Queue<Note>  notes      = new PriorityQueue<Note>();
+    private final ComplexPanel all        = new VerticalPanel();
+    private final PopupPanel   popup      = new PopupPanel(true, false); // autohide,not_modal
+    private final HTML         message    = new HTML();
     {
         this.popup.add(this.message);
         final CloseHandler<PopupPanel> closeHandler = new CloseHandler<PopupPanel>() {
@@ -88,6 +91,16 @@ public class PopupNotifications implements Notifications, ResourceNotification {
             }
         };
         this.popup.addCloseHandler(closeHandler);
+    }
+    private final Label        closeLabel = new Label("(X) close");
+    {
+        this.closeLabel.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(final ClickEvent event) {
+                PopupNotifications.this.popup.hide();
+            }
+        });
     }
 
     @Override
@@ -137,8 +150,13 @@ public class PopupNotifications implements Notifications, ResourceNotification {
             noteLabel.setStyleName(note.isInfo ? "info-note" : "warn-note");
             this.all.add(noteLabel);
         }
+        this.all.add(this.closeLabel);
         this.popup.setPopupPosition(0, Window.getScrollTop());
         this.popup.show();
+    }
+
+    protected Label closeLabel() {
+        return this.closeLabel;
     }
 
     @Override
@@ -154,4 +172,5 @@ public class PopupNotifications implements Notifications, ResourceNotification {
         // TODO make the resource clickable inside the text
         info(message + " " + resource.display());
     }
+
 }
