@@ -8,7 +8,7 @@ module Ixtlan
       private
       
       def locale_guard
-
+        # TODO
       end
 
       public
@@ -22,16 +22,25 @@ module Ixtlan
       def create
         phrase = params[:phrase]
 
-        locale = LOCALE.get!(phrase.delete(:locale))
+        # load the locale and delete the locale parameter array
+        locale = LOCALE.get!(phrase.delete(:locale)[:code])
 
         if(TEXT.count(:version => nil, :code => phrase[:code], :locale => locale) == 1)
-          raise "TODO precondition failed"
+          logger.warn "precondition failed: " + phrase.inspect
+          # mimic created action
+          render :xml => TEXT.first(:version => nil, :code => phrase[:code], :locale => locale).to_xml, :status => :created
+          return
         end
 
         phrase[:text] ||= phrase.delete(:current_text)
-        phrase[:locale] = locale
 
         @text = TEXT.new(phrase)
+        # set the missing attributes
+        @text.locale = locale
+
+        #TODO once the bootstrap works as an action from within the GUI
+        # the User.first becomes obsolete
+        @text.current_user = current_user || User.first
 
         respond_to do |format|
           if @text.save
