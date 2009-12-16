@@ -23,6 +23,10 @@ import de.saumya.gwt.session.client.model.User;
 
 public class Session {
 
+    public enum Action {
+        CREATE, SHOW, INDEX, UPDATE, DESTROY
+    }
+
     class SessionTimer extends Timer {
 
         int             timeout   = 5;
@@ -81,6 +85,8 @@ public class Session {
             public void onChange(final Configuration resource,
                     final String message) {
                 Session.this.timer.timeout = resource.idleSessionTimeout;
+                GWT.log("set timeout to " + resource.idleSessionTimeout
+                        + " minutes", null);
             }
 
             @Override
@@ -174,7 +180,6 @@ public class Session {
                 if (resource.user.login.equals(username)) {
                     if (resource.isUptodate()) {
                         doLogin(resource);
-                        GWT.log(resource.toString(), null);
                         Session.this.repository.setAuthenticationToken(resource.token);
                     }
                 }
@@ -204,10 +209,6 @@ public class Session {
         this.authentication.destroy();
         this.authentication = null;
         fireLoggedOut();
-    }
-
-    public enum Action {
-        CREATE, SHOW, INDEX, UPDATE, DESTROY
     }
 
     public boolean isAllowed(final Action action, final String resourceName) {

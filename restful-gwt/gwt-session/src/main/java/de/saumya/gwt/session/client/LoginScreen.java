@@ -11,6 +11,7 @@ public interface LoginScreen {
 
     ButtonBase loginButton();
 
+    // TODO should be just an component and not expose by the loginscreen
     Notifications notifications();
 
     void setVisible(boolean visible);
