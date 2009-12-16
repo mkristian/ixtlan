@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Panel;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.session.client.AuthenticationFactory;
@@ -16,7 +16,6 @@ import de.saumya.gwt.session.client.model.Configuration;
 import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
-import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.translation.common.client.GetText;
@@ -74,14 +73,16 @@ public class GUIContainer {
                                                                    new AuthenticationFactory(this.repository,
                                                                            this.notifications,
                                                                            this.userFactory),
-                                                                   this.permissionFactory);
+                                                                   this.permissionFactory,
+                                                                   this.configurationFactory);
 
     public final GetText              getText              = new GetText(new WordBundleFactory(this.repository,
                                                                    this.notifications,
                                                                    this.wordFactory),
                                                                    this.wordFactory,
                                                                    this.bookFactory,
-                                                                   this.phraseFactory);
+                                                                   this.phraseFactory,
+                                                                   this.localeFactory);
 
     public final GetTextController    getTextController    = new GetTextController(this.getText,
                                                                    this.session);
@@ -101,32 +102,29 @@ public class GUIContainer {
                                                                    new ResourceMutator<Configuration>(),
                                                                    this.getTextController,
                                                                    this.session);
+    public final SessionPanel         sessionPanel         = new SessionPanel(this.getTextController,
+                                                                   this.getText,
+                                                                   this.session,
+                                                                   this.notifications,
+                                                                   this.localeFactory);
+    public final ScreenController     screenController     = new ScreenController(this.sessionPanel,
+                                                                   this.getTextController,
+                                                                   this.session);
+    public final LoginPanel           loginPanel           = new LoginPanel(this.notifications);
 
-    public GUIContainer() {
-    }
-
-    public ScreenController build(final String localeCode) {
-        final Locale locale = this.localeFactory.newResource();
-        locale.code = localeCode;
-        final SessionPanel sessionPanel = new SessionPanel(this.getTextController,
-                this.getText,
-                this.session,
-                locale);
-        final ScreenController screenController = new ScreenController(sessionPanel,
-                this.getTextController,
-                this.session);
-
+    public GUIContainer(final Panel panel) {
         // add the screens to the screen controller which hangs them into a
         // tab-panel
-        screenController.addScreen(this.configurationScreen, "configurations");
-        screenController.addScreen(this.phraseBookScreen, "phrase_book");
+        this.screenController.addScreen(this.configurationScreen,
+                                        "configurations");
+        this.screenController.addScreen(this.phraseBookScreen, "phrase_book");
 
-        final LoginPanel loginPanel = new LoginPanel(this.notifications);
-        new SessionController(this.session, loginPanel, sessionPanel);
+        // activate the session controller
+        new SessionController(this.session, this.loginPanel, this.sessionPanel);
 
-        RootPanel.get().add(loginPanel);
-        RootPanel.get().add(sessionPanel);
-
-        return screenController;
+        // add the components
+        // TODO use StackPanel instead
+        panel.add(this.loginPanel);
+        panel.add(this.sessionPanel);
     }
 }

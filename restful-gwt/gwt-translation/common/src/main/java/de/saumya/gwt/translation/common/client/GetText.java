@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.model.Locale;
+import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
@@ -28,78 +29,76 @@ public class GetText {
 
     private final PhraseFactory                      phraseFactory;
 
-    private final List<Translatable>                 translatables            = new ArrayList<Translatable>();
+    private final List<Translatable>                 translatables   = new ArrayList<Translatable>();
 
-    private Map<String, Word>                        wordMap                  = new HashMap<String, Word>();
+    private Map<String, Word>                        wordMap         = new HashMap<String, Word>();
 
-    private Map<String, Phrase>                      phraseMap                = new HashMap<String, Phrase>();
+    private Map<String, Phrase>                      phraseMap       = new HashMap<String, Phrase>();
 
-    private final Map<String, Map<String, Word>>     wordCache                = new HashMap<String, Map<String, Word>>();
+    private final Map<String, Map<String, Word>>     wordCache       = new HashMap<String, Map<String, Word>>();
 
-    private final Map<String, Map<String, Phrase>>   phraseCache              = new HashMap<String, Map<String, Phrase>>();
+    private final Map<String, Map<String, Phrase>>   phraseCache     = new HashMap<String, Map<String, Phrase>>();
 
-    private boolean                                  isInTranslation          = false;
+    private boolean                                  isInTranslation = false;
 
     private Locale                                   locale;
-    private final ResourceChangeListener<WordBundle> wordBundleListener       = new ResourceChangeListener<WordBundle>() {
+    private final ResourceChangeListener<WordBundle> wordBundleListener;
 
-                                                                                  @Override
-                                                                                  public void onChange(
-                                                                                          final WordBundle resource,
-                                                                                          final String message) {
-                                                                                      for (final Word word : resource.words) {
-                                                                                          GetText.this.wordMap.put(word.code,
-                                                                                                                   word);
-                                                                                      }
-                                                                                      GetText.this.wordCache.put(GetText.this.locale.code,
-                                                                                                                 GetText.this.wordMap);
-                                                                                      resetTranslatables();
-                                                                                  }
-
-                                                                                  @Override
-                                                                                  public void onError(
-                                                                                          final WordBundle resource,
-                                                                                          final int status,
-                                                                                          final String statusText) {
-                                                                                      // nothing
-                                                                                      // to
-                                                                                      // do
-                                                                                  }
-                                                                              };
-
-    private final ResourceChangeListener<PhraseBook> phraseBookChangeListener = new ResourceChangeListener<PhraseBook>() {
-
-                                                                                  @Override
-                                                                                  public void onChange(
-                                                                                          final PhraseBook resource,
-                                                                                          final String message) {
-                                                                                      for (final Phrase phrase : resource.phrases) {
-                                                                                          GetText.this.phraseMap.put(phrase.code,
-                                                                                                                     phrase);
-                                                                                      }
-                                                                                      GetText.this.phraseCache.put(resource.locale,
-                                                                                                                   GetText.this.phraseMap);
-                                                                                      resetTranslatables();
-                                                                                  }
-
-                                                                                  @Override
-                                                                                  public void onError(
-                                                                                          final PhraseBook resource,
-                                                                                          final int status,
-                                                                                          final String statusText) {
-                                                                                      // nothing
-                                                                                      // to
-                                                                                      // do
-                                                                                  }
-                                                                              };
+    private final ResourceChangeListener<PhraseBook> phraseBookChangeListener;
 
     public GetText(final WordBundleFactory bundleFactory,
             final WordFactory wordFactory, final PhraseBookFactory bookFactory,
-            final PhraseFactory phraseFactory) {
+            final PhraseFactory phraseFactory, final LocaleFactory localeFactory) {
         this.bundleFactory = bundleFactory;
         this.bookFactory = bookFactory;
         this.wordFactory = wordFactory;
         this.phraseFactory = phraseFactory;
+        this.locale = localeFactory.defaultLocale();
+        this.wordBundleListener = new ResourceChangeListener<WordBundle>() {
+
+            @Override
+            public void onChange(final WordBundle resource, final String message) {
+                for (final Word word : resource.words) {
+                    GetText.this.wordMap.put(word.code, word);
+                }
+                final Locale locale = localeFactory.get(resource.locale, null);
+                for (final Word word : GetText.this.wordMap.values()) {
+                    if (word.isNew()) {
+                        final Phrase phrase = phraseFactory.newResource();
+                        phrase.code = word.code;
+                        phrase.currentText = word.code;
+                        phrase.locale = locale;
+                        phrase.save();
+                        GWT.log(phrase.toString(), null);
+                        // TODO do I really need to do this ??
+                        GetText.this.phraseMap.put(word.code, phrase);
+                    }
+                }
+                resetTranslatables();
+            }
+
+            @Override
+            public void onError(final WordBundle resource, final int status,
+                    final String statusText) {
+                // nothing to do
+            }
+        };
+        this.phraseBookChangeListener = new ResourceChangeListener<PhraseBook>() {
+
+            @Override
+            public void onChange(final PhraseBook resource, final String message) {
+                for (final Phrase phrase : resource.phrases) {
+                    GetText.this.phraseMap.put(phrase.code, phrase);
+                }
+                resetTranslatables();
+            }
+
+            @Override
+            public void onError(final PhraseBook resource, final int status,
+                    final String statusText) {
+                // nothing to do
+            }
+        };
     }
 
     private void loadWordBundle(final Locale locale) {
@@ -147,11 +146,10 @@ public class GetText {
     public Word getWord(final String code) {
         Word word = this.wordMap.get(code);
         if (word == null) {
+            // put the default in place into all words are loaded
             word = this.wordFactory.newResource();
             word.code = code;
             word.text = code;
-            // word.l
-            word.save();
             this.wordMap.put(code, word);
         }
         return word;

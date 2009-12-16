@@ -51,7 +51,7 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                 },
                 1,
                 Integer.MAX_VALUE);
-            add("email recipients for error notification (comma separated list of emails)",
+            add("email recipients for error notification (comma separated list)",
                 new TextBoxMutator<Configuration>(mutator) {
 
                     @Override

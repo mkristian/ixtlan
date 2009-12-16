@@ -29,4 +29,6 @@ public class WordFactory extends ResourceFactory<Word> {
         return new Word(this.repository, this);
     }
 
+    // TODO you can NOT save or delete this resource !!
+
 }
