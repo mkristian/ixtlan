@@ -12,6 +12,8 @@ import de.saumya.gwt.persistence.client.Resource;
 
 public class Locale extends Resource<Locale> {
 
+    public static final String DEFAULT_CODE = "DEFAULT";
+
     Locale(final Repository repository, final LocaleFactory factory) {
         super(repository, factory, null);
     }
@@ -46,4 +48,5 @@ public class Locale extends Resource<Locale> {
     public String display() {
         return this.code;
     }
+
 }

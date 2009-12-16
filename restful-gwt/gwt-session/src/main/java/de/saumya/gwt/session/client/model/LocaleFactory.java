@@ -29,11 +29,19 @@ public class LocaleFactory extends ResourceFactory<Locale> {
         return new Locale(this.repository, this);
     }
 
-    Locale defaultLocale() {
-        return get("DEFAULT", null);
+    public Locale defaultLocale() {
+        final Locale locale = get("DEFAULT", null);
+        if (locale.code == null) {
+            locale.code = "DEFAULT";
+        }
+        return locale;
     }
 
-    Locale allLocale() {
-        return get("*", null);
+    public Locale allLocale() {
+        final Locale locale = get("ALL", null);
+        if (locale.code == null) {
+            locale.code = "ALL";
+        }
+        return locale;
     }
 }
