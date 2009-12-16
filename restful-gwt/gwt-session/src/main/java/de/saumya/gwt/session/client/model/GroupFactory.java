@@ -7,14 +7,14 @@ import de.saumya.gwt.persistence.client.ResourceNotification;
 public class GroupFactory extends ResourceFactory<Group> {
 
     private final LocaleFactory localeFactory;
-    private final DomainFactory  venueFactory;
+    private final DomainFactory  domainFactory;
 
     public GroupFactory(final Repository repository,
             final ResourceNotification notification,
-            final LocaleFactory localeFactory, final DomainFactory venueFactory) {
+            final LocaleFactory localeFactory, final DomainFactory domainFactory) {
         super(repository, notification);
         this.localeFactory = localeFactory;
-        this.venueFactory = venueFactory;
+        this.domainFactory = domainFactory;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class GroupFactory extends ResourceFactory<Group> {
         return new Group(this.repository,
                 this,
                 this.localeFactory,
-                this.venueFactory);
+                this.domainFactory);
     }
 
 }

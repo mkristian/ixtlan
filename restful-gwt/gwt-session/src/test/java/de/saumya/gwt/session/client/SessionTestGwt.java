@@ -6,6 +6,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.RepositoryMock;
 import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.Group;
 import de.saumya.gwt.session.client.model.GroupFactory;
@@ -72,7 +73,10 @@ public class SessionTestGwt extends GWTTestCase {
                 new AuthenticationFactory(this.repository,
                         this.notification,
                         this.userFactory),
-                permissionFactory) {
+                permissionFactory,
+                new ConfigurationFactory(this.repository,
+                        this.notification,
+                        this.userFactory)) {
 
             @Override
             void login(final String username, final String password) {

@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
 import de.saumya.gwt.session.client.model.LocaleFactory;
@@ -127,7 +128,8 @@ public class SessionTest implements EntryPoint {
                 groupFactory);
         new SessionController(new Session(repository,
                 new AuthenticationFactory(repository, notification, userFactory),
-                new PermissionFactory(repository, notification, roleFactory)),
+                new PermissionFactory(repository, notification, roleFactory),
+                new ConfigurationFactory(repository, notification, userFactory)),
                 loginPanel,
                 sessionPanel);
 

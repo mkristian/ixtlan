@@ -14,20 +14,20 @@ import de.saumya.gwt.persistence.client.Resources;
 public class Group extends ResourceWithID<Group> {
 
     private final LocaleFactory localeFactory;
-    private final DomainFactory  venueFactory;
+    private final DomainFactory domainFactory;
 
     protected Group(final Repository repository, final GroupFactory factory,
-            final LocaleFactory localeFactory, final DomainFactory venueFactory) {
+            final LocaleFactory localeFactory, final DomainFactory domainFactory) {
         super(repository, factory, null);
         this.localeFactory = localeFactory;
-        this.venueFactory = venueFactory;
+        this.domainFactory = domainFactory;
     }
 
     public String            name;
 
     public Timestamp         createdAt;
 
-    public Resources<Domain>  venues;
+    public Resources<Domain> domains;
     public Resources<Locale> locales;
 
     @Override
@@ -35,7 +35,7 @@ public class Group extends ResourceWithID<Group> {
         super.appendXml(buf);
         append(buf, "name", this.name);
         append(buf, "locales", this.locales);
-        append(buf, "venues", this.venues);
+        append(buf, "domains", this.domains);
         append(buf, "created_at", this.createdAt);
     }
 
@@ -44,7 +44,7 @@ public class Group extends ResourceWithID<Group> {
         super.fromXml(root);
         this.name = getString(root, "name");
         this.locales = this.localeFactory.getChildResources(root, "locales");
-        this.venues = this.venueFactory.getChildResources(root, "venues");
+        this.domains = this.domainFactory.getChildResources(root, "domains");
         this.createdAt = getTimestamp(root, "created_at");
     }
 
@@ -52,8 +52,8 @@ public class Group extends ResourceWithID<Group> {
     public void toString(final StringBuffer buf) {
         super.toString(buf);
         buf.append(":name => ").append(this.name);
-        if (this.venues != null) {
-            buf.append(", :venues => ").append(this.venues);
+        if (this.domains != null) {
+            buf.append(", :domains => ").append(this.domains);
         }
         if (this.locales != null) {
             buf.append(", :locales => ").append(this.locales);

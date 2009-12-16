@@ -23,7 +23,7 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
                                                      + "<id>1</id>"
                                                      + "<name>root</name>"
                                                      + "<locales></locales>"
-                                                     + "<venues></venues>"
+                                                     + "<domains></domains>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                                      + "</group>";
 
@@ -91,12 +91,12 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "</locales>"
-                                            + "<venues>"
-                                            + "<venue>"
+                                            + "<domains>"
+                                            + "<domain>"
                                             + "<id>dvara</id>"
                                             + "<created_at>2007-07-09 17:14:48.0</created_at>"
-                                            + "</venue>"
-                                            + "</venues>"
+                                            + "</domain>"
+                                            + "</domains>"
                                             + "<created_at>2005-07-09 17:14:48.0</created_at>"
                                             + "</group>";
 

@@ -15,6 +15,8 @@ import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.Resources;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
+import de.saumya.gwt.session.client.model.Configuration;
+import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.session.client.model.Group;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.User;
@@ -23,9 +25,9 @@ public class Session {
 
     class SessionTimer extends Timer {
 
-        private final int timeout   = 5;
-        private int       countDown = this.timeout;
-        private boolean   idle      = true;
+        int             timeout   = 5;
+        private int     countDown = this.timeout;
+        private boolean idle      = true;
 
         public SessionTimer() {
             Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
@@ -50,23 +52,43 @@ public class Session {
                 }
             }
             else {
-                this.countDown = this.timeout * 6 - 1;
+                this.countDown = this.timeout * 6 - 4;
                 this.idle = true;
             }
         }
     }
 
+    // keep it package scope for testing
     Authentication                                           authentication = null;
-    final Timer                                              timer          = new SessionTimer();
+    final SessionTimer                                       timer          = new SessionTimer();
     final AuthenticationFactory                              authenticationFactory;
+
+    private final ConfigurationFactory                       configurationFactory;
+    private final ResourceChangeListener<Configuration>      resourceChangeListener;
     private final Map<String, Map<String, Collection<Role>>> permissions;
     private final Repository                                 repository;
 
     public Session(final Repository repository,
             final AuthenticationFactory authenticationFactory,
-            final PermissionFactory permissionFactory) {
+            final PermissionFactory permissionFactory,
+            final ConfigurationFactory configurationFactory) {
         this.repository = repository;
         this.authenticationFactory = authenticationFactory;
+        this.configurationFactory = configurationFactory;
+        this.resourceChangeListener = new ResourceChangeListener<Configuration>() {
+
+            @Override
+            public void onChange(final Configuration resource,
+                    final String message) {
+                Session.this.timer.timeout = resource.idleSessionTimeout;
+            }
+
+            @Override
+            public void onError(final Configuration resource, final int status,
+                    final String statusText) {
+            }
+        };
+
         this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
@@ -130,6 +152,8 @@ public class Session {
         this.authentication = authentication;
         this.timer.scheduleRepeating(10000);
         GWT.log("login of " + authentication.user.login, null);
+        // load configuration and reset the timeout of the timer
+        this.configurationFactory.get(this.resourceChangeListener);
         fireSuccessfulLogin();
     }
 
@@ -145,7 +169,8 @@ public class Session {
         authentication.addResourceChangeListener(new ResourceChangeListener<Authentication>() {
 
             @Override
-            public void onChange(final Authentication resource, String message) {
+            public void onChange(final Authentication resource,
+                    final String message) {
                 if (resource.user.login.equals(username)) {
                     if (resource.isUptodate()) {
                         doLogin(resource);
@@ -159,7 +184,8 @@ public class Session {
             }
 
             @Override
-            public void onError(final Authentication resource, final int status, String statusText) {
+            public void onError(final Authentication resource,
+                    final int status, final String statusText) {
                 if (status < 500) {
                     doAccessDenied();
                 }
