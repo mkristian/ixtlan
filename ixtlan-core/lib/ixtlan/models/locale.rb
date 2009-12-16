@@ -16,6 +16,18 @@ module Ixtlan
       
       timestamps :created_at
 
+      def parent
+        c = attribute_get(:code)
+        case c.size
+        when 2
+          self.model.default
+        when 5
+          self.model.get!(code[0,2])
+        else
+          nil
+        end
+      end
+
       def self.default
         get(DEFAULT) || create(:code => DEFAULT)
       end
