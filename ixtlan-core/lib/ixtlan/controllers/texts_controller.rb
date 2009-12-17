@@ -35,12 +35,10 @@ module Ixtlan
         phrase[:text] ||= phrase.delete(:current_text)
 
         @text = TEXT.new(phrase)
+
         # set the missing attributes
         @text.locale = locale
-
-        #TODO once the bootstrap works as an action from within the GUI
-        # the User.first becomes obsolete
-        @text.current_user = current_user || User.first
+        @text.current_user = current_user
 
         respond_to do |format|
           if @text.save
