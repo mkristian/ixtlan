@@ -2,6 +2,10 @@
 
 * stay logged in when deleting a resource
 
+* lot's of work to get restful-gwt version 0.2.1 working with login, and basic i18n = dictonory gets loaded after login or in case the a i18n entry is missing a new one gets created if the permissions allow it
+
+* the rails template had a lot of version problems after a major refactoring, so lot's of little fixes there
+
 === 0.2.0 / 2009-12-07
 
 * intial import
