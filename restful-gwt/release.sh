@@ -9,7 +9,7 @@ fi
 find -name "pom.xml" | xargs sed -i s/${SNAPSHOT}-SNAPSHOT/${VERSION}/
 find -name "pom.xml" | xargs git add
 git ci -m "release of version ${VERSION}" || exit
-git tag restful${VERSION}
+git tag restful_${VERSION}
 
 mvn clean deploy
 
