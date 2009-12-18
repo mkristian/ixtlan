@@ -43,6 +43,10 @@ lib/ixtlan/optimistic_persistence_module.rb
 lib/ixtlan/optimistic_persistence_validation.rb
 lib/ixtlan/error_notifier/error_notification.rhtml
 lib/ixtlan/controllers/texts_controller.rb
+lib/ixtlan/controllers/permissions_controller.rb
+lib/ixtlan/controllers/authentications_controller.rb
+lib/ixtlan/controllers/configurations_controller.rb
+lib/ixtlan/controllers/word_bundles_controller.rb
 lib/ixtlan/guard.rb
 lib/ixtlan/rails/audit.rb
 lib/ixtlan/rails/error_handling.rb
