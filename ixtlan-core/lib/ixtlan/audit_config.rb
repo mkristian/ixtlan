@@ -1,5 +1,3 @@
-require 'ixtlan/audit'
-
 Logging.init :debug, :info, :warn, :error, :fatal unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
 
 module Ixtlan
