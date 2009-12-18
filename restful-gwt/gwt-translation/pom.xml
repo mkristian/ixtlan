@@ -6,11 +6,10 @@
   <parent>
     <groupId>de.saumya.gwt</groupId>
     <artifactId>gwt</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.2.1</version>
   </parent>
   <artifactId>translation</artifactId>
   <packaging>pom</packaging>
-  <version>0.3.0-SNAPSHOT</version>
   <name>GWT translation parent</name>
   <dependencies>
     <dependency>
