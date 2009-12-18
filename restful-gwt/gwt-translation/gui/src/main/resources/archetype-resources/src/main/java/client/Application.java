@@ -10,8 +10,7 @@ public class Application implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        final GUIContainer container = new GUIContainer();
-	// build the ixtlan stuff with default locale "en"
-        final ScreenController screenController = container.build("en");
+        final GUIContainer container = new GUIContainer(RootPanel.get());
+        final ScreenController screenController = container.screenController;
     }
 }
