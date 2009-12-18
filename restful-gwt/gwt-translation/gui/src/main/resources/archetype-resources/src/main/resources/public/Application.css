@@ -86,15 +86,82 @@ margin-left: .2em;
 width: 100%
 }
 .header-panel {
+clear: both;
 float:right;
+margin-right: 4.5%;
 }
 .header-panel div {
 display:inline;
+}.action-panel {
+margin-left:1.2%;
+margin-right:2em;
 }
-.action-panel {
-float: left;
+.action-panel * {
+float:left;
+}
+.action-panel div.gwt-Label {
+color:darkBlue;
+display:inline;
+font-weight:bold;
+font-size:1.1em;
+}
+.action-panel input {
+margin-left:0.5em;
+margin-right:0.5em;
+}
+.action-panel .new-create {
+clear:both;
 }
 .screen table {
 margin-top: .5em;
 clear: both;
+}
+.resource-panel {
+margin-top: 1em;
+clear: both;
+}
+.resource-panel > div {
+float: left;
+width: 30%;
+margin-bottom: .5em;
+margin-right: 1%;
+margin-left: 1%;
+border: solid white 1px;
+}
+.resource-panel > div.big-box {
+width: 62.2%
+}
+.resource-panel > div input, .resource-panel > div textarea {
+width:100%;
+}
+.is-ok, .is-error{
+float: right;
+}
+.is-ok {
+color: darkgreen;
+}
+.is-error{
+color: darkred;
+}
+.resource-panel > div.has-errors{
+border: solid red 1px;
+}
+.resource-panel input[disabled]{
+color: black;
+}
+.screen .loading {
+background-color:lightgoldenRodYellow;
+border:1px solid darkgoldenrod;
+color:darkgoldenrod;
+margin-left:35%;
+margin-right:35%;
+padding-left:5%;
+width:30%;
+padding-right:5%;
+padding-top:.5em;
+padding-bottom:.5em;
+overflow:auto;;
+position:absolute;
+top:3em;
+opacity:.9;
 }

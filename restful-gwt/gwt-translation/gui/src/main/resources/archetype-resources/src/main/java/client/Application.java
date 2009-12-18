@@ -1,7 +1,7 @@
 package ${package}.client;
 
-
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import de.saumya.gwt.translation.common.client.route.ScreenController;
 import de.saumya.gwt.translation.gui.client.GUIContainer;
