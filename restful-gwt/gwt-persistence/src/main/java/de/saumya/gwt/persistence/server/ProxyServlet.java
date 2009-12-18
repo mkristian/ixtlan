@@ -23,7 +23,7 @@ public class ProxyServlet extends HttpServlet {
             final HttpServletResponse resp) throws ServletException,
             IOException {
         final URL url = new URL("http://localhost:3000"
-                + req.getRequestURI().replaceFirst("/[a-z.]*/", "/"));
+                + req.getRequestURI().replaceFirst("/[a-zA-Z.]*/", "/"));
         final HttpURLConnection con = ((HttpURLConnection) url.openConnection());
         con.setRequestMethod(req.getMethod());
         con.setDoInput(true);
