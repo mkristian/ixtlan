@@ -1,6 +1,6 @@
 module Ixtlan
   module Models
-    class Word < Text
+    class Word < Ixtlan::Models::Text
 
       alias :to_x :to_xml_document
       def to_xml_document(opts, doc = nil)

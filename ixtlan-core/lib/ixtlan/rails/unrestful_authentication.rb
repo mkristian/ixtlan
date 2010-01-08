@@ -9,7 +9,7 @@ module Rails
     AUTHENTICATION = Object.full_const_get(Ixtlan::Models::AUTHENTICATION)
 
     def authentication_logger
-      @authentication_logger ||= UserLogger.new(Ixtlan::Rails::UnrestfulAuthentication)
+      @authentication_logger ||= Ixtlan::UserLogger.new(Ixtlan::Rails::UnrestfulAuthentication)
     end
 
     protected

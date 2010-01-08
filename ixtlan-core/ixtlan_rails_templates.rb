@@ -1,6 +1,13 @@
 # inspired by http://www.rowtheboat.com/archives/32
 ###################################################
 
+# helper to add middleware
+def middleware(name)
+  log 'middleware', name
+  environment "config.middleware.use '#{name}'"
+end
+
+
 # ixtlan gems
 gem 'ixtlan', :version => '0.2.1'
 
@@ -46,12 +53,6 @@ gsub_file 'test/test_helper.rb', /^[^#]*fixtures/, '  #\0'
 file 'spec/support/datamapper.rb', <<-CODE
 require 'datamapper4rails/rspec'
 CODE
-
-# add middleware
-def middleware(name)
-  log 'middleware', name
-  environment "config.middleware.use '#{name}'"
-end
 
 environment ''
 middleware 'DataMapper::RestfulTransactions'
@@ -232,7 +233,7 @@ route "map.resources :permissions"
 
 # setup word_bundles controller
 file "app/controllers/word_bundles_controller.rb", <<-CODE
-class PermissionsController < ApplicationController
+class WordBundlesController < ApplicationController
   # no guard since everyone needs to load the bundles
   skip_before_filter :guard
   include Ixtlan::Controllers::WordBundlesController
@@ -311,6 +312,7 @@ CODE
 file 'app/controllers/authentications_controller.rb', <<-CODE
 class AuthenticationsController < ApplicationController
   skip_before_filter :guard
+  skip_before_filter :authenticate, :only => :destroy
   include Ixtlan::Controllers::AuthenticationsController
 end
 CODE

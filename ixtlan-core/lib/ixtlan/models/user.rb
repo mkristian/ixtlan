@@ -1,4 +1,4 @@
-require 'digest'
+require 'digest/sha1'
 require 'base64'
 require 'ixtlan/modified_by'
 require 'dm-serializer'

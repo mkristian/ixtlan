@@ -1,9 +1,10 @@
+require 'ixtlan/user_logger'
 module Ixtlan
   module Rails
     module ErrorHandling
 
       def log_user_error(exception)
-        UserLogger.new(Ixtlan::Rails::ErrorHandling).log_action(self, " - #{exception.class} - #{exception.message}")
+        Ixtlan::UserLogger.new(Ixtlan::Rails::ErrorHandling).log_action(self, " - #{exception.class} - #{exception.message}")
         log_error(exception)
       end
 
