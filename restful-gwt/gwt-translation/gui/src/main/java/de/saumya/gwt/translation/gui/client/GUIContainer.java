@@ -28,7 +28,7 @@ import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.model.WordFactory;
 import de.saumya.gwt.translation.common.client.route.ScreenController;
-import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
+import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 
 public class GUIContainer {
     public final Repository           repository           = new Repository();
@@ -89,17 +89,17 @@ public class GUIContainer {
 
     public final PhraseScreen         phraseScreen         = new PhraseScreen(this.getTextController,
                                                                    this.phraseFactory,
-                                                                   new ResourceMutator<Phrase>(),
+                                                                   new ResourceBindings<Phrase>(),
                                                                    this.session);
     public final PhraseBookScreen     phraseBookScreen     = new PhraseBookScreen(this.bookFactory,
                                                                    this.phraseScreen,
-                                                                   new ResourceMutator<PhraseBook>(),
+                                                                   new ResourceBindings<PhraseBook>(),
                                                                    this.getTextController,
                                                                    this.session);
     public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.configurationFactory,
                                                                    // default
                                                                    // mutator
-                                                                   new ResourceMutator<Configuration>(),
+                                                                   new ResourceBindings<Configuration>(),
                                                                    this.getTextController,
                                                                    this.session);
     public final SessionPanel         sessionPanel         = new SessionPanel(this.getTextController,
@@ -117,7 +117,7 @@ public class GUIContainer {
         // tab-panel
         this.screenController.addScreen(this.configurationScreen,
                                         "configurations");
-        this.screenController.addScreen(this.phraseBookScreen, "phrase_book");
+        this.screenController.addScreen(this.phraseScreen, "phrases");
 
         // activate the session controller
         new SessionController(this.session, this.loginPanel, this.sessionPanel);

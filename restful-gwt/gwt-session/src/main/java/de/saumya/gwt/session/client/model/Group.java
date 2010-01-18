@@ -9,7 +9,7 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceWithID;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 
 public class Group extends ResourceWithID<Group> {
 
@@ -27,8 +27,8 @@ public class Group extends ResourceWithID<Group> {
 
     public Timestamp         createdAt;
 
-    public Resources<Domain> domains;
-    public Resources<Locale> locales;
+    public ResourceCollection<Domain> domains;
+    public ResourceCollection<Locale> locales;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
@@ -43,8 +43,8 @@ public class Group extends ResourceWithID<Group> {
     protected void fromXml(final Element root) {
         super.fromXml(root);
         this.name = getString(root, "name");
-        this.locales = this.localeFactory.getChildResources(root, "locales");
-        this.domains = this.domainFactory.getChildResources(root, "domains");
+        this.locales = this.localeFactory.getChildResourceCollection(root, "locales");
+        this.domains = this.domainFactory.getChildResourceCollection(root, "domains");
         this.createdAt = getTimestamp(root, "created_at");
     }
 

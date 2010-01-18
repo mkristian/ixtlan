@@ -13,7 +13,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.model.Configuration;
 import de.saumya.gwt.session.client.model.ConfigurationFactory;
@@ -99,7 +99,7 @@ public class Session {
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
             @Override
-            public void onChange(final Resources<Permission> resources,
+            public void onChange(final ResourceCollection<Permission> resources,
                     final Permission resource) {
                 final Map<String, Collection<Role>> actions;
                 if (Session.this.permissions.containsKey(resource.resource)) {
@@ -115,7 +115,7 @@ public class Session {
             }
 
             @Override
-            public void onLoaded(final Resources<Permission> resources) {
+            public void onLoaded(final ResourceCollection<Permission> resources) {
             }
         });
     }

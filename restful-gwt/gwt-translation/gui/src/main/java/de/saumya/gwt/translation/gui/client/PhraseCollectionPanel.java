@@ -6,7 +6,7 @@ package de.saumya.gwt.translation.gui.client;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.model.Phrase;
@@ -27,7 +27,7 @@ class PhraseCollectionPanel extends ResourceCollectionPanel<Phrase> {
     }
 
     @Override
-    protected final void reset(final Resources<Phrase> resources) {
+    protected final void reset(final ResourceCollection<Phrase> resources) {
         clear();
         if (resources != null) {
             if (this.session.isAllowed(Action.UPDATE,

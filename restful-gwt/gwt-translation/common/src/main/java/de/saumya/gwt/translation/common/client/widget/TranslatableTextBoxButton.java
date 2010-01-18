@@ -9,17 +9,17 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-class TranslatableTextBoxButton extends TranslatableButton {
+public class TranslatableTextBoxButton extends TranslatableButton {
 
     final TextBox box;
 
-    TranslatableTextBoxButton(final TextBox box, final String text,
+    public TranslatableTextBoxButton(final TextBox box, final String text,
             final GetTextController getTextController) {
         super(text, getTextController);
         this.box = box;
     }
 
-    void add(final TextBoxButtonHandler handler) {
+    public void add(final TextBoxButtonHandler handler) {
         addClickHandler(handler);
         addKeyUpHandler(handler);
         this.box.addKeyUpHandler(new KeyUpHandler() {

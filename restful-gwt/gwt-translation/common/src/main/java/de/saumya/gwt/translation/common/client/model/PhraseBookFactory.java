@@ -2,14 +2,14 @@ package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
 
     private final PhraseFactory factory;
 
     public PhraseBookFactory(final Repository repository,
-            final ResourceNotification notification, final PhraseFactory factory) {
+            final ResourceNotifications notification, final PhraseFactory factory) {
         super(repository, notification);
         this.factory = factory;
     }

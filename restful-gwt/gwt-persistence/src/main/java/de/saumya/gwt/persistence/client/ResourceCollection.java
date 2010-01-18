@@ -14,13 +14,13 @@ import com.google.gwt.xml.client.XMLParser;
 import de.saumya.gwt.persistence.client.Resource.State;
 
 @SuppressWarnings("serial")
-public class Resources<E extends Resource<E>> extends ArrayList<E> {
+public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
 
     private final List<ResourcesChangeListener<E>> listeners = new ArrayList<ResourcesChangeListener<E>>();
 
     private final ResourceFactory<E>               factory;
 
-    public Resources(final ResourceFactory<E> factory) {
+    public ResourceCollection(final ResourceFactory<E> factory) {
         this.factory = factory;
     }
 

@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.Translation;
-import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
+import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
@@ -41,22 +41,21 @@ public class PhrasePanel extends ResourcePanel<Phrase> {
     }
 
     PhrasePanel(final GetTextController getTextController,
-            final ResourceMutator<Phrase> mutator) {
-        super(getTextController, mutator);
+            final ResourceBindings<Phrase> bindings) {
+        super(getTextController, bindings);
 
         this.defaultTranslation = addTranslationLabel("Default Translation");
         this.parentTranslation = addTranslationLabel("Parent Translation");
 
-        addTranslatableLabel("current text");
-        add(new TextBoxMutator<Phrase>(mutator) {
+        add("current text", new TextBoxBinding<Phrase>() {
 
             @Override
-            public void pull(final Phrase resource) {
+            public void pullFrom(final Phrase resource) {
                 setText(resource.currentText);
             }
 
             @Override
-            public void push(final Phrase resource) {
+            public void pushInto(final Phrase resource) {
                 resource.currentText = getText();
             }
 
@@ -66,16 +65,15 @@ public class PhrasePanel extends ResourcePanel<Phrase> {
             }
         });
 
-        addTranslatableLabel("next text");
-        add(new TextBoxMutator<Phrase>(mutator) {
+        add("next text", new TextBoxBinding<Phrase>() {
 
             @Override
-            public void pull(final Phrase resource) {
+            public void pullFrom(final Phrase resource) {
                 setText(resource.text);
             }
 
             @Override
-            public void push(final Phrase resource) {
+            public void pushInto(final Phrase resource) {
                 resource.text = getText();
             }
 

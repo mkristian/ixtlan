@@ -10,22 +10,25 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
+import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.widget.ResourceBindings.Binding;
 
 public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
 
     protected final GetTextController getTextController;
 
-    private final ResourceMutator<E>  mutator;
+    private final ResourceBindings<E> bindings;
 
     protected ResourcePanel(final GetTextController getTextController,
-            final ResourceMutator<E> mutator) {
+            final ResourceBindings<E> bindings) {
         setStyleName("resource-panel");
         this.getTextController = getTextController;
-        this.mutator = mutator;
+        this.bindings = bindings;
     }
 
     protected void doReset(final E resource) {
@@ -33,24 +36,36 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
 
     protected final void reset(final E resource) {
         doReset(resource);
-        this.mutator.pullFromResource(resource);
+        this.bindings.pullFromResource(resource);
         setVisible(true);
     }
 
     public void setReadOnly(final boolean isReadOnly) {
-        this.mutator.setReadOnly(isReadOnly);
+        this.bindings.setReadOnly(isReadOnly);
     }
 
     public boolean isReadOnly() {
-        return this.mutator.isReadOnly();
+        return this.bindings.isReadOnly();
     }
 
     protected void addTranslatableLabel(final String text) {
         add(new TranslatableLabel(text, this.getTextController));
     }
 
-    protected void add(final String label, final IntegerTextBox textBox,
-            final int min, final int max) {
+    protected <T extends Widget & Binding<E>> void add(final String label,
+            final T widget) {
+        this.bindings.add(widget);
+        final ComplexPanel panel = new FlowPanel();
+        final Label message = new TranslatableLabel(this.getTextController);
+        panel.add(message);
+        panel.add(new TranslatableLabel(label, this.getTextController));
+        panel.add(widget);
+        add(panel);
+    }
+
+    protected <T extends IntegerTextBox & Binding<E>> void add(
+            final String label, final T textBox, final int min, final int max) {
+        this.bindings.add(textBox);
         final ComplexPanel panel = new FlowPanel();
         final Label message = new TranslatableLabel(this.getTextController);
         message.setStyleName("is-ok");
@@ -69,7 +84,7 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
                     panel.setStyleName("has-errors");
                 }
                 else if (textBox.getTextAsInt() < min) {
-                    message.setText("under minimum " + max);
+                    message.setText("under minimum " + min);
                     message.setStyleName("is-error");
                     panel.setStyleName("has-errors");
                 }
@@ -85,13 +100,14 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
         add(panel);
     }
 
-    protected void add(final String label, final TextBoxBase textBox,
-            final int max) {
+    protected <T extends TextBox & Binding<E>> void add(final String label,
+            final T textBox, final int max) {
         add(label, textBox, false, max);
     }
 
-    protected void add(final String label, final TextBoxBase textBox,
-            final boolean required, final int max) {
+    protected <T extends TextBox & Binding<E>> void add(final String label,
+            final T textBox, final boolean required, final int max) {
+        this.bindings.add(textBox);
         final ComplexPanel panel = new FlowPanel();
         if (max > 64) {
             panel.addStyleName("big-box");
@@ -172,4 +188,9 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
         panel.add(textBox);
         add(panel);
     }
+
+    // public <T extends Widget & Binding<E>> void addWidget(final T widget) {
+    // this.bindings.add(widget);
+    // add(widget);
+    // }
 }

@@ -21,6 +21,7 @@ public abstract class ResourceWithID<E extends Resource<E>> extends Resource<E> 
     }
 
     @Override
+    // TODO move to StringBuilder
     protected void appendXml(final StringBuffer buf) {
         if (this.state != State.TO_BE_CREATED) {
             append(buf, "id", "" + this.id);
@@ -33,6 +34,7 @@ public abstract class ResourceWithID<E extends Resource<E>> extends Resource<E> 
     }
 
     @Override
+    // TODO move to StringBuilder
     public void toString(final StringBuffer buf) {
         buf.append(":id => ").append(this.id);
     }

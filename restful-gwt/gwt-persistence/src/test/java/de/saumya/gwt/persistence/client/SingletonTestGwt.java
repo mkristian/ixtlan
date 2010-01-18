@@ -43,7 +43,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     public static class SingletonFactory extends ResourceFactory<Singleton> {
 
         public SingletonFactory(final Repository repository,
-                final ResourceNotification notification) {
+                final ResourceNotifications notification) {
             super(repository, notification);
         }
 

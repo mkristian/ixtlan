@@ -2,14 +2,14 @@ package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class PermissionFactory extends ResourceFactory<Permission> {
 
     private final RoleFactory groupFactory;
 
     public PermissionFactory(final Repository repository,
-            final ResourceNotification notification,
+            final ResourceNotifications notification,
             final RoleFactory groupFactory) {
         super(repository, notification);
         this.groupFactory = groupFactory;

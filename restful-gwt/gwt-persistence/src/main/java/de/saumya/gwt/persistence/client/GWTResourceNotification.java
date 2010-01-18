@@ -5,7 +5,7 @@ package de.saumya.gwt.persistence.client;
 
 import com.google.gwt.core.client.GWT;
 
-public class GWTResourceNotification implements ResourceNotification {
+public class GWTResourceNotification implements ResourceNotifications {
 
     @Override
     public void error(final int status, final String message,

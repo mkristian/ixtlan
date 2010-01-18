@@ -2,14 +2,14 @@ package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class WordBundleFactory extends ResourceFactory<WordBundle> {
 
     private final WordFactory wordFactory;
 
     public WordBundleFactory(final Repository repository,
-            final ResourceNotification notification,
+            final ResourceNotifications notification,
             final WordFactory wordFactory) {
         super(repository, notification);
         this.wordFactory = wordFactory;

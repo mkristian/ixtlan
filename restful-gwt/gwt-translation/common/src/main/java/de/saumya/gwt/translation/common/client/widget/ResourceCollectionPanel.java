@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
@@ -37,7 +37,7 @@ public class ResourceCollectionPanel<E extends Resource<E>> extends
         return this.pathFactory;
     }
 
-    protected void reset(final Resources<E> resources) {
+    protected void reset(final ResourceCollection<E> resources) {
         clear();
         if (resources != null) {
             if (this.session.isAllowed(Action.UPDATE, this.resourceName)) {

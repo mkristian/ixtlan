@@ -11,7 +11,7 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 
 public class User extends Resource<User> {
 
@@ -33,7 +33,7 @@ public class User extends Resource<User> {
     public Timestamp        createdAt;
     public Timestamp        updatedAt;
 
-    public Resources<Group> groups;
+    public ResourceCollection<Group> groups;
 
     @Override
     public String key() {
@@ -58,7 +58,7 @@ public class User extends Resource<User> {
         this.email = getString(root, "email");
         this.preferedLanguage = this.localeFactory.getChildResource(root,
                                                                     "preferred_language");
-        this.groups = this.groupFactory.getChildResources(root, "groups");
+        this.groups = this.groupFactory.getChildResourceCollection(root, "groups");
         this.createdAt = getTimestamp(root, "created_at");
         this.updatedAt = getTimestamp(root, "updated_at");
     }

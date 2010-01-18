@@ -19,9 +19,9 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class PopupNotifications implements Notifications, ResourceNotification {
+public class PopupNotifications implements Notifications, ResourceNotifications {
 
     private static class Note implements Comparable<Note> {
         private final Timestamp timestamp;

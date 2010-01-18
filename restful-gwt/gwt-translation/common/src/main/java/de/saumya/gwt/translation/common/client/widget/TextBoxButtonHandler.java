@@ -9,7 +9,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
-abstract class TextBoxButtonHandler implements KeyUpHandler, ClickHandler {
+abstract public class TextBoxButtonHandler implements KeyUpHandler,
+        ClickHandler {
 
     @Override
     public void onKeyUp(final KeyUpEvent event) {

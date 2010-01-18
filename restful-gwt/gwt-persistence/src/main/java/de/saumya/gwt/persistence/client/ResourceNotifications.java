@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.persistence.client;
 
-public interface ResourceNotification {
+public interface ResourceNotifications {
 
     void info(String message, Resource<? extends Resource<?>> resource);
 

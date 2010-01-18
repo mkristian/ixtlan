@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.session.client.model.DomainFactory;
 import de.saumya.gwt.session.client.model.GroupFactory;
@@ -113,7 +113,7 @@ public class SessionTest implements EntryPoint {
         final LoginPanel loginPanel = new LoginPanel();
         final SessionPanel sessionPanel = new SessionPanel();
         final Repository repository = new Repository();
-        final ResourceNotification notification = new GWTResourceNotification();
+        final ResourceNotifications notification = new GWTResourceNotification();
         final LocaleFactory localeFactory = new LocaleFactory(repository,
                 notification);
         final RoleFactory roleFactory = new RoleFactory(repository,

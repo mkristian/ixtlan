@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -24,7 +24,7 @@ class PhraseBookCollectionPanel extends ResourceCollectionPanel<PhraseBook> {
     }
 
     @Override
-    protected final void reset(final Resources<PhraseBook> resources) {
+    protected final void reset(final ResourceCollection<PhraseBook> resources) {
         clear();
         if (this.session.isAllowed(Action.SHOW, this.resourceName)) {
             for (final PhraseBook resource : resources) {

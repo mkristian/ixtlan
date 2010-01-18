@@ -4,7 +4,7 @@
 package de.saumya.gwt.persistence.client;
 
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 
 public class CountingResourcesChangeListener<T extends Resource<T>> implements
@@ -13,7 +13,7 @@ public class CountingResourcesChangeListener<T extends Resource<T>> implements
     private int count = 0;
 
     @Override
-    public void onChange(final Resources<T> resources, final T resource) {
+    public void onChange(final ResourceCollection<T> resources, final T resource) {
         this.count++;
     }
 
@@ -26,6 +26,6 @@ public class CountingResourcesChangeListener<T extends Resource<T>> implements
     }
 
     @Override
-    public void onLoaded(final Resources<T> resources) {
+    public void onLoaded(final ResourceCollection<T> resources) {
     }
 }

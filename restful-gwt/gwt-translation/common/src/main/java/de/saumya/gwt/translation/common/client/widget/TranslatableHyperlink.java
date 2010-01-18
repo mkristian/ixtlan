@@ -19,8 +19,8 @@ public class TranslatableHyperlink extends Hyperlink implements Translatable {
     private final GetTextController getText;
 
     public TranslatableHyperlink(final String text,
-            final GetTextController getText) {
-        this.getText = getText;
+            final GetTextController getTextController) {
+        this.getText = getTextController;
         this.getText.addTranslatable(this);
         setText(text);
         sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.ONCONTEXTMENU);

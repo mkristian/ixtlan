@@ -2,7 +2,7 @@ package de.saumya.gwt.session.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotification;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class GroupFactory extends ResourceFactory<Group> {
 
@@ -10,7 +10,7 @@ public class GroupFactory extends ResourceFactory<Group> {
     private final DomainFactory  domainFactory;
 
     public GroupFactory(final Repository repository,
-            final ResourceNotification notification,
+            final ResourceNotifications notification,
             final LocaleFactory localeFactory, final DomainFactory domainFactory) {
         super(repository, notification);
         this.localeFactory = localeFactory;

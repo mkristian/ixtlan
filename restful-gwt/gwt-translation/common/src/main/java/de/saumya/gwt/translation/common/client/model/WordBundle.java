@@ -7,7 +7,7 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 
 public class WordBundle extends Resource<WordBundle> {
 
@@ -20,7 +20,7 @@ public class WordBundle extends Resource<WordBundle> {
     }
 
     public String          locale;
-    public Resources<Word> words;
+    public ResourceCollection<Word> words;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
@@ -31,7 +31,7 @@ public class WordBundle extends Resource<WordBundle> {
     @Override
     protected void fromXml(final Element root) {
         this.locale = getString(root, "locale");
-        this.words = this.wordFactory.getChildResources(root, "words");
+        this.words = this.wordFactory.getChildResourceCollection(root, "words");
     }
 
     @Override

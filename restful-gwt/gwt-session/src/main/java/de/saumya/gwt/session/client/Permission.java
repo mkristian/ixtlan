@@ -7,7 +7,7 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 
 class Permission extends Resource<Permission> {
 
@@ -21,7 +21,7 @@ class Permission extends Resource<Permission> {
 
     String          resource;
     String          action;
-    Resources<Role> roles;
+    ResourceCollection<Role> roles;
 
     @Override
     protected void appendXml(final StringBuffer buf) {
@@ -34,7 +34,7 @@ class Permission extends Resource<Permission> {
     protected void fromXml(final Element root) {
         this.resource = getString(root, "resource");
         this.action = getString(root, "action");
-        this.roles = this.roleFactory.getChildResources(root, "roles");
+        this.roles = this.roleFactory.getChildResourceCollection(root, "roles");
     }
 
     @Override

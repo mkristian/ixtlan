@@ -65,6 +65,7 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public void save() {
+        addResourceChangeListener(this.factory.resourceChangeListener);
         switch (this.state) {
         case NEW:
         case TO_BE_CREATED:
@@ -100,7 +101,7 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public void reload() {
-        // TODO switch on state
+        // TODO switch on state - why ?
         if (key() == null) {
             this.factory.get(null);
         }
@@ -138,6 +139,46 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
+    protected void toString(final StringBuffer buf, final String name,
+            final Object value) {
+        if (value != null) {
+            toString(buf, name, value.toString());
+        }
+    }
+
+    protected void toString(final StringBuffer buf, final String name,
+            final String value) {
+        if (value != null) {
+            buf.append(", :").append(name).append(" => ").append(value);
+        }
+    }
+
+    protected void toString(final StringBuffer buf, final String name,
+            final Resource<?> value) {
+        if (value != null) {
+            buf.append(", :").append(name).append(" => ");
+            value.toString(buf);
+        }
+    }
+
+    protected void toString(final StringBuffer buf, final String name,
+            final ResourceCollection<?> value) {
+        if (value != null) {
+            buf.append(", :").append(name).append(" => [");
+            boolean first = true;
+            for (final Resource<?> resource : value) {
+                if (first) {
+                    first = false;
+                }
+                else {
+                    buf.append(", ");
+                }
+                resource.toString(buf);
+            }
+            buf.append("]");
+        }
+    }
+
     protected void append(final StringBuffer buf, final String name,
             final Resource<?> value) {
         if (value != null) {
@@ -148,7 +189,7 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     protected void append(final StringBuffer buf, final String name,
-            final Resources<?> value) {
+            final ResourceCollection<?> value) {
         if (value != null) {
             value.toXml(buf);
         }
@@ -205,39 +246,6 @@ public abstract class Resource<E extends Resource<E>> {
                 : new TimestampFactory(value).toTimestamp());
     }
 
-    static class TimestampFactory {
-        final String value;
-
-        TimestampFactory(final String value) {
-            if (value.contains(".")) {
-                this.value = value
-                        + "000000000".substring(0, 29 - value.length());
-            }
-            else {
-                this.value = value + ".000000000";
-            }
-        }
-
-        @SuppressWarnings("deprecation")
-        Timestamp toTimestamp() {
-            return new Timestamp(toInt(0, 4) - 1900,
-                    toInt(5) - 1,
-                    toInt(8),
-                    toInt(11),
-                    toInt(14),
-                    toInt(17),
-                    toInt(20, 9));
-        }
-
-        private int toInt(final int from) {
-            return toInt(from, 2);
-        }
-
-        private int toInt(final int from, final int len) {
-            return Integer.parseInt(this.value.substring(from, from + len));
-        }
-    }
-
     protected Date getDate(final Element root, final String name) {
         final String value = getString(root, name);
         return value == null ? null : Date.valueOf(value);
@@ -251,6 +259,11 @@ public abstract class Resource<E extends Resource<E>> {
     protected int getInt(final Element root, final String name) {
         final String value = getString(root, name);
         return value == null ? 0 : Integer.parseInt(value);
+    }
+
+    protected boolean getBoolean(final Element root, final String name) {
+        final String value = getString(root, name);
+        return "true".equals(value);
     }
 
     protected String getString(final Element root, final String name) {

@@ -4,8 +4,6 @@
 package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -19,12 +17,9 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.route.PathFactory;
 
-public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
-
-    private final GetTextController         getText;
-
+public class DefaultResourceActionPanel<E extends Resource<E>> extends
+        AbstractResourceActionPanel<E> {
     protected final Button                  fresh;
     protected final Button                  create;
     protected final Button                  save;
@@ -32,25 +27,24 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
     protected final Button                  reload;
     protected final Button                  delete;
 
-    private final ButtonHandler<E>          newHandler;
-    private final ButtonHandler<E>          createHandler;
-    private final ButtonHandler<E>          reloadHandler;
-    private final ButtonHandler<E>          editHandler;
-    private final ButtonHandler<E>          saveHandler;
-    private final ButtonHandler<E>          destroyHandler;
+    private final ButtonAction<E>           newHandler;
+    private final ButtonAction<E>           createHandler;
+    private final ButtonAction<E>           reloadHandler;
+    private final ButtonAction<E>           editHandler;
+    private final ButtonAction<E>           saveHandler;
+    private final ButtonAction<E>           destroyHandler;
     protected final Session                 session;
 
     protected final String                  resourceName;
 
     private final ResourceChangeListener<E> createdListener;
 
-    private PathFactory                     pathFactory;
-
-    public ResourceActionPanel(final GetTextController getText,
-            final ResourceMutator<E> mutator, final Session session,
+    public DefaultResourceActionPanel(final GetTextController getText,
+            final ResourceBindings<E> bindings, final Session session,
             final ResourceFactory<E> factory) {
+        super(getText, bindings, session, factory);
+
         setStyleName("action-panel");
-        this.getText = getText;
         this.session = session;
         this.resourceName = factory.storagePluralName();
         this.createdListener = new ResourceChangeListener<E>() {
@@ -59,8 +53,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
             public void onChange(final E resource, final String message) {
                 if (resource.isUptodate()
                         && History.getToken()
-                                .equals(ResourceActionPanel.this.pathFactory.newPath())) {
-                    History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                                .equals(DefaultResourceActionPanel.this.pathFactory.newPath())) {
+                    History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(resource.key()));
                 }
             }
 
@@ -70,15 +64,15 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                 // TODO Auto-generated method stub
             }
         };
-        this.newHandler = new ButtonHandler<E>(mutator) {
+        this.newHandler = new ButtonAction<E>() {
 
             @Override
             protected void action(final E resource) {
-                History.newItem(ResourceActionPanel.this.pathFactory.newPath());
+                History.newItem(DefaultResourceActionPanel.this.pathFactory.newPath());
             }
 
         };
-        this.reloadHandler = new ButtonHandler<E>(mutator) {
+        this.reloadHandler = new ButtonAction<E>() {
 
             @Override
             protected void action(final E resource) {
@@ -87,16 +81,16 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
 
         };
 
-        this.editHandler = new ButtonHandler<E>(mutator) {
+        this.editHandler = new ButtonAction<E>() {
 
             @Override
             protected void action(final E resource) {
-                History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(resource.key()));
             }
 
         };
 
-        this.createHandler = new ButtonHandler<E>(mutator) {
+        this.createHandler = new MutatingButtonAction<E>(bindings) {
 
             @Override
             protected void action(final E resource) {
@@ -106,8 +100,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                     public void onChange(final E resource, final String message) {
                         if (resource.isUptodate()
                                 && History.getToken()
-                                        .equals(ResourceActionPanel.this.pathFactory.newPath())) {
-                            History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                                        .equals(DefaultResourceActionPanel.this.pathFactory.newPath())) {
+                            History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(resource.key()));
                         }
                     }
 
@@ -120,7 +114,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
                 resource.save();
             }
         };
-        this.saveHandler = new ButtonHandler<E>(mutator) {
+        this.saveHandler = new MutatingButtonAction<E>(bindings) {
 
             @Override
             protected void action(final E resource) {
@@ -128,19 +122,70 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
             }
 
         };
-        this.destroyHandler = new ButtonHandler<E>(mutator) {
+        this.destroyHandler = new ButtonAction<E>() {
 
             @Override
             protected void action(final E resource) {
                 resource.destroy();
-                History.newItem(ResourceActionPanel.this.pathFactory.showAllPath());
+                History.newItem(DefaultResourceActionPanel.this.pathFactory.showAllPath());
             }
 
         };
 
+        final ComplexPanel search = createSearchPanel();
+
+        final ComplexPanel getBy = createGetByPanel();
+
+        final ComplexPanel newCreate = new FlowPanel();
+        newCreate.setStyleName("new-create");
+        this.fresh = button(newCreate, "new", this.newHandler);
+        this.create = button(newCreate, "create", this.createHandler);
+        final ComplexPanel actionButtons = new FlowPanel();
+        actionButtons.setStyleName("action-buttons");
+        this.reload = button(actionButtons, "reload", this.reloadHandler);
+        this.edit = button(actionButtons, "edit", this.editHandler);
+        this.save = button(actionButtons, "save", this.saveHandler);
+        this.delete = button(actionButtons, "delete", this.destroyHandler);
+
+        if (factory.keyName() != null) { // unless it is a singleton resource
+            if (search != null) {
+                add(search);
+            }
+            if (getBy != null) {
+                add(getBy);
+            }
+        }
+        add(newCreate);
+        add(actionButtons);
+    }
+
+    protected ComplexPanel createGetByPanel() {
+        final ComplexPanel getBy = new FlowPanel();
+        getBy.setStyleName("get-by");
+        boxWithButton(getBy,
+                      "get by " + this.resourceName + " key",
+                      new TextBoxButtonHandler() {
+
+                          @Override
+                          protected void action(final TextBoxBase textBox) {
+                              if (DefaultResourceActionPanel.this.session.isAllowed(Action.UPDATE,
+                                                                                    DefaultResourceActionPanel.this.resourceName)) {
+                                  History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
+                              }
+                              else {
+                                  History.newItem(DefaultResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
+                              }
+                              textBox.setText("");
+                          }
+
+                      });
+        return getBy;
+    }
+
+    protected ComplexPanel createSearchPanel() {
         final ComplexPanel search = new FlowPanel();
         search.setStyleName("search");
-        search.add(new TranslatableLabel("search", getText));
+        search.add(new TranslatableLabel("search", this.getText));
         final TextBox box = boxWithButton(search,
                                           "similar",
                                           new TextBoxButtonHandler() {
@@ -165,80 +210,11 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
             }
         });
         search.add(button);
-
-        final ComplexPanel getBy = new FlowPanel();
-        getBy.setStyleName("get-by");
-        boxWithButton(getBy,
-                      "get by " + this.resourceName + " key",
-                      new TextBoxButtonHandler() {
-
-                          @Override
-                          protected void action(final TextBoxBase textBox) {
-                              if (ResourceActionPanel.this.session.isAllowed(Action.UPDATE,
-                                                                             ResourceActionPanel.this.resourceName)) {
-                                  History.newItem(ResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
-                              }
-                              else {
-                                  History.newItem(ResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
-                              }
-                              textBox.setText("");
-                          }
-
-                      });
-
-        final ComplexPanel newCreate = new FlowPanel();
-        newCreate.setStyleName("new-create");
-        this.fresh = button(newCreate, "new", this.newHandler);
-        this.create = button(newCreate, "create", this.createHandler);
-        final ComplexPanel actionButtons = new FlowPanel();
-        actionButtons.setStyleName("action-buttons");
-        this.reload = button(actionButtons, "reload", this.reloadHandler);
-        this.edit = button(actionButtons, "edit", this.editHandler);
-        this.save = button(actionButtons, "save", this.saveHandler);
-        this.delete = button(actionButtons, "delete", this.destroyHandler);
-
-        if (factory.keyName() != null) { // unless it is a singleton resource
-            add(search);
-            add(getBy);
-        }
-        add(newCreate);
-        add(actionButtons);
+        return search;
     }
 
-    private TextBox boxWithButton(final ComplexPanel panel, final String name,
-            final TextBoxButtonHandler handler) {
-        final TextBox box = new TextBox();
-        box.setStyleName(name + "-box");
-        final TranslatableTextBoxButton button = new TranslatableTextBoxButton(box,
-                name,
-                this.getText);
-        button.add(handler);
-        panel.add(box);
-        panel.add(button);
-        return box;
-    }
-
-    protected <T extends ClickHandler & KeyUpHandler> Button button(
-            final ComplexPanel panel, final String name, final T handler) {
-        final Button button = new TranslatableButton(name, this.getText);
-        button.ensureDebugId(this.resourceName + "-" + name);
-        button.setVisible(false);
-        button.addClickHandler(handler);
-        button.addKeyUpHandler(handler);
-        panel.add(button);
-        return button;
-    }
-
-    public final void setup(final PathFactory pathFactory) {
-        this.pathFactory = pathFactory;
-    }
-
-    protected void doReset(final E resource) {
-    }
-
-    protected void doReset() {
-    }
-
+    // TODO move into abstract class
+    @Override
     public final void reset(final E resource, final boolean readOnly) {
         this.newHandler.reset(resource);
         this.reloadHandler.reset(resource);
@@ -270,6 +246,8 @@ public class ResourceActionPanel<E extends Resource<E>> extends FlowPanel {
         setVisible(true);
     }
 
+    // TODO move into abstract class
+    @Override
     public final void reset() {
         this.create.setVisible(false);
         this.reload.setVisible(false);

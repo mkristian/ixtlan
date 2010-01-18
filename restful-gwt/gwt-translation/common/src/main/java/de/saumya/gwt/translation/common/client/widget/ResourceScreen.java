@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
@@ -28,7 +28,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
     protected final ResourceHeaderPanel        header;
 
-    protected final ResourceActionPanel<E>     actions;
+    protected final AbstractResourceActionPanel<E>     actions;
 
     protected final ResourcePanel<E>           display;
 
@@ -46,7 +46,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
             final ResourceFactory<E> factory, final Session session,
             final ResourcePanel<E> display,
             final ResourceCollectionPanel<E> displayAll,
-            final ResourceActionPanel<E> actions) {
+            final AbstractResourceActionPanel<E> actions) {
         setStyleName("screen");
         this.loading = new TranslatableLabel("loading ...", getText);
         this.loading.setStyleName("loading");
@@ -116,14 +116,14 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
     @Override
     public void showAll() {
-        final Resources<E> resources = this.factory.all(new ResourcesChangeListener<E>() {
+        final ResourceCollection<E> resources = this.factory.all(new ResourcesChangeListener<E>() {
 
             @Override
-            public void onChange(final Resources<E> resources, final E resource) {
+            public void onChange(final ResourceCollection<E> resources, final E resource) {
             }
 
             @Override
-            public void onLoaded(final Resources<E> resources) {
+            public void onLoaded(final ResourceCollection<E> resources) {
                 reset(resources);
                 ResourceScreen.this.loading.setVisible(false);
             }
@@ -134,7 +134,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         reset(resources);
     }
 
-    protected void reset(final Resources<E> resources) {
+    protected void reset(final ResourceCollection<E> resources) {
         this.displayAll.reset(resources);
         this.actions.reset();
         this.header.setVisible(false);

@@ -11,23 +11,24 @@ import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
-import de.saumya.gwt.translation.common.client.widget.ButtonHandler;
-import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
-import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
+import de.saumya.gwt.translation.common.client.widget.ButtonAction;
+import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.MutatingButtonAction;
+import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 
-class PhraseActions extends ResourceActionPanel<Phrase> {
+class PhraseActions extends DefaultResourceActionPanel<Phrase> {
 
-    private final Button                approve;
+    private final Button               approve;
 
-    private final ButtonHandler<Phrase> approveHandler;
+    private final ButtonAction<Phrase> approveHandler;
 
-    private String                      locale;
+    private String                     locale;
 
     public PhraseActions(final GetTextController getText,
-            final ResourceMutator<Phrase> mutator, final Session session,
+            final ResourceBindings<Phrase> bindings, final Session session,
             final PhraseFactory factory) {
-        super(getText, mutator, session, factory);
-        this.approveHandler = new ButtonHandler<Phrase>(mutator) {
+        super(getText, bindings, session, factory);
+        this.approveHandler = new MutatingButtonAction<Phrase>(bindings) {
 
             @Override
             protected void action(final Phrase resource) {

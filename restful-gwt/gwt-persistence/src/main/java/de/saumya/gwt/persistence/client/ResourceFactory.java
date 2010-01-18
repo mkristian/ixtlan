@@ -17,12 +17,12 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     private final Map<String, E>              cache = new HashMap<String, E>();
 
     protected final Repository                repository;
-    private final ResourceNotification        notification;
+    private final ResourceNotifications        notification;
 
     protected final ResourceChangeListener<E> resourceChangeListener;
 
     public ResourceFactory(final Repository repository,
-            final ResourceNotification notification) {
+            final ResourceNotifications notification) {
         this.repository = repository;
         this.notification = notification;
         this.resourceChangeListener = new ResourceChangeListener<E>() {
@@ -134,18 +134,18 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return keyName() == null ? null : getString(root, keyName());
     }
 
-    public Resources<E> getChildResources(final Element root, final String name) {
+    public ResourceCollection<E> getChildResourceCollection(final Element root, final String name) {
         final Element element = (Element) root.getElementsByTagName(name)
                 .item(0);
-        final Resources<E> resources = newResources();
+        final ResourceCollection<E> resources = newResources();
         if (element != null) {
             resources.fromXml(element);
         }
         return resources;
     }
 
-    public Resources<E> newResources() {
-        return new Resources<E>(this);
+    public ResourceCollection<E> newResources() {
+        return new ResourceCollection<E>(this);
     }
 
     public E get(final int key, final ResourceChangeListener<E> listener) {
@@ -166,14 +166,15 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource(key);
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
+        resource.addResourceChangeListener(this.resourceChangeListener);
         this.repository.get(storagePluralName(),
                             key,
                             new ResourceRequestCallback<E>(resource, this));
         return resource;
     }
 
-    public Resources<E> all(final ResourcesChangeListener<E> listener) {
-        final Resources<E> list = new Resources<E>(this);
+    public ResourceCollection<E> all(final ResourcesChangeListener<E> listener) {
+        final ResourceCollection<E> list = new ResourceCollection<E>(this);
         list.addResourcesChangeListener(listener);
         this.repository.all(storagePluralName(),
                             new ResourceListRequestCallback(list));

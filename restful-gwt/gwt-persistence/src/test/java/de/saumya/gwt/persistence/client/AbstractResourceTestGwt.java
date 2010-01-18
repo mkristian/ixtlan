@@ -9,7 +9,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
         GWTTestCase {
 
     protected RepositoryMock                     repository;
-    protected ResourceNotification               notification;
+    protected ResourceNotifications               notification;
     protected CountingResourceChangeListener<T>  countingResourceListener;
     protected CountingResourcesChangeListener<T> countingResourcesListener;
 
@@ -51,7 +51,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
     public void testRetrieveAll() {
         this.repository.addXmlResponse(resourcesXml());
 
-        final Resources<T> resources = this.factory.all(this.countingResourcesListener);
+        final ResourceCollection<T> resources = this.factory.all(this.countingResourcesListener);
 
         assertEquals(2, this.countingResourcesListener.count());
         int id = 0;
@@ -89,7 +89,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
     }
 
     public void testMarshallingUnmarshallingResources() {
-        final Resources<T> resources = new Resources<T>(this.factory);
+        final ResourceCollection<T> resources = new ResourceCollection<T>(this.factory);
         resources.fromXml(resourcesXml());
 
         assertEquals(resourcesXml(), resources.toXml());

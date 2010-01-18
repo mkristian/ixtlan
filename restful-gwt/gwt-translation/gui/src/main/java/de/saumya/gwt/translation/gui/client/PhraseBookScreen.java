@@ -9,8 +9,8 @@ import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
-import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
-import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
+import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
@@ -22,19 +22,18 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
 
         PhraseBookPanel(final PhraseScreen phraseScreen,
                 final GetTextController getTextController,
-                final ResourceMutator<PhraseBook> mutator) {
-            super(getTextController, mutator);
+                final ResourceBindings<PhraseBook> bindings) {
+            super(getTextController, bindings);
             this.phraseScreen = phraseScreen;
-            addTranslatableLabel("locale");
-            add(new TextBoxMutator<PhraseBook>(mutator) {
+            add("locale", new TextBoxBinding<PhraseBook>() {
 
                 @Override
-                public void pull(final PhraseBook resource) {
+                public void pullFrom(final PhraseBook resource) {
                     setText(resource.locale);
                 }
 
                 @Override
-                public void push(final PhraseBook resource) {
+                public void pushInto(final PhraseBook resource) {
                     resource.locale = getText();
                 }
             });
@@ -52,7 +51,7 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
 
     public PhraseBookScreen(final PhraseBookFactory bookFactory,
             final PhraseScreen phraseScreen,
-            final ResourceMutator<PhraseBook> mutator,
+            final ResourceBindings<PhraseBook> mutator,
             final GetTextController getTextController, final Session session) {
         super(getTextController,
                 bookFactory,
@@ -61,7 +60,7 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
                 new PhraseBookCollectionPanel(session,
                         bookFactory,
                         getTextController),
-                new ResourceActionPanel<PhraseBook>(getTextController,
+                new DefaultResourceActionPanel<PhraseBook>(getTextController,
                         mutator,
                         session,
                         bookFactory));

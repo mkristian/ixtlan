@@ -43,7 +43,7 @@ public class CacheTestGwt extends PersistenceTestGwt {
     public void testGetAll() {
         this.repository.addXmlResponse("<samples>" + RESOURCE_XML
                 + RESOURCE_XML.replace("123", "234") + "</samples>");
-        final Resources<Sample> samples = this.factory.all(null);
+        final ResourceCollection<Sample> samples = this.factory.all(null);
         assertSame(this.sample, samples.get(0));
 
         this.repository.reset();

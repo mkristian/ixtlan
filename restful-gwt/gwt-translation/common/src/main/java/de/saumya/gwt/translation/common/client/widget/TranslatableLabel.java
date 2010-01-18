@@ -22,9 +22,9 @@ public class TranslatableLabel extends Label implements Translatable {
         this(null, getText);
     }
 
-    public TranslatableLabel(final String text, final GetTextController getText) {
+    public TranslatableLabel(final String text, final GetTextController getTextController) {
         super();
-        this.getText = getText;
+        this.getText = getTextController;
         this.getText.addTranslatable(this);
         setText(text);
         sinkEvents(Event.MOUSEEVENTS | Event.ONCONTEXTMENU);

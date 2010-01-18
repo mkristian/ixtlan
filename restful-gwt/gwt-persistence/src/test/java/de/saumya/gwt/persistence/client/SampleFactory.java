@@ -7,7 +7,7 @@ package de.saumya.gwt.persistence.client;
 public class SampleFactory extends ResourceFactory<Sample> {
 
     public SampleFactory(final Repository repository,
-            final ResourceNotification notification) {
+            final ResourceNotifications notification) {
         super(repository, notification);
     }
 

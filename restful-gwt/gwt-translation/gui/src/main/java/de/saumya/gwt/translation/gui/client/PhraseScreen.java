@@ -3,37 +3,37 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import de.saumya.gwt.persistence.client.Resources;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
-import de.saumya.gwt.translation.common.client.widget.ResourceMutator;
+import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
 class PhraseScreen extends ResourceScreen<Phrase> {
 
-    private final PhraseActions         phraseActions;
+    // private final PhraseActionPanel phraseActions;
     private final PhraseCollectionPanel phraseCollection;
 
     PhraseScreen(final GetTextController getTextController,
             final PhraseFactory phraseFactory,
-            final ResourceMutator<Phrase> mutator, final Session session) {
+            final ResourceBindings<Phrase> binding, final Session session) {
         super(getTextController,
                 phraseFactory,
                 session,
-                new PhrasePanel(getTextController, mutator),
+                new PhrasePanel(getTextController, binding),
                 new PhraseCollectionPanel(session, phraseFactory),
-                new PhraseActions(getTextController,
-                        mutator,
+                new PhraseActionPanel(getTextController,
+                        binding,
                         session,
                         phraseFactory));
-        this.phraseActions = (PhraseActions) this.actions;
+        // this.phraseActions = (PhraseActionPanel) this.actions;
         this.phraseCollection = (PhraseCollectionPanel) this.displayAll;
     }
 
-    void showAll(final Resources<Phrase> resources) {
+    void showAll(final ResourceCollection<Phrase> resources) {
         reset(resources);
     }
 
@@ -48,7 +48,7 @@ class PhraseScreen extends ResourceScreen<Phrase> {
     }
 
     void setParentKey(final String key) {
-        this.phraseActions.setLocale(key);
+        // this.phraseActions.setLocale(key);
         this.phraseCollection.setLocale(key);
     }
 
@@ -57,9 +57,9 @@ class PhraseScreen extends ResourceScreen<Phrase> {
         throw new UnsupportedOperationException("phrase does not show new");
     }
 
-    @Override
-    public void showAll() {
-        throw new UnsupportedOperationException("phrase does not show all");
-    }
+    // @Override
+    // public void showAll() {
+    // throw new UnsupportedOperationException("phrase does not show all");
+    // }
 
 }
