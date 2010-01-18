@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
@@ -52,7 +53,8 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
     public PhraseBookScreen(final PhraseBookFactory bookFactory,
             final PhraseScreen phraseScreen,
             final ResourceBindings<PhraseBook> mutator,
-            final GetTextController getTextController, final Session session) {
+            final GetTextController getTextController, final Session session,
+            final ResourceNotifications changeNotification) {
         super(getTextController,
                 bookFactory,
                 session,
@@ -63,7 +65,8 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
                 new DefaultResourceActionPanel<PhraseBook>(getTextController,
                         mutator,
                         session,
-                        bookFactory));
+                        bookFactory,
+                        changeNotification));
         this.phraseScreen = phraseScreen;
     }
 

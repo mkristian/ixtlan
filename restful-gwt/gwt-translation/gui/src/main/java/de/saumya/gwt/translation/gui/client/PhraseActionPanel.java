@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
@@ -44,14 +45,15 @@ public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
 
     public PhraseActionPanel(final GetTextController getText,
             final ResourceBindings<Phrase> binding, final Session session,
-            final ResourceFactory<Phrase> factory) {
+            final ResourceFactory<Phrase> factory,
+            final ResourceNotifications changeNotification) {
         super(getText, binding, session, factory);
 
         setStyleName("action-panel");
         this.getText = getText;
         this.session = session;
         this.resourceName = factory.storagePluralName();
-        this.reloadHandler = new ButtonAction<Phrase>() {
+        this.reloadHandler = new ButtonAction<Phrase>(changeNotification) {
 
             @Override
             protected void action(final Phrase resource) {
@@ -60,7 +62,7 @@ public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
 
         };
 
-        this.editHandler = new ButtonAction<Phrase>() {
+        this.editHandler = new ButtonAction<Phrase>(changeNotification) {
 
             @Override
             protected void action(final Phrase resource) {
@@ -69,7 +71,7 @@ public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
 
         };
 
-        this.saveHandler = new MutatingButtonAction<Phrase>(binding) {
+        this.saveHandler = new MutatingButtonAction<Phrase>(null, binding) {
 
             @Override
             protected void action(final Phrase resource) {

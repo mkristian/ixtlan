@@ -3,17 +3,18 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-
 import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public abstract class MutatingButtonAction<E extends Resource<E>> extends
         ButtonAction<E> {
 
     private final ResourceBindings<E> bindings;
 
-    public MutatingButtonAction(final ResourceBindings<E> bindings) {
+    public MutatingButtonAction(
+            final ResourceNotifications changeNotification,
+            final ResourceBindings<E> bindings) {
+        super(changeNotification);
         this.bindings = bindings;
     }
 
@@ -26,16 +27,9 @@ public abstract class MutatingButtonAction<E extends Resource<E>> extends
     }
 
     @Override
-    public void onClick(final ClickEvent event) {
+    public void doAction() {
         this.bindings.pushIntoResource();
-        action(this.resource);
+        super.doAction();
     }
 
-    @Override
-    public void onKeyUp(final KeyUpEvent event) {
-        if (event.getNativeKeyCode() == 32) {
-            this.bindings.pushIntoResource();
-            action(this.resource);
-        }
-    }
 }

@@ -90,18 +90,19 @@ public class GUIContainer {
     public final PhraseScreen         phraseScreen         = new PhraseScreen(this.getTextController,
                                                                    this.phraseFactory,
                                                                    new ResourceBindings<Phrase>(),
-                                                                   this.session);
+                                                                   this.session,
+                                                                   this.notifications);
     public final PhraseBookScreen     phraseBookScreen     = new PhraseBookScreen(this.bookFactory,
                                                                    this.phraseScreen,
                                                                    new ResourceBindings<PhraseBook>(),
                                                                    this.getTextController,
-                                                                   this.session);
+                                                                   this.session,
+                                                                   this.notifications);
     public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.configurationFactory,
-                                                                   // default
-                                                                   // mutator
                                                                    new ResourceBindings<Configuration>(),
                                                                    this.getTextController,
-                                                                   this.session);
+                                                                   this.session,
+                                                                   this.notifications);
     public final SessionPanel         sessionPanel         = new SessionPanel(this.getTextController,
                                                                    this.getText,
                                                                    this.session,

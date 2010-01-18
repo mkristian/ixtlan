@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.model.Configuration;
 import de.saumya.gwt.session.client.model.ConfigurationFactory;
@@ -70,7 +71,8 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
 
     public ConfigurationScreen(final ConfigurationFactory configFactory,
             final ResourceBindings<Configuration> mutator,
-            final GetTextController getTextController, final Session session) {
+            final GetTextController getTextController, final Session session,
+            final ResourceNotifications changeNotification) {
         super(getTextController,
                 configFactory,
                 session,
@@ -81,7 +83,8 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                 new DefaultResourceActionPanel<Configuration>(getTextController,
                         mutator,
                         session,
-                        configFactory));
+                        configFactory,
+                        changeNotification));
     }
 
     // TODO put all these methods below except reset(...) into

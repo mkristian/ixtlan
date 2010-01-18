@@ -8,29 +8,29 @@ import com.google.gwt.user.client.ui.Hyperlink;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 
-public class HyperlinkFactory {
+public class ResourceHyperlinkFactory {
 
-    private final PathFactory factory;
+    private final PathFactory pathFactory;
 
-    public HyperlinkFactory(final PathFactory factory) {
-        this.factory = factory;
+    public ResourceHyperlinkFactory(final PathFactory factory) {
+        this.pathFactory = factory;
     }
 
     public Hyperlink editResourceHyperklink(final Resource<?> resource) {
         return new Hyperlink(resource.display(),
-                this.factory.editPath(resource.key()));
+                this.pathFactory.editPath(resource.key()));
     }
 
     public Hyperlink showResourceHyperlink(final Resource<?> resource) {
         return new Hyperlink(resource.display(),
-                this.factory.showPath(resource.key()));
+                this.pathFactory.showPath(resource.key()));
     }
 
     public Hyperlink showAllResourcesHyperlink(final String name) {
-        return new Hyperlink(name, this.factory.showAllPath());
+        return new Hyperlink(name, this.pathFactory.showAllPath());
     }
 
     public Hyperlink newResourceHyperlink(final String name) {
-        return new Hyperlink(name, this.factory.newPath());
+        return new Hyperlink(name, this.pathFactory.newPath());
     }
 }

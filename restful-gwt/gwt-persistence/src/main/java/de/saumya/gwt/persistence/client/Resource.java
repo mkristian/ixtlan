@@ -36,7 +36,7 @@ public abstract class Resource<E extends Resource<E>> {
     private final Repository                     repository;
 
     private final Set<ResourceChangeListener<E>> listeners = new HashSet<ResourceChangeListener<E>>();
-    private ResourceChangeNotification           changeNotification;
+    private ResourceNotifications                changeNotifications;
 
     final ResourceFactory<E>                     factory;
 
@@ -255,9 +255,9 @@ public abstract class Resource<E extends Resource<E>> {
         return null;
     }
 
-    public void setResourceChangeNotification(
-            final ResourceChangeNotification changeNotification) {
-        this.changeNotification = changeNotification;
+    public void setResourceNotification(
+            final ResourceNotifications changeNotifications) {
+        this.changeNotifications = changeNotifications;
     }
 
     public void addResourceChangeListener(
@@ -277,9 +277,9 @@ public abstract class Resource<E extends Resource<E>> {
         for (final ResourceChangeListener<E> listener : this.listeners) {
             listener.onChange((E) this);
         }
-        if (this.changeNotification != null) {
-            this.changeNotification.onChange(message, this);
-            this.changeNotification = null;
+        if (this.changeNotifications != null) {
+            this.changeNotifications.info(message, this);
+            this.changeNotifications = null;
         }
     }
 
@@ -288,9 +288,9 @@ public abstract class Resource<E extends Resource<E>> {
         for (final ResourceChangeListener<E> listener : this.listeners) {
             listener.onError((E) this);
         }
-        if (this.changeNotification != null) {
-            this.changeNotification.onError(status, statusText, this);
-            this.changeNotification = null;
+        if (this.changeNotifications != null) {
+            this.changeNotifications.error(status, statusText, this);
+            this.changeNotifications = null;
         }
 
     }

@@ -6,6 +6,7 @@ package de.saumya.gwt.translation.gui.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -26,9 +27,11 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
 
     public PhraseActions(final GetTextController getText,
             final ResourceBindings<Phrase> bindings, final Session session,
-            final PhraseFactory factory) {
-        super(getText, bindings, session, factory);
-        this.approveHandler = new MutatingButtonAction<Phrase>(bindings) {
+            final PhraseFactory factory,
+            final ResourceNotifications changeNotification) {
+        super(getText, bindings, session, factory, changeNotification);
+        this.approveHandler = new MutatingButtonAction<Phrase>(changeNotification,
+                bindings) {
 
             @Override
             protected void action(final Phrase resource) {

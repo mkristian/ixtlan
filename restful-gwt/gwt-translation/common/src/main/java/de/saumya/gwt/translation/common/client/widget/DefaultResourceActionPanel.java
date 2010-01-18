@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
@@ -41,7 +42,8 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
     public DefaultResourceActionPanel(final GetTextController getText,
             final ResourceBindings<E> bindings, final Session session,
-            final ResourceFactory<E> factory) {
+            final ResourceFactory<E> factory,
+            final ResourceNotifications changeNotification) {
         super(getText, bindings, session, factory);
 
         setStyleName("action-panel");
@@ -60,10 +62,9 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
             @Override
             public void onError(final E resource) {
-                // TODO Auto-generated method stub
             }
         };
-        this.newHandler = new ButtonAction<E>() {
+        this.newHandler = new ButtonAction<E>(changeNotification) {
 
             @Override
             protected void action(final E resource) {
@@ -71,7 +72,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             }
 
         };
-        this.reloadHandler = new ButtonAction<E>() {
+        this.reloadHandler = new ButtonAction<E>(changeNotification) {
 
             @Override
             protected void action(final E resource) {
@@ -80,7 +81,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         };
 
-        this.editHandler = new ButtonAction<E>() {
+        this.editHandler = new ButtonAction<E>(changeNotification) {
 
             @Override
             protected void action(final E resource) {
@@ -89,7 +90,8 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         };
 
-        this.createHandler = new MutatingButtonAction<E>(bindings) {
+        this.createHandler = new MutatingButtonAction<E>(changeNotification,
+                bindings) {
 
             @Override
             protected void action(final E resource) {
@@ -112,7 +114,8 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                 resource.save();
             }
         };
-        this.saveHandler = new MutatingButtonAction<E>(bindings) {
+        this.saveHandler = new MutatingButtonAction<E>(changeNotification,
+                bindings) {
 
             @Override
             protected void action(final E resource) {
@@ -120,7 +123,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             }
 
         };
-        this.destroyHandler = new ButtonAction<E>() {
+        this.destroyHandler = new ButtonAction<E>(changeNotification) {
 
             @Override
             protected void action(final E resource) {

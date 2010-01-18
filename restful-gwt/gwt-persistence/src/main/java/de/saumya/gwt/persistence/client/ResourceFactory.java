@@ -18,28 +18,9 @@ public abstract class ResourceFactory<E extends Resource<E>> {
 
     protected final Repository   repository;
 
-    // private final ResourceNotifications notification;
-
-    // protected final ResourceChangeListener<E> resourceChangeListener;
-
-    // private final
     public ResourceFactory(final Repository repository,
             final ResourceNotifications notifications) {
         this.repository = repository;
-        // this.notification = notification;
-        // this.resourceChangeListener = new ResourceChangeListener<E>() {
-        //
-        // @Override
-        // public void onChange(final E resource, final String message) {
-        // notifications.info(message, resource);
-        // }
-        //
-        // @Override
-        // public void onError(final E resource, final int status,
-        // final String statusText) {
-        // notifications.error(status, statusText, resource);
-        // }
-        // };
     }
 
     abstract public String storageName();
@@ -157,7 +138,6 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource();
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
-        // resource.addResourceChangeListener(this.resourceChangeListener);
         this.repository.get(storageName(),
                             new ResourceRequestCallback<E>(resource, this));
         return resource;
@@ -167,7 +147,6 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource(key);
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
-        // resource.addResourceChangeListener(this.resourceChangeListener);
         this.repository.get(storagePluralName(),
                             key,
                             new ResourceRequestCallback<E>(resource, this));
