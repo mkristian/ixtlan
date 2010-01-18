@@ -22,8 +22,8 @@ class Role extends Resource<Role> {
     }
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "name", this.name);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "name", this.name);
     }
 
     @Override
@@ -32,7 +32,7 @@ class Role extends Resource<Role> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         buf.append(":name => ").append(this.name);
     }
 

@@ -82,16 +82,14 @@ public class Session {
         this.resourceChangeListener = new ResourceChangeListener<Configuration>() {
 
             @Override
-            public void onChange(final Configuration resource,
-                    final String message) {
+            public void onChange(final Configuration resource) {
                 Session.this.timer.timeout = resource.idleSessionTimeout;
                 GWT.log("set timeout to " + resource.idleSessionTimeout
                         + " minutes", null);
             }
 
             @Override
-            public void onError(final Configuration resource, final int status,
-                    final String statusText) {
+            public void onError(final Configuration resource) {
             }
         };
 
@@ -99,7 +97,8 @@ public class Session {
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
             @Override
-            public void onChange(final ResourceCollection<Permission> resources,
+            public void onChange(
+                    final ResourceCollection<Permission> resources,
                     final Permission resource) {
                 final Map<String, Collection<Role>> actions;
                 if (Session.this.permissions.containsKey(resource.resource)) {
@@ -175,8 +174,7 @@ public class Session {
         authentication.addResourceChangeListener(new ResourceChangeListener<Authentication>() {
 
             @Override
-            public void onChange(final Authentication resource,
-                    final String message) {
+            public void onChange(final Authentication resource) {
                 if (resource.user.login.equals(username)) {
                     if (resource.isUptodate()) {
                         doLogin(resource);
@@ -189,15 +187,8 @@ public class Session {
             }
 
             @Override
-            public void onError(final Authentication resource,
-                    final int status, final String statusText) {
-                if (status < 500) {
-                    doAccessDenied();
-                }
-                else {
-                    // TODO better something like doSomethingWentWrong()
-                    doAccessDenied();
-                }
+            public void onError(final Authentication resource) {
+                doAccessDenied();
             }
         });
         authentication.save();

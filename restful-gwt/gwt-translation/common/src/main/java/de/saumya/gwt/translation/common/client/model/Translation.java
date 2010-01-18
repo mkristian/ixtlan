@@ -30,12 +30,12 @@ public class Translation extends ResourceWithID<Translation> {
     public User      approvedBy;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
+    protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
-        append(buf, "previous_text", this.previousText);
-        append(buf, "text", this.text);
-        append(buf, "approved_at", this.approvedAt);
-        append(buf, "approved_by", this.approvedBy);
+        appendXml(buf, "previous_text", this.previousText);
+        appendXml(buf, "text", this.text);
+        appendXml(buf, "approved_at", this.approvedAt);
+        appendXml(buf, "approved_by", this.approvedBy);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Translation extends ResourceWithID<Translation> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         super.toString(buf);
         buf.append(":previous_text => ").append(this.previousText);
         buf.append(":text => ").append(this.text);

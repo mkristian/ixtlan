@@ -23,9 +23,9 @@ public class WordBundle extends Resource<WordBundle> {
     public ResourceCollection<Word> words;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "locale", this.locale);
-        append(buf, "words", this.words);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "locale", this.locale);
+        appendXml(buf, "words", this.words);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class WordBundle extends Resource<WordBundle> {
     }
 
     @Override
-    protected void toString(final StringBuffer buf) {
+    protected void toString(final StringBuilder buf) {
         buf.append(":locale => ").append(this.locale);
         if (this.words != null) {
             buf.append(", :words => ").append(this.words);

@@ -8,8 +8,8 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceWithID;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceWithID;
 
 public class Group extends ResourceWithID<Group> {
 
@@ -23,42 +23,40 @@ public class Group extends ResourceWithID<Group> {
         this.domainFactory = domainFactory;
     }
 
-    public String            name;
+    public String                     name;
 
-    public Timestamp         createdAt;
+    public Timestamp                  createdAt;
 
     public ResourceCollection<Domain> domains;
     public ResourceCollection<Locale> locales;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
+    protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
-        append(buf, "name", this.name);
-        append(buf, "locales", this.locales);
-        append(buf, "domains", this.domains);
-        append(buf, "created_at", this.createdAt);
+        appendXml(buf, "name", this.name);
+        appendXml(buf, "locales", this.locales);
+        appendXml(buf, "domains", this.domains);
+        appendXml(buf, "created_at", this.createdAt);
     }
 
     @Override
     protected void fromXml(final Element root) {
         super.fromXml(root);
         this.name = getString(root, "name");
-        this.locales = this.localeFactory.getChildResourceCollection(root, "locales");
-        this.domains = this.domainFactory.getChildResourceCollection(root, "domains");
+        this.locales = this.localeFactory.getChildResourceCollection(root,
+                                                                     "locales");
+        this.domains = this.domainFactory.getChildResourceCollection(root,
+                                                                     "domains");
         this.createdAt = getTimestamp(root, "created_at");
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         super.toString(buf);
-        buf.append(":name => ").append(this.name);
-        if (this.domains != null) {
-            buf.append(", :domains => ").append(this.domains);
-        }
-        if (this.locales != null) {
-            buf.append(", :locales => ").append(this.locales);
-        }
-        buf.append(", :created_at => ").append(this.createdAt);
+        toString(buf, "name", this.name);
+        toString(buf, "domains", this.domains);
+        toString(buf, "locales", this.locales);
+        toString(buf, "created_at", this.createdAt);
     }
 
     @Override

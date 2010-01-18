@@ -24,10 +24,10 @@ class Permission extends Resource<Permission> {
     ResourceCollection<Role> roles;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "resource", this.resource);
-        append(buf, "action", this.action);
-        append(buf, "roles", this.roles);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "resource", this.resource);
+        appendXml(buf, "action", this.action);
+        appendXml(buf, "roles", this.roles);
     }
 
     @Override
@@ -43,7 +43,7 @@ class Permission extends Resource<Permission> {
     }
 
     @Override
-    protected void toString(final StringBuffer buf) {
+    protected void toString(final StringBuilder buf) {
         buf.append(":resource => ").append(this.resource);
         buf.append(":action => ").append(this.action);
         if (this.roles != null) {

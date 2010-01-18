@@ -57,7 +57,7 @@ public class GetText {
         this.wordBundleListener = new ResourceChangeListener<WordBundle>() {
 
             @Override
-            public void onChange(final WordBundle resource, final String message) {
+            public void onChange(final WordBundle resource) {
                 for (final Word word : resource.words) {
                     GetText.this.wordMap.put(word.code, word);
                 }
@@ -78,15 +78,14 @@ public class GetText {
             }
 
             @Override
-            public void onError(final WordBundle resource, final int status,
-                    final String statusText) {
+            public void onError(final WordBundle resource) {
                 // nothing to do
             }
         };
         this.phraseBookChangeListener = new ResourceChangeListener<PhraseBook>() {
 
             @Override
-            public void onChange(final PhraseBook resource, final String message) {
+            public void onChange(final PhraseBook resource) {
                 for (final Phrase phrase : resource.phrases) {
                     GetText.this.phraseMap.put(phrase.code, phrase);
                 }
@@ -94,8 +93,7 @@ public class GetText {
             }
 
             @Override
-            public void onError(final PhraseBook resource, final int status,
-                    final String statusText) {
+            public void onError(final PhraseBook resource) {
                 // nothing to do
             }
         };

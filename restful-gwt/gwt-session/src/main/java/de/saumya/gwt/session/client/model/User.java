@@ -25,13 +25,13 @@ public class User extends Resource<User> {
         this.groupFactory = groupFactory;
     }
 
-    public String           login;
-    public String           email;
-    public String           name;
-    public Locale           preferedLanguage;
+    public String                    login;
+    public String                    email;
+    public String                    name;
+    public Locale                    preferedLanguage;
 
-    public Timestamp        createdAt;
-    public Timestamp        updatedAt;
+    public Timestamp                 createdAt;
+    public Timestamp                 updatedAt;
 
     public ResourceCollection<Group> groups;
 
@@ -41,14 +41,14 @@ public class User extends Resource<User> {
     }
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "login", this.login);
-        append(buf, "name", this.name);
-        append(buf, "email", this.email);
-        append(buf, "preferred_language", this.preferedLanguage);
-        append(buf, "groups", this.groups);
-        append(buf, "created_at", this.createdAt);
-        append(buf, "updated_at", this.updatedAt);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "login", this.login);
+        appendXml(buf, "name", this.name);
+        appendXml(buf, "email", this.email);
+        appendXml(buf, "preferred_language", this.preferedLanguage);
+        appendXml(buf, "groups", this.groups);
+        appendXml(buf, "created_at", this.createdAt);
+        appendXml(buf, "updated_at", this.updatedAt);
     }
 
     @Override
@@ -58,25 +58,21 @@ public class User extends Resource<User> {
         this.email = getString(root, "email");
         this.preferedLanguage = this.localeFactory.getChildResource(root,
                                                                     "preferred_language");
-        this.groups = this.groupFactory.getChildResourceCollection(root, "groups");
+        this.groups = this.groupFactory.getChildResourceCollection(root,
+                                                                   "groups");
         this.createdAt = getTimestamp(root, "created_at");
         this.updatedAt = getTimestamp(root, "updated_at");
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
-        buf.append(":login => ").append(this.login);
-        buf.append(", :name => ").append(this.name);
-        buf.append(", :email => ").append(this.email);
-        if (this.preferedLanguage != null) {
-            buf.append(", :preferedLanguage => ");
-            this.preferedLanguage.toString(buf);
-        }
-        if (this.groups != null) {
-            buf.append(", :groups => ").append(this.groups);
-        }
-        buf.append(", :created_at => ").append(this.createdAt);
-        buf.append(", :updated_at => ").append(this.updatedAt);
+    public void toString(final StringBuilder buf) {
+        toString(buf, "login", this.login);
+        toString(buf, "name", this.name);
+        toString(buf, "email", this.email);
+        toString(buf, "preferred_language", this.preferedLanguage);
+        toString(buf, "groups", this.groups);
+        toString(buf, "created_at", this.createdAt);
+        toString(buf, "updated_at", this.updatedAt);
     }
 
     public Collection<Locale> getAllowedLocales() {

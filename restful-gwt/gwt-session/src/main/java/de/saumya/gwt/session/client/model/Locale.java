@@ -27,9 +27,9 @@ public class Locale extends Resource<Locale> {
     }
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "code", this.code);
-        append(buf, "created_at", this.createdAt);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "code", this.code);
+        appendXml(buf, "created_at", this.createdAt);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class Locale extends Resource<Locale> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
-        buf.append(":code => ").append(this.code);
-        buf.append(", :created_at => ").append(this.createdAt);
+    public void toString(final StringBuilder buf) {
+        toString(buf, "code", this.code);
+        toString(buf, "created_at", this.createdAt);
     }
 
     @Override

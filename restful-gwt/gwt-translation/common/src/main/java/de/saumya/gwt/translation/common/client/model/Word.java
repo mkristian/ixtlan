@@ -18,9 +18,9 @@ public class Word extends Resource<Word> {
     public String text;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "code", this.code);
-        append(buf, "text", this.text);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "code", this.code);
+        appendXml(buf, "text", this.text);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Word extends Resource<Word> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         buf.append(":code => ").append(this.code);
         buf.append(", :text => ").append(this.text);
     }

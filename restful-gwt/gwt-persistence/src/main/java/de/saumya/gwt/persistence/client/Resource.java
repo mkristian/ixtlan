@@ -36,6 +36,7 @@ public abstract class Resource<E extends Resource<E>> {
     private final Repository                     repository;
 
     private final Set<ResourceChangeListener<E>> listeners = new HashSet<ResourceChangeListener<E>>();
+    private ResourceChangeNotification           changeNotification;
 
     final ResourceFactory<E>                     factory;
 
@@ -44,7 +45,6 @@ public abstract class Resource<E extends Resource<E>> {
     protected Resource(final Repository repository,
             final ResourceFactory<E> factory,
             final ResourceChangeListener<E> listener) {
-        // final ResourceChangeListener<E> resourceChangeListener) {
         this.repository = repository;
         this.factory = factory;
         if (listener != null) {
@@ -65,7 +65,6 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public void save() {
-        addResourceChangeListener(this.factory.resourceChangeListener);
         switch (this.state) {
         case NEW:
         case TO_BE_CREATED:
@@ -120,40 +119,60 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public String toXml() {
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         toXml(buf);
         GWT.log(buf.toString(), null);
         return buf.toString();
     }
 
-    public void toXml(final StringBuffer buf) {
+    public void toXml(final StringBuilder buf) {
         buf.append("<").append(this.factory.storageName()).append(">");
         appendXml(buf);
         buf.append("</").append(this.factory.storageName()).append(">");
     }
 
-    protected void append(final StringBuffer buf, final String name,
-            final Object value) {
+    protected void appendXml(final StringBuilder buf, final String name,
+            final Resource<?> value) {
         if (value != null) {
-            append(buf, name, value.toString());
+            buf.append("<").append(name).append(">");
+            value.appendXml(buf);
+            buf.append("</").append(name).append(">");
         }
     }
 
-    protected void toString(final StringBuffer buf, final String name,
-            final Object value) {
+    protected void appendXml(final StringBuilder buf, final String name,
+            final ResourceCollection<?> value) {
         if (value != null) {
-            toString(buf, name, value.toString());
+            value.toXml(buf);
+        }
+        else {
+            buf.append("<").append(name).append(">");
+            buf.append("</").append(name).append(">");
         }
     }
 
-    protected void toString(final StringBuffer buf, final String name,
+    protected void appendXml(final StringBuilder buf, final String name,
             final String value) {
-        if (value != null) {
-            buf.append(", :").append(name).append(" => ").append(value);
+        // follow what the browser does with empty strings: do not send them
+        if (value != null && !"".equals(value)) {
+            buf.append("<")
+                    .append(name)
+                    .append(">")
+                    .append(value)
+                    .append("</")
+                    .append(name)
+                    .append(">");
         }
     }
 
-    protected void toString(final StringBuffer buf, final String name,
+    protected void appendXml(final StringBuilder buf, final String name,
+            final Object value) {
+        if (value != null) {
+            appendXml(buf, name, value.toString());
+        }
+    }
+
+    protected void toString(final StringBuilder buf, final String name,
             final Resource<?> value) {
         if (value != null) {
             buf.append(", :").append(name).append(" => ");
@@ -161,7 +180,7 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
-    protected void toString(final StringBuffer buf, final String name,
+    protected void toString(final StringBuilder buf, final String name,
             final ResourceCollection<?> value) {
         if (value != null) {
             buf.append(", :").append(name).append(" => [");
@@ -179,63 +198,17 @@ public abstract class Resource<E extends Resource<E>> {
         }
     }
 
-    protected void append(final StringBuffer buf, final String name,
-            final Resource<?> value) {
-        if (value != null) {
-            buf.append("<").append(name).append(">");
-            value.appendXml(buf);
-            buf.append("</").append(name).append(">");
-        }
-    }
-
-    protected void append(final StringBuffer buf, final String name,
-            final ResourceCollection<?> value) {
-        if (value != null) {
-            value.toXml(buf);
-        }
-        else {
-            buf.append("<").append(name).append(">");
-            buf.append("</").append(name).append(">");
-        }
-    }
-
-    protected void append(final StringBuffer buf, final String name,
+    protected void toString(final StringBuilder buf, final String name,
             final String value) {
-        // follow what the browser does with empty strings: do not send them
-        if (value != null && !"".equals(value)) {
-            buf.append("<")
-                    .append(name)
-                    .append(">")
-                    .append(value)
-                    .append("</")
-                    .append(name)
-                    .append(">");
+        if (value != null) {
+            buf.append(", :").append(name).append(" => ").append(value);
         }
     }
 
-    public void addResourceChangeListener(
-            final ResourceChangeListener<E> listener) {
-        if (listener != null) {
-            this.listeners.add(listener);
-        }
-    }
-
-    public void removeResourceChangeListener(
-            final ResourceChangeListener<E> listener) {
-        this.listeners.remove(listener);
-    }
-
-    @SuppressWarnings("unchecked")
-    void fireResourceChangeEvents(final String message) {
-        for (final ResourceChangeListener<E> listener : this.listeners) {
-            listener.onChange((E) this, message);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    void fireResourceErrorEvents(final int status, final String statusText) {
-        for (final ResourceChangeListener<E> listener : this.listeners) {
-            listener.onError((E) this, status, statusText);
+    protected void toString(final StringBuilder buf, final String name,
+            final Object value) {
+        if (value != null) {
+            toString(buf, name, value.toString());
         }
     }
 
@@ -282,9 +255,49 @@ public abstract class Resource<E extends Resource<E>> {
         return null;
     }
 
+    public void setResourceChangeNotification(
+            final ResourceChangeNotification changeNotification) {
+        this.changeNotification = changeNotification;
+    }
+
+    public void addResourceChangeListener(
+            final ResourceChangeListener<E> listener) {
+        if (listener != null) {
+            this.listeners.add(listener);
+        }
+    }
+
+    public void removeResourceChangeListener(
+            final ResourceChangeListener<E> listener) {
+        this.listeners.remove(listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    void fireResourceChangeEvents(final String message) {
+        for (final ResourceChangeListener<E> listener : this.listeners) {
+            listener.onChange((E) this);
+        }
+        if (this.changeNotification != null) {
+            this.changeNotification.onChange(message, this);
+            this.changeNotification = null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    void fireResourceErrorEvents(final int status, final String statusText) {
+        for (final ResourceChangeListener<E> listener : this.listeners) {
+            listener.onError((E) this);
+        }
+        if (this.changeNotification != null) {
+            this.changeNotification.onError(status, statusText, this);
+            this.changeNotification = null;
+        }
+
+    }
+
     @Override
     public String toString() {
-        final StringBuffer buf = new StringBuffer(getClass().getName()).append("(");
+        final StringBuilder buf = new StringBuilder(getClass().getName()).append("(");
         toString(buf);
 
         return buf.append(")").toString();
@@ -305,11 +318,11 @@ public abstract class Resource<E extends Resource<E>> {
 
     protected abstract void fromXml(Element root);
 
+    protected abstract void appendXml(StringBuilder buf);
+
+    protected abstract void toString(StringBuilder buf);
+
     public abstract String key();
-
-    protected abstract void appendXml(StringBuffer buf);
-
-    protected abstract void toString(StringBuffer buf);
 
     public abstract String display();
 

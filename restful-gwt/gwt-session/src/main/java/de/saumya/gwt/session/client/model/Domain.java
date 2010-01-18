@@ -19,9 +19,9 @@ public class Domain extends Resource<Domain> {
     public Timestamp createdAt;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "id", this.id);
-        append(buf, "created_at", this.createdAt);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "id", this.id);
+        appendXml(buf, "created_at", this.createdAt);
     }
 
     @Override
@@ -36,9 +36,9 @@ public class Domain extends Resource<Domain> {
     }
 
     @Override
-    protected void toString(final StringBuffer buf) {
-        buf.append("id => ").append(this.id);
-        buf.append(", :created_at => ").append(this.createdAt);
+    protected void toString(final StringBuilder buf) {
+        toString(buf, "id", this.id);
+        toString(buf, "created_at", this.createdAt);
     }
 
     @Override

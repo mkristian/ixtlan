@@ -50,7 +50,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
         this.createdListener = new ResourceChangeListener<E>() {
 
             @Override
-            public void onChange(final E resource, final String message) {
+            public void onChange(final E resource) {
                 if (resource.isUptodate()
                         && History.getToken()
                                 .equals(DefaultResourceActionPanel.this.pathFactory.newPath())) {
@@ -59,8 +59,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             }
 
             @Override
-            public void onError(final E resource, final int status,
-                    final String statusText) {
+            public void onError(final E resource) {
                 // TODO Auto-generated method stub
             }
         };
@@ -97,7 +96,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                 resource.addResourceChangeListener(new ResourceChangeListener<E>() {
 
                     @Override
-                    public void onChange(final E resource, final String message) {
+                    public void onChange(final E resource) {
                         if (resource.isUptodate()
                                 && History.getToken()
                                         .equals(DefaultResourceActionPanel.this.pathFactory.newPath())) {
@@ -106,8 +105,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                     }
 
                     @Override
-                    public void onError(final E resource, final int status,
-                            final String statusText) {
+                    public void onError(final E resource) {
                         // TODO Auto-generated method stub
                     }
                 });

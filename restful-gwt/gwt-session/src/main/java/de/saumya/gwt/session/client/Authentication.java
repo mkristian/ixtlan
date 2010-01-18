@@ -31,9 +31,9 @@ class Authentication extends Resource<Authentication> {
     }
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "login", this.login);
-        append(buf, "password", this.password);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "login", this.login);
+        appendXml(buf, "password", this.password);
     }
 
     @Override
@@ -45,7 +45,7 @@ class Authentication extends Resource<Authentication> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         if (this.login != null) {
             buf.append(":login => ").append(this.login);
         }

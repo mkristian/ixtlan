@@ -186,8 +186,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
                                                          @Override
                                                          public void onChange(
-                                                                 final E resource,
-                                                                 final String message) {
+                                                                 final E resource) {
                                                              reset(resource);
                                                              ResourceScreen.this.loading.setVisible(false);
                                                              // ResourceScreen.this.notifications.info("loaded: "
@@ -198,9 +197,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
                                                          @Override
                                                          public void onError(
-                                                                 final E resource,
-                                                                 final int status,
-                                                                 final String statusText) {
+                                                                 final E resource) {
                                                              ResourceScreen.this.loading.setVisible(false);
                                                              // ResourceScreen.this.notifications.warn(status
                                                              // + ": "

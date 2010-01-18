@@ -35,15 +35,15 @@ public class Configuration extends Resource<Configuration> {
     }
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "session_idle_timeout", this.idleSessionTimeout);
-        append(buf, "keep_audit_logs", this.auditLogRotation);
-        append(buf, "locales", this.availableLocales);
-        append(buf,
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "session_idle_timeout", this.idleSessionTimeout);
+        appendXml(buf, "keep_audit_logs", this.auditLogRotation);
+        appendXml(buf, "locales", this.availableLocales);
+        appendXml(buf,
                "notification_recipient_emails",
                this.emailForErrorNotification);
-        append(buf, "updated_at", this.updatedAt);
-        append(buf, "updated_by", this.updatedBy);
+        appendXml(buf, "updated_at", this.updatedAt);
+        appendXml(buf, "updated_by", this.updatedBy);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Configuration extends Resource<Configuration> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         buf.append(":idle_session_timeout => ").append(this.idleSessionTimeout);
         buf.append(", :audit_log_rotation => ").append(this.auditLogRotation);
         buf.append(", :available_locales => ").append(this.availableLocales);

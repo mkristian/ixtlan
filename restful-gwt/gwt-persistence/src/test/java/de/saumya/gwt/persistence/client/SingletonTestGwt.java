@@ -15,8 +15,8 @@ public class SingletonTestGwt extends PersistenceTestGwt {
         String name;
 
         @Override
-        protected void appendXml(final StringBuffer buf) {
-            append(buf, "name", this.name);
+        protected void appendXml(final StringBuilder buf) {
+            appendXml(buf, "name", this.name);
         }
 
         @Override
@@ -25,7 +25,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
         }
 
         @Override
-        public void toString(final StringBuffer buf) {
+        public void toString(final StringBuilder buf) {
             buf.append(", :name => ").append(this.name);
         }
 

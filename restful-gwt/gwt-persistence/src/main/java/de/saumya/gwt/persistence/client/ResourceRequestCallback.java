@@ -67,8 +67,6 @@ public class ResourceRequestCallback<E extends Resource<E>> implements
 
             this.resource.fireResourceErrorEvents(response.getStatusCode(),
                                                   response.getStatusText());
-            GWT.log(response.getStatusText(), null);
-            GWT.log(response.getText(), null);
         }
     }
 }

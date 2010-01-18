@@ -14,32 +14,32 @@ import de.saumya.gwt.persistence.client.Resource.State;
 
 public abstract class ResourceFactory<E extends Resource<E>> {
 
-    private final Map<String, E>              cache = new HashMap<String, E>();
+    private final Map<String, E> cache = new HashMap<String, E>();
 
-    protected final Repository                repository;
-    private final ResourceNotifications        notification;
+    protected final Repository   repository;
 
-    protected final ResourceChangeListener<E> resourceChangeListener;
+    // private final ResourceNotifications notification;
 
+    // protected final ResourceChangeListener<E> resourceChangeListener;
+
+    // private final
     public ResourceFactory(final Repository repository,
-            final ResourceNotifications notification) {
+            final ResourceNotifications notifications) {
         this.repository = repository;
-        this.notification = notification;
-        this.resourceChangeListener = new ResourceChangeListener<E>() {
-
-            @Override
-            public void onChange(final E resource, final String message) {
-                ResourceFactory.this.notification.info(message, resource);
-            }
-
-            @Override
-            public void onError(final E resource, final int status,
-                    final String statusText) {
-                ResourceFactory.this.notification.error(status,
-                                                        statusText,
-                                                        resource);
-            }
-        };
+        // this.notification = notification;
+        // this.resourceChangeListener = new ResourceChangeListener<E>() {
+        //
+        // @Override
+        // public void onChange(final E resource, final String message) {
+        // notifications.info(message, resource);
+        // }
+        //
+        // @Override
+        // public void onError(final E resource, final int status,
+        // final String statusText) {
+        // notifications.error(status, statusText, resource);
+        // }
+        // };
     }
 
     abstract public String storageName();
@@ -134,7 +134,8 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return keyName() == null ? null : getString(root, keyName());
     }
 
-    public ResourceCollection<E> getChildResourceCollection(final Element root, final String name) {
+    public ResourceCollection<E> getChildResourceCollection(final Element root,
+            final String name) {
         final Element element = (Element) root.getElementsByTagName(name)
                 .item(0);
         final ResourceCollection<E> resources = newResources();
@@ -156,7 +157,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource();
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
-        resource.addResourceChangeListener(this.resourceChangeListener);
+        // resource.addResourceChangeListener(this.resourceChangeListener);
         this.repository.get(storageName(),
                             new ResourceRequestCallback<E>(resource, this));
         return resource;
@@ -166,7 +167,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource(key);
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
-        resource.addResourceChangeListener(this.resourceChangeListener);
+        // resource.addResourceChangeListener(this.resourceChangeListener);
         this.repository.get(storagePluralName(),
                             key,
                             new ResourceRequestCallback<E>(resource, this));

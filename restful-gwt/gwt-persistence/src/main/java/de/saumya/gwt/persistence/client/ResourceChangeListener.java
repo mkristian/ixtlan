@@ -4,7 +4,7 @@
 package de.saumya.gwt.persistence.client;
 
 public interface ResourceChangeListener<E extends Resource<E>> {
-    void onChange(E resource, String message);
+    void onChange(E resource);
 
-    void onError(E resource, int status, String statusText);
+    void onError(E resource);
 }

@@ -39,16 +39,16 @@ public class Phrase extends ResourceWithID<Phrase> {
     public Locale      locale;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
+    protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
-        append(buf, "code", this.code);
-        append(buf, "current_text", this.currentText);
-        append(buf, "text", this.text);
-        append(buf, "parentTranslation", this.parentTranslation);
-        append(buf, "default", this.defaultTranslation);
-        append(buf, "locale", this.locale);
-        append(buf, "updated_at", this.updatedAt);
-        append(buf, "updated_by", this.updatedBy);
+        appendXml(buf, "code", this.code);
+        appendXml(buf, "current_text", this.currentText);
+        appendXml(buf, "text", this.text);
+        appendXml(buf, "parentTranslation", this.parentTranslation);
+        appendXml(buf, "default", this.defaultTranslation);
+        appendXml(buf, "locale", this.locale);
+        appendXml(buf, "updated_at", this.updatedAt);
+        appendXml(buf, "updated_by", this.updatedBy);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Phrase extends ResourceWithID<Phrase> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         super.toString(buf);
         buf.append(":code => ").append(this.code);
         buf.append(", :current_text => ").append(this.currentText);

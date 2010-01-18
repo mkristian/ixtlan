@@ -23,9 +23,9 @@ public class PhraseBook extends Resource<PhraseBook> {
     public ResourceCollection<Phrase> phrases;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
-        append(buf, "locale", this.locale);
-        append(buf, "phrases", this.phrases);
+    protected void appendXml(final StringBuilder buf) {
+        appendXml(buf, "locale", this.locale);
+        appendXml(buf, "phrases", this.phrases);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class PhraseBook extends Resource<PhraseBook> {
     }
 
     @Override
-    protected void toString(final StringBuffer buf) {
+    protected void toString(final StringBuilder buf) {
         buf.append(":locale => ").append(this.locale);
         if (this.phrases != null) {
             buf.append(", :phrases => ").append(this.phrases);

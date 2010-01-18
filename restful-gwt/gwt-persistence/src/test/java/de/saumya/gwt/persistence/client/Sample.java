@@ -23,11 +23,11 @@ public class Sample extends ResourceWithID<Sample> {
     Sample child;
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
+    protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
-        append(buf, "language", this.language);
-        append(buf, "country", this.country);
-        append(buf, "child", this.child);
+        appendXml(buf, "language", this.language);
+        appendXml(buf, "country", this.country);
+        appendXml(buf, "child", this.child);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class Sample extends ResourceWithID<Sample> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
         super.toString(buf);
         buf.append(", :language => ").append(this.language);
         if (this.country != null) {

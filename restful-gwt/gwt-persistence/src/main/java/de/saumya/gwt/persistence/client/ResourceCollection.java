@@ -45,12 +45,12 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
     }
 
     public String toXml() {
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         toXml(buf);
         return buf.toString();
     }
 
-    public void toXml(final StringBuffer buf) {
+    public void toXml(final StringBuilder buf) {
         buf.append("<").append(this.factory.storagePluralName()).append(">");
         for (final E rsrc : this) {
             rsrc.toXml(buf);
