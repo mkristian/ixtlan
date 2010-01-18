@@ -7,6 +7,11 @@ generators/ixtlan_datamapper_rspec_scaffold/templates/controller.rb
 generators/ixtlan_datamapper_rspec_scaffold/templates/controller_spec.rb
 generators/ixtlan_datamapper_rspec_scaffold/templates/guard.rb
 generators/ixtlan_datamapper_rspec_scaffold/templates/i18n.rb
+generators/gwt_ixtlan_datamapper_rspec_scaffold/gwt_ixtlan_datamapper_rspec_scaffold_generator.rb
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Model.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/ModelFactory.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Panel.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Screen.java
 lib/models.rb
 lib/ixtlan.rb
 lib/dm-serializer.rb

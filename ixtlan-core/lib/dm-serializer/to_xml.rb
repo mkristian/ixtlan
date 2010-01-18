@@ -37,7 +37,9 @@ module DataMapper
           value = __send__(meth)
           unless value.nil?
             if value.respond_to?(:to_xml_document)
-              xml.add_xml(root, value.__send__(:to_xml_document, value.is_a?(DataMapper::Collection) ? {:collection_element_name => xml_name} : {:element_name => xml_name}))
+              options = value.is_a?(DataMapper::Collection) ? {:collection_element_name => xml_name} : {:element_name => xml_name}
+              options.merge!(opts[meth] || {})
+              xml.add_xml(root, value.__send__(:to_xml_document, options))
             else
               xml.add_node(root, xml_name, value.to_s)
             end
