@@ -17,9 +17,6 @@ public class ScreenDispatcher {
     }
 
     void dispatch(final ScreenPath path) {
-        GWT.log(path.controllerName, null);
-        GWT.log(path.action == null ? "null" : path.action.toString(), null);
-        GWT.log(path.key, null);
         dispatch(this.registry.get(path.controllerName), path);
     }
 
@@ -51,7 +48,18 @@ public class ScreenDispatcher {
                 screen.showEdit(path.key);
                 break;
             case INDEX:
-                screen.showAll();
+                final Map<String, String> query = new HashMap<String, String>();
+                if (path.query != null) {
+                    for (final String param : path.query.split("&")) {
+                        final int index = param.indexOf('=');
+                        if (index > 0) {
+                            query.put(param.substring(0, index),
+                                      param.substring(index + 1));
+                        }
+                    }
+                }
+                GWT.log("query " + query.toString(), null);
+                screen.showAll(query);
             }
         }
     }

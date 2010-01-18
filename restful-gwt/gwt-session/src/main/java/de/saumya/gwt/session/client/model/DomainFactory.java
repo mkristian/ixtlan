@@ -29,4 +29,9 @@ public class DomainFactory extends ResourceFactory<Domain> {
         return new Domain(this.repository, this);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return keyName();
+    }
+
 }

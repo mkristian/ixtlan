@@ -9,7 +9,8 @@ public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
     private final PhraseFactory factory;
 
     public PhraseBookFactory(final Repository repository,
-            final ResourceNotifications notification, final PhraseFactory factory) {
+            final ResourceNotifications notification,
+            final PhraseFactory factory) {
         super(repository, notification);
         this.factory = factory;
     }
@@ -27,6 +28,11 @@ public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
     @Override
     public PhraseBook newResource() {
         return new PhraseBook(this.repository, this, this.factory);
+    }
+
+    @Override
+    public String defaultSearchParameterName() {
+        return keyName();
     }
 
 }

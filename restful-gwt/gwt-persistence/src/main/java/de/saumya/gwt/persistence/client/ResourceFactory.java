@@ -18,20 +18,14 @@ public abstract class ResourceFactory<E extends Resource<E>> {
 
     protected final Repository   repository;
 
+    private E                    singleton;
+
     public ResourceFactory(final Repository repository,
             final ResourceNotifications notifications) {
         this.repository = repository;
     }
 
-    abstract public String storageName();
-
-    public String storagePluralName() {
-        return storageName() + "s";
-    }
-
-    abstract public E newResource();
-
-    String getString(final Element root, final String name) {
+    private String getString(final Element root, final String name) {
         if (root == null) {
             return null;
         }
@@ -45,6 +39,10 @@ public abstract class ResourceFactory<E extends Resource<E>> {
             }
         }
         return null;
+    }
+
+    private String keyFromXml(final Element root) {
+        return keyName() == null ? null : getString(root, keyName());
     }
 
     void putIntoCache(final E resource) {
@@ -71,12 +69,6 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         this.cache.clear();
     }
 
-    E getResource(final Element root) {
-        return getResource(keyFromXml(root));
-    }
-
-    private E singleton;
-
     E getResource() {
         if (this.singleton == null) {
             this.singleton = newResource();
@@ -98,6 +90,20 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         }
     }
 
+    E getResource(final Element root) {
+        return getResource(keyFromXml(root));
+    }
+
+    abstract public String storageName();
+
+    public String storagePluralName() {
+        return storageName() + "s";
+    }
+
+    public abstract String keyName();
+
+    public abstract String defaultSearchParameterName();
+
     public E getChildResource(final Element root, final String name) {
         final Element element = (Element) root.getElementsByTagName(name)
                 .item(0);
@@ -107,12 +113,6 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final E resource = getResource(keyFromXml(element));
         resource.fromXml(element);
         return resource;
-    }
-
-    public abstract String keyName();
-
-    private String keyFromXml(final Element root) {
-        return keyName() == null ? null : getString(root, keyName());
     }
 
     public ResourceCollection<E> getChildResourceCollection(final Element root,
@@ -126,16 +126,30 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return resources;
     }
 
+    abstract public E newResource();
+
     public ResourceCollection<E> newResources() {
         return new ResourceCollection<E>(this);
     }
 
-    public E get(final int key, final ResourceChangeListener<E> listener) {
-        return get("" + key, listener);
+    public E get() {
+        return get((ResourceChangeListener<E>) null, null);
+    }
+
+    public E get(final ResourceNotifications notifications) {
+        return get((ResourceChangeListener<E>) null, notifications);
     }
 
     public E get(final ResourceChangeListener<E> listener) {
+        return get(listener, null);
+    }
+
+    public E get(final ResourceChangeListener<E> listener,
+            final ResourceNotifications notifications) {
         final E resource = getResource();
+        if (notifications != null) {
+            resource.setResourceNotification(notifications);
+        }
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
         this.repository.get(storageName(),
@@ -143,8 +157,41 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return resource;
     }
 
+    public E get(final int key) {
+        return get("" + key, null, null);
+    }
+
+    public E get(final int key, final ResourceNotifications notifications) {
+        return get("" + key, null, notifications);
+    }
+
+    public E get(final int key, final ResourceChangeListener<E> listener) {
+        return get("" + key, listener, null);
+    }
+
+    public E get(final int key, final ResourceChangeListener<E> listener,
+            final ResourceNotifications notifications) {
+        return get("" + key, listener, notifications);
+    }
+
+    public E get(final String key) {
+        return get(key, null, null);
+    }
+
+    public E get(final String key, final ResourceNotifications notifications) {
+        return get(key, null, notifications);
+    }
+
     public E get(final String key, final ResourceChangeListener<E> listener) {
+        return get(key, listener, null);
+    }
+
+    public E get(final String key, final ResourceChangeListener<E> listener,
+            final ResourceNotifications notifications) {
         final E resource = getResource(key);
+        if (notifications != null) {
+            resource.setResourceNotification(notifications);
+        }
         resource.state = State.TO_BE_LOADED;
         resource.addResourceChangeListener(listener);
         this.repository.get(storagePluralName(),
@@ -153,10 +200,24 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return resource;
     }
 
+    public ResourceCollection<E> all() {
+        return all(null, null);
+    }
+
+    public ResourceCollection<E> all(final Map<String, String> query) {
+        return all(query, null);
+    }
+
     public ResourceCollection<E> all(final ResourcesChangeListener<E> listener) {
+        return all(null, listener);
+    }
+
+    public ResourceCollection<E> all(final Map<String, String> query,
+            final ResourcesChangeListener<E> listener) {
         final ResourceCollection<E> list = new ResourceCollection<E>(this);
         list.addResourcesChangeListener(listener);
         this.repository.all(storagePluralName(),
+                            query,
                             new ResourceListRequestCallback(list));
         return list;
     }

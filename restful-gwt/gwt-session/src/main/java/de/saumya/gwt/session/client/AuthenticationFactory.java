@@ -31,4 +31,9 @@ public class AuthenticationFactory extends ResourceFactory<Authentication> {
         return new Authentication(this.repository, this, this.userFactory);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
 }

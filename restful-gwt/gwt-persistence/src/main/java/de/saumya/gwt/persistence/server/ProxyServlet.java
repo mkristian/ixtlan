@@ -23,12 +23,13 @@ public class ProxyServlet extends HttpServlet {
             final HttpServletResponse resp) throws ServletException,
             IOException {
         final URL url = new URL("http://localhost:3000"
-                + req.getRequestURI().replaceFirst("/[a-zA-Z.]*/", "/"));
+                + req.getRequestURI().replaceFirst("/[a-zA-Z.]*/", "/")
+                + (req.getQueryString() == null ? "" : "?"
+                        + req.getQueryString()));
         final HttpURLConnection con = ((HttpURLConnection) url.openConnection());
         con.setRequestMethod(req.getMethod());
         con.setDoInput(true);
         con.addRequestProperty("Content-type", req.getContentType());
-        log(req.getMethod());
         InputStream in = null;
         OutputStream out = null;
         final Enumeration<String> headers = req.getHeaderNames();

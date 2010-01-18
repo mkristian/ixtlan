@@ -26,4 +26,9 @@ public class RoleFactory extends ResourceFactory<Role> {
         return new Role(this.repository, this);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
 }

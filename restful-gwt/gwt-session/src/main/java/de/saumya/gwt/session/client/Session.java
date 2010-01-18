@@ -44,7 +44,8 @@ public class Session {
 
         @Override
         public void run() {
-            GWT.log("idle " + this.idle + ", countDown " + this.countDown, null);
+            GWT.log("session idle " + this.idle + ", countDown "
+                    + this.countDown, null);
             if (this.idle) {
                 this.countDown--;
                 if (this.countDown == 0) {

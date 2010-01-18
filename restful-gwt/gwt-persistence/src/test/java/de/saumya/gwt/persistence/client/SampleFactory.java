@@ -3,7 +3,6 @@
  */
 package de.saumya.gwt.persistence.client;
 
-
 public class SampleFactory extends ResourceFactory<Sample> {
 
     public SampleFactory(final Repository repository,
@@ -24,6 +23,11 @@ public class SampleFactory extends ResourceFactory<Sample> {
     @Override
     public Sample newResource() {
         return new Sample(this.repository, this);
+    }
+
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
     }
 
 }

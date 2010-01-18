@@ -16,8 +16,8 @@ public class PhraseFactory extends ResourceFactory<Phrase> {
     private final LocaleFactory      localeFactory;
 
     public PhraseFactory(final Repository repository,
-            final ResourceNotifications notification, final UserFactory factory,
-            final LocaleFactory localeFactory,
+            final ResourceNotifications notification,
+            final UserFactory factory, final LocaleFactory localeFactory,
             final TranslationFactory translationFactory) {
         super(repository, notification);
         this.factory = factory;
@@ -42,6 +42,11 @@ public class PhraseFactory extends ResourceFactory<Phrase> {
                 this.translationFactory,
                 this.factory,
                 this.localeFactory);
+    }
+
+    @Override
+    public String defaultSearchParameterName() {
+        return "current_text";
     }
 
 }

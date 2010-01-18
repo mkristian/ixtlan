@@ -3,6 +3,8 @@
  */
 package de.saumya.gwt.translation.common.client.route;
 
+import com.google.gwt.core.client.GWT;
+
 public class ScreenPath {
 
     enum Action {
@@ -13,6 +15,7 @@ public class ScreenPath {
     public final ScreenPath.Action action;
     public final String            key;
     public final ScreenPath        child;
+    public final String            query;
 
     /**
      * <ul>
@@ -40,6 +43,7 @@ public class ScreenPath {
             if (subpath.equals("new")) {
                 // case "/name/new"
                 this.action = Action.NEW;
+                this.query = null;
                 this.key = null;
                 this.child = null;
             }
@@ -50,10 +54,12 @@ public class ScreenPath {
                 if (subsubpath.equals("edit")) {
                     // case "/name/id/edit"
                     this.action = Action.EDIT;
+                    this.query = null;
                     this.child = null;
                 }
                 else {
                     // case "/name/id/nested"
+                    this.query = null;
                     this.action = null;
                     this.child = new ScreenPath(subsubpath);
                 }
@@ -62,21 +68,27 @@ public class ScreenPath {
                 // case "/name/id
                 this.action = Action.SHOW;
                 this.key = subpath;
+                this.query = null;
                 this.child = null;
             }
         }
         else {
             // case "/name"
-            this.controllerName = path;
+            this.controllerName = path.replaceFirst("[$].*", "");
+            // assume NO $-character in query
+            this.query = path.replaceFirst(".*[$]", "");
             this.action = Action.INDEX;
             this.key = null;
             this.child = null;
+            GWT.log(this.controllerName + " <=> " + this.query, null);
         }
     }
 
     @Override
     public String toString() {
         // TODO use stringbuffer and apply all cases properly
-        return "/" + this.controllerName + "/" + this.key;
+        return "/" + this.controllerName
+                + (this.key != null ? "/" + this.key : "")
+                + (this.query != null ? "$" + this.query : "");
     }
 }

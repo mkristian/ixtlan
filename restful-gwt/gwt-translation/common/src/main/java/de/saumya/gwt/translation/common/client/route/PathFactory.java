@@ -1,5 +1,7 @@
 package de.saumya.gwt.translation.common.client.route;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 
 public class PathFactory {
@@ -30,6 +32,22 @@ public class PathFactory {
 
     public String showAllPath() {
         return path().toString();
+    }
+
+    public String allPath(final String query) {
+        return path().toString() + "$" + query;
+    }
+
+    public String allPath(final Map<String, String> query) {
+        final StringBuilder buf = new StringBuilder(path().toString());
+        buf.append("$");
+        for (final Map.Entry<String, String> entry : query.entrySet()) {
+            buf.append(entry.getKey())
+                    .append("=")
+                    .append(entry.getValue())
+                    .append("&");
+        }
+        return buf.toString();
     }
 
     private StringBuffer path() {

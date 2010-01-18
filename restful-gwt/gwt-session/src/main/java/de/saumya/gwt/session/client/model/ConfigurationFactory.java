@@ -33,4 +33,9 @@ public class ConfigurationFactory extends ResourceFactory<Configuration> {
         return new Configuration(this.repository, this, this.userFactory);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
 }

@@ -7,7 +7,7 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 public class GroupFactory extends ResourceFactory<Group> {
 
     private final LocaleFactory localeFactory;
-    private final DomainFactory  domainFactory;
+    private final DomainFactory domainFactory;
 
     public GroupFactory(final Repository repository,
             final ResourceNotifications notification,
@@ -33,6 +33,11 @@ public class GroupFactory extends ResourceFactory<Group> {
                 this,
                 this.localeFactory,
                 this.domainFactory);
+    }
+
+    @Override
+    public String defaultSearchParameterName() {
+        return "name";
     }
 
 }

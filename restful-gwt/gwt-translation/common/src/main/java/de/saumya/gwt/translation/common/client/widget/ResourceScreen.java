@@ -4,13 +4,15 @@
 package de.saumya.gwt.translation.common.client.widget;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
@@ -22,31 +24,34 @@ import de.saumya.gwt.translation.common.client.route.Screen;
 public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         implements Screen<E> {
 
-    private final PathFactory                  pathFactory;
+    private final PathFactory                      pathFactory;
 
-    protected final ResourceFactory<E>         factory;
+    private final ResourceNotifications            notifications;
 
-    protected final ResourceHeaderPanel        header;
+    protected final ResourceFactory<E>             factory;
 
-    protected final AbstractResourceActionPanel<E>     actions;
+    protected final ResourceHeaderPanel            header;
 
-    protected final ResourcePanel<E>           display;
+    protected final AbstractResourceActionPanel<E> actions;
 
-    protected final ResourceCollectionPanel<E> displayAll;
+    protected final ResourcePanel<E>               display;
 
-    protected final Session                    session;
+    protected final ResourceCollectionPanel<E>     displayAll;
 
-    protected final TranslatableLabel          loading;
+    protected final Session                        session;
 
-    private PathFactory                        parentPathFactory;
+    protected final TranslatableLabel              loading;
 
-    protected E                                resource;
+    private PathFactory                            parentPathFactory;
+
+    protected E                                    resource;
 
     protected ResourceScreen(final GetTextController getText,
             final ResourceFactory<E> factory, final Session session,
             final ResourcePanel<E> display,
             final ResourceCollectionPanel<E> displayAll,
-            final AbstractResourceActionPanel<E> actions) {
+            final AbstractResourceActionPanel<E> actions,
+            final ResourceNotifications notifications) {
         setStyleName("screen");
         this.loading = new TranslatableLabel("loading ...", getText);
         this.loading.setStyleName("loading");
@@ -56,6 +61,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         this.displayAll = displayAll;
         this.factory = factory;
         this.session = session;
+        this.notifications = notifications;
 
         add(this.loading);
         add(this.actions);
@@ -115,19 +121,24 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
     }
 
     @Override
-    public void showAll() {
-        final ResourceCollection<E> resources = this.factory.all(new ResourcesChangeListener<E>() {
+    public void showAll(final Map<String, String> query) {
+        this.loading.setVisible(true);
+        final ResourceCollection<E> resources = this.factory.all(query,
+                                                                 new ResourcesChangeListener<E>() {
 
-            @Override
-            public void onChange(final ResourceCollection<E> resources, final E resource) {
-            }
+                                                                     @Override
+                                                                     public void onChange(
+                                                                             final ResourceCollection<E> resources,
+                                                                             final E resource) {
+                                                                     }
 
-            @Override
-            public void onLoaded(final ResourceCollection<E> resources) {
-                reset(resources);
-                ResourceScreen.this.loading.setVisible(false);
-            }
-        });
+                                                                     @Override
+                                                                     public void onLoaded(
+                                                                             final ResourceCollection<E> resources) {
+                                                                         reset(resources);
+                                                                         ResourceScreen.this.loading.setVisible(false);
+                                                                     }
+                                                                 });
         // TODO should be set be onChange and onError. maybe make an application
         // wide notification widget
         // this.loading.setVisible(false);
@@ -171,9 +182,9 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
             this.display.setReadOnly(!this.session.isAllowed(Action.UPDATE,
                                                              this.factory.storagePluralName()));
-
             this.loading.setVisible(true);
-            final E resource = this.factory.get(this.resourceChangeListener);
+            final E resource = this.factory.get(this.resourceChangeListener,
+                                                this.notifications);
             reset(resource);
         }
         else {
@@ -211,7 +222,9 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
     protected void show(final String key) {
         this.loading.setVisible(true);
-        final E resource = this.factory.get(key, this.resourceChangeListener);
+        final E resource = this.factory.get(key,
+                                            this.resourceChangeListener,
+                                            this.notifications);
         reset(resource);
     }
 }

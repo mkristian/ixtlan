@@ -62,6 +62,11 @@ public class SingletonTestGwt extends PersistenceTestGwt {
             return new Singleton(this.repository, this);
         }
 
+        @Override
+        public String defaultSearchParameterName() {
+            return null;
+        }
+
     }
 
     private static final String RESOURCE_XML = "<singleton>"
@@ -91,7 +96,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
 
     public void testGet() {
         this.repository.addXmlResponse(RESOURCE_XML);
-        final Singleton second = this.factory.get(null);
+        final Singleton second = this.factory.get();
 
         assertSame(this.singleton, second);
         assertEquals(State.UP_TO_DATE, second.state);
@@ -109,7 +114,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     public void testClearCache() {
         this.factory.clearCache();
         this.repository.addXmlResponse(RESOURCE_XML);
-        final Singleton second = this.factory.get(null);
+        final Singleton second = this.factory.get();
         assertEquals(State.UP_TO_DATE, this.singleton.state);
         assertNotSame(this.singleton, second);
     }

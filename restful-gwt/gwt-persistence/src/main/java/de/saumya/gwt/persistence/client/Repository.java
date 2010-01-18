@@ -3,6 +3,9 @@
  */
 package de.saumya.gwt.persistence.client;
 
+import java.util.Collections;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -10,16 +13,33 @@ import com.google.gwt.http.client.RequestException;
 
 public class Repository {
 
-    private static final String URL = GWT.getHostPageBaseURL();
+    private static final String        URL      = GWT.getHostPageBaseURL();
+    private static Map<String, String> NO_QUERY = Collections.emptyMap();
 
-    private String              authenticationToken;
+    private String                     authenticationToken;
 
     public void setAuthenticationToken(final String authenticationToken) {
         this.authenticationToken = authenticationToken;
     }
 
+    void all(final String resourceName, final Map<String, String> query,
+            final RequestCallback callback) {
+        final StringBuilder buf = new StringBuilder(URL);
+        buf.append(resourceName).append(".xml");
+        if (query != null && !query.isEmpty()) {
+            buf.append("?");
+            for (final Map.Entry<String, String> entry : query.entrySet()) {
+                buf.append(entry.getKey())
+                        .append("=")
+                        .append(entry.getValue())
+                        .append("&");
+            }
+        }
+        doIt("GET", buf.toString(), null, callback);
+    }
+
     void all(final String resourceName, final RequestCallback callback) {
-        doIt("GET", URL + resourceName + ".xml", null, callback);
+        all(resourceName, NO_QUERY, callback);
     }
 
     void get(final String resourceName, final int id,

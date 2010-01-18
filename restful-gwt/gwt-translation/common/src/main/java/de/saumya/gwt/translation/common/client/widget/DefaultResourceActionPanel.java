@@ -3,7 +3,6 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -13,8 +12,8 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -38,6 +37,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
     protected final String                  resourceName;
 
+    private final String                    defaultParameterName;
     private final ResourceChangeListener<E> createdListener;
 
     public DefaultResourceActionPanel(final GetTextController getText,
@@ -49,6 +49,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
         setStyleName("action-panel");
         this.session = session;
         this.resourceName = factory.storagePluralName();
+        this.defaultParameterName = factory.defaultSearchParameterName();
         this.createdListener = new ResourceChangeListener<E>() {
 
             @Override
@@ -183,6 +184,21 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
         return getBy;
     }
 
+    private void search(final TextBoxBase textBox, final boolean exact) {
+        final String token = DefaultResourceActionPanel.this.pathFactory.allPath((exact
+                ? "exact=&"
+                : "")
+                + this.defaultParameterName
+                + "="
+                + (textBox.getText().length() == 0 ? "*" : textBox.getText()));
+        if (token.equals(History.getToken())) {
+            History.fireCurrentHistoryState();
+        }
+        else {
+            History.newItem(token);
+        }
+    }
+
     protected ComplexPanel createSearchPanel() {
         final ComplexPanel search = new FlowPanel();
         search.setStyleName("search");
@@ -194,10 +210,9 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                                               @Override
                                               protected void action(
                                                       final TextBoxBase textBox) {
-                                                  // TODO
-                                                  GWT.log("TODO fuzzy search",
-                                                          null);
+                                                  search(textBox, false);
                                               }
+
                                           });
         final TranslatableTextBoxButton button = new TranslatableTextBoxButton(box,
                 "exact",
@@ -206,8 +221,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
             @Override
             protected void action(final TextBoxBase textBox) {
-                // TODO
-                GWT.log("TODO exact search", null);
+                search(textBox, true);
             }
         });
         search.add(button);

@@ -35,4 +35,9 @@ public class UserFactory extends ResourceFactory<User> {
                 this.groupFactory);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return "name";
+    }
+
 }

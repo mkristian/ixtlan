@@ -30,4 +30,9 @@ public class WordBundleFactory extends ResourceFactory<WordBundle> {
         return new WordBundle(this.repository, this, this.wordFactory);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
 }

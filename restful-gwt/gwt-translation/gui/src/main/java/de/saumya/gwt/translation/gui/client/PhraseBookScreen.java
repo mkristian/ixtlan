@@ -54,7 +54,7 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
             final PhraseScreen phraseScreen,
             final ResourceBindings<PhraseBook> mutator,
             final GetTextController getTextController, final Session session,
-            final ResourceNotifications changeNotification) {
+            final ResourceNotifications notifications) {
         super(getTextController,
                 bookFactory,
                 session,
@@ -66,7 +66,8 @@ public class PhraseBookScreen extends ResourceScreen<PhraseBook> {
                         mutator,
                         session,
                         bookFactory,
-                        changeNotification));
+                        notifications),
+                notifications);
         this.phraseScreen = phraseScreen;
     }
 

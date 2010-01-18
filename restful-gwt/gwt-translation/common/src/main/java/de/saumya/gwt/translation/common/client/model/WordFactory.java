@@ -29,6 +29,11 @@ public class WordFactory extends ResourceFactory<Word> {
         return new Word(this.repository, this);
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
     // TODO you can NOT save or delete this resource !!
 
 }

@@ -30,7 +30,7 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     }
 
     public Locale defaultLocale() {
-        final Locale locale = get("DEFAULT", null);
+        final Locale locale = get("DEFAULT");
         if (locale.code == null) {
             locale.code = "DEFAULT";
         }
@@ -38,10 +38,16 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     }
 
     public Locale allLocale() {
-        final Locale locale = get("ALL", null);
+        final Locale locale = get("ALL");
         if (locale.code == null) {
             locale.code = "ALL";
         }
         return locale;
     }
+
+    @Override
+    public String defaultSearchParameterName() {
+        return "code";
+    }
+
 }

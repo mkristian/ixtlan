@@ -3,6 +3,8 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
+import java.util.Map;
+
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.model.Configuration;
@@ -72,7 +74,7 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
     public ConfigurationScreen(final ConfigurationFactory configFactory,
             final ResourceBindings<Configuration> mutator,
             final GetTextController getTextController, final Session session,
-            final ResourceNotifications changeNotification) {
+            final ResourceNotifications notifications) {
         super(getTextController,
                 configFactory,
                 session,
@@ -84,13 +86,14 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                         mutator,
                         session,
                         configFactory,
-                        changeNotification));
+                        notifications),
+                notifications);
     }
 
     // TODO put all these methods below except reset(...) into
     // SingletonResourceScreen
     @Override
-    public void showAll() {
+    public void showAll(Map<String, String> query) {
         // singletons act on urls which look like a collection of resources =>
         // no showNew, showRead, showEdit. only showAll
         showSingleton();

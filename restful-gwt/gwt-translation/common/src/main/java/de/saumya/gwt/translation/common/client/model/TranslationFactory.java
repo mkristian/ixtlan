@@ -34,4 +34,9 @@ public class TranslationFactory extends ResourceFactory<Translation> {
         return "id";
     }
 
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
 }

@@ -3,8 +3,8 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
@@ -21,7 +21,7 @@ class PhraseScreen extends ResourceScreen<Phrase> {
     PhraseScreen(final GetTextController getTextController,
             final PhraseFactory phraseFactory,
             final ResourceBindings<Phrase> binding, final Session session,
-            final ResourceNotifications changeNotification) {
+            final ResourceNotifications notifications) {
         super(getTextController,
                 phraseFactory,
                 session,
@@ -31,7 +31,8 @@ class PhraseScreen extends ResourceScreen<Phrase> {
                         binding,
                         session,
                         phraseFactory,
-                        changeNotification));
+                        notifications),
+                notifications);
         // this.phraseActions = (PhraseActionPanel) this.actions;
         this.phraseCollection = (PhraseCollectionPanel) this.displayAll;
     }

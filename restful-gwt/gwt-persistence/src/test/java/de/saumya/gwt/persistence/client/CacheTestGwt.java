@@ -34,7 +34,7 @@ public class CacheTestGwt extends PersistenceTestGwt {
 
     public void testGet() {
         this.repository.addXmlResponse(RESOURCE_XML);
-        final Sample second = this.factory.get(123, null);
+        final Sample second = this.factory.get(123);
 
         assertSame(this.sample, second);
         assertEquals(State.UP_TO_DATE, second.state);
@@ -43,11 +43,11 @@ public class CacheTestGwt extends PersistenceTestGwt {
     public void testGetAll() {
         this.repository.addXmlResponse("<samples>" + RESOURCE_XML
                 + RESOURCE_XML.replace("123", "234") + "</samples>");
-        final ResourceCollection<Sample> samples = this.factory.all(null);
+        final ResourceCollection<Sample> samples = this.factory.all();
         assertSame(this.sample, samples.get(0));
 
         this.repository.reset();
-        final Sample second = this.factory.get(234, null);
+        final Sample second = this.factory.get(234);
         assertSame(second, samples.get(1));
     }
 
@@ -55,7 +55,7 @@ public class CacheTestGwt extends PersistenceTestGwt {
         this.repository.addXmlResponse("<sample><id>345</id><language>de</language>"
                 + RESOURCE_XML.replaceAll("sample", "child")
                         .replace("GE", "JP") + "</sample>");
-        final Sample second = this.factory.get(345, null);
+        final Sample second = this.factory.get(345);
         assertSame(second.child, this.sample);
         assertEquals(this.sample.country, "JP");
     }
@@ -67,7 +67,7 @@ public class CacheTestGwt extends PersistenceTestGwt {
 
         this.repository.reset();
         this.repository.addXmlResponse(RESOURCE_XML);
-        final Sample second = this.factory.get(123, null);
+        final Sample second = this.factory.get(123);
         assertEquals(State.UP_TO_DATE, second.state);
         assertNotSame(this.sample, second);
     }
@@ -75,7 +75,7 @@ public class CacheTestGwt extends PersistenceTestGwt {
     public void testClearCache() {
         this.factory.clearCache();
         this.repository.addXmlResponse(RESOURCE_XML);
-        final Sample second = this.factory.get(123, null);
+        final Sample second = this.factory.get(123);
         assertEquals(State.UP_TO_DATE, this.sample.state);
         assertNotSame(this.sample, second);
     }

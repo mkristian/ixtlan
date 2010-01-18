@@ -61,7 +61,7 @@ public class GetText {
                 for (final Word word : resource.words) {
                     GetText.this.wordMap.put(word.code, word);
                 }
-                final Locale locale = localeFactory.get(resource.locale, null);
+                final Locale locale = localeFactory.get(resource.locale);
                 for (final Word word : GetText.this.wordMap.values()) {
                     if (word.isNew()) {
                         final Phrase phrase = phraseFactory.newResource();
