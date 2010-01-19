@@ -15,7 +15,7 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 public abstract class ButtonAction<E extends Resource<E>> implements
         ClickHandler, KeyUpHandler {
 
-    private E                                resource;
+    private E                           resource;
 
     private final ResourceNotifications changeNotification;
 
@@ -33,7 +33,9 @@ public abstract class ButtonAction<E extends Resource<E>> implements
     }
 
     protected void doAction() {
-        this.resource.setResourceNotification(this.changeNotification);
+        if (this.resource != null) {
+            this.resource.setResourceNotification(this.changeNotification);
+        }
         action(this.resource);
     }
 

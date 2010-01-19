@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -110,6 +111,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                     @Override
                     public void onError(final E resource) {
                         // TODO Auto-generated method stub
+                        GWT.log("TODO error on create resource", null);
                     }
                 });
                 resource.save();
