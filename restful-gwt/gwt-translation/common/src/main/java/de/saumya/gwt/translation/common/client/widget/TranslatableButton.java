@@ -15,12 +15,17 @@ public class TranslatableButton extends Button implements Translatable {
 
     private String                  code = null;
 
-    private final GetTextController getText;
+    private final GetTextController getTextController;
 
-    public TranslatableButton(final String text, final GetTextController getText) {
+    public TranslatableButton(final GetTextController getTextController) {
+        this(null, getTextController);
+    }
+
+    public TranslatableButton(final String text,
+            final GetTextController getTextController) {
         super();
-        this.getText = getText;
-        this.getText.addTranslatable(this);
+        this.getTextController = getTextController;
+        this.getTextController.addTranslatable(this);
         setText(text);
         sinkEvents(Event.MOUSEEVENTS);
     }
@@ -29,7 +34,9 @@ public class TranslatableButton extends Button implements Translatable {
     public void onBrowserEvent(final Event event) {
         if (DOM.eventGetType(event) == Event.ONMOUSEUP
                 && event.getButton() == NativeEvent.BUTTON_RIGHT) {
-            this.getText.show(event.getClientX(), event.getClientY(), this);
+            this.getTextController.show(event.getClientX(),
+                                        event.getClientY(),
+                                        this);
         }
         else {
             super.onBrowserEvent(event);
@@ -39,12 +46,12 @@ public class TranslatableButton extends Button implements Translatable {
     @Override
     public void setText(final String text) {
         this.code = text;
-        super.setText(this.getText.get(this.code));
+        super.setText(this.getTextController.get(this.code));
     }
 
     @Override
     public void reset() {
-        this.getText.reset(this);
+        this.getTextController.reset(this);
     }
 
     @Override

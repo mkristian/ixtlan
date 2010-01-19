@@ -78,6 +78,7 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
     }
 
     @Override
+    // TODO make protected - seems not to be used outside class hierarchy!!!
     public PathFactory getPathFactory() {
         return this.parentPathFactory;
     }

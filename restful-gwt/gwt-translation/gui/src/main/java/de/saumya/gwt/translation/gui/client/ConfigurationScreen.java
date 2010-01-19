@@ -29,12 +29,12 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
 
                     @Override
                     public void pullFrom(final Configuration resource) {
-                        setText(resource.idleSessionTimeout + "");
+                        setText(resource.sessionIdleTimeout + "");
                     }
 
                     @Override
                     public void pushInto(final Configuration resource) {
-                        resource.idleSessionTimeout = Integer.parseInt(getText());
+                        resource.sessionIdleTimeout = Integer.parseInt(getText());
                     }
                 },
                 1,
@@ -44,12 +44,12 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
 
                     @Override
                     public void pullFrom(final Configuration resource) {
-                        setText(resource.auditLogRotation + "");
+                        setText(resource.keepAuditLogs + "");
                     }
 
                     @Override
                     public void pushInto(final Configuration resource) {
-                        resource.auditLogRotation = Integer.parseInt(getText());
+                        resource.keepAuditLogs = Integer.parseInt(getText());
                     }
                 },
                 1,
@@ -59,12 +59,12 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
 
                     @Override
                     public void pullFrom(final Configuration resource) {
-                        setText(resource.emailForErrorNotification);
+                        setText(resource.notificationRecipientEmails);
                     }
 
                     @Override
                     public void pushInto(final Configuration resource) {
-                        resource.emailForErrorNotification = getText();
+                        resource.notificationRecipientEmails = getText();
                     }
                 },
                 254);

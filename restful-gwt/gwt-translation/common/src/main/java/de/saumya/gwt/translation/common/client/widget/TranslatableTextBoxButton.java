@@ -13,6 +13,11 @@ public class TranslatableTextBoxButton extends TranslatableButton {
 
     final TextBox box;
 
+    public TranslatableTextBoxButton(final TextBox box,
+            final GetTextController getTextController) {
+        this(box, null, getTextController);
+    }
+
     public TranslatableTextBoxButton(final TextBox box, final String text,
             final GetTextController getTextController) {
         super(text, getTextController);

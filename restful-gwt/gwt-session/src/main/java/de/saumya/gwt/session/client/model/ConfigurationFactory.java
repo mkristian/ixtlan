@@ -9,13 +9,15 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class ConfigurationFactory extends ResourceFactory<Configuration> {
 
-    private final UserFactory userFactory;
+    private final UserFactory   userFactory;
+    private final LocaleFactory localeFactory;
 
     public ConfigurationFactory(final Repository repository,
             final ResourceNotifications notification,
-            final UserFactory userFactory) {
+            final UserFactory userFactory, final LocaleFactory localeFactory) {
         super(repository, notification);
         this.userFactory = userFactory;
+        this.localeFactory = localeFactory;
     }
 
     @Override
@@ -30,7 +32,10 @@ public class ConfigurationFactory extends ResourceFactory<Configuration> {
 
     @Override
     public Configuration newResource() {
-        return new Configuration(this.repository, this, this.userFactory);
+        return new Configuration(this.repository,
+                this,
+                this.userFactory,
+                this.localeFactory);
     }
 
     @Override

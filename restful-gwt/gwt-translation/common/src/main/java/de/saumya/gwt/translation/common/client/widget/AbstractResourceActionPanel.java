@@ -19,20 +19,18 @@ import de.saumya.gwt.translation.common.client.route.PathFactory;
 public abstract class AbstractResourceActionPanel<E extends Resource<E>>
         extends FlowPanel {
 
-    protected final GetTextController getText;
-
-    protected final Session           session;
+    protected final GetTextController getTextController;
 
     protected final String            resourceName;
 
     protected PathFactory             pathFactory;
 
-    public AbstractResourceActionPanel(final GetTextController getText,
+    public AbstractResourceActionPanel(
+            final GetTextController getTextController,
             final ResourceBindings<E> binding, final Session session,
             final ResourceFactory<E> factory) {
         setStyleName("action-panel");
-        this.getText = getText;
-        this.session = session;
+        this.getTextController = getTextController;
         this.resourceName = factory.storagePluralName();
     }
 
@@ -42,7 +40,7 @@ public abstract class AbstractResourceActionPanel<E extends Resource<E>>
         box.setStyleName(name + "-box");
         final TranslatableTextBoxButton button = new TranslatableTextBoxButton(box,
                 name,
-                this.getText);
+                this.getTextController);
         button.add(handler);
         panel.add(box);
         panel.add(button);
@@ -51,7 +49,8 @@ public abstract class AbstractResourceActionPanel<E extends Resource<E>>
 
     protected <T extends ClickHandler & KeyUpHandler> Button button(
             final ComplexPanel panel, final String name, final T handler) {
-        final Button button = new TranslatableButton(name, this.getText);
+        final Button button = new TranslatableButton(name,
+                this.getTextController);
         button.ensureDebugId(this.resourceName + "-" + name);
         button.setVisible(false);
         button.addClickHandler(handler);

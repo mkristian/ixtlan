@@ -8,13 +8,13 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceWithID;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.session.client.model.Locale;
 import de.saumya.gwt.session.client.model.LocaleFactory;
 import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.session.client.model.UserFactory;
 
-public class Phrase extends ResourceWithID<Phrase> {
+public class Phrase extends Resource<Phrase> {
 
     private final TranslationFactory translationFactory;
     private final UserFactory        userFactory;
@@ -40,7 +40,6 @@ public class Phrase extends ResourceWithID<Phrase> {
 
     @Override
     protected void appendXml(final StringBuilder buf) {
-        super.appendXml(buf);
         appendXml(buf, "code", this.code);
         appendXml(buf, "current_text", this.currentText);
         appendXml(buf, "text", this.text);
@@ -53,7 +52,6 @@ public class Phrase extends ResourceWithID<Phrase> {
 
     @Override
     protected void fromXml(final Element root) {
-        super.fromXml(root);
         this.code = getString(root, "code");
         this.defaultTranslation = this.translationFactory.getChildResource(root,
                                                                            "default");
@@ -68,30 +66,36 @@ public class Phrase extends ResourceWithID<Phrase> {
 
     @Override
     public void toString(final StringBuilder buf) {
-        super.toString(buf);
-        buf.append(":code => ").append(this.code);
-        buf.append(", :current_text => ").append(this.currentText);
-        buf.append(", :text => ").append(this.text);
-        buf.append(", :default => ").append(this.defaultTranslation);
-        buf.append(", :parentTranslation => ").append(this.parentTranslation);
-        buf.append(", :locale => ").append(this.locale);
-        buf.append(", :updated_at => ").append(this.updatedAt);
-        if (this.updatedBy != null) {
-            buf.append(", :updated_by => ");
-            this.updatedBy.toString(buf);
-        }
+        toString(buf, "code", this.code);
+        toString(buf, "current_text", this.currentText);
+        toString(buf, "text", this.text);
+        toString(buf, "parentTranslation", this.parentTranslation);
+        toString(buf, "default", this.defaultTranslation);
+        toString(buf, "locale", this.locale);
+        toString(buf, "updated_at", this.updatedAt);
+        toString(buf, "updated_by", this.updatedBy);
     }
 
     @Override
     public String display() {
-        return new StringBuffer(this.currentText).append("=>")
+        return new StringBuilder().append(this.currentText)
+                .append(" -> ")
                 .append(this.text == null ? "?" : this.text)
                 .append(" <")
                 .append(this.code)
                 .append(":")
-                .append(this.locale)
+                .append(this.locale.display())
                 .append(">")
                 .toString();
+    }
+
+    @Override
+    public String key() {
+        return this.code;
+    }
+
+    public boolean isApproved() {
+        return this.text == null;
     }
 
 }

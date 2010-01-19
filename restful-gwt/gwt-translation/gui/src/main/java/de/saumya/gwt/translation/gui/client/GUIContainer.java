@@ -21,7 +21,6 @@ import de.saumya.gwt.session.client.model.UserFactory;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
-import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.model.TranslationFactory;
@@ -67,7 +66,8 @@ public class GUIContainer {
 
     public final ConfigurationFactory configurationFactory = new ConfigurationFactory(this.repository,
                                                                    this.notifications,
-                                                                   this.userFactory);
+                                                                   this.userFactory,
+                                                                   this.localeFactory);
 
     public final Session              session              = new Session(this.repository,
                                                                    new AuthenticationFactory(this.repository,
@@ -90,12 +90,6 @@ public class GUIContainer {
     public final PhraseScreen         phraseScreen         = new PhraseScreen(this.getTextController,
                                                                    this.phraseFactory,
                                                                    new ResourceBindings<Phrase>(),
-                                                                   this.session,
-                                                                   this.notifications);
-    public final PhraseBookScreen     phraseBookScreen     = new PhraseBookScreen(this.bookFactory,
-                                                                   this.phraseScreen,
-                                                                   new ResourceBindings<PhraseBook>(),
-                                                                   this.getTextController,
                                                                    this.session,
                                                                    this.notifications);
     public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.configurationFactory,

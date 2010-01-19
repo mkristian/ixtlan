@@ -32,7 +32,7 @@ public class PhraseFactory extends ResourceFactory<Phrase> {
 
     @Override
     public String keyName() {
-        return "id";
+        return "code";
     }
 
     @Override

@@ -8,8 +8,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.TextBoxBase;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
@@ -34,12 +32,11 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     private final ButtonAction<E>           editHandler;
     private final ButtonAction<E>           saveHandler;
     private final ButtonAction<E>           destroyHandler;
+
     protected final Session                 session;
 
-    protected final String                  resourceName;
-
-    private final String                    defaultParameterName;
     private final ResourceChangeListener<E> createdListener;
+    private final ResourceFactory<E>        factory;
 
     public DefaultResourceActionPanel(final GetTextController getText,
             final ResourceBindings<E> bindings, final Session session,
@@ -49,8 +46,8 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         setStyleName("action-panel");
         this.session = session;
-        this.resourceName = factory.storagePluralName();
-        this.defaultParameterName = factory.defaultSearchParameterName();
+        this.factory = factory;
+
         this.createdListener = new ResourceChangeListener<E>() {
 
             @Override
@@ -164,70 +161,76 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     }
 
     protected ComplexPanel createGetByPanel() {
-        final ComplexPanel getBy = new FlowPanel();
-        getBy.setStyleName("get-by");
-        boxWithButton(getBy,
-                      "get by " + this.resourceName + " key",
-                      new TextBoxButtonHandler() {
-
-                          @Override
-                          protected void action(final TextBoxBase textBox) {
-                              if (DefaultResourceActionPanel.this.session.isAllowed(Action.UPDATE,
-                                                                                    DefaultResourceActionPanel.this.resourceName)) {
-                                  History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
-                              }
-                              else {
-                                  History.newItem(DefaultResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
-                              }
-                              textBox.setText("");
-                          }
-
-                      });
-        return getBy;
+        return new GetByPanel(this.getTextController,
+                this.factory,
+                this.session);
+        // final ComplexPanel getBy = new FlowPanel();
+        // getBy.setStyleName("get-by");
+        // boxWithButton(getBy,
+        // "get by " + this.resourceName + " key",
+        // new TextBoxButtonHandler() {
+        //
+        // @Override
+        // protected void action(final TextBoxBase textBox) {
+        // if (DefaultResourceActionPanel.this.session.isAllowed(Action.UPDATE,
+        // DefaultResourceActionPanel.this.resourceName)) {
+        // History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
+        // }
+        // else {
+        // History.newItem(DefaultResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
+        // }
+        // textBox.setText("");
+        // }
+        //
+        // });
+        // return getBy;
     }
 
-    private void search(final TextBoxBase textBox, final boolean exact) {
-        final String token = DefaultResourceActionPanel.this.pathFactory.allPath((exact
-                ? "exact=&"
-                : "")
-                + this.defaultParameterName
-                + "="
-                + (textBox.getText().length() == 0 ? "*" : textBox.getText()));
-        if (token.equals(History.getToken())) {
-            History.fireCurrentHistoryState();
-        }
-        else {
-            History.newItem(token);
-        }
-    }
+    // private void search(final TextBoxBase textBox, final boolean exact) {
+    // final String token =
+    // DefaultResourceActionPanel.this.pathFactory.allPath((exact
+    // ? "exact=&"
+    // : "")
+    // + this.defaultParameterName
+    // + "="
+    // + (textBox.getText().length() == 0 ? "*" : textBox.getText()));
+    // if (token.equals(History.getToken())) {
+    // History.fireCurrentHistoryState();
+    // }
+    // else {
+    // History.newItem(token);
+    // }
+    // }
 
     protected ComplexPanel createSearchPanel() {
-        final ComplexPanel search = new FlowPanel();
-        search.setStyleName("search");
-        search.add(new TranslatableLabel("search", this.getText));
-        final TextBox box = boxWithButton(search,
-                                          "similar",
-                                          new TextBoxButtonHandler() {
-
-                                              @Override
-                                              protected void action(
-                                                      final TextBoxBase textBox) {
-                                                  search(textBox, false);
-                                              }
-
-                                          });
-        final TranslatableTextBoxButton button = new TranslatableTextBoxButton(box,
-                "exact",
-                this.getText);
-        button.add(new TextBoxButtonHandler() {
-
-            @Override
-            protected void action(final TextBoxBase textBox) {
-                search(textBox, true);
-            }
-        });
-        search.add(button);
-        return search;
+        return new SearchPanel(this.getTextController, this.factory);
+        // final ComplexPanel search = new FlowPanel();
+        // search.setStyleName("search");
+        // search.add(new TranslatableLabel("search", this.getTextController));
+        // final TextBox box = boxWithButton(search,
+        // "similar",
+        // new TextBoxButtonHandler() {
+        //
+        // @Override
+        // protected void action(
+        // final TextBoxBase textBox) {
+        // search(textBox, false);
+        // }
+        //
+        // });
+        // final TranslatableTextBoxButton button = new
+        // TranslatableTextBoxButton(box,
+        // "exact",
+        // this.getTextController);
+        // button.add(new TextBoxButtonHandler() {
+        //
+        // @Override
+        // protected void action(final TextBoxBase textBox) {
+        // search(textBox, true);
+        // }
+        // });
+        // search.add(button);
+        // return search;
     }
 
     // TODO move into abstract class

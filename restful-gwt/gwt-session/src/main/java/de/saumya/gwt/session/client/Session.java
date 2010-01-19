@@ -84,8 +84,8 @@ public class Session {
 
             @Override
             public void onChange(final Configuration resource) {
-                Session.this.timer.timeout = resource.idleSessionTimeout;
-                GWT.log("set timeout to " + resource.idleSessionTimeout
+                Session.this.timer.timeout = resource.sessionIdleTimeout;
+                GWT.log("set timeout to " + resource.sessionIdleTimeout
                         + " minutes", null);
             }
 
@@ -254,6 +254,10 @@ public class Session {
             }
         }
         return false;
+    }
+
+    public Configuration getConfiguration() {
+        return this.configurationFactory.get();
     }
 
     public User getUser() {
