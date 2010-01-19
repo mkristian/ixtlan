@@ -80,9 +80,26 @@ public abstract class Resource<E extends Resource<E>> {
                     this.factory));
             break;
         default:
-            throw new IllegalStateException("can not save with state "
+            throw new IllegalStateException("can not save in state "
                     + this.state);
         }
+    }
+
+    public void save(final String verb) {
+        switch (this.state) {
+        case UP_TO_DATE:
+        case TO_BE_UPDATED:
+            this.state = State.TO_BE_UPDATED;
+            this.repository.put(this,
+                                verb,
+                                new ResourceRequestCallback<E>(this,
+                                        this.factory));
+            break;
+        default:
+            throw new IllegalStateException("can not save with verb " + verb
+                    + " in state " + this.state);
+        }
+
     }
 
     public void destroy() {

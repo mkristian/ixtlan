@@ -129,7 +129,10 @@ public class SessionTest implements EntryPoint {
         new SessionController(new Session(repository,
                 new AuthenticationFactory(repository, notification, userFactory),
                 new PermissionFactory(repository, notification, roleFactory),
-                new ConfigurationFactory(repository, notification, userFactory)),
+                new ConfigurationFactory(repository,
+                        notification,
+                        userFactory,
+                        localeFactory)),
                 loginPanel,
                 sessionPanel);
 

@@ -23,6 +23,8 @@ import de.saumya.gwt.translation.common.client.widget.SearchPanel;
 
 public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
 
+    private static final String        APPROVE = "approve";
+
     protected final Button             save;
     protected final Button             edit;
     protected final Button             reload;
@@ -75,7 +77,7 @@ public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
 
             @Override
             protected void action(final Phrase resource) {
-                resource.save();
+                resource.save(APPROVE);
             }
 
         };
@@ -97,6 +99,7 @@ public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
         this.reloadHandler.reset(resource);
         this.editHandler.reset(resource);
         this.saveHandler.reset(resource);
+        this.approveHandler.reset(resource);
 
         // TODO this status check needs improvement
         this.reload.setVisible(!resource.isNew() && !resource.isDeleted()
@@ -109,7 +112,7 @@ public class PhraseActionPanel extends AbstractResourceActionPanel<Phrase> {
                 && this.session.isAllowed(Action.UPDATE, this.resourceName));
         this.approve.setVisible(!readOnly && !resource.isNew()
                 && !resource.isDeleted() && !resource.isApproved()
-                && this.session.isAllowed("approve", this.resourceName));
+                && this.session.isAllowed(APPROVE, this.resourceName));
 
         doReset(resource);
 

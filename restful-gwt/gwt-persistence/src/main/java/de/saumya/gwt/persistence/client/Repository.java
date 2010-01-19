@@ -86,6 +86,21 @@ public class Repository {
         }
     }
 
+    void put(final Resource<? extends Resource<?>> resource, final String verb,
+            final RequestCallback callback) {
+        if (resource.key() != null) {
+            doIt("PUT",
+                 URL + resource.factory.storagePluralName() + "/"
+                         + resource.key() + "/" + verb + ".xml",
+                 resource.toXml(),
+                 callback);
+        }
+        else { // singleton
+            doIt("PUT", URL + resource.factory.storageName() + "/" + verb
+                    + ".xml", resource.toXml(), callback);
+        }
+    }
+
     void delete(final Resource<? extends Resource<?>> resource,
             final RequestCallback callback) {
         if (resource.key() != null) {

@@ -20,17 +20,17 @@ import de.saumya.gwt.session.client.model.UserFactory;
  */
 public class SessionTestGwt extends GWTTestCase {
 
-    protected RepositoryMock       repository;
+    protected RepositoryMock        repository;
 
     protected ResourceNotifications notification;
 
-    protected Session              session;
+    protected Session               session;
 
-    protected SessionListenerMock  listener;
+    protected SessionListenerMock   listener;
 
-    protected UserFactory          userFactory;
+    protected UserFactory           userFactory;
 
-    protected LocaleFactory        localeFactory;
+    protected LocaleFactory         localeFactory;
 
     /**
      * Must refer to a valid module that sources this class.
@@ -76,7 +76,8 @@ public class SessionTestGwt extends GWTTestCase {
                 permissionFactory,
                 new ConfigurationFactory(this.repository,
                         this.notification,
-                        this.userFactory)) {
+                        this.userFactory,
+                        this.localeFactory)) {
 
             @Override
             void login(final String username, final String password) {
