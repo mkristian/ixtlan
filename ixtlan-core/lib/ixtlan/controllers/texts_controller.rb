@@ -27,7 +27,7 @@ module Ixtlan
 
         if(TEXT.count(:version => nil, :code => phrase[:code], :locale => locale) == 1)
           logger.warn "precondition failed: " + phrase.inspect
-          # mimic created action
+          # mimic created action by just loading it
           render :xml => TEXT.first(:version => nil, :code => phrase[:code], :locale => locale).to_xml, :status => :created
           return
         end
@@ -35,13 +35,21 @@ module Ixtlan
         phrase[:text] ||= phrase.delete(:current_text)
 
         @text = TEXT.new(phrase)
+        if(TEXT.count(:code => phrase[:code], :locale => locale) == 0)
+          approve_it = true
+        end
 
         # set the missing attributes
         @text.locale = locale
         @text.current_user = current_user
 
         respond_to do |format|
-          if @text.save
+          success = @text.save 
+          if success && approve_it
+            @text.current_user = current_user
+            success = @text.approve
+          end
+          if success
             flash[:notice] = 'Text was successfully created.'
             format.html { redirect_to(text_url(@text.id)) }
             format.xml  { render :xml => @text, :status => :created }
