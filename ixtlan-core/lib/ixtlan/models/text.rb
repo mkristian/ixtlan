@@ -98,14 +98,15 @@ module Ixtlan
                                                      :locale => locale).first
         params[:version] = latest.nil? ? 1 : latest.version + 1
         params[:current] = true
+# TODO approved is not need since after approval the resource is inmutable !!!
         params[:approved_at] = attribute_get(:updated_at)
-        params[:approved_by] = params[:current_user]
+        params[:approved_by] = params[:current_user] || current_user
         
         p = (previous.nil? ? true : previous.update(:previous => false,
-                                                    :current_user => params[:current_user]))
+                                                    :current_user => params[:current_user] || current_user))
         l = (latest.nil? ? true : latest.update(:current => false, 
                                                 :previous => true,
-                                                :current_user => params[:current_user]))
+                                                :current_user => params[:current_user] || current_user))
         u = update(params)
         
         u && l && p
