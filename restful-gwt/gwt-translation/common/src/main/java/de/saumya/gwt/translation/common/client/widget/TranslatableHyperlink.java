@@ -1,8 +1,11 @@
 package de.saumya.gwt.translation.common.client.widget;
 
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Hyperlink;
 
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -26,10 +29,27 @@ public class TranslatableHyperlink extends Hyperlink implements Translatable {
         sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.ONCONTEXTMENU);
     }
 
+    private static class HyperlinkClickHandler implements ClickHandler {
+
+        private final String path;
+
+        private HyperlinkClickHandler(final String path) {
+            this.path = path;
+        }
+
+        @Override
+        public void onClick(final ClickEvent event) {
+            if (this.path.equals(History.getToken())) {
+                History.fireCurrentHistoryState();
+            }
+        }
+    };
+
     public TranslatableHyperlink(final String text, final String path,
             final GetTextController getText) {
         this(text, getText);
         setTargetHistoryToken(path);
+        addClickHandler(new HyperlinkClickHandler(path));
     }
 
     @Override
