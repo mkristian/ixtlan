@@ -295,7 +295,8 @@ public abstract class Resource<E extends Resource<E>> {
             listener.onChange((E) this);
         }
         if (this.changeNotifications != null) {
-            this.changeNotifications.info(message, this);
+            this.changeNotifications.info(message + " "
+                    + this.factory.storageName() + ": ", this);
             this.changeNotifications = null;
         }
     }
@@ -306,7 +307,8 @@ public abstract class Resource<E extends Resource<E>> {
             listener.onError((E) this);
         }
         if (this.changeNotifications != null) {
-            this.changeNotifications.error(status, statusText, this);
+            this.changeNotifications.error(status, statusText + " "
+                    + this.factory.storageName() + ": ", this);
             this.changeNotifications = null;
         }
 
