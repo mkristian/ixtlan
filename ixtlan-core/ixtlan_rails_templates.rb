@@ -6,10 +6,27 @@ def middleware(name)
   log 'middleware', name
   environment "config.middleware.use '#{name}'"
 end
-
+def ixtlan_model(name)
+  file "app/models/#{name}.rb", <<-CODE
+class #{name.camelcase} < Ixtlan::Models::#{name.camelcase}; end
+CODE
+end
+def ixtlan_controller(name, guards = [:index,:show,:new,:create,:edit,:update,:destroy])
+  file "app/guards/#{name}_guard.rb", <<-CODE
+Ixtlan::Guard.initialize(:#{name}, { 
+#{guards.collect {|g| ":#{g} => []" }.join(",\n") }
+})
+CODE
+  file "app/controllers/#{name}_controller.rb", <<-CODE
+class #{name.camelize}Controller < ApplicationController
+  include Ixtlan::Controllers::#{name.camelize}Controller
+end
+CODE
+route "map.resources :#{name}"
+end
 
 # ixtlan gems
-gem 'ixtlan', :version => '0.2.1'
+gem 'ixtlan', :version => '0.2.2'
 
 # this pulls in rack_datamapper
 gem 'datamapper4rails', :version => '0.4.0'
@@ -241,26 +258,82 @@ end
 CODE
 route "map.resources :word_bundles"
 
-# user model/controller
-generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
-file 'app/models/user.rb', <<-CODE
-class User < Ixtlan::Models::User; end
+# setup a pom.xml to enable the use of the rails-maven-plugin
+file 'pom.xml', <<-CODE
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>#{File.basename(root)}</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>rails datamapper demo</name>
+  <url>http://github.com/mkristian/rails-templates/blob/master/datamapper.rb</url>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>saumya</id>
+      <name>Saumyas Plugins</name>
+      <url>http://mojo.saumya.de</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <build>
+    <!-- allow the gwt plugin to work with this pom -->
+    <outputDirectory>war/WEB-INF/classes</outputDirectory> 
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>rails-maven-plugin</artifactId>
+	<version>0.3.1</version>
+      </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>jruby-maven-plugin</artifactId>
+	<version>${jruby.plugins.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+	<version>${jruby.plugins.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+  <properties>
+    <jruby.plugins.version>0.5.0</jruby.plugins.version>
+    <jruby.fork>false</jruby.fork>
+  </properties>
+</project>
 CODE
+
+if ENV['GWT'] == 'true' || (!ENV['GWT'] && yes?("install GWT interface ?"))
+  gwt_prefix = "gwt_"
+  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.2.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNAPSHOT -B")
+else
+  gwt_prefix = nil
+end
+
+# user model/controller
+generate "#{gwt_prefix}ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
+ixtlan_model('user')
+#file 'app/models/user.rb', <<-CODE
+#class User < Ixtlan::Models::User; end
+#CODE
 gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
 gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
 gsub_file 'spec/models/user_spec.rb', /value for email/, 'value@for.email'
 gsub_file 'spec/models/user_spec.rb', /value for language/, 'vl'
 
 # group model/controller
-generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', 'Group', 'name:string'
-file 'app/models/group.rb', <<-CODE
-class Group < Ixtlan::Models::Group; end
-CODE
+generate "#{gwt_prefix}ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Group', 'name:string'
+ixtlan_model('group')
 
 # i18n stuff: i18n model, phrases controller
+# TODO rename Text to I18nText
 file 'app/models/i18n_text.rb', <<-CODE
-class I18nText < Ixtlan::Models::Text; end
+ class I18nText < Ixtlan::Models::Text; end
 CODE
+# TODO rename TextsController to PhraseController i.e. make a new one
 file "app/controllers/phrases_controller.rb", <<-CODE
 class PhrasesController < ApplicationController
   include Ixtlan::Controllers::TextsController
@@ -269,10 +342,11 @@ CODE
 route "map.resources :phrases"
 
 # locale model/controller
-generate 'ixtlan_datamapper_rspec_scaffold', '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
-file 'app/models/locale.rb', <<-CODE
-class Locale < Ixtlan::Models::Locale; end
-CODE
+generate "#{gwt_prefix}ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
+ixtlan_model "locale"
+#file 'app/models/locale.rb', <<-CODE
+#class Locale < Ixtlan::Models::Locale; end
+#CODE
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
 file 'spec/support/locale.rb', <<-CODE
 module Ixtlan
@@ -284,6 +358,7 @@ module Ixtlan
 end
 CODE
 
+ixtlan_controller("dummy")
 # configuration guard/model/controller
 file 'app/models/configuration.rb', <<-CODE
 class Configuration < Ixtlan::Models::Configuration
@@ -306,9 +381,10 @@ CODE
 route "map.resource :configuration"
 
 # authentication model/controller
-file 'app/models/authentication.rb', <<-CODE
-class Authentication < Ixtlan::Models::Authentication; end
-CODE
+ixtlan_model "authentication"
+#file 'app/models/authentication.rb', <<-CODE
+#class Authentication < Ixtlan::Models::Authentication; end
+#CODE
 file 'app/controllers/authentications_controller.rb', <<-CODE
 class AuthenticationsController < ApplicationController
   skip_before_filter :guard
@@ -423,62 +499,15 @@ ActionMailer::Base.smtp_settings = {
 } 
 CODE
 
-# setup a pom.xml to enable the use of the rails-maven-plugin
-file 'pom.xml', <<-CODE
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.example</groupId>
-  <artifactId>#{File.basename(root)}</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>rails datamapper demo</name>
-  <url>http://github.com/mkristian/rails-templates/blob/master/datamapper.rb</url>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>saumya</id>
-      <name>Saumyas Plugins</name>
-      <url>http://mojo.saumya.de</url>
-    </pluginRepository>
-  </pluginRepositories>
-  <build>
-    <!-- allow the gwt plugin to work with this pom -->
-    <outputDirectory>war/WEB-INF/classes</outputDirectory> 
-    <plugins>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>rails-maven-plugin</artifactId>
-	<version>0.3.1</version>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>jruby-maven-plugin</artifactId>
-	<version>${jruby.plugins.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>gem-maven-plugin</artifactId>
-	<version>${jruby.plugins.version}</version>
-      </plugin>
-    </plugins>
-  </build>
-  <properties>
-    <jruby.plugins.version>0.5.0</jruby.plugins.version>
-    <jruby.fork>false</jruby.fork>
-  </properties>
-</project>
-CODE
-
 logger.info 
 logger.info 
 logger.info "info mavenized rails application"
 logger.info "\thttp://github.org/mkristian/rails-maven-plugin"
 logger.info 
-logger.info "if you want to run jruby please run after uninstalling"
+logger.info "if you want to run jruby please first uninstall"
 logger.info "the native extension of do_sqlite3"
 logger.info "\truby -S gem uninstall do_sqlite3"
+logger.info "and the install it with java extension"
 logger.info "\tjruby -S rake gems:install"
 logger.info "rake gems:unpack does NOT work with jruby due to a bug in rail <=2.3.5"
 logger.info "you can try"
@@ -498,9 +527,7 @@ logger.info "you find the root password in the file 'root'"
 logger.info
 
 # GWT GUI installation
-logger.info "if you have maven installed you can preview the GWT interface"
-if yes?("install GWT interface ?")
-  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.2.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNAPSHOT -B")
+if gwt_prefix
   logger.info
   logger.info "first start rails in one console"
   logger.info "\tscript/server"
