@@ -12,6 +12,8 @@ generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Model.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/ModelFactory.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Panel.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Screen.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/TestGwt.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/AbstractApplicationResourceTestGwt.java
 lib/models.rb
 lib/ixtlan.rb
 lib/dm-serializer.rb
@@ -37,6 +39,7 @@ lib/ixtlan/models/group_user.rb
 lib/ixtlan/models/group.rb
 lib/ixtlan/rolling_file.rb
 lib/ixtlan/cms_script.rb
+lib/ixtlan/child_path.rb
 lib/ixtlan/logger_config.rb
 lib/ixtlan/models.rb
 lib/ixtlan/audit_config.rb
