@@ -63,11 +63,27 @@ module Ixtlan
         logger.warn("guard directory #{guard_dir} not found, skip loading")
       end
     end
+
+    def self.symbolize(h)
+      result = {}
+      
+      h.each do |k, v|
+        if v.is_a?(Hash)
+          result[k.to_sym] = symbolize_keys(v) unless v.size == 0
+        elsif v.is_a?(Array)
+          val = []
+          v.each {|vv| val << vv.to_sym }
+          result[k.to_sym] = val
+        end
+      end
+      
+      result
+    end
     
     def self.initialize(controller, map)
       msg = map.collect{ |k,v| "\n\t#{k} => [#{v.join(',')}]"}
       @@logger.debug("#{controller} guard: #{msg}")
-      @@map[controller] = map
+      @@map[controller.to_sym] = symbolize(map)
     end
 
     def self.export_xml
