@@ -1,9 +1,9 @@
 /**
  *
  */
-package com.example.client.views.<%= plural_name %>;
+package <%= package %>.views.<%= plural_name %>;
 
-import com.example.client.models.<%= class_name %>;
+import <%= package %>.models.<%= class_name %>;
 
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
@@ -18,7 +18,7 @@ public class <%= class_name %>Panel extends ResourcePanel<<%= class_name %>> {
             final ResourceBindings<<%= class_name %>> bindings) {
         super(getTextController, bindings);
 <% Array(attributes).each do |attribute| -%>
-        add("<%= attribute.name %>", new <% if attribute.type == :integer %>IntegerText<% elsif attribute.type == :boolean %>Check<% else %>Text<% end -%>BoxBinding<<%= class_name %>>(bindings) {
+        add("<%= attribute.name %>", new <% if attribute.type == :integer %>IntegerText<% elsif attribute.type == :boolean %>Check<% else %>Text<% end -%>BoxBinding<<%= class_name %>>() {
 
             @Override
             public void pullFrom(final <%= class_name %> resource) {

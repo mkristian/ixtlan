@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.client.models;
+package <%= package %>.models;
 
 <% if Array(attributes).find { |attr| attr.type == :date } -%>
 import java.sql.Date;
@@ -46,18 +46,18 @@ public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
 <% end -%>
 
     @Override
-    protected void appendXml(final StringBuffer buf) {
+    protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
 <% Array(attributes).each do |attribute| -%>
-        append(buf, "<%= attribute.name %>", this.<%= attribute.name.javanize %>);
+        appendXml(buf, "<%= attribute.name %>", this.<%= attribute.name.javanize %>);
 <% end -%>
 <% unless options[:skip_timestamps] -%>
-        append(buf, "created_at", this.createdAt);
-        append(buf, "updated_at", this.updatedAt);
+        appendXml(buf, "created_at", this.createdAt);
+        appendXml(buf, "updated_at", this.updatedAt);
 <% end -%>
 <% unless options[:skip_modified_by] -%>
-        append(buf, "created_by", this.createdBy);
-        append(buf, "updated_by", this.updatedBy);
+        appendXml(buf, "created_by", this.createdBy);
+        appendXml(buf, "updated_by", this.updatedBy);
 <% end -%>
     }
 
@@ -78,7 +78,8 @@ public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
     }
 
     @Override
-    public void toString(final StringBuffer buf) {
+    public void toString(final StringBuilder buf) {
+        super.toString(buf);
 <% Array(attributes).each do |attribute| -%>
         toString(buf, "<%= attribute.name %>", this.<%= attribute.name.javanize %>);
 <% end -%>

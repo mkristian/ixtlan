@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.client.models;
+package <%= package %>.models;
 
 
 import de.saumya.gwt.persistence.client.Repository;
@@ -21,7 +21,7 @@ public class <%= class_name %>Factory extends ResourceFactory<<%= class_name %>>
     public <%= class_name %>Factory(final Repository repository,
             final ResourceNotifications notifications<% unless options[:skip_modified_by] -%>,
             final UserFactory userFactory<% end -%>) {
-        super(repository, notification);
+        super(repository, notifications);
 <% unless options[:skip_modified_by] -%>
         this.userFactory = userFactory;
 <% end -%>
@@ -41,4 +41,10 @@ public class <%= class_name %>Factory extends ResourceFactory<<%= class_name %>>
     public String storageName() {
         return "<%= singular_name %>";
     }
+
+    @Override
+    public String defaultSearchParameterName() {
+        return null;
+    }
+
 }

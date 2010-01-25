@@ -1,12 +1,12 @@
 /**
  * 
  */
-package com.example.client.views.<%= plural_name %>;
+package <%= package %>.views.<%= plural_name %>;
 
-import com.example.client.models.<%= class_name %>;
-import com.example.client.models.<%= class_name %>Factory;
+import <%= package %>.models.<%= class_name %>;
+import <%= package %>.models.<%= class_name %>Factory;
 
-import de.saumya.gwt.session.client.Notifications;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.Screen;
@@ -20,7 +20,7 @@ public class <%= class_name %>Screen extends ResourceScreen<<%= class_name %>> {
     public <%= class_name %>Screen(final GetTextController getTextController,
             final <%= class_name %>Factory factory, final Session session,
             final ResourceBindings<<%= class_name %>> bindings,
-            final Notifications notifications) {
+            final ResourceNotifications notifications) {
         super(getTextController,
                 factory,
                 session,
@@ -29,7 +29,9 @@ public class <%= class_name %>Screen extends ResourceScreen<<%= class_name %>> {
                 new DefaultResourceActionPanel<<%= class_name %>>(getTextController,
                         bindings,
                         session,
-                        factory));
+			factory,
+			notifications),
+                notifications);
     }
 
     @Override

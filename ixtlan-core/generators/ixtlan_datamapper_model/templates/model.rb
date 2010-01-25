@@ -12,6 +12,14 @@ class <%= class_name %>
 
 <% unless options[:skip_modified_by] -%>
   modified_by "Ixtlan::Models::User"
+
+  alias :to_x :to_xml_document
+  def to_xml_document(opts = {}, doc = nil)
+    unless(opts[:methods])
+      opts.merge!({:methods => [:updated_by], :updated_by => {:methods => [], :exclude => [:created_at, :updated_at]}}})
+    end
+    to_x(opts, doc)
+  end
 <% end -%>
 
 end
