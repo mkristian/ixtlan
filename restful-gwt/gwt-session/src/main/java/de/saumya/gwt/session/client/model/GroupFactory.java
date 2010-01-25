@@ -10,9 +10,9 @@ public class GroupFactory extends ResourceFactory<Group> {
     private final DomainFactory domainFactory;
 
     public GroupFactory(final Repository repository,
-            final ResourceNotifications notification,
+            final ResourceNotifications notifications,
             final LocaleFactory localeFactory, final DomainFactory domainFactory) {
-        super(repository, notification);
+        super(repository, notifications);
         this.localeFactory = localeFactory;
         this.domainFactory = domainFactory;
     }

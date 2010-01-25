@@ -9,7 +9,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
         GWTTestCase {
 
     protected RepositoryMock                     repository;
-    protected ResourceNotifications               notification;
+    protected ResourceNotifications              notifications;
     protected CountingResourceChangeListener<T>  countingResourceListener;
     protected CountingResourcesChangeListener<T> countingResourcesListener;
 
@@ -19,7 +19,7 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
     @Override
     protected void gwtSetUp() {
         this.repository = new RepositoryMock();
-        this.notification = new GWTResourceNotification();
+        this.notifications = new GWTResourceNotification();
         this.factory = factorySetUp();
 
         this.countingResourceListener = new CountingResourceChangeListener<T>();

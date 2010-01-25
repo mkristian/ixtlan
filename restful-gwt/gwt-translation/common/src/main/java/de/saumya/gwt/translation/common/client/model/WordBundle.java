@@ -15,11 +15,11 @@ public class WordBundle extends Resource<WordBundle> {
 
     WordBundle(final Repository repository, final WordBundleFactory factory,
             final WordFactory wordFactory) {
-        super(repository, factory, null);
+        super(repository, factory);
         this.wordFactory = wordFactory;
     }
 
-    public String          locale;
+    public String                   locale;
     public ResourceCollection<Word> words;
 
     @Override

@@ -63,7 +63,7 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
 
     @Override
     protected ResourceFactory<Domain> factorySetUp() {
-        return new DomainFactory(this.repository, this.notification);
+        return new DomainFactory(this.repository, this.notifications);
     }
 
     @Override

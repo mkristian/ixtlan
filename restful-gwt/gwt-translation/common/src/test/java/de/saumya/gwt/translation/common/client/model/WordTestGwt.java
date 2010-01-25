@@ -36,7 +36,7 @@ public class WordTestGwt extends AbstractResourceTestGwt<Word> {
 
     @Override
     protected WordFactory factorySetUp() {
-        return new WordFactory(this.repository, this.notification);
+        return new WordFactory(this.repository, this.notifications);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Configuration extends Resource<Configuration> {
     Configuration(final Repository repository,
             final ConfigurationFactory factory, final UserFactory userFactory,
             final LocaleFactory localeFactory) {
-        super(repository, factory, null);
+        super(repository, factory);
         this.userFactory = userFactory;
         this.localeFactory = localeFactory;
     }

@@ -15,11 +15,11 @@ public class PhraseBook extends Resource<PhraseBook> {
 
     PhraseBook(final Repository repository, final PhraseBookFactory factory,
             final PhraseFactory phraseFactory) {
-        super(repository, factory, null);
+        super(repository, factory);
         this.phraseFactory = phraseFactory;
     }
 
-    public String            locale;
+    public String                     locale;
     public ResourceCollection<Phrase> phrases;
 
     @Override
@@ -31,7 +31,8 @@ public class PhraseBook extends Resource<PhraseBook> {
     @Override
     protected void fromXml(final Element root) {
         this.locale = getString(root, "locale");
-        this.phrases = this.phraseFactory.getChildResourceCollection(root, "phrases");
+        this.phrases = this.phraseFactory.getChildResourceCollection(root,
+                                                                     "phrases");
     }
 
     @Override

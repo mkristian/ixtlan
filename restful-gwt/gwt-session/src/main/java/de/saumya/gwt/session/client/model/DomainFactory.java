@@ -10,8 +10,8 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 public class DomainFactory extends ResourceFactory<Domain> {
 
     public DomainFactory(final Repository repository,
-            final ResourceNotifications notification) {
-        super(repository, notification);
+            final ResourceNotifications notifications) {
+        super(repository, notifications);
     }
 
     @Override

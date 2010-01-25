@@ -62,7 +62,7 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     protected ResourceFactory<Locale> factorySetUp() {
-        return new LocaleFactory(this.repository, this.notification);
+        return new LocaleFactory(this.repository, this.notifications);
     }
 
     @Override

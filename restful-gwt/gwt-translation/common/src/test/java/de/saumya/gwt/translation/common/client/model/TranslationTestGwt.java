@@ -55,16 +55,16 @@ public class TranslationTestGwt extends AbstractResourceTestGwt<Translation> {
     @Override
     protected ResourceFactory<Translation> factorySetUp() {
         return new TranslationFactory(this.repository,
-                this.notification,
+                this.notifications,
                 new UserFactory(this.repository,
-                        this.notification,
-                        new LocaleFactory(this.repository, this.notification),
+                        this.notifications,
+                        new LocaleFactory(this.repository, this.notifications),
                         new GroupFactory(this.repository,
-                                this.notification,
+                                this.notifications,
                                 new LocaleFactory(this.repository,
-                                        this.notification),
+                                        this.notifications),
                                 new DomainFactory(this.repository,
-                                        this.notification))));
+                                        this.notifications))));
     }
 
     @Override

@@ -13,7 +13,7 @@ public class Sample extends ResourceWithID<Sample> {
     private final SampleFactory factory;
 
     Sample(final Repository repository, final SampleFactory factory) {
-        super(repository, factory, null);
+        super(repository, factory);
         this.factory = factory;
     }
 

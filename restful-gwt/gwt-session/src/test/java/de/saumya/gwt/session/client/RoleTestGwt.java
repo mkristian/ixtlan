@@ -44,7 +44,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
 
     @Override
     protected ResourceFactory<Role> factorySetUp() {
-        return new RoleFactory(this.repository, this.notification);
+        return new RoleFactory(this.repository, this.notifications);
     }
 
     @Override

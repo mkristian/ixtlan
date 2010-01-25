@@ -11,7 +11,7 @@ import de.saumya.gwt.persistence.client.Resource;
 class Role extends Resource<Role> {
 
     protected Role(final Repository repository, final RoleFactory factory) {
-        super(repository, factory, null);
+        super(repository, factory);
     }
 
     String name;

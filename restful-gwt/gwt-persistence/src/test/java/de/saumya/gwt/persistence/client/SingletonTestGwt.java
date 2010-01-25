@@ -9,7 +9,7 @@ public class SingletonTestGwt extends PersistenceTestGwt {
     public static class Singleton extends Resource<Singleton> {
 
         Singleton(final Repository repository, final SingletonFactory factory) {
-            super(repository, factory, null);
+            super(repository, factory);
         }
 
         String name;

@@ -42,8 +42,8 @@ public class WordBundleTestGwt extends AbstractResourceTestGwt<WordBundle> {
     @Override
     protected WordBundleFactory factorySetUp() {
         return new WordBundleFactory(this.repository,
-                this.notification,
-                new WordFactory(this.repository, this.notification));
+                this.notifications,
+                new WordFactory(this.repository, this.notifications));
     }
 
     @Override

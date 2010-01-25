@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -100,12 +99,12 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
         add(panel);
     }
 
-    protected <T extends TextBox & Binding<E>> void add(final String label,
+    protected <T extends TextBoxBase & Binding<E>> void add(final String label,
             final T textBox, final int max) {
         add(label, textBox, false, max);
     }
 
-    protected <T extends TextBox & Binding<E>> void add(final String label,
+    protected <T extends TextBoxBase & Binding<E>> void add(final String label,
             final T textBox, final boolean required, final int max) {
         this.bindings.add(textBox);
         final ComplexPanel panel = new FlowPanel();

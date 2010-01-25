@@ -15,12 +15,12 @@ class Permission extends Resource<Permission> {
 
     Permission(final Repository repository, final PermissionFactory factory,
             final RoleFactory roleFactory) {
-        super(repository, factory, null);
+        super(repository, factory);
         this.roleFactory = roleFactory;
     }
 
-    String          resource;
-    String          action;
+    String                   resource;
+    String                   action;
     ResourceCollection<Role> roles;
 
     @Override

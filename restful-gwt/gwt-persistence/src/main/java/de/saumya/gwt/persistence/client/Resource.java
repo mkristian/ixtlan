@@ -43,13 +43,9 @@ public abstract class Resource<E extends Resource<E>> {
     protected State                              state     = State.NEW;
 
     protected Resource(final Repository repository,
-            final ResourceFactory<E> factory,
-            final ResourceChangeListener<E> listener) {
+            final ResourceFactory<E> factory) {
         this.repository = repository;
         this.factory = factory;
-        if (listener != null) {
-            addResourceChangeListener(listener);
-        }
     }
 
     public boolean isNew() {

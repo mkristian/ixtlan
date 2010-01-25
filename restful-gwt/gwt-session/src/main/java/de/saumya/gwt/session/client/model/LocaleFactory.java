@@ -10,8 +10,8 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 public class LocaleFactory extends ResourceFactory<Locale> {
 
     public LocaleFactory(final Repository repository,
-            final ResourceNotifications notification) {
-        super(repository, notification);
+            final ResourceNotifications notifications) {
+        super(repository, notifications);
     }
 
     @Override

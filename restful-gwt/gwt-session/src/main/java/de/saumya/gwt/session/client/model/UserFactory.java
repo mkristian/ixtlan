@@ -10,9 +10,9 @@ public class UserFactory extends ResourceFactory<User> {
     private final GroupFactory  groupFactory;
 
     public UserFactory(final Repository repository,
-            final ResourceNotifications notification,
+            final ResourceNotifications notifications,
             final LocaleFactory localeFactory, final GroupFactory groupFactory) {
-        super(repository, notification);
+        super(repository, notifications);
         this.localeFactory = localeFactory;
         this.groupFactory = groupFactory;
     }

@@ -94,16 +94,16 @@ public class AuthenticationTestGwt extends
     @Override
     protected ResourceFactory<Authentication> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
-                this.notification);
+                this.notifications);
         this.userFactory = new UserFactory(this.repository,
-                this.notification,
+                this.notifications,
                 localeFactory,
                 new GroupFactory(this.repository,
-                        this.notification,
+                        this.notifications,
                         localeFactory,
-                        new DomainFactory(this.repository, this.notification)));
+                        new DomainFactory(this.repository, this.notifications)));
         return new AuthenticationFactory(this.repository,
-                this.notification,
+                this.notifications,
                 this.userFactory);
     }
 

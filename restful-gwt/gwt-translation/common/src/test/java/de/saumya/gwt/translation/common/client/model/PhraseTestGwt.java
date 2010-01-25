@@ -52,20 +52,20 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
     @Override
     protected ResourceFactory<Phrase> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
-                this.notification);
+                this.notifications);
         final UserFactory userFactory = new UserFactory(this.repository,
-                this.notification,
+                this.notifications,
                 localeFactory,
                 new GroupFactory(this.repository,
-                        this.notification,
+                        this.notifications,
                         localeFactory,
-                        new DomainFactory(this.repository, this.notification)));
+                        new DomainFactory(this.repository, this.notifications)));
         return new PhraseFactory(this.repository,
-                this.notification,
+                this.notifications,
                 userFactory,
                 localeFactory,
                 new TranslationFactory(this.repository,
-                        this.notification,
+                        this.notifications,
                         userFactory));
     }
 
