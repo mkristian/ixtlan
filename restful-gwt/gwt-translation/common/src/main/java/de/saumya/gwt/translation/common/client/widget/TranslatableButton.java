@@ -18,11 +18,11 @@ public class TranslatableButton extends Button implements Translatable {
     private final GetTextController getTextController;
 
     public TranslatableButton(final GetTextController getTextController) {
-        this(null, getTextController);
+        this(getTextController, null);
     }
 
-    public TranslatableButton(final String text,
-            final GetTextController getTextController) {
+    public TranslatableButton(final GetTextController getTextController,
+            final String text) {
         super();
         this.getTextController = getTextController;
         this.getTextController.addTranslatable(this);

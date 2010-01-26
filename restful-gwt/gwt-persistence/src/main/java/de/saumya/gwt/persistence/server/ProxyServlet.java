@@ -29,7 +29,9 @@ public class ProxyServlet extends HttpServlet {
         final HttpURLConnection con = ((HttpURLConnection) url.openConnection());
         con.setRequestMethod(req.getMethod());
         con.setDoInput(true);
-        con.addRequestProperty("Content-type", req.getContentType());
+        if (req.getContentType() != null) {
+            con.addRequestProperty("Content-type", req.getContentType());
+        }
         InputStream in = null;
         OutputStream out = null;
         final Enumeration<String> headers = req.getHeaderNames();

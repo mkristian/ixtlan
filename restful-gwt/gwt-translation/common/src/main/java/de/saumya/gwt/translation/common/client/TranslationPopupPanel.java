@@ -78,7 +78,7 @@ public class TranslationPopupPanel extends PopupPanel {
         this.panel.add(this.codeLabel);
         this.panel.add(this.box);
         final Panel buttons = new HorizontalPanel();
-        final Button keep = new TranslatableButton("keep old version", getText);
+        final Button keep = new TranslatableButton(getText, "keep old version");
         keep.addClickHandler(new ClickHandler() {
 
             @Override
@@ -86,7 +86,7 @@ public class TranslationPopupPanel extends PopupPanel {
                 TranslationPopupPanel.this.box.setText(TranslationPopupPanel.this.phrase.parentTranslation.text);
             }
         });
-        this.approveIt = new TranslatableButton("approve", getText);
+        this.approveIt = new TranslatableButton(getText, "approve");
         buttons.add(this.approveIt);
         buttons.add(keep);
         this.panel.add(buttons);

@@ -10,6 +10,8 @@ import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
+import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
+import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
@@ -23,7 +25,11 @@ class PhraseScreen extends ResourceScreen<Phrase> {
                 phraseFactory,
                 session,
                 new PhrasePanel(getTextController, binding),
-                new ResourceCollectionPanel<Phrase>(session, phraseFactory),
+                new ResourceCollectionPanel<Phrase>(new ResourceCollectionNavigation<Phrase>(phraseFactory,
+                        getTextController),
+                        new ResourceCollectionListing<Phrase>(session,
+                                phraseFactory,
+                                getTextController)),
                 new PhraseActionPanel(getTextController,
                         binding,
                         session,

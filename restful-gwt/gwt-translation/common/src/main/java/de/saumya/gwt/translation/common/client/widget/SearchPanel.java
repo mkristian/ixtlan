@@ -21,14 +21,14 @@ public class SearchPanel extends TextBoxWithButton {
         this.pathFactory = new PathFactory(factory.storagePluralName());
         this.defaultSearchParameterName = factory.defaultSearchParameterName();
         setStyleName("search");
-        add(new TranslatableLabel("search", getTextController));
+        add(new TranslatableLabel(getTextController, "search"));
 
         this.button.setText("similar");
         this.button.add(new TextBoxButtonHandler() {
 
             @Override
             protected void action(final TextBoxBase textBox) {
-                search(textBox, false);
+                search(textBox, true);
             }
 
         });
@@ -39,21 +39,16 @@ public class SearchPanel extends TextBoxWithButton {
 
             @Override
             protected void action(final TextBoxBase textBox) {
-                search(textBox, true);
+                search(textBox, false);
             }
         });
         add(button);
     }
 
-    private void search(final TextBoxBase textBox, final boolean exact) {
-        final String token = this.pathFactory.allPath((exact
-                ? "exact=&"
-                : "")
-                + this.defaultSearchParameterName
-                + "="
-                + (textBox.getText().length() == 0
-                        ? "*"
-                        : textBox.getText()));
+    private void search(final TextBoxBase textBox, final boolean fuzzy) {
+        final String token = this.pathFactory.allPath("limit=10&fuzzy=" + fuzzy
+                + "&" + this.defaultSearchParameterName + "="
+                + (textBox.getText().length() == 0 ? "" : textBox.getText()));
         if (token.equals(History.getToken())) {
             History.fireCurrentHistoryState();
         }

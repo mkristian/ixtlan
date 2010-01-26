@@ -3,64 +3,50 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.Session.Action;
+import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 
-public class ResourceCollectionPanel<E extends Resource<E>> extends
-        VerticalPanel {
+public class ResourceCollectionPanel<E extends Resource<E>> extends FlowPanel
+        implements ResourceCollectionResetable<E> {
 
-    protected final Session session;
+    private final ResourceCollectionNavigation<E> navigation;
+    private final ResourceCollectionListing<E>    listing;
 
-    protected final String  resourceName;
+    public ResourceCollectionPanel(
+            final ResourceCollectionNavigation<E> navigation,
+            final ResourceCollectionListing<E> listing) {
+        setStylePrimaryName("resource-collection-panel");
 
-    private PathFactory     pathFactory;
+        this.navigation = navigation;
+        this.listing = listing;
+        this.navigation.setChangeListener(new ResourcesChangeListener<E>() {
 
-    public ResourceCollectionPanel(final Session session,
-            final ResourceFactory<E> factory) {
-        this.session = session;
-        this.resourceName = factory.storagePluralName();
+            @Override
+            public void onLoaded(final ResourceCollection<E> resources) {
+                reset(resources);
+            }
+        });
+
+        add(this.navigation);
+        add(this.listing);
     }
 
     protected void setup(final PathFactory pathFactory) {
-        this.pathFactory = pathFactory;
+        this.listing.setup(pathFactory);
     }
 
-    protected PathFactory getPathFactory() {
-        return this.pathFactory;
-    }
+    // protected PathFactory getPathFactory() {
+    // return this.pathFactory;
+    // }
 
-    protected void reset(final ResourceCollection<E> resources) {
-        clear();
-        if (resources != null) {
-            if (this.session.isAllowed(Action.UPDATE, this.resourceName)) {
-                for (final E resource : resources) {
-                    add(new Hyperlink(resource.display(),
-                            this.pathFactory.editPath(resource.key())));
-                }
-            }
-            else if (this.session.isAllowed(Action.SHOW, this.resourceName)) {
-                for (final E resource : resources) {
-                    add(new Hyperlink(resource.display(),
-                            this.pathFactory.showPath(resource.key())));
-                }
-            }
-            else {
-                for (final E resource : resources) {
-                    add(new Label(resource.display()));
-                }
-            }
-            setVisible(true);
-        }
-        else {
-            setVisible(false);
-        }
+    @Override
+    public void reset(final ResourceCollection<E> resources) {
+        setVisible(resources != null);
+        this.navigation.reset(resources);
+        this.listing.reset(resources);
     }
 }

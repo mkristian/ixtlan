@@ -50,7 +50,7 @@ public class SessionPanel extends VerticalPanel implements SessionScreen {
         header.setStyleName("session-header");
         this.welcome = new TranslatableLabel(getTextController);
         this.userLabel = new Label();
-        this.logoutButton = new TranslatableButton("logout", getTextController);
+        this.logoutButton = new TranslatableButton(getTextController, "logout");
 
         this.localeBox = new ListBox();
 

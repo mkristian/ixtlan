@@ -84,11 +84,15 @@ public class ScreenPath {
         }
     }
 
-    @Override
-    public String toString() {
+    public String toString(final String query) {
         // TODO use stringbuffer and apply all cases properly
         return "/" + this.controllerName
                 + (this.key != null ? "/" + this.key : "")
-                + (this.query != null ? "$" + this.query : "");
+                + (query != null ? "$" + query : "");
+    }
+
+    @Override
+    public String toString() {
+        return toString(this.query);
     }
 }

@@ -46,16 +46,16 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
 
     protected E                                    resource;
 
-    protected ResourceScreen(final GetTextController getText,
+    protected ResourceScreen(final GetTextController getTextController,
             final ResourceFactory<E> factory, final Session session,
             final ResourcePanel<E> display,
             final ResourceCollectionPanel<E> displayAll,
             final AbstractResourceActionPanel<E> actions,
             final ResourceNotifications notifications) {
         setStyleName("screen");
-        this.loading = new TranslatableLabel("loading ...", getText);
+        this.loading = new TranslatableLabel(getTextController, "loading ...");
         this.loading.setStyleName("loading");
-        this.header = new ResourceHeaderPanel(getText);
+        this.header = new ResourceHeaderPanel(getTextController);
         this.actions = actions;
         this.display = display;
         this.displayAll = displayAll;
@@ -126,12 +126,6 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         this.loading.setVisible(true);
         final ResourceCollection<E> resources = this.factory.all(query,
                                                                  new ResourcesChangeListener<E>() {
-
-                                                                     @Override
-                                                                     public void onChange(
-                                                                             final ResourceCollection<E> resources,
-                                                                             final E resource) {
-                                                                     }
 
                                                                      @Override
                                                                      public void onLoaded(

@@ -48,7 +48,7 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
     }
 
     protected void addTranslatableLabel(final String text) {
-        add(new TranslatableLabel(text, this.getTextController));
+        add(new TranslatableLabel(this.getTextController, text));
     }
 
     protected <T extends Widget & Binding<E>> void add(final String label,
@@ -57,7 +57,7 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
         final ComplexPanel panel = new FlowPanel();
         final Label message = new TranslatableLabel(this.getTextController);
         panel.add(message);
-        panel.add(new TranslatableLabel(label, this.getTextController));
+        panel.add(new TranslatableLabel(this.getTextController, label));
         panel.add(widget);
         add(panel);
     }
@@ -94,7 +94,7 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
             }
         });
         panel.add(message);
-        panel.add(new TranslatableLabel(label, this.getTextController));
+        panel.add(new TranslatableLabel(this.getTextController, label));
         panel.add(textBox);
         add(panel);
     }
@@ -113,10 +113,10 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
         }
         final Label message;
         if (required) {
-            message = new TranslatableLabel("required", this.getTextController);
+            message = new TranslatableLabel(this.getTextController, "required");
         }
         else {
-            message = new TranslatableLabel("", this.getTextController);
+            message = new TranslatableLabel(this.getTextController, "");
         }
         message.setStyleName("is-ok");
         panel.add(message);
@@ -183,7 +183,7 @@ public class ResourcePanel<E extends Resource<E>> extends FlowPanel {
                 }
             }
         });
-        panel.add(new TranslatableLabel(label, this.getTextController));
+        panel.add(new TranslatableLabel(this.getTextController, label));
         panel.add(textBox);
         add(panel);
     }

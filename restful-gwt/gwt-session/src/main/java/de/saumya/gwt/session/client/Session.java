@@ -98,24 +98,23 @@ public class Session {
         permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
             @Override
-            public void onChange(
-                    final ResourceCollection<Permission> resources,
-                    final Permission resource) {
-                final Map<String, Collection<Role>> actions;
-                if (Session.this.permissions.containsKey(resource.resource)) {
-                    actions = Session.this.permissions.get(resource.resource);
-                }
-                else {
-                    actions = new HashMap<String, Collection<Role>>();
-                    Session.this.permissions.put(resource.resource, actions);
-                }
-                actions.put(resource.action, resource.roles);
-                GWT.log("added permission for '" + resource.resource + "#"
-                        + resource.action + ": " + resource.roles, null);
-            }
-
-            @Override
             public void onLoaded(final ResourceCollection<Permission> resources) {
+                for (final Permission permission : resources) {
+                    final Map<String, Collection<Role>> actions;
+                    if (Session.this.permissions.containsKey(permission.resource)) {
+                        actions = Session.this.permissions.get(permission.resource);
+                    }
+                    else {
+                        actions = new HashMap<String, Collection<Role>>();
+                        Session.this.permissions.put(permission.resource,
+                                                     actions);
+                    }
+                    actions.put(permission.action, permission.roles);
+                    GWT.log("added permission for '" + permission.resource
+                                    + "#" + permission.action + ": "
+                                    + permission.roles,
+                            null);
+                }
             }
         });
     }

@@ -15,7 +15,7 @@ public abstract class AttributePanel<E extends Resource<E>> extends
     private final TextBox box = new TextBox();
 
     public AttributePanel(final String name, final GetTextController getText) {
-        add(new TranslatableLabel(name, getText));
+        add(new TranslatableLabel(getText, name));
         add(this.box);
         this.box.setEnabled(false);
     }

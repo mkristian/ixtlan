@@ -19,10 +19,10 @@ public class TranslatableLabel extends Label implements Translatable {
     private final GetTextController getText;
 
     public TranslatableLabel(final GetTextController getText) {
-        this(null, getText);
+        this(getText, null);
     }
 
-    public TranslatableLabel(final String text, final GetTextController getTextController) {
+    public TranslatableLabel(final GetTextController getTextController, final String text) {
         super();
         this.getText = getTextController;
         this.getText.addTranslatable(this);

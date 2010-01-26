@@ -49,8 +49,8 @@ public abstract class AbstractResourceActionPanel<E extends Resource<E>>
 
     protected <T extends ClickHandler & KeyUpHandler> Button button(
             final ComplexPanel panel, final String name, final T handler) {
-        final Button button = new TranslatableButton(name,
-                this.getTextController);
+        final Button button = new TranslatableButton(this.getTextController,
+                name);
         button.ensureDebugId(this.resourceName + "-" + name);
         button.setVisible(false);
         button.addClickHandler(handler);

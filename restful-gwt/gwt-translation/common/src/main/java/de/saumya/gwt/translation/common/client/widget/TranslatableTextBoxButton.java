@@ -20,7 +20,7 @@ public class TranslatableTextBoxButton extends TranslatableButton {
 
     public TranslatableTextBoxButton(final TextBox box, final String text,
             final GetTextController getTextController) {
-        super(text, getTextController);
+        super(getTextController, text);
         this.box = box;
     }
 

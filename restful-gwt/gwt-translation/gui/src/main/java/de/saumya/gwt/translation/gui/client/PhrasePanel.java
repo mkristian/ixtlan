@@ -82,7 +82,7 @@ public class PhrasePanel extends ResourcePanel<Phrase> {
     }
 
     protected TranslationLabel addTranslationLabel(final String text) {
-        final Label head = new TranslatableLabel(text, this.getTextController);
+        final Label head = new TranslatableLabel(this.getTextController, text);
         add(head);
         final TranslationLabel label = new TranslationLabel(head);
         add(label);

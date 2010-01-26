@@ -70,7 +70,7 @@ public class ResourceHeaderPanel extends FlowPanel {
     private Label label(final String labelValue) {
         final Label label = labelValue == null
                 ? new Label()
-                : new TranslatableLabel(labelValue, this.getText);
+                : new TranslatableLabel(this.getText, labelValue);
         label.setVisible(false);
         add(label);
         return label;

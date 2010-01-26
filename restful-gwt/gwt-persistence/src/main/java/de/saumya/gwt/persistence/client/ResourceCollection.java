@@ -38,7 +38,7 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
                 resource.fromXml(element);
                 resource.state = State.UP_TO_DATE;
                 add(resource);
-                fireResourcesChangeEvents(resource);
+                // fireResourcesChangeEvents(resource);
             }
         }
         fireResourcesLoadedEvents();
@@ -70,11 +70,11 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
         this.listeners.remove(listener);
     }
 
-    private void fireResourcesChangeEvents(final E resource) {
-        for (final ResourcesChangeListener<E> listener : this.listeners) {
-            listener.onChange(this, resource);
-        }
-    }
+    // private void fireResourcesChangeEvents(final E resource) {
+    // for (final ResourcesChangeListener<E> listener : this.listeners) {
+    // listener.onChange(this, resource);
+    // }
+    // }
 
     private void fireResourcesLoadedEvents() {
         for (final ResourcesChangeListener<E> listener : this.listeners) {
