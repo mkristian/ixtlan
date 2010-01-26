@@ -21,6 +21,7 @@ import de.saumya.gwt.translation.common.client.route.ScreenPath;
 
 public class ResourceCollectionNavigation<E extends Resource<E>> extends
         FlowPanel implements ResourceCollectionResetable<E> {
+
     static class Pagination {
 
         private final Map<String, String> params = new HashMap<String, String>();
@@ -112,6 +113,7 @@ public class ResourceCollectionNavigation<E extends Resource<E>> extends
             this.pagination.params.put("offset", ""
                     + (this.pagination.offset - this.pagination.limit));
             this.pagination.createHistoryToken();
+            ResourceCollectionNavigation.this.loadingNotice.setVisible(true);
             ResourceCollectionNavigation.this.factory.all(this.pagination.params,
                                                           ResourceCollectionNavigation.this.changeListener);
         }
@@ -127,6 +129,7 @@ public class ResourceCollectionNavigation<E extends Resource<E>> extends
             this.pagination.params.put("offset", ""
                     + (this.pagination.offset + this.pagination.limit));
             this.pagination.createHistoryToken();
+            ResourceCollectionNavigation.this.loadingNotice.setVisible(true);
             ResourceCollectionNavigation.this.factory.all(this.pagination.params,
                                                           ResourceCollectionNavigation.this.changeListener);
         }
@@ -136,14 +139,17 @@ public class ResourceCollectionNavigation<E extends Resource<E>> extends
     private final Button               next;
 
     private final ResourceFactory<E>   factory;
+    protected final LoadingNotice      loadingNotice;
 
     protected final Pagination         pagination = new Pagination();
 
     private ResourcesChangeListener<E> changeListener;
 
-    public ResourceCollectionNavigation(final ResourceFactory<E> factory,
+    public ResourceCollectionNavigation(final LoadingNotice loadingNotice,
+            final ResourceFactory<E> factory,
             final GetTextController getTextController) {
         setStyleName("resource-collection-navigation");
+        this.loadingNotice = loadingNotice;
         this.factory = factory;
         this.previous = new TranslatableButton(getTextController,
                 "previous results");

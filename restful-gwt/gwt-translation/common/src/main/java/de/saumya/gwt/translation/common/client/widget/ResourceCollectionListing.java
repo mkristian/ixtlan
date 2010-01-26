@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
@@ -13,10 +14,11 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 
 public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
-        implements ResourceCollectionResetable<E> {
+        implements ResourceCollectionResetable<E>, HasPathFactory {
 
     protected final Session            session;
 
@@ -35,14 +37,15 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
         this.factory = factory;
         this.noResult = new TranslatableLabel(getTextController, "no "
                 + factory.storagePluralName());
-
     }
 
-    protected void setup(final PathFactory pathFactory) {
+    @Override
+    public void setPathFactory(final PathFactory pathFactory) {
         this.pathFactory = pathFactory;
     }
 
-    protected PathFactory getPathFactory() {
+    @Override
+    public PathFactory getPathFactory() {
         return this.pathFactory;
     }
 
@@ -54,6 +57,7 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
                 add(this.noResult);
             }
             else {
+                setVisible(false);
                 // add the collection one by one and create a link according to
                 // the permission of the logged in user
                 if (this.session.isAllowed(Action.UPDATE,
@@ -75,6 +79,8 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
                         add(new Label(resource.display()));
                     }
                 }
+                GWT.log(resources.toString(), null);
+                setVisible(true);
             }
         }
     }

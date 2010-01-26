@@ -6,7 +6,9 @@ package de.saumya.gwt.translation.common.client.widget;
 import java.sql.Timestamp;
 import java.util.Map;
 
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
@@ -17,58 +19,126 @@ import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.session.client.model.User;
-import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
 
-public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
-        implements Screen<E> {
+public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
+        Screen<E>, ResourceResetable<E>, ResourceCollectionResetable<E> {
 
-    private final PathFactory                      pathFactory;
+    private static final int                       RESOURCE            = 0;
+    private static final int                       RESOURCE_COLLECTION = 1;
 
     private final ResourceNotifications            notifications;
 
     protected final ResourceFactory<E>             factory;
 
-    protected final ResourceHeaderPanel            header;
-
     protected final AbstractResourceActionPanel<E> actions;
 
-    protected final ResourcePanel<E>               display;
+    protected final Widget                         display;
+    protected final AllowReadOnly<E>               displayAllowReadOnly;
 
-    protected final ResourceCollectionPanel<E>     displayAll;
+    protected final Widget                         displayCollection;
+    protected final ResourceCollectionResetable<E> displayCollectionResetable;
+    protected final HasPathFactory                 displayCollectionPathFactory;
 
     protected final Session                        session;
 
-    protected final TranslatableLabel              loading;
+    protected final Widget                         loading;
 
     private PathFactory                            parentPathFactory;
+    private final PathFactory                      pathFactory;
 
-    protected E                                    resource;
+    private final DeckPanel                        deck;
+    private final ResourceChangeListener<E>        resourceChangeListener;
 
-    protected ResourceScreen(final GetTextController getTextController,
+    protected <ResourceWidget extends Widget & AllowReadOnly<E>> ResourceScreen(
+            final LoadingNotice loadingNotice,
             final ResourceFactory<E> factory, final Session session,
-            final ResourcePanel<E> display,
-            final ResourceCollectionPanel<E> displayAll,
+            final ResourceWidget display,
             final AbstractResourceActionPanel<E> actions,
             final ResourceNotifications notifications) {
-        setStyleName("screen");
-        this.loading = new TranslatableLabel(getTextController, "loading ...");
-        this.loading.setStyleName("loading");
-        this.header = new ResourceHeaderPanel(getTextController);
+        this(loadingNotice,
+                factory,
+                session,
+                display,
+                null,
+                null,
+                null,
+                actions,
+                notifications);
+    }
+
+    protected <S extends Widget & AllowReadOnly<E>, T extends Widget & ResourceCollectionResetable<E> & HasPathFactory> ResourceScreen(
+            final LoadingNotice loadingNotice,
+            final ResourceFactory<E> factory, final Session session,
+            final S display, final T displayCollection,
+            final AbstractResourceActionPanel<E> actions,
+            final ResourceNotifications notifications) {
+        this(loadingNotice,
+                factory,
+                session,
+                display,
+                displayCollection,
+                displayCollection,
+                displayCollection,
+                actions,
+                notifications);
+    }
+
+    private <ResourceWidget extends Widget & AllowReadOnly<E>> ResourceScreen(
+            final LoadingNotice loadingNotice,
+            final ResourceFactory<E> factory, final Session session,
+            final ResourceWidget display, final Widget displayCollection,
+            final ResourceCollectionResetable<E> displayCollectionResetable,
+            final HasPathFactory displayCollectionPathFactory,
+            final AbstractResourceActionPanel<E> actions,
+            final ResourceNotifications notifications) {
+        setStyleName("resource-screen");
+        this.loading = loadingNotice;
+
         this.actions = actions;
+
+        // TODO from a javascript point of view casting might be better then
+        // multiple references to the same object
         this.display = display;
-        this.displayAll = displayAll;
+        this.displayAllowReadOnly = display;
+
+        // TODO from a javascript point of view casting might be better then
+        // multiple references to the same object
+        this.displayCollection = displayCollection;
+        this.displayCollectionResetable = displayCollectionResetable;
+        this.displayCollectionPathFactory = displayCollectionPathFactory;
+
         this.factory = factory;
         this.session = session;
         this.notifications = notifications;
 
+        this.deck = new DeckPanel();
+        this.deck.add(display);
+        if (displayCollection != null) {
+            this.deck.add(displayCollection);
+        }
+
         add(this.loading);
         add(this.actions);
-        add(this.header);
-        add(this.display);
-        if (displayAll != null) {
-            add(this.displayAll);
+        add(this.deck);
+
+        this.resourceChangeListener = new ResourceChangeListener<E>() {
+
+            @Override
+            public void onChange(final E resource) {
+                reset(resource);
+            }
+
+            @Override
+            public void onError(final E resource) {
+                reset(resource);
+                ResourceScreen.this.loading.setVisible(false);
+            }
+        };
+
+        if (displayCollection != null) {
             this.pathFactory = new PathFactory(factory.storagePluralName());
         }
         else {
@@ -77,21 +147,94 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
         this.parentPathFactory = this.pathFactory;
     }
 
+    // protected ResourceScreen(final GetTextController getTextController,
+    // final ResourceFactory<E> factory, final Session session,
+    // final ResourceFields<E> displayFields,
+    // final ResourceCollectionPanel<E> displayAll,
+    // final AbstractResourceActionPanel<E> actions,
+    // final ResourceNotifications notifications) {
+    // setStyleName("screen");
+    // this.loading = new TranslatableLabel(getTextController, "loading ...");
+    // this.loading.setStyleName("loading");
+    //
+    // final ResourceHeaderPanel<E> header = new
+    // ResourceHeaderPanel<E>(getTextController) {
+    //
+    // @Override
+    // protected void reset(final E resource) {
+    // // TODO Auto-generated method stub
+    //
+    // }
+    //
+    // };
+    // this.actions = actions;
+    // final ResourcePanel<E> display = new ResourcePanel<E>(header,
+    // displayFields);
+    //
+    // this.display = display;
+    // this.displayAllowReadOnly = display;
+    //
+    // this.displayAll = displayAll;
+    // this.displayAllResetable = displayAll;
+    // this.displayAllPathFactory = displayAll;
+    //
+    // this.factory = factory;
+    // this.session = session;
+    // this.notifications = notifications;
+    //
+    // this.deck = new DeckPanel();
+    // this.deck.add(display);
+    // if (displayAll != null) {
+    // this.deck.add(displayAll);
+    // }
+    //
+    // add(this.loading);
+    // add(this.actions);
+    // add(this.deck);
+    //
+    // this.resourceChangeListener = new ResourceChangeListener<E>() {
+    //
+    // @Override
+    // public void onChange(final E resource) {
+    // reset(resource);
+    // }
+    //
+    // @Override
+    // public void onError(final E resource) {
+    // reset(resource);
+    // ResourceScreen.this.loading.setVisible(false);
+    // }
+    // };
+    //
+    // if (displayAll != null) {
+    // this.pathFactory = new PathFactory(factory.storagePluralName());
+    // }
+    // else {
+    // this.pathFactory = new PathFactory(factory.storageName());
+    // }
+    // this.parentPathFactory = this.pathFactory;
+    // }
+
     @Override
     // TODO make protected - seems not to be used outside class hierarchy!!!
     public PathFactory getPathFactory() {
         return this.parentPathFactory;
     }
 
-    @Override
-    public void setup(final String parentPath) {
-        this.parentPathFactory = parentPath == null
-                ? this.pathFactory
-                : this.pathFactory.newPathFactory(parentPath);
-        this.actions.setup(getPathFactory());
-        if (this.displayAll != null) {
-            this.displayAll.setup(getPathFactory());
+    public void setPathFactory(final PathFactory pathFactory) {
+        this.parentPathFactory = pathFactory;
+        this.actions.setPathFactory(getPathFactory());
+        if (this.displayCollectionPathFactory != null) {
+            this.displayCollectionPathFactory.setPathFactory(getPathFactory());
         }
+
+    }
+
+    @Override
+    public void setupPathFactory(final String parentPath) {
+        setPathFactory(parentPath == null
+                ? this.pathFactory
+                : this.pathFactory.newPathFactory(parentPath));
     }
 
     /**
@@ -102,23 +245,81 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
      * 
      * @param resource
      */
-    abstract protected void reset(final E resource);
+    // abstract protected void reset(final E resource);
 
-    protected final void reset(final E resource, final Timestamp updatedAt,
-            final User updatedBy) {
-        this.header.reset(resource.isNew() || resource.isDeleted()
-                                  || !resource.isUptodate()
-                                  ? null
-                                  : resource.key(),
-                          updatedAt,
-                          updatedBy);
-        this.actions.reset(resource, this.display.isReadOnly());
-        this.display.reset(resource);
+    // @SuppressWarnings("unchecked")
+    @Override
+    public final void reset(final E resource) {
+        // if (((ResourcePanel<E>) this.display).header != null) {
+        // ((ResourcePanel<E>) this.display).header.reset(resource.isNew()
+        // || resource.isDeleted() || !resource.isUptodate()
+        // ? null
+        // : resource.key(), updatedAt, updatedBy);
+        // }
+        this.actions.reset(resource);
+        this.actions.setReadOnly(this.displayAllowReadOnly.isReadOnly());
 
-        if (this.displayAll != null) {
-            this.displayAll.setVisible(false);
-        }
+        this.displayAllowReadOnly.reset(resource);
+
+        this.deck.showWidget(RESOURCE);
+        this.loading.setVisible(!resource.isUptodate());
         setVisible(true);
+    }
+
+    @Override
+    public void reset(final ResourceCollection<E> resources) {
+        this.displayCollectionResetable.reset(resources);
+        this.actions.reset(resources);
+        this.deck.showWidget(RESOURCE_COLLECTION);
+        this.loading.setVisible(false);
+        setVisible(true);
+    }
+
+    // TODO make a SingletonResourceScreen see also ConfigurationScreen
+    protected void showSingleton() {
+        if (this.session.isAllowed(Action.UPDATE,
+                                   this.factory.storagePluralName())
+                || this.session.isAllowed(Action.SHOW,
+                                          this.factory.storagePluralName())) {
+
+            this.displayAllowReadOnly.setReadOnly(!this.session.isAllowed(Action.UPDATE,
+                                                                          this.factory.storagePluralName()));
+            this.loading.setVisible(true);
+            final E resource = this.factory.get(this.resourceChangeListener,
+                                                this.notifications);
+            reset(resource);
+        }
+        else {
+            this.loading.setVisible(false);
+            this.display.setVisible(false);
+        }
+    }
+
+    @Override
+    public void showNew() {
+        this.loading.setVisible(true);
+        this.displayAllowReadOnly.setReadOnly(false);
+        reset(this.factory.newResource());
+    }
+
+    @Override
+    public void showRead(final String key) {
+        this.displayAllowReadOnly.setReadOnly(true);
+        show(key);
+    }
+
+    @Override
+    public void showEdit(final String key) {
+        this.displayAllowReadOnly.setReadOnly(false);
+        show(key);
+    }
+
+    protected void show(final String key) {
+        this.loading.setVisible(true);
+        final E resource = this.factory.get(key,
+                                            this.resourceChangeListener,
+                                            this.notifications);
+        reset(resource);
     }
 
     @Override
@@ -136,90 +337,13 @@ public abstract class ResourceScreen<E extends Resource<E>> extends FlowPanel
                                                                  });
         // TODO should be set be onChange and onError. maybe make an application
         // wide notification widget
-        // this.loading.setVisible(false);
         reset(resources);
     }
 
-    protected void reset(final ResourceCollection<E> resources) {
-        this.displayAll.reset(resources);
-        this.actions.reset();
-        this.header.setVisible(false);
-        this.display.setVisible(false);
-        this.loading.setVisible(false);
-        setVisible(true);
-    }
-
     @Override
-    public void showEdit(final String key) {
-        this.display.setReadOnly(false);
-        show(key);
+    public Screen<?> child(final String parentKey) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    @Override
-    public void showNew() {
-        this.display.setReadOnly(false);
-        this.displayAll.setVisible(false);
-        reset(this.factory.newResource());
-        this.loading.setVisible(false);
-    }
-
-    @Override
-    public void showRead(final String key) {
-        this.display.setReadOnly(true);
-        show(key);
-        this.actions.setVisible(false);
-    }
-
-    protected void showSingleton() {
-        if (this.session.isAllowed(Action.UPDATE, this.factory.storageName())
-                || this.session.isAllowed(Action.SHOW,
-                                          this.factory.storagePluralName())) {
-
-            this.display.setReadOnly(!this.session.isAllowed(Action.UPDATE,
-                                                             this.factory.storagePluralName()));
-            this.loading.setVisible(true);
-            final E resource = this.factory.get(this.resourceChangeListener,
-                                                this.notifications);
-            reset(resource);
-        }
-        else {
-            this.loading.setVisible(false);
-            this.display.setVisible(false);
-        }
-    }
-
-    ResourceChangeListener<E> resourceChangeListener = new ResourceChangeListener<E>() {
-
-                                                         @Override
-                                                         public void onChange(
-                                                                 final E resource) {
-                                                             reset(resource);
-                                                             ResourceScreen.this.loading.setVisible(false);
-                                                             // ResourceScreen.this.notifications.info("loaded: "
-                                                             // +
-                                                             // resource.display());
-
-                                                         }
-
-                                                         @Override
-                                                         public void onError(
-                                                                 final E resource) {
-                                                             ResourceScreen.this.loading.setVisible(false);
-                                                             // ResourceScreen.this.notifications.warn(status
-                                                             // + ": "
-                                                             // + statusText
-                                                             // + ": "
-                                                             // +
-                                                             // resource.display());
-                                                             reset(resource);
-                                                         }
-                                                     };
-
-    protected void show(final String key) {
-        this.loading.setVisible(true);
-        final E resource = this.factory.get(key,
-                                            this.resourceChangeListener,
-                                            this.notifications);
-        reset(resource);
-    }
 }

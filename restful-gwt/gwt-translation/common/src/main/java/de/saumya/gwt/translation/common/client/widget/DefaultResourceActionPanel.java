@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
@@ -38,11 +39,14 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     private final ResourceChangeListener<E> createdListener;
     private final ResourceFactory<E>        factory;
 
-    public DefaultResourceActionPanel(final GetTextController getText,
+    private E                               resource;
+    private boolean                         isReadOnly;
+
+    public DefaultResourceActionPanel(final GetTextController getTextController,
             final ResourceBindings<E> bindings, final Session session,
             final ResourceFactory<E> factory,
-            final ResourceNotifications changeNotification) {
-        super(getText, bindings, session, factory);
+            final ResourceNotifications notifications) {
+        super(getTextController, bindings, session, factory);
 
         setStyleName("action-panel");
         this.session = session;
@@ -63,7 +67,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             public void onError(final E resource) {
             }
         };
-        this.newHandler = new ButtonAction<E>(changeNotification) {
+        this.newHandler = new ButtonAction<E>(notifications) {
 
             @Override
             protected void action(final E resource) {
@@ -71,7 +75,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             }
 
         };
-        this.reloadHandler = new ButtonAction<E>(changeNotification) {
+        this.reloadHandler = new ButtonAction<E>(notifications) {
 
             @Override
             protected void action(final E resource) {
@@ -80,7 +84,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         };
 
-        this.editHandler = new ButtonAction<E>(changeNotification) {
+        this.editHandler = new ButtonAction<E>(notifications) {
 
             @Override
             protected void action(final E resource) {
@@ -89,7 +93,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         };
 
-        this.createHandler = new MutatingButtonAction<E>(changeNotification,
+        this.createHandler = new MutatingButtonAction<E>(notifications,
                 bindings) {
 
             @Override
@@ -114,7 +118,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                 resource.save();
             }
         };
-        this.saveHandler = new MutatingButtonAction<E>(changeNotification,
+        this.saveHandler = new MutatingButtonAction<E>(notifications,
                 bindings) {
 
             @Override
@@ -123,7 +127,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             }
 
         };
-        this.destroyHandler = new ButtonAction<E>(changeNotification) {
+        this.destroyHandler = new ButtonAction<E>(notifications) {
 
             @Override
             protected void action(final E resource) {
@@ -164,78 +168,30 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
         return new GetByPanel(this.getTextController,
                 this.factory,
                 this.session);
-        // final ComplexPanel getBy = new FlowPanel();
-        // getBy.setStyleName("get-by");
-        // boxWithButton(getBy,
-        // "get by " + this.resourceName + " key",
-        // new TextBoxButtonHandler() {
-        //
-        // @Override
-        // protected void action(final TextBoxBase textBox) {
-        // if (DefaultResourceActionPanel.this.session.isAllowed(Action.UPDATE,
-        // DefaultResourceActionPanel.this.resourceName)) {
-        // History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(textBox.getText()));
-        // }
-        // else {
-        // History.newItem(DefaultResourceActionPanel.this.pathFactory.showPath(textBox.getText()));
-        // }
-        // textBox.setText("");
-        // }
-        //
-        // });
-        // return getBy;
     }
-
-    // private void search(final TextBoxBase textBox, final boolean exact) {
-    // final String token =
-    // DefaultResourceActionPanel.this.pathFactory.allPath((exact
-    // ? "exact=&"
-    // : "")
-    // + this.defaultParameterName
-    // + "="
-    // + (textBox.getText().length() == 0 ? "*" : textBox.getText()));
-    // if (token.equals(History.getToken())) {
-    // History.fireCurrentHistoryState();
-    // }
-    // else {
-    // History.newItem(token);
-    // }
-    // }
 
     protected ComplexPanel createSearchPanel() {
         return new SearchPanel(this.getTextController, this.factory);
-        // final ComplexPanel search = new FlowPanel();
-        // search.setStyleName("search");
-        // search.add(new TranslatableLabel("search", this.getTextController));
-        // final TextBox box = boxWithButton(search,
-        // "similar",
-        // new TextBoxButtonHandler() {
-        //
-        // @Override
-        // protected void action(
-        // final TextBoxBase textBox) {
-        // search(textBox, false);
-        // }
-        //
-        // });
-        // final TranslatableTextBoxButton button = new
-        // TranslatableTextBoxButton(box,
-        // "exact",
-        // this.getTextController);
-        // button.add(new TextBoxButtonHandler() {
-        //
-        // @Override
-        // protected void action(final TextBoxBase textBox) {
-        // search(textBox, true);
-        // }
-        // });
-        // search.add(button);
-        // return search;
     }
 
     // TODO move into abstract class
     @Override
-    public final void reset(final E resource, final boolean readOnly) {
+    public void reset(final ResourceCollection<E> resources) {
+        this.create.setVisible(false);
+        this.reload.setVisible(false);
+        this.edit.setVisible(false);
+        this.save.setVisible(false);
+        this.delete.setVisible(false);
+        this.fresh.setVisible(this.session.isAllowed(Session.Action.CREATE,
+                                                     this.resourceName));
+
+        setVisible(true);
+    }
+
+    @Override
+    public void reset(final E resource) {
+        this.resource = resource;
+
         this.newHandler.reset(resource);
         this.reloadHandler.reset(resource);
         this.createHandler.reset(resource);
@@ -245,40 +201,42 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         resource.addResourceChangeListener(this.createdListener);
 
-        // TODO this status check needs improvement
-        this.delete.setVisible(!resource.isNew() && !resource.isDeleted()
-                && this.session.isAllowed(Action.DESTROY, this.resourceName));
-        this.reload.setVisible(!resource.isNew() && !resource.isDeleted()
-                && this.session.isAllowed(Action.SHOW, this.resourceName));
-        this.edit.setVisible(readOnly && !resource.isNew()
-                && !resource.isDeleted()
-                && this.session.isAllowed(Action.UPDATE, this.resourceName));
-        this.save.setVisible(!readOnly && !resource.isNew()
-                && !resource.isDeleted()
-                && this.session.isAllowed(Action.UPDATE, this.resourceName));
-        this.create.setVisible(resource.isNew()
-                && this.session.isAllowed(Action.CREATE, this.resourceName));
-        this.fresh.setVisible(!resource.isNew()
-                && this.session.isAllowed(Action.CREATE, this.resourceName));
-
-        doReset(resource);
+        resetVisibility();
 
         setVisible(true);
     }
 
-    // TODO move into abstract class
+    private void resetVisibility() {
+        if (this.resource != null) {
+            // TODO this status check needs improvement
+            this.delete.setVisible(!this.resource.isNew()
+                    && !this.resource.isDeleted()
+                    && this.session.isAllowed(Action.DESTROY, this.resourceName));
+
+            this.reload.setVisible(!this.resource.isNew()
+                    && !this.resource.isDeleted()
+                    && this.session.isAllowed(Action.SHOW, this.resourceName));
+            this.edit.setVisible(this.isReadOnly && !this.resource.isNew()
+                    && !this.resource.isDeleted()
+                    && this.session.isAllowed(Action.UPDATE, this.resourceName));
+            this.save.setVisible(!this.isReadOnly && !this.resource.isNew()
+                    && !this.resource.isDeleted()
+                    && this.session.isAllowed(Action.UPDATE, this.resourceName));
+            this.create.setVisible(this.resource.isNew()
+                    && this.session.isAllowed(Action.CREATE, this.resourceName));
+            this.fresh.setVisible(!this.resource.isNew()
+                    && this.session.isAllowed(Action.CREATE, this.resourceName));
+        }
+    }
+
     @Override
-    public final void reset() {
-        this.create.setVisible(false);
-        this.reload.setVisible(false);
-        this.edit.setVisible(false);
-        this.save.setVisible(false);
-        this.delete.setVisible(false);
-        this.fresh.setVisible(this.session.isAllowed(Session.Action.CREATE,
-                                                     this.resourceName));
+    public boolean isReadOnly() {
+        return this.isReadOnly;
+    }
 
-        doReset();
-
-        setVisible(true);
+    @Override
+    public void setReadOnly(final boolean isReadOnly) {
+        this.isReadOnly = isReadOnly;
+        resetVisibility();
     }
 }

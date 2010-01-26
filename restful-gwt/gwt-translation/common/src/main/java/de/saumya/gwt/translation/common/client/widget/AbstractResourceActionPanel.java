@@ -14,10 +14,12 @@ import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 
 public abstract class AbstractResourceActionPanel<E extends Resource<E>>
-        extends FlowPanel {
+        extends FlowPanel implements ResourceCollectionResetable<E>,
+        AllowReadOnly<E>, HasPathFactory, ResourceResetable<E> {
 
     protected final GetTextController getTextController;
 
@@ -59,19 +61,14 @@ public abstract class AbstractResourceActionPanel<E extends Resource<E>>
         return button;
     }
 
-    public final void setup(final PathFactory pathFactory) {
+    @Override
+    public final void setPathFactory(final PathFactory pathFactory) {
         this.pathFactory = pathFactory;
     }
 
-    // TODO better API, it is not clear what these 4 methods do and shall do
-    protected void doReset(final E resource) {
+    @Override
+    public final PathFactory getPathFactory() {
+        return this.pathFactory;
     }
-
-    protected void doReset() {
-    }
-
-    abstract public void reset(final E resource, final boolean readOnly);
-
-    abstract public void reset();
 
 }

@@ -17,7 +17,7 @@ import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-public class ResourceCollectionNavigationWithExport<E extends Resource<E>>
+public class ResourceCollectionNavigationWithCSVExport<E extends Resource<E>>
         extends ResourceCollectionNavigation<E> {
 
     private final Button export;
@@ -25,10 +25,11 @@ public class ResourceCollectionNavigationWithExport<E extends Resource<E>>
     private final Hidden fuzzy;
     private final Hidden query;
 
-    public ResourceCollectionNavigationWithExport(
+    public ResourceCollectionNavigationWithCSVExport(
+            final LoadingNotice loadingNotice,
             final ResourceFactory<E> factory,
             final GetTextController getTextController) {
-        super(factory, getTextController);
+        super(loadingNotice, factory, getTextController);
         this.export = new TranslatableButton(getTextController, "export as CSV");
 
         // setup a form (without iframe) with hidden fields

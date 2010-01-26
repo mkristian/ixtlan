@@ -36,7 +36,7 @@ public class ScreenDispatcher {
                     + "/" + path);
         }
         else {
-            screen.setup(parentPath);
+            screen.setupPathFactory(parentPath);
             switch (path.action) {
             case NEW:
                 screen.showNew();

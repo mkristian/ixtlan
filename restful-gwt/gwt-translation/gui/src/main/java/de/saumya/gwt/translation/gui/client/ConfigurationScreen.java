@@ -10,18 +10,20 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.model.Configuration;
 import de.saumya.gwt.session.client.model.ConfigurationFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.model.Phrase;
-import de.saumya.gwt.translation.common.client.route.Screen;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
+import de.saumya.gwt.translation.common.client.widget.ResourceFields;
+import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
 public class ConfigurationScreen extends ResourceScreen<Configuration> {
 
-    static class ConfigurationPanel extends ResourcePanel<Configuration> {
+    private static class ConfigurationFields extends
+            ResourceFields<Configuration> {
 
-        ConfigurationPanel(final GetTextController getTextController,
+        ConfigurationFields(final GetTextController getTextController,
                 final ResourceBindings<Configuration> bindings) {
             super(getTextController, bindings);
             add("idle session timeout (in minutes)",
@@ -71,19 +73,32 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
         }
     }
 
-    public ConfigurationScreen(final ConfigurationFactory configFactory,
-            final ResourceBindings<Configuration> mutator,
+    private static class ConfigurationHeaders extends
+            ResourceHeaderPanel<Configuration> {
+
+        public ConfigurationHeaders(final GetTextController getTextController) {
+            super(getTextController);
+        }
+
+        @Override
+        public void reset(final Configuration resource) {
+            reset(resource, resource.updatedAt, resource.updatedBy);
+        }
+    }
+
+    public ConfigurationScreen(final LoadingNotice loadingNotice,
+            final ConfigurationFactory configFactory,
+            final ResourceBindings<Configuration> bindings,
             final GetTextController getTextController, final Session session,
             final ResourceNotifications notifications) {
-        super(getTextController,
+        super(loadingNotice,
                 configFactory,
                 session,
-                new ConfigurationPanel(getTextController, mutator),
-                // no displayAll panel
-                null,
+                new ResourcePanel<Configuration>(new ConfigurationHeaders(getTextController),
+                        new ConfigurationFields(getTextController, bindings)),
                 // default action panel (save, delete, new, etc buttons)
                 new DefaultResourceActionPanel<Configuration>(getTextController,
-                        mutator,
+                        bindings,
                         session,
                         configFactory,
                         notifications),
@@ -93,7 +108,7 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
     // TODO put all these methods below except reset(...) into
     // SingletonResourceScreen
     @Override
-    public void showAll(Map<String, String> query) {
+    public void showAll(final Map<String, String> query) {
         // singletons act on urls which look like a collection of resources =>
         // no showNew, showRead, showEdit. only showAll
         showSingleton();
@@ -112,16 +127,6 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
     @Override
     public void showEdit(final String key) {
         throw new UnsupportedOperationException("configuration has no 'edit'");
-    }
-
-    @Override
-    protected void reset(final Configuration resource) {
-        reset(resource, resource.updatedAt, resource.updatedBy);
-    }
-
-    @Override
-    public Screen<Phrase> child(final String key) {
-        return null;
     }
 
 }

@@ -27,6 +27,7 @@ import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.model.WordFactory;
 import de.saumya.gwt.translation.common.client.route.ScreenController;
+import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 
 public class GUIContainer {
@@ -87,12 +88,16 @@ public class GUIContainer {
     public final GetTextController    getTextController    = new GetTextController(this.getText,
                                                                    this.session);
 
-    public final PhraseScreen         phraseScreen         = new PhraseScreen(this.getTextController,
+    public final LoadingNotice        loadingNotice        = new LoadingNotice(this.getTextController);
+
+    public final PhraseScreen         phraseScreen         = new PhraseScreen(this.loadingNotice,
+                                                                   this.getTextController,
                                                                    this.phraseFactory,
                                                                    new ResourceBindings<Phrase>(),
                                                                    this.session,
                                                                    this.notifications);
-    public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.configurationFactory,
+    public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.loadingNotice,
+                                                                   this.configurationFactory,
                                                                    new ResourceBindings<Configuration>(),
                                                                    this.getTextController,
                                                                    this.session,
@@ -118,7 +123,7 @@ public class GUIContainer {
         new SessionController(this.session, this.loginPanel, this.sessionPanel);
 
         // add the components
-        // TODO use StackPanel instead
+        // TODO use DeckPanel instead
         panel.add(this.loginPanel);
         panel.add(this.sessionPanel);
     }

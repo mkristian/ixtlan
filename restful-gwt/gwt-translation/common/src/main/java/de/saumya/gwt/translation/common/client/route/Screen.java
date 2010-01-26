@@ -7,13 +7,11 @@ import java.util.Map;
 
 import de.saumya.gwt.persistence.client.Resource;
 
-public interface Screen<E extends Resource<E>> {
+public interface Screen<E extends Resource<E>> extends HasPathFactory {
+
+    void setupPathFactory(String parentPath);
 
     Screen<?> child(String parentKey);
-
-    PathFactory getPathFactory();
-
-    void setup(String parentPath);
 
     void showRead(String key);
 

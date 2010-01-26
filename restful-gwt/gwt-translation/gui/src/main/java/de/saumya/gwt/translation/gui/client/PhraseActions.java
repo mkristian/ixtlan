@@ -6,6 +6,7 @@ package de.saumya.gwt.translation.gui.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
@@ -47,12 +48,13 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
     }
 
     @Override
-    protected void doReset() {
+    public void reset(final ResourceCollection<Phrase> resources) {
         this.approve.setVisible(false);
+        super.reset(resources);
     }
 
     @Override
-    protected void doReset(final Phrase phrase) {
+    public void reset(final Phrase phrase) {
         this.approveHandler.reset(phrase);
         this.approve.setVisible(!phrase.isNew()
                 && !phrase.isDeleted()
@@ -64,6 +66,7 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
                 && this.session.isAllowed(Action.UPDATE,
                                           this.resourceName,
                                           this.locale));
+        super.reset(phrase);
 
         GWT.log("actions: "
                 + this.locale

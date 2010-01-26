@@ -8,12 +8,14 @@ import java.sql.Timestamp;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.session.client.model.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-public class ResourceHeaderPanel extends FlowPanel {
+public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
+        FlowPanel implements ResourceResetable<E> {
 
-    private final GetTextController getText;
+    private final GetTextController getTextController;
 
     private final Label             keyLabel;
     private final Label             keyValue;
@@ -23,9 +25,9 @@ public class ResourceHeaderPanel extends FlowPanel {
     private final Label             modifiedByLabel;
     private final Label             modifiedByValue;
 
-    public ResourceHeaderPanel(final GetTextController getText) {
+    public ResourceHeaderPanel(final GetTextController getTextController) {
         setStyleName("header-panel");
-        this.getText = getText;
+        this.getTextController = getTextController;
         this.keyLabel = label("key");
         this.keyValue = label();
         this.modifiedAtLabel = label("modified at");
@@ -35,8 +37,15 @@ public class ResourceHeaderPanel extends FlowPanel {
         this.modifiedByValue = label();
     }
 
-    public void reset(final String keyValue, final Timestamp updatedAt,
+    /**
+     * only the resource knows whether it has updated Timestamp and/or updatedBy
+     * User. an implementation needs to forward the respective info to the
+     * {@link ResourceScreen#reset(Resource, Timestamp, User)} using null where
+     * the info does not exists
+     */
+    protected void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
+        final String keyValue = resource.key();
         if (keyValue != null) {
             this.keyValue.setText("\u00a0" + keyValue + "\u00a0");
         }
@@ -70,7 +79,7 @@ public class ResourceHeaderPanel extends FlowPanel {
     private Label label(final String labelValue) {
         final Label label = labelValue == null
                 ? new Label()
-                : new TranslatableLabel(this.getText, labelValue);
+                : new TranslatableLabel(this.getTextController, labelValue);
         label.setVisible(false);
         add(label);
         return label;

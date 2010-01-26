@@ -11,15 +11,15 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.Translation;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
-import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
+import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
-public class PhrasePanel extends ResourcePanel<Phrase> {
+public class PhraseFields extends ResourceFields<Phrase> {
 
     private final TranslationLabel defaultTranslation;
     private final TranslationLabel parentTranslation;
 
-    class TranslationLabel extends Label {
+    private static class TranslationLabel extends Label {
 
         private final Widget widget;
 
@@ -40,7 +40,7 @@ public class PhrasePanel extends ResourcePanel<Phrase> {
         }
     }
 
-    PhrasePanel(final GetTextController getTextController,
+    PhraseFields(final GetTextController getTextController,
             final ResourceBindings<Phrase> bindings) {
         super(getTextController, bindings);
 
@@ -90,8 +90,9 @@ public class PhrasePanel extends ResourcePanel<Phrase> {
     }
 
     @Override
-    protected void doReset(final Phrase resource) {
+    public void reset(final Phrase resource) {
         this.defaultTranslation.reset(resource.defaultTranslation);
         this.parentTranslation.reset(resource.parentTranslation);
+        super.reset(resource);
     }
 }
