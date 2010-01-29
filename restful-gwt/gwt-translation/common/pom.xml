@@ -6,7 +6,7 @@
   <parent>
     <groupId>de.saumya.gwt</groupId>
     <artifactId>translation</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.3.0</version>
   </parent>
   <groupId>de.saumya.gwt.translation</groupId>
   <artifactId>common</artifactId>
