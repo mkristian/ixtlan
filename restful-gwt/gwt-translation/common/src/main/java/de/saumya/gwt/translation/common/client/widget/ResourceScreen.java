@@ -147,76 +147,7 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
         this.parentPathFactory = this.pathFactory;
     }
 
-    // protected ResourceScreen(final GetTextController getTextController,
-    // final ResourceFactory<E> factory, final Session session,
-    // final ResourceFields<E> displayFields,
-    // final ResourceCollectionPanel<E> displayAll,
-    // final AbstractResourceActionPanel<E> actions,
-    // final ResourceNotifications notifications) {
-    // setStyleName("screen");
-    // this.loading = new TranslatableLabel(getTextController, "loading ...");
-    // this.loading.setStyleName("loading");
-    //
-    // final ResourceHeaderPanel<E> header = new
-    // ResourceHeaderPanel<E>(getTextController) {
-    //
-    // @Override
-    // protected void reset(final E resource) {
-    // // TODO Auto-generated method stub
-    //
-    // }
-    //
-    // };
-    // this.actions = actions;
-    // final ResourcePanel<E> display = new ResourcePanel<E>(header,
-    // displayFields);
-    //
-    // this.display = display;
-    // this.displayAllowReadOnly = display;
-    //
-    // this.displayAll = displayAll;
-    // this.displayAllResetable = displayAll;
-    // this.displayAllPathFactory = displayAll;
-    //
-    // this.factory = factory;
-    // this.session = session;
-    // this.notifications = notifications;
-    //
-    // this.deck = new DeckPanel();
-    // this.deck.add(display);
-    // if (displayAll != null) {
-    // this.deck.add(displayAll);
-    // }
-    //
-    // add(this.loading);
-    // add(this.actions);
-    // add(this.deck);
-    //
-    // this.resourceChangeListener = new ResourceChangeListener<E>() {
-    //
-    // @Override
-    // public void onChange(final E resource) {
-    // reset(resource);
-    // }
-    //
-    // @Override
-    // public void onError(final E resource) {
-    // reset(resource);
-    // ResourceScreen.this.loading.setVisible(false);
-    // }
-    // };
-    //
-    // if (displayAll != null) {
-    // this.pathFactory = new PathFactory(factory.storagePluralName());
-    // }
-    // else {
-    // this.pathFactory = new PathFactory(factory.storageName());
-    // }
-    // this.parentPathFactory = this.pathFactory;
-    // }
-
     @Override
-    // TODO make protected - seems not to be used outside class hierarchy!!!
     public PathFactory getPathFactory() {
         return this.parentPathFactory;
     }
@@ -245,24 +176,15 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
      * 
      * @param resource
      */
-    // abstract protected void reset(final E resource);
-
-    // @SuppressWarnings("unchecked")
     @Override
     public final void reset(final E resource) {
-        // if (((ResourcePanel<E>) this.display).header != null) {
-        // ((ResourcePanel<E>) this.display).header.reset(resource.isNew()
-        // || resource.isDeleted() || !resource.isUptodate()
-        // ? null
-        // : resource.key(), updatedAt, updatedBy);
-        // }
         this.actions.reset(resource);
         this.actions.setReadOnly(this.displayAllowReadOnly.isReadOnly());
 
         this.displayAllowReadOnly.reset(resource);
 
         this.deck.showWidget(RESOURCE);
-        this.loading.setVisible(!resource.isUptodate());
+        this.loading.setVisible(false);
         setVisible(true);
     }
 
@@ -315,16 +237,15 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
     }
 
     protected void show(final String key) {
-        this.loading.setVisible(true);
         final E resource = this.factory.get(key,
                                             this.resourceChangeListener,
                                             this.notifications);
         reset(resource);
+        this.loading.setVisible(true);
     }
 
     @Override
     public void showAll(final Map<String, String> query) {
-        this.loading.setVisible(true);
         final ResourceCollection<E> resources = this.factory.all(query,
                                                                  new ResourcesChangeListener<E>() {
 
@@ -338,11 +259,12 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
         // TODO should be set be onChange and onError. maybe make an application
         // wide notification widget
         reset(resources);
+        this.loading.setVisible(true);
     }
 
     @Override
     public Screen<?> child(final String parentKey) {
-        // TODO Auto-generated method stub
+        // that is the default !!!
         return null;
     }
 

@@ -42,13 +42,12 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     private E                               resource;
     private boolean                         isReadOnly;
 
-    public DefaultResourceActionPanel(final GetTextController getTextController,
+    public DefaultResourceActionPanel(
+            final GetTextController getTextController,
             final ResourceBindings<E> bindings, final Session session,
             final ResourceFactory<E> factory,
             final ResourceNotifications notifications) {
         super(getTextController, bindings, session, factory);
-
-        setStyleName("action-panel");
         this.session = session;
         this.factory = factory;
 
@@ -118,8 +117,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                 resource.save();
             }
         };
-        this.saveHandler = new MutatingButtonAction<E>(notifications,
-                bindings) {
+        this.saveHandler = new MutatingButtonAction<E>(notifications, bindings) {
 
             @Override
             protected void action(final E resource) {
@@ -160,8 +158,11 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                 add(getBy);
             }
         }
-        add(newCreate);
-        add(actionButtons);
+        final FlowPanel buttons = new FlowPanel();
+        buttons.setStyleName("resource-buttons");
+        buttons.add(newCreate);
+        buttons.add(actionButtons);
+        add(buttons);
     }
 
     protected ComplexPanel createGetByPanel() {

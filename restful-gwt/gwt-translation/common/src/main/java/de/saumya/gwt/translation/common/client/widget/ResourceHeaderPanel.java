@@ -26,7 +26,7 @@ public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
     private final Label             modifiedByValue;
 
     public ResourceHeaderPanel(final GetTextController getTextController) {
-        setStyleName("header-panel");
+        setStyleName("resource-header-panel");
         this.getTextController = getTextController;
         this.keyLabel = label("key");
         this.keyValue = label();
@@ -54,7 +54,8 @@ public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
         this.modifiedByLabel.setVisible(false);
         this.byLabel.setVisible(false);
         if (updatedAt != null) {
-            this.modifiedAtValue.setText("\u00a0" + updatedAt.toString()
+            this.modifiedAtValue.setText("\u00a0"
+                    + updatedAt.toString().replaceFirst("[.]0+$", "")
                     + "\u00a0");
             if (updatedBy != null) {
                 this.byLabel.setVisible(true);

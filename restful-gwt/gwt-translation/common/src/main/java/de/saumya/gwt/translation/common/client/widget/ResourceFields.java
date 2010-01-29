@@ -26,7 +26,7 @@ public class ResourceFields<E extends Resource<E>> extends FlowPanel implements
 
     protected ResourceFields(final GetTextController getTextController,
             final ResourceBindings<E> bindings) {
-        setStyleName("resource-panel");
+        setStyleName("resource-fields");
         this.getTextController = getTextController;
         this.bindings = bindings;
     }

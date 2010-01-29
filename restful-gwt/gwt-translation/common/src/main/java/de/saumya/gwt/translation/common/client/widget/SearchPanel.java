@@ -21,7 +21,7 @@ public class SearchPanel extends TextBoxWithButton {
         this.pathFactory = new PathFactory(factory.storagePluralName());
         this.defaultSearchParameterName = factory.defaultSearchParameterName();
         setStyleName("search");
-        add(new TranslatableLabel(getTextController, "search"));
+        insert(new TranslatableLabel(getTextController, "search"), 0);
 
         this.button.setText("similar");
         this.button.add(new TextBoxButtonHandler() {

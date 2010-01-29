@@ -31,7 +31,7 @@ public abstract class AbstractResourceActionPanel<E extends Resource<E>>
             final GetTextController getTextController,
             final ResourceBindings<E> binding, final Session session,
             final ResourceFactory<E> factory) {
-        setStyleName("action-panel");
+        setStyleName("resource-action-panel");
         this.getTextController = getTextController;
         this.resourceName = factory.storagePluralName();
     }

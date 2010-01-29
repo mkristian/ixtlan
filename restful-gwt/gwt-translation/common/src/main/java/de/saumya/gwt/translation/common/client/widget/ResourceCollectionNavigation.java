@@ -33,6 +33,7 @@ public class ResourceCollectionNavigation<E extends Resource<E>> extends
 
         public void reset(final ResourceCollection<?> resources) {
             this.screenPath = new ScreenPath(History.getToken());
+            this.params.clear();
             for (final String param : this.screenPath.query.split("&")) {
                 final int index = param.indexOf('=');
                 if (index > -1) {
@@ -65,7 +66,7 @@ public class ResourceCollectionNavigation<E extends Resource<E>> extends
                         .append(entry.getValue())
                         .append("&");
             }
-            return buf.toString();
+            return buf.substring(0, buf.length() - 1);
         }
 
         void createHistoryToken() {
