@@ -6,14 +6,14 @@ import com.google.gwt.junit.client.GWTTestCase;
 import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.RepositoryMock;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
-import de.saumya.gwt.session.client.model.ConfigurationFactory;
-import de.saumya.gwt.session.client.model.DomainFactory;
-import de.saumya.gwt.session.client.model.Group;
-import de.saumya.gwt.session.client.model.GroupFactory;
-import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.User;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.ConfigurationFactory;
+import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.Group;
+import de.saumya.gwt.session.client.models.GroupFactory;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.

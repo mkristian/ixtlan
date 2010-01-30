@@ -15,11 +15,11 @@ import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
-import de.saumya.gwt.session.client.model.Configuration;
-import de.saumya.gwt.session.client.model.ConfigurationFactory;
-import de.saumya.gwt.session.client.model.Group;
-import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.User;
+import de.saumya.gwt.session.client.models.Configuration;
+import de.saumya.gwt.session.client.models.ConfigurationFactory;
+import de.saumya.gwt.session.client.models.Group;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.User;
 
 public class Session {
 

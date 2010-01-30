@@ -9,10 +9,10 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.User;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 public class Phrase extends Resource<Phrase> {
 

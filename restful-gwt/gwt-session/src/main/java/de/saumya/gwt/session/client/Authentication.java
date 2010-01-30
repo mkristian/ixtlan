@@ -7,8 +7,8 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.session.client.model.User;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 class Authentication extends Resource<Authentication> {
 

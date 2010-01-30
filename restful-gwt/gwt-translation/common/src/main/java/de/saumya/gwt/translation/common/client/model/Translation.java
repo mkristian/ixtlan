@@ -10,8 +10,8 @@ import com.google.gwt.xml.client.Element;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceWithID;
-import de.saumya.gwt.session.client.model.User;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 public class Translation extends ResourceWithID<Translation> {
 

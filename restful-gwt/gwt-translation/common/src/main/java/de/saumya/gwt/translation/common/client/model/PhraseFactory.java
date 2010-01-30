@@ -6,8 +6,8 @@ package de.saumya.gwt.translation.common.client.model;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
-import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 public class PhraseFactory extends ResourceFactory<Phrase> {
 

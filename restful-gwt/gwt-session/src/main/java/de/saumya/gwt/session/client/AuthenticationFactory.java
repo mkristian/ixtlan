@@ -3,7 +3,7 @@ package de.saumya.gwt.session.client;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 public class AuthenticationFactory extends ResourceFactory<Authentication> {
 

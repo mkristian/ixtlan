@@ -18,7 +18,7 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
-import de.saumya.gwt.session.client.model.User;
+import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;

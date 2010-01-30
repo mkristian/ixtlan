@@ -5,8 +5,8 @@ package de.saumya.gwt.translation.gui.client.views.locales;
 
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;

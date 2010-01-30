@@ -3,6 +3,8 @@ package de.saumya.gwt.session.client.model;
 import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.LocaleFactory;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.

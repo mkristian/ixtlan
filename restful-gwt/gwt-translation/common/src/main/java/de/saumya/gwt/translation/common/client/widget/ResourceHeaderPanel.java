@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.session.client.model.User;
+import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
 public abstract class ResourceHeaderPanel<E extends Resource<E>> extends

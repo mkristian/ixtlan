@@ -5,8 +5,8 @@ package de.saumya.gwt.translation.gui.client.views.users;
 
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.model.User;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;

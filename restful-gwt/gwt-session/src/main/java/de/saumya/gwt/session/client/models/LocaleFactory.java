@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;

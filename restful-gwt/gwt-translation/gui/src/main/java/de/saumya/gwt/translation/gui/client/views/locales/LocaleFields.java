@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client.views.locales;
 
-import de.saumya.gwt.session.client.model.Locale;
+import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;

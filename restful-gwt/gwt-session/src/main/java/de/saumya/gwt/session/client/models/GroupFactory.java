@@ -1,38 +1,38 @@
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class UserFactory extends ResourceFactory<User> {
+public class GroupFactory extends ResourceFactory<Group> {
 
     private final LocaleFactory localeFactory;
-    private final GroupFactory  groupFactory;
+    private final DomainFactory domainFactory;
 
-    public UserFactory(final Repository repository,
+    public GroupFactory(final Repository repository,
             final ResourceNotifications notifications,
-            final LocaleFactory localeFactory, final GroupFactory groupFactory) {
+            final LocaleFactory localeFactory, final DomainFactory domainFactory) {
         super(repository, notifications);
         this.localeFactory = localeFactory;
-        this.groupFactory = groupFactory;
+        this.domainFactory = domainFactory;
     }
 
     @Override
     public String storageName() {
-        return "user";
+        return "group";
     }
 
     @Override
     public String keyName() {
-        return "login";
+        return "id";
     }
 
     @Override
-    public User newResource() {
-        return new User(this.repository,
+    public Group newResource() {
+        return new Group(this.repository,
                 this,
                 this.localeFactory,
-                this.groupFactory);
+                this.domainFactory);
     }
 
     @Override

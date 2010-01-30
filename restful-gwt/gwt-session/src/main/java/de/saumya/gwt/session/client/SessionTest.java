@@ -14,11 +14,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.persistence.client.GWTResourceNotification;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
-import de.saumya.gwt.session.client.model.ConfigurationFactory;
-import de.saumya.gwt.session.client.model.DomainFactory;
-import de.saumya.gwt.session.client.model.GroupFactory;
-import de.saumya.gwt.session.client.model.LocaleFactory;
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.ConfigurationFactory;
+import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.GroupFactory;
+import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.session.client.models.UserFactory;
 
 public class SessionTest implements EntryPoint {
 

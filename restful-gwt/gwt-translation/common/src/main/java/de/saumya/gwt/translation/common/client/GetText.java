@@ -8,8 +8,8 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
-import de.saumya.gwt.session.client.model.Locale;
-import de.saumya.gwt.session.client.model.LocaleFactory;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseBook;
 import de.saumya.gwt.translation.common.client.model.PhraseBookFactory;

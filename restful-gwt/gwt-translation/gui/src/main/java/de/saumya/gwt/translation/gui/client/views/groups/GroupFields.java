@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.translation.gui.client.views.groups;
 
-import de.saumya.gwt.session.client.model.Group;
+import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
