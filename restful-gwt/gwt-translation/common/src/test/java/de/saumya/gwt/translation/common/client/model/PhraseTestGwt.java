@@ -25,13 +25,13 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     @Override
     protected String resource1Xml() {
-        return "<phrase>" + "<id>123</id>"
+        return "<phrase>" + "<code>123</code>"
                 + "<current_text>some text</current_text>" + "</phrase>";
     }
 
     @Override
     protected String resource2Xml() {
-        return "<phrase>" + "<id>345</id>"
+        return "<phrase>" + "<code>345</code>"
                 + "<current_text>some text</current_text>" + "</phrase>";
     }
 
@@ -41,7 +41,7 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
     }
 
     static final String XML = "<phrase>"
-                                    + "<id>123</id>"
+                                    + "<code>123</code>"
                                     + "<current_text>text</current_text>"
                                     + "<text>some text</text>"
                                     + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
@@ -73,6 +73,7 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
     protected Resource<Phrase> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.code = "123";
         this.resource.currentText = "some text";
 
         this.repository.addXmlResponse(resource1Xml());
@@ -99,7 +100,7 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
 
     @Override
     protected String keyValue() {
-        return "123";
+        return "code";
     }
 
     @Override

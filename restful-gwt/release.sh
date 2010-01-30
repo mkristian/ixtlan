@@ -18,6 +18,6 @@ find -name "pom.xml" | xargs sed -i s/${VERSION}/${NEXT}-SNAPSHOT/
 find -name "pom.xml" | xargs git add
 git ci -m "next snapshot version ${NEXT}"
 
-mvn install
+mvn clean install
 
 git push --tags origin master

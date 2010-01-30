@@ -112,7 +112,7 @@ public class PhraseBookTestGwt extends AbstractResourceTestGwt<PhraseBook> {
                                             + "<locale>en</locale>"
                                             + "<phrases>"
                                             + "<phrase>"
-                                            + "<id>1</id>"
+                                            // + "<id>1</id>"
                                             + "<code>CODE</code>"
                                             + "<current_text>code</current_text>"
                                             + "</phrase>" + "</phrases>"

@@ -29,6 +29,7 @@ import de.saumya.gwt.translation.common.client.model.WordFactory;
 import de.saumya.gwt.translation.common.client.route.ScreenController;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
+import de.saumya.gwt.translation.gui.client.views.configuration.ConfigurationScreen;
 
 public class GUIContainer {
     public final Repository           repository           = new Repository();

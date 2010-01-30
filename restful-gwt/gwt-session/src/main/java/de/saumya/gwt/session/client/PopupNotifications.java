@@ -161,14 +161,13 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
 
     @Override
     public void error(final int status, final String message,
-            final Resource<? extends Resource<?>> resource) {
+            final Resource<?> resource) {
         // TODO make the resource clickable inside the text
         warn(status + ": " + message + " " + resource.display());
     }
 
     @Override
-    public void info(final String message,
-            final Resource<? extends Resource<?>> resource) {
+    public void info(final String message, final Resource<?> resource) {
         // TODO make the resource clickable inside the text
         info(message + " " + resource.display());
     }

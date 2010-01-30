@@ -85,8 +85,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>2.0.2</version>
           <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.6</source>
+            <target>1.6</target>
 <!--
             <source>${dollar}{maven.compiler.source}</source>
             <target>${dollar}{maven.compiler.target}</target>
@@ -102,9 +102,9 @@
       <!-- convenience to define GWT version in one place -->
       <gwt.version>1.7.1</gwt.version>
 
-      <!--  tell the compiler we can use 1.5 -->
-      <maven.compiler.source>1.5</maven.compiler.source>
-      <maven.compiler.target>1.5</maven.compiler.target>
+      <!--  tell the compiler to use 1.6 -->
+      <maven.compiler.source>1.6</maven.compiler.source>
+      <maven.compiler.target>1.6</maven.compiler.target>
 
   </properties>
 
