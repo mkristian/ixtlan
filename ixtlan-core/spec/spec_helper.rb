@@ -20,7 +20,7 @@ require 'ixtlan' / 'models' / 'group_user'
 require 'ixtlan' / 'models' / 'group_locale_user'
 require 'ixtlan' / 'models' / 'permission'
 require 'ixtlan' / 'models' / 'role'
-require 'ixtlan' / 'models' / 'text'
+require 'ixtlan' / 'models' / 'i18n_text'
 require 'ixtlan' / 'passwords'
 require 'ixtlan' / 'digest'
 

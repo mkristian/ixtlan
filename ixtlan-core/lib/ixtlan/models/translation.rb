@@ -19,10 +19,10 @@ module Ixtlan
       
       def self.map_for(args = {})
         map = {}
-        Text.latest_approved(args.dup).each do |text|
+        I18nText.latest_approved(args.dup).each do |text|
           map[text.code] = Translation.create(:text => text.text, :approved_at => text.approved_at, :approved_by => text.approved_by)
         end
-        Text.second_latest_approved(args.dup).each do |text|
+        I18nText.second_latest_approved(args.dup).each do |text|
           translation = map[text.code]
           translation.previous_text = text.text
         end

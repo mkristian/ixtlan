@@ -27,7 +27,7 @@ public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
 <% end -%>
     protected <%= class_name %>(final Repository repository, final <%= class_name %>Factory factory<% unless options[:skip_modified_by] -%>,
             final UserFactory userFactory<% end -%>) {
-        super(repository, factory, null);
+        super(repository, factory);
 <% unless options[:skip_modified_by] -%>
         this.userFactory = userFactory;
 <% end -%>

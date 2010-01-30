@@ -6,7 +6,7 @@ require Pathname(__FILE__).dirname  + '../lib/dm-serializer/to_xml'
 
 require 'ixtlan/controllers/texts_controller'
 
-require 'ixtlan/models/text'
+require 'ixtlan/models/i18n_text'
 require 'ixtlan/models/word'
 require 'ixtlan/models/translation'
 require 'ixtlan/models/phrase'
@@ -18,7 +18,7 @@ def setup(code)
   @en =  Ixtlan::Models::Locale.first_or_create(:code => "en")
   @en_in =  Ixtlan::Models::Locale.first_or_create(:code => "en_IN")
   (1..len).each do |j|
-    text = Ixtlan::Models::Text.create(:code => code, 
+    text = Ixtlan::Models::I18nText.create(:code => code, 
                                        :text => "text_#{j}",
                                        :current_user => @controller2.current_user, 
                                        :locale => Ixtlan::Models::Locale.default, 
@@ -47,7 +47,7 @@ describe "with default locale" do
     setup("code_2")
   end
   it "should xml-serialize with edited text" do
-    Ixtlan::Models::Text.create(:code => "code_2", 
+    Ixtlan::Models::I18nText.create(:code => "code_2", 
                                 :text => "text_edited",
                                 :current_user => @controller2.current_user, 
                                 :locale => Ixtlan::Models::Locale.default, 
@@ -61,11 +61,11 @@ end
 describe "with default locale" do
   before(:each) do
     setup("code_3")
-    Ixtlan::Models::Text.all.destroy!
+    Ixtlan::Models::I18nText.all.destroy!
   end
   
   it "should xml-serialize with edited text and not approved" do
-    Ixtlan::Models::Text.create(:code => "code_3", 
+    Ixtlan::Models::I18nText.create(:code => "code_3", 
                                 :text => "text_edited",
                                 :current_user => @controller2.current_user, 
                                 :locale => Ixtlan::Models::Locale.default, 
@@ -90,13 +90,13 @@ describe "with 'en' locale" do
   before(:each) do
     setup("en_code")
 
-  Ixtlan::Models::Text.create(:code => "en_code", 
+  Ixtlan::Models::I18nText.create(:code => "en_code", 
                               :text => "en_text_edited",
                               :current_user => @controller2.current_user, 
                               :locale => @en, 
                               :updated_at => DateTime.now, 
                               :updated_by => @controller2.current_user)
-  Ixtlan::Models::Text.create(:code => "en_code", 
+  Ixtlan::Models::I18nText.create(:code => "en_code", 
                               :text => "en_in_text_edited",
                               :current_user => @controller2.current_user, 
                               :locale => @en_in, 

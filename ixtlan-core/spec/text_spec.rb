@@ -4,16 +4,16 @@ require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
 require 'ixtlan/controllers/texts_controller'
 
-require 'ixtlan/models/text'
+require 'ixtlan/models/i18n_text'
 require 'ixtlan/models/word'
 require 'ixtlan/models/translation'
 
-describe Ixtlan::Models::Text do
+describe Ixtlan::Models::I18nText do
 
   before(:each) do
     @controller = Controller.new
     Ixtlan::Models::Text.all.destroy!
-    @approved = Ixtlan::Models::Text.create(:code => "code", :text => "other text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
+    @approved = Ixtlan::Models::I18nText.create(:code => "code", :text => "other text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
     @approved.approve(:current_user => @controller.current_user)
     @text = Ixtlan::Models::Text.create(:code => "code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
   end
@@ -30,15 +30,15 @@ describe Ixtlan::Models::Text do
   end
 
   it 'should create translation' do
-    Ixtlan::Models::Text.create(:code => "code", :text => "text_en", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.first_or_create(:code => 'en')).new?.should be_false
+    Ixtlan::Models::I18nText.create(:code => "code", :text => "text_en", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.first_or_create(:code => 'en')).new?.should be_false
   end
 
   it 'should not create' do
-     Ixtlan::Models::Text.create(:code => "code2", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.first_or_create(:code => 'en')).new?.should be_true
+     Ixtlan::Models::I18nText.create(:code => "code2", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.first_or_create(:code => 'en')).new?.should be_true
   end
 
   it 'should update' do
-    text = Ixtlan::Models::Text.create(:code => "update_code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
+    text = Ixtlan::Models::I18nText.create(:code => "update_code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
     text.update(:text => 'new text', :current_user => @controller.current_user)
     text.should be_true
     text.version.should be_nil
@@ -48,7 +48,7 @@ describe Ixtlan::Models::Text do
   end
 
   it 'should approve' do
-    text = Ixtlan::Models::Text.create(:code => "apporved_code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
+    text = Ixtlan::Models::I18nText.create(:code => "apporved_code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
     text.approved?.should be_false
     text.approve(:current_user => @controller.current_user).should be_true
     text.version.should_not be_nil

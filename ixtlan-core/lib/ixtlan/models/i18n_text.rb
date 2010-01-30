@@ -1,6 +1,6 @@
 module Ixtlan
   module Models
-    class Text
+    class I18nText
       include DataMapper::Resource
 
       def self.default_storage_name

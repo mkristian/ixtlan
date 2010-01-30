@@ -24,15 +24,32 @@ end
 desc 'generate rails using all generators and run the specs'
 task :integration_tests => [:spec, :install] do
   require 'datamapper4rails/integration_test'
-  Datamapper4Rails::IntegrationTest.new do |t|
+  tests = Datamapper4Rails::IntegrationTest.new do |t|
     t.directory = 'temp'
+    ENV['GWT'] = "true"
     t.rails_template = 'ixtlan_rails_templates.rb'
     t.generate "ixtlan_datamapper_model name name:string"
     t.generate "ixtlan_datamapper_rspec_model domain name:string"
-    t.generate "ixtlan_datamapper_rspec_scaffold word name:string"
-  end
+    t.generate "ixtlan_datamapper_rspec_scaffold player name:string"
+    t.generate "gwt_ixtlan_datamapper_rspec_scaffold word name:string"
+   end
+   tests.command("mvn clean integration-test")
 end
 
 YARD::Rake::YardocTask.new
+
+module Datamapper4Rails
+  class IntegrationTest
+    def command(command) 
+      FileUtils.cd(@directory) do
+      unless system("#{command}")
+        puts
+        puts "error in: #{command}"
+        exit 1
+      end
+    end
+    end
+  end
+end
 
 # vim: syntax=Ruby

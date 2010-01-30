@@ -10,9 +10,10 @@ generators/ixtlan_datamapper_rspec_scaffold/templates/i18n.rb
 generators/gwt_ixtlan_datamapper_rspec_scaffold/gwt_ixtlan_datamapper_rspec_scaffold_generator.rb
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Model.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/ModelFactory.java
-generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Panel.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Fields.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/Screen.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/TestGwt.java
+generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/GwtTestSuite.java
 generators/gwt_ixtlan_datamapper_rspec_scaffold/templates/AbstractApplicationResourceTestGwt.java
 lib/models.rb
 lib/ixtlan.rb
@@ -34,7 +35,7 @@ lib/ixtlan/models/configuration_locale.rb
 lib/ixtlan/models/word.rb
 lib/ixtlan/models/configuration.rb
 lib/ixtlan/models/authentication.rb
-lib/ixtlan/models/text.rb
+lib/ixtlan/models/i18n_text.rb
 lib/ixtlan/models/group_user.rb
 lib/ixtlan/models/group.rb
 lib/ixtlan/rolling_file.rb
@@ -51,6 +52,7 @@ lib/ixtlan/optimistic_persistence_module.rb
 lib/ixtlan/optimistic_persistence_validation.rb
 lib/ixtlan/error_notifier/error_notification.rhtml
 lib/ixtlan/controllers/texts_controller.rb
+lib/ixtlan/controllers/phrases_controller.rb
 lib/ixtlan/controllers/permissions_controller.rb
 lib/ixtlan/controllers/authentications_controller.rb
 lib/ixtlan/controllers/configurations_controller.rb

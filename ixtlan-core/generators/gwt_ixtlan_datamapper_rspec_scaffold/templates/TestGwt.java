@@ -67,7 +67,7 @@ public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt
 
     @Override
     public void doTestCreate() {
-        assertEquals("<%= attributes.first.name %>", this.resource.<%= attributes.first.name.javanize %><% if [:date, :time, :date_time].member? attributes.first.type  %>.toString()<% end -%>);
+        assertEquals("<%= attributes.first.sample_value %>", this.resource.<%= attributes.first.name.javanize %><% if [:date, :time, :date_time].member? attributes.first.type  %>.toString()<% end -%>);
     }
 
     @Override

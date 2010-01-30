@@ -8,6 +8,6 @@ module Ixtlan
     LOCALE = "::Ixtlan::Models::Locale" unless const_defined? "LOCALE"
     CONFIGURATION = "::Ixtlan::Models::Configuration" unless const_defined? "CONFIGURATION"
     TRANSLATION = "::Ixtlan::Models::Translation" unless const_defined? "TRANSLATION"
-    TEXT = "::Ixtlan::Models::Text" unless const_defined? "TEXT"
+    TEXT = "::Ixtlan::Models::I18nText" unless const_defined? "TEXT"
   end
 end

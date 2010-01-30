@@ -11,18 +11,24 @@ def ixtlan_model(name)
 class #{name.camelcase} < Ixtlan::Models::#{name.camelcase}; end
 CODE
 end
-def ixtlan_controller(name, guards = [:index,:show,:new,:create,:edit,:update,:destroy])
-  file "app/guards/#{name}_guard.rb", <<-CODE
+def ixtlan_controller(name, guards = [:index,:show,:new,:create,:edit,:update,:destroy], singleton = nil)
+  if guards
+    file "app/guards/#{name}_guard.rb", <<-CODE
 Ixtlan::Guard.initialize(:#{name}, { 
 #{guards.collect {|g| ":#{g} => []" }.join(",\n") }
 })
 CODE
+  end
   file "app/controllers/#{name}_controller.rb", <<-CODE
 class #{name.camelize}Controller < ApplicationController
   include Ixtlan::Controllers::#{name.camelize}Controller
 end
 CODE
-route "map.resources :#{name}"
+  if singleton
+    route "map.resource :#{singleton}"
+  else
+    route "map.resources :#{name}"
+  end
 end
 
 # ixtlan gems
@@ -283,9 +289,17 @@ file 'pom.xml', <<-CODE
     <outputDirectory>war/WEB-INF/classes</outputDirectory> 
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>rails-maven-plugin</artifactId>
-	<version>0.3.1</version>
+	<version>${jruby.plugins.version}</version>
       </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
@@ -300,7 +314,7 @@ file 'pom.xml', <<-CODE
     </plugins>
   </build>
   <properties>
-    <jruby.plugins.version>0.5.0</jruby.plugins.version>
+    <jruby.plugins.version>0.8.0</jruby.plugins.version>
     <jruby.fork>false</jruby.fork>
   </properties>
 </project>
@@ -308,45 +322,86 @@ CODE
 
 if ENV['GWT'] == 'true' || (!ENV['GWT'] && yes?("install GWT interface ?"))
   gwt_prefix = "gwt_"
-  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.2.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNAPSHOT -B")
+  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.3.0 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNAPSHOT -B")
+
+  file '.classpath', <<-CODE
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="war/WEB-INF/classes" path="src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="war/WEB-INF/classes" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>
+CODE
+  file '.project', <<-CODE
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ixtlan-test</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.maven.ide.eclipse.maven2Nature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+</projectDescription>
+CODE
+  file '.settings/org.maven.ide.eclipse.prefs', <<-CODE
+activeProfiles=
+eclipse.preferences.version=1
+fullBuildGoals=process-test-resources
+includeModules=false
+resolveWorkspaceProjects=true
+resourceFilterGoals=process-resources resources\:testResources
+skipCompilerPlugin=true
+version=1
+CODE
+  file '.settings/org.eclipse.jdt.core.prefs', <<-CODE
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+org.eclipse.jdt.core.compiler.compliance=1.6
+org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
+org.eclipse.jdt.core.compiler.source=1.6
+CODE
 else
   gwt_prefix = nil
 end
 
 # user model/controller
-generate "#{gwt_prefix}ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
-ixtlan_model('user')
-#file 'app/models/user.rb', <<-CODE
-#class User < Ixtlan::Models::User; end
-#CODE
+generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
+ixtlan_model 'user'
 gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
 gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
 gsub_file 'spec/models/user_spec.rb', /value for email/, 'value@for.email'
 gsub_file 'spec/models/user_spec.rb', /value for language/, 'vl'
 
 # group model/controller
-generate "#{gwt_prefix}ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Group', 'name:string'
-ixtlan_model('group')
+generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Group', 'name:string'
+ixtlan_model 'group'
 
 # i18n stuff: i18n model, phrases controller
-# TODO rename Text to I18nText
-file 'app/models/i18n_text.rb', <<-CODE
- class I18nText < Ixtlan::Models::Text; end
-CODE
+ixtlan_model 'i18n_text'
+
 # TODO rename TextsController to PhraseController i.e. make a new one
-file "app/controllers/phrases_controller.rb", <<-CODE
-class PhrasesController < ApplicationController
-  include Ixtlan::Controllers::TextsController
-end
-CODE
-route "map.resources :phrases"
+ixtlan_controller "phrases", nil
 
 # locale model/controller
-generate "#{gwt_prefix}ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
+generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
 ixtlan_model "locale"
-#file 'app/models/locale.rb', <<-CODE
-#class Locale < Ixtlan::Models::Locale; end
-#CODE
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
 file 'spec/support/locale.rb', <<-CODE
 module Ixtlan
@@ -358,7 +413,6 @@ module Ixtlan
 end
 CODE
 
-ixtlan_controller("dummy")
 # configuration guard/model/controller
 file 'app/models/configuration.rb', <<-CODE
 class Configuration < Ixtlan::Models::Configuration
@@ -367,24 +421,11 @@ class Configuration < Ixtlan::Models::Configuration
   end
 end
 CODE
-file 'app/guards/configurations_guard.rb', <<-CODE
-Ixtlan::Guard.initialize(:configurations, 
-                 { :show => [], 
-                   :edit => [], 
-                   :update => [] })
-CODE
-file 'app/controllers/configurations_controller.rb', <<-CODE
-class ConfigurationsController < ApplicationController
-  include Ixtlan::Controllers::ConfigurationsController
-end
-CODE
-route "map.resource :configuration"
+ixtlan_controller 'configurations', [:show, :edit, :update], 'configuration'
 
 # authentication model/controller
 ixtlan_model "authentication"
-#file 'app/models/authentication.rb', <<-CODE
-#class Authentication < Ixtlan::Models::Authentication; end
-#CODE
+
 file 'app/controllers/authentications_controller.rb', <<-CODE
 class AuthenticationsController < ApplicationController
   skip_before_filter :guard

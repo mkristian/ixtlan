@@ -1,3 +1,13 @@
+=== 0.2.2 / 2010-01-29
+
+* symbolize internal map of guard
+
+* gwt generator: parametrizied package generated java classes - find client directory and use this as base package 
+
+* make phrases to work
+
+* added code to add screen and testcase for gwt_scaffolding
+
 === 0.2.1 / 2009-12-07
 
 * stay logged in when deleting a resource

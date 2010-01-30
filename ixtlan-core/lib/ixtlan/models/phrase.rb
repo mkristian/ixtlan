@@ -35,11 +35,11 @@ module Ixtlan
         phrases = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Models::Phrase), [])
         map = {}
         locale = (args[:locale] ||= Locale.default)
-        Text.not_approved(args.dup).each do |text|
+        I18nText.not_approved(args.dup).each do |text|
           phrase = Phrase.new(:code => text.code, :text => text.text, :current_text => text.text, :locale => locale, :updated_at => text.updated_at, :updated_by => text.updated_by)
           map[phrase.code] = phrase
         end
-        Text.latest_approved(args.dup).each do |text|
+        I18nText.latest_approved(args.dup).each do |text|
           if (phrase = map[text.code])
             phrase.current_text = text.text
           else

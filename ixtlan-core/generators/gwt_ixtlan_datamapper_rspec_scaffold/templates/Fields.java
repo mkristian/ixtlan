@@ -7,14 +7,14 @@ import <%= package %>.models.<%= class_name %>;
 
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
-import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
+import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.gui.client.CheckBoxBinding;
 import de.saumya.gwt.translation.gui.client.IntegerTextBoxBinding;
 import de.saumya.gwt.translation.gui.client.TextBoxBinding;
 
-public class <%= class_name %>Panel extends ResourcePanel<<%= class_name %>> {
+public class <%= class_name %>Fields extends ResourceFields<<%= class_name %>> {
 
-    public <%= class_name %>Panel(final GetTextController getTextController,
+    public <%= class_name %>Fields(final GetTextController getTextController,
             final ResourceBindings<<%= class_name %>> bindings) {
         super(getTextController, bindings);
 <% Array(attributes).each do |attribute| -%>
