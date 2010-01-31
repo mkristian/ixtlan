@@ -6,12 +6,12 @@
   <parent>
     <groupId>de.saumya.gwt</groupId>
     <artifactId>translation</artifactId>
-    <version>0.3.1</version>
+    <version>0.4.0-SNAPSHOT</version>
   </parent>
   <groupId>de.saumya.gwt.translation</groupId>
   <artifactId>html</artifactId>
   <packaging>war</packaging>
-  <version>0.3.1</version>
+  <version>0.4.0-SNAPSHOT</version>
   <name>GWT interface for translating html pages</name>
   <dependencies>
     <dependency>
