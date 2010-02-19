@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.views.phrases;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Label;
@@ -13,6 +13,7 @@ import de.saumya.gwt.translation.common.client.model.Translation;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
+import de.saumya.gwt.translation.gui.client.bindings.TextBoxBinding;
 
 public class PhraseFields extends ResourceFields<Phrase> {
 

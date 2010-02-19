@@ -322,7 +322,7 @@ CODE
 
 if ENV['GWT'] == 'true' || (!ENV['GWT'] && yes?("install GWT interface ?"))
   gwt_prefix = "gwt_"
-  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.3.0 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=1.0-SNAPSHOT -B")
+  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.3.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
 
   file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.bindings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 
 import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.widget.TranslatableRadioButton;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings.Binding;
 
 public abstract class RadioButtonBinding<T extends Resource<T>> extends
@@ -18,10 +20,13 @@ public abstract class RadioButtonBinding<T extends Resource<T>> extends
 
     private final List<RadioButton> buttons;
 
-    public RadioButtonBinding(final String name, final Object[] labels) {
+    public RadioButtonBinding(final GetTextController getTextController,
+            final String name, final Object[] labels) {
         this.buttons = new ArrayList<RadioButton>(labels.length);
         for (final Object label : labels) {
-            final RadioButton button = new RadioButton(name, label.toString());
+            final RadioButton button = new TranslatableRadioButton(getTextController,
+                    name,
+                    label.toString());
             button.setFormValue(label.toString());
             this.buttons.add(button);
             add(button);

@@ -8,9 +8,9 @@ import <%= package %>.models.<%= class_name %>;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
-import de.saumya.gwt.translation.gui.client.CheckBoxBinding;
-import de.saumya.gwt.translation.gui.client.IntegerTextBoxBinding;
-import de.saumya.gwt.translation.gui.client.TextBoxBinding;
+import de.saumya.gwt.translation.gui.client.bindings.CheckBoxBinding;
+import de.saumya.gwt.translation.gui.client.bindings.IntegerTextBoxBinding;
+import de.saumya.gwt.translation.gui.client.bindings.TextBoxBinding;
 
 public class <%= class_name %>Fields extends ResourceFields<<%= class_name %>> {
 

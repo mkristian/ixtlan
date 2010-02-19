@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.views.phrases;
 
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
@@ -17,7 +17,7 @@ import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
-class PhraseScreen extends ResourceScreen<Phrase> {
+public class PhraseScreen extends ResourceScreen<Phrase> {
 
     static class PhraseHeaders extends ResourceHeaderPanel<Phrase> {
 
@@ -32,7 +32,7 @@ class PhraseScreen extends ResourceScreen<Phrase> {
 
     }
 
-    PhraseScreen(final LoadingNotice loadingNotice,
+    public PhraseScreen(final LoadingNotice loadingNotice,
             final GetTextController getTextController,
             final PhraseFactory phraseFactory,
             final ResourceBindings<Phrase> binding, final Session session,

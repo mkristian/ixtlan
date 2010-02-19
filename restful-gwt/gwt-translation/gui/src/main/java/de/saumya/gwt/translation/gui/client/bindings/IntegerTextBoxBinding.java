@@ -1,4 +1,4 @@
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.bindings;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.widget.IntegerTextBox;

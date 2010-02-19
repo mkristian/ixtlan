@@ -2,6 +2,7 @@
 require 'slf4r/logging_logger'
 
 require 'ixtlan/rolling_file'
+require 'ixtlan/audit_config'
 
 module Ixtlan
   class LoggerConfig

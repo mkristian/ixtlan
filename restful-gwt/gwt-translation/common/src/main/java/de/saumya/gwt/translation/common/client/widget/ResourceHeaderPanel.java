@@ -45,7 +45,7 @@ public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
      */
     protected void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
-        final String keyValue = resource.key();
+        final String keyValue = resource.isNew() ? null : resource.key();
         if (keyValue != null) {
             this.keyValue.setText("\u00a0" + keyValue + "\u00a0");
         }

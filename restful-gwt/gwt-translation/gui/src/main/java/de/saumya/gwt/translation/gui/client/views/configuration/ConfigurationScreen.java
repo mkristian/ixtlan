@@ -17,8 +17,8 @@ import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
-import de.saumya.gwt.translation.gui.client.IntegerTextBoxBinding;
-import de.saumya.gwt.translation.gui.client.TextBoxBinding;
+import de.saumya.gwt.translation.gui.client.bindings.IntegerTextBoxBinding;
+import de.saumya.gwt.translation.gui.client.bindings.TextBoxBinding;
 
 public class ConfigurationScreen extends ResourceScreen<Configuration> {
 

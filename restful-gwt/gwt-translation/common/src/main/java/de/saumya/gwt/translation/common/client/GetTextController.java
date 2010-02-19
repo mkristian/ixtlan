@@ -17,6 +17,11 @@ public class GetTextController {
         this.popup = new TranslationPopupPanel(this, session);
     }
 
+    public void reset(final Phrase phrase) {
+        this.getText.resetWord(phrase);
+        this.getText.resetTranslatables();
+    }
+
     public String get(final String code) {
         return this.getText.get(code);
     }
@@ -49,10 +54,13 @@ public class GetTextController {
             }
         }
         else {
+            final Phrase phrase = this.getText.getPhrase(translatable.getCode());
+            if (phrase != null) {
+                translatable.setText(phrase.currentText);
+            }
             translatable.removeStyleName("translatable");
             translatable.removeStyleName("to_be_approved");
             translatable.removeStyleName("to_be_translated");
         }
     }
-
 }

@@ -9,7 +9,7 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 <% unless options[:skip_modified_by] -%>
-import de.saumya.gwt.session.client.model.UserFactory;
+import de.saumya.gwt.session.client.models.UserFactory;
 <% end -%>
 
 public class <%= class_name %>Factory extends ResourceFactory<<%= class_name %>> {

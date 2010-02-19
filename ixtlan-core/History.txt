@@ -1,3 +1,9 @@
+=== 0.2.3 / 2010-02-03
+
+* little fixes to use ixtlan with MRI rails !
+
+* adjust generator to new packages of the restful-gwt jars
+
 === 0.2.2 / 2010-01-29
 
 * symbolize internal map of guard

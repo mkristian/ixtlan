@@ -153,6 +153,15 @@ public class GetText {
         return word;
     }
 
+    public void resetWord(final Phrase phrase) {
+        Word word = this.wordMap.get(phrase.code);
+        if (word == null) {
+            word = this.wordFactory.newResource();
+            word.code = phrase.code;
+        }
+        word.text = phrase.currentText;
+    }
+
     public void load(final Locale locale) {
         load(locale, this.isInTranslation);
     }
@@ -168,9 +177,16 @@ public class GetText {
         }
     }
 
-    private void resetTranslatables() {
+    public void resetTranslatables() {
+        GWT.log("reset translatables " + this.translatables.size(), null);
         for (final Translatable translatable : this.translatables) {
+            if (translatable != null && "delete".equals(translatable.getCode())) {
+                GWT.log("reset translatable " + translatable, null);
+            }
             translatable.reset();
+            if (translatable != null && "delete".equals(translatable.getCode())) {
+                GWT.log("reset translatable " + translatable, null);
+            }
         }
     }
 

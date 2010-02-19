@@ -7,7 +7,7 @@ import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
-import de.saumya.gwt.translation.gui.client.TextBoxBinding;
+import de.saumya.gwt.translation.gui.client.bindings.TextBoxBinding;
 
 public class GroupFields extends ResourceFields<Group> {
 

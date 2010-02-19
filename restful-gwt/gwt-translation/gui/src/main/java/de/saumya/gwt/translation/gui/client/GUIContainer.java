@@ -15,8 +15,11 @@ import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.session.client.models.GroupFactory;
+import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
 import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -30,6 +33,12 @@ import de.saumya.gwt.translation.common.client.route.ScreenController;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.gui.client.views.configuration.ConfigurationScreen;
+import de.saumya.gwt.translation.gui.client.views.groups.GroupScreen;
+import de.saumya.gwt.translation.gui.client.views.locales.LocaleScreen;
+import de.saumya.gwt.translation.gui.client.views.phrases.PhraseScreen;
+import de.saumya.gwt.translation.gui.client.views.session.LoginPanel;
+import de.saumya.gwt.translation.gui.client.views.session.DefaultSessionScreen;
+import de.saumya.gwt.translation.gui.client.views.users.UserScreen;
 
 public class GUIContainer {
     public final Repository           repository           = new Repository();
@@ -91,6 +100,15 @@ public class GUIContainer {
 
     public final LoadingNotice        loadingNotice        = new LoadingNotice(this.getTextController);
 
+    public final DefaultSessionScreen         sessionPanel         = new DefaultSessionScreen(this.getTextController,
+                                                                   this.getText,
+                                                                   this.session,
+                                                                   this.notifications,
+                                                                   this.localeFactory);
+    public final ScreenController     screenController     = new ScreenController(this.sessionPanel,
+                                                                   this.getTextController,
+                                                                   this.session);
+    public final LoginPanel           loginPanel           = new LoginPanel(this.notifications);
     public final PhraseScreen         phraseScreen         = new PhraseScreen(this.loadingNotice,
                                                                    this.getTextController,
                                                                    this.phraseFactory,
@@ -103,15 +121,24 @@ public class GUIContainer {
                                                                    this.getTextController,
                                                                    this.session,
                                                                    this.notifications);
-    public final SessionPanel         sessionPanel         = new SessionPanel(this.getTextController,
-                                                                   this.getText,
-                                                                   this.session,
-                                                                   this.notifications,
-                                                                   this.localeFactory);
-    public final ScreenController     screenController     = new ScreenController(this.sessionPanel,
+    public final UserScreen           userScreen           = new UserScreen(this.loadingNotice,
                                                                    this.getTextController,
-                                                                   this.session);
-    public final LoginPanel           loginPanel           = new LoginPanel(this.notifications);
+                                                                   this.userFactory,
+                                                                   this.session,
+                                                                   new ResourceBindings<User>(),
+                                                                   this.notifications);
+    public final GroupScreen          groupScreen          = new GroupScreen(this.loadingNotice,
+                                                                   this.getTextController,
+                                                                   this.groupFactory,
+                                                                   this.session,
+                                                                   new ResourceBindings<Group>(),
+                                                                   this.notifications);
+    public final LocaleScreen         localeScreen         = new LocaleScreen(this.loadingNotice,
+                                                                   this.getTextController,
+                                                                   this.localeFactory,
+                                                                   this.session,
+                                                                   new ResourceBindings<Locale>(),
+                                                                   this.notifications);
 
     public GUIContainer(final Panel panel) {
         // add the screens to the screen controller which hangs them into a
@@ -119,6 +146,9 @@ public class GUIContainer {
         this.screenController.addScreen(this.configurationScreen,
                                         "configurations");
         this.screenController.addScreen(this.phraseScreen, "phrases");
+        this.screenController.addScreen(this.userScreen, "users");
+        this.screenController.addScreen(this.groupScreen, "groups");
+        this.screenController.addScreen(this.localeScreen, "locales");
 
         // activate the session controller
         new SessionController(this.session, this.loginPanel, this.sessionPanel);

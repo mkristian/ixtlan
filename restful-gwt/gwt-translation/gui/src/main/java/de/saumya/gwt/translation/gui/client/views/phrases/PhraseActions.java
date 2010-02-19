@@ -1,11 +1,12 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.views.phrases;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
@@ -26,18 +27,28 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
 
     private String                     locale;
 
-    public PhraseActions(final GetTextController getText,
+    public PhraseActions(final GetTextController getTextController,
             final ResourceBindings<Phrase> bindings, final Session session,
             final PhraseFactory factory,
             final ResourceNotifications changeNotification) {
-        super(getText, bindings, session, factory, changeNotification);
+        super(getTextController, bindings, session, factory, changeNotification);
         this.approveHandler = new MutatingButtonAction<Phrase>(changeNotification,
                 bindings) {
 
             @Override
             protected void action(final Phrase resource) {
-                // TODO implement save("approve")
-                resource.save();
+                resource.addResourceChangeListener(new ResourceChangeListener<Phrase>() {
+
+                    @Override
+                    public void onError(final Phrase resource) {
+                    }
+
+                    @Override
+                    public void onChange(final Phrase resource) {
+                        getTextController.reset(resource);
+                    }
+                });
+                resource.save("approve");
             }
         };
         this.approve = button(this, "approve", this.approveHandler);
@@ -58,6 +69,7 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
         this.approveHandler.reset(phrase);
         this.approve.setVisible(!phrase.isNew()
                 && !phrase.isDeleted()
+                && !phrase.isApproved()
                 && this.session.isAllowed("approve",
                                           this.resourceName,
                                           this.locale));

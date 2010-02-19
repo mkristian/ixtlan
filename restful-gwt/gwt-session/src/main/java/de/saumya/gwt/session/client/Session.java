@@ -229,7 +229,8 @@ public class Session {
             GWT.log(group.toString(), null);
             if (isAllowed(action, resourceName, group)) {
                 for (final Locale l : group.locales) {
-                    if (l.code.equals(localeCode)) {
+                    if (l.code.equals(localeCode)
+                            || l.code.equals(Locale.ALL_CODE)) {
                         return true;
                     }
                 }
@@ -255,9 +256,9 @@ public class Session {
         return false;
     }
 
-    public Configuration getConfiguration() {
-        return this.configurationFactory.get();
-    }
+    // public Configuration getConfiguration() {
+    // return this.configurationFactory.get();
+    // }
 
     public User getUser() {
         return this.authentication != null ? this.authentication.user : null;

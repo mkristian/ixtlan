@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.views.session;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -27,7 +27,8 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
-public class SessionPanel extends VerticalPanel implements SessionScreen {
+public class DefaultSessionScreen extends VerticalPanel implements
+        SessionScreen {
 
     private final Label         welcome;
     private final Label         userLabel;
@@ -39,7 +40,7 @@ public class SessionPanel extends VerticalPanel implements SessionScreen {
     private final LocaleFactory localeFactory;
     private final GetText       getText;
 
-    public SessionPanel(final GetTextController getTextController,
+    public DefaultSessionScreen(final GetTextController getTextController,
             final GetText getText, final Session session,
             final Notifications notifications, final LocaleFactory localeFactory) {
         setStyleName("session");
@@ -66,29 +67,33 @@ public class SessionPanel extends VerticalPanel implements SessionScreen {
             @Override
             public void onLogin() {
                 if (session.getUser().getAllowedLocales().size() > 0) {
-                    SessionPanel.this.localeBox.clear();
-
-                    SessionPanel.this.localeBox.addItem("normal mode", "en");
+                    DefaultSessionScreen.this.localeBox.clear();
+                    DefaultSessionScreen.this.localeBox.addItem("normal mode",
+                                                                "en");
                     for (final Locale locale : session.getUser()
                             .getAllowedLocales()) {
-                        SessionPanel.this.localeBox.addItem(locale.code + " "
-                                + "mode", locale.code);
+                        if (!Locale.ALL_CODE.equals(locale.code)) {
+                            DefaultSessionScreen.this.localeBox.addItem(locale.code
+                                                                                + " "
+                                                                                + "mode",
+                                                                        locale.code);
+                        }
                     }
-                    SessionPanel.this.localeBox.setVisible(true);
+                    DefaultSessionScreen.this.localeBox.setVisible(DefaultSessionScreen.this.localeBox.getItemCount() > 1);
                 }
                 else {
-                    SessionPanel.this.localeBox.setVisible(false);
+                    DefaultSessionScreen.this.localeBox.setVisible(false);
                 }
             }
 
             @Override
             public void onTimeout() {
-                SessionPanel.this.localeBox.clear();
+                DefaultSessionScreen.this.localeBox.clear();
             }
 
             @Override
             public void onLogout() {
-                SessionPanel.this.localeBox.clear();
+                DefaultSessionScreen.this.localeBox.clear();
             }
         });
 

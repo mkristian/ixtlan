@@ -14,6 +14,8 @@ public class Locale extends Resource<Locale> {
 
     public static final String DEFAULT_CODE = "DEFAULT";
 
+    public static final String ALL_CODE     = "ALL";
+
     Locale(final Repository repository, final LocaleFactory factory) {
         super(repository, factory);
     }

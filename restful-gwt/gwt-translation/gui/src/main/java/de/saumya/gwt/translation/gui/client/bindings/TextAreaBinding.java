@@ -1,4 +1,4 @@
-package de.saumya.gwt.translation.gui.client;
+package de.saumya.gwt.translation.gui.client.bindings;
 
 import com.google.gwt.user.client.ui.TextArea;
 
