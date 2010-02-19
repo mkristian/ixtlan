@@ -88,7 +88,7 @@ module Ixtlan
       
       def update
         new_text = params[:phrase][:text]
-        word = Ixtlan::Models::Text.not_approved(:locale => Locale.default, :code => params[:id]).first
+        word = TEXT.not_approved(:locale => Locale.default, :code => params[:id]).first
         if word
           phrase = word_to_phrase(word, :text) 
           word_approved = Ixtlan::Models::Word.latest_approved(:locale => Locale.default, :code => params[:id]).first
@@ -96,9 +96,9 @@ module Ixtlan
         else
           # take the latest approved text for the given code and create a new
           # text without version (!= not_approved text) for the given code
-          word = Ixtlan::Models::Text.latest_approved(:locale => Locale.default, :code => params[:id]).first
+          word = TEXT.latest_approved(:locale => Locale.default, :code => params[:id]).first
           phrase = word_to_phrase(word, :current_text) 
-          word = Ixtlan::Models::Text.new(:code => params[:id], :locale => Locale.default)
+          word = TEXT.new(:code => params[:id], :locale => Locale.default)
         end
 
         phrase.text = new_text
@@ -114,7 +114,7 @@ module Ixtlan
       end
 
       def approve
-        word = Ixtlan::Models::Text.not_approved(:locale => Locale.default, :code => params[:id]).first
+        word = TEXT.not_approved(:locale => Locale.default, :code => params[:id]).first
         if word
           word.current_user = current_user
           if word.approve
