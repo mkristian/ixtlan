@@ -31,6 +31,11 @@ public class PermissionFactory extends ResourceFactory<Permission> {
     }
 
     @Override
+    public Permission newResource(final String key) {
+        return new Permission(this.repository, this, this.groupFactory);
+    }
+
+    @Override
     public String defaultSearchParameterName() {
         return null;
     }

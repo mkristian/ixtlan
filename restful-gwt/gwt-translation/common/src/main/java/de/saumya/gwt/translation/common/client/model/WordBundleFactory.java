@@ -27,7 +27,12 @@ public class WordBundleFactory extends ResourceFactory<WordBundle> {
 
     @Override
     public WordBundle newResource() {
-        return new WordBundle(this.repository, this, this.wordFactory);
+        return new WordBundle(this.repository, this, this.wordFactory, null);
+    }
+
+    @Override
+    public WordBundle newResource(final String key) {
+        return new WordBundle(this.repository, this, this.wordFactory, key);
     }
 
     @Override

@@ -9,6 +9,7 @@ import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
@@ -35,7 +36,8 @@ public class GroupScreen extends ResourceScreen<Group> {
             final GetTextController getTextController,
             final GroupFactory factory, final Session session,
             final ResourceBindings<Group> bindings,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
                 session,
@@ -47,12 +49,15 @@ public class GroupScreen extends ResourceScreen<Group> {
                                 getTextController),
                         new ResourceCollectionListing<Group>(session,
                                 factory,
-                                getTextController)),
+                                getTextController,
+                                hyperlinkFactory)),
                 new DefaultResourceActionPanel<Group>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications),
-                notifications);
+                        notifications,
+                        hyperlinkFactory),
+                notifications,
+                hyperlinkFactory);
     }
 }

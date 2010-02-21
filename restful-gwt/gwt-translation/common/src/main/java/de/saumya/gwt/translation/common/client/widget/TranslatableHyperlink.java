@@ -15,41 +15,39 @@ import de.saumya.gwt.translation.common.client.Translatable;
  * @author kristian
  * @author bill
  */
-public class TranslatableHyperlink extends Hyperlink implements Translatable {
+public class TranslatableHyperlink extends Hyperlink implements Translatable,
+        Locatable {
 
     private String                  code = null;
+    private final String            path;
 
     private final GetTextController getText;
 
-    public TranslatableHyperlink(final String text,
-            final GetTextController getTextController) {
-        this.getText = getTextController;
-        this.getText.addTranslatable(this);
-        setText(text);
-        sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.ONCONTEXTMENU);
-    }
-
     private static class HyperlinkClickHandler implements ClickHandler {
-
-        private final String path;
-
-        private HyperlinkClickHandler(final String path) {
-            this.path = path;
-        }
 
         @Override
         public void onClick(final ClickEvent event) {
-            if (this.path.equals(History.getToken())) {
+            if (((TranslatableHyperlink) event.getSource()).path.equals(History.getToken())) {
                 History.fireCurrentHistoryState();
             }
         }
     };
 
-    public TranslatableHyperlink(final String text, final String path,
-            final GetTextController getText) {
-        this(text, getText);
-        setTargetHistoryToken(path);
-        addClickHandler(new HyperlinkClickHandler(path));
+    private static final HyperlinkClickHandler CLICK_HANDLER = new HyperlinkClickHandler();
+
+    TranslatableHyperlink(final String text, final String path,
+            final GetTextController getTextController) {
+        this.getText = getTextController;
+        this.getText.addTranslatable(this);
+        this.path = path;
+        setText(text);
+        sinkEvents(Event.MOUSEEVENTS | Event.ONCLICK | Event.ONCONTEXTMENU);
+        setTargetHistoryToken("/DEFAULT" + path);
+        addClickHandler(CLICK_HANDLER);
+    }
+
+    public void reset(final String locale) {
+        setTargetHistoryToken("/" + locale + this.path);
     }
 
     @Override

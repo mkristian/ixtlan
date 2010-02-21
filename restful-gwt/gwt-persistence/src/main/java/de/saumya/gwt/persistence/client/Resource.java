@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -46,6 +45,10 @@ public abstract class Resource<E extends Resource<E>> {
             final ResourceFactory<E> factory) {
         this.repository = repository;
         this.factory = factory;
+    }
+
+    public boolean isImmutable() {
+        return false;
     }
 
     public boolean isNew() {
@@ -134,7 +137,6 @@ public abstract class Resource<E extends Resource<E>> {
     public String toXml() {
         final StringBuilder buf = new StringBuilder();
         toXml(buf);
-        GWT.log(buf.toString(), null);
         return buf.toString();
     }
 
@@ -314,7 +316,6 @@ public abstract class Resource<E extends Resource<E>> {
     public String toString() {
         final StringBuilder buf = new StringBuilder(getClass().getName()).append("(");
         toString(buf);
-
         return buf.append(")").toString();
     }
 

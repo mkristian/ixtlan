@@ -57,7 +57,8 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
             final ResourceFactory<E> factory, final Session session,
             final ResourceWidget display,
             final AbstractResourceActionPanel<E> actions,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         this(loadingNotice,
                 factory,
                 session,
@@ -66,7 +67,8 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
                 null,
                 null,
                 actions,
-                notifications);
+                notifications,
+                hyperlinkFactory);
     }
 
     protected <S extends Widget & AllowReadOnly<E>, T extends Widget & ResourceCollectionResetable<E> & HasPathFactory> ResourceScreen(
@@ -74,7 +76,8 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
             final ResourceFactory<E> factory, final Session session,
             final S display, final T displayCollection,
             final AbstractResourceActionPanel<E> actions,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         this(loadingNotice,
                 factory,
                 session,
@@ -83,7 +86,8 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
                 displayCollection,
                 displayCollection,
                 actions,
-                notifications);
+                notifications,
+                hyperlinkFactory);
     }
 
     private <ResourceWidget extends Widget & AllowReadOnly<E>> ResourceScreen(
@@ -93,7 +97,8 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
             final ResourceCollectionResetable<E> displayCollectionResetable,
             final HasPathFactory displayCollectionPathFactory,
             final AbstractResourceActionPanel<E> actions,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         setStyleName("resource-screen");
         this.loading = loadingNotice;
 
@@ -139,10 +144,10 @@ public class ResourceScreen<E extends Resource<E>> extends FlowPanel implements
         };
 
         if (displayCollection != null) {
-            this.pathFactory = new PathFactory(factory.storagePluralName());
+            this.pathFactory = hyperlinkFactory.newPathFactory(factory.storagePluralName());
         }
         else {
-            this.pathFactory = new PathFactory(factory.storageName());
+            this.pathFactory = hyperlinkFactory.newPathFactory(factory.storageName());
         }
         this.parentPathFactory = this.pathFactory;
     }

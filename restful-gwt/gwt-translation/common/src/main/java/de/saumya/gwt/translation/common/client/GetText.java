@@ -2,10 +2,14 @@ package de.saumya.gwt.translation.common.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.models.Locale;
@@ -162,11 +166,11 @@ public class GetText {
         word.text = phrase.currentText;
     }
 
-    public void load(final Locale locale) {
-        load(locale, this.isInTranslation);
-    }
-
     public void load(final Locale locale, final boolean isInTranslation) {
+        if (isInTranslation == this.isInTranslation
+                && this.locale.equals(locale)) {
+            return;
+        }
         this.isInTranslation = isInTranslation;
         this.locale = locale;
         if (this.isInTranslation) {
@@ -178,16 +182,29 @@ public class GetText {
     }
 
     public void resetTranslatables() {
-        GWT.log("reset translatables " + this.translatables.size(), null);
-        for (final Translatable translatable : this.translatables) {
-            if (translatable != null && "delete".equals(translatable.getCode())) {
-                GWT.log("reset translatable " + translatable, null);
+        DeferredCommand.addCommand(new Command() {
+
+            @Override
+            public void execute() {
+                GWT.log("before reset translatables "
+                        + GetText.this.translatables.size(), null);
+                final Iterator<Translatable> iterator = GetText.this.translatables.iterator();
+                while (iterator.hasNext()) {
+                    final Translatable translatable = iterator.next();
+                    if (((Widget) translatable).isAttached()) {
+                        translatable.reset();
+                    }
+                    else {
+                        GWT.log("TODO remove the need to remove this detached element "
+                                        + translatable,
+                                null);
+                        iterator.remove();
+                    }
+                }
+                GWT.log("after reset translatables "
+                        + GetText.this.translatables.size(), null);
             }
-            translatable.reset();
-            if (translatable != null && "delete".equals(translatable.getCode())) {
-                GWT.log("reset translatable " + translatable, null);
-            }
-        }
+        });
     }
 
     public void addTranslatable(final Translatable translatable) {

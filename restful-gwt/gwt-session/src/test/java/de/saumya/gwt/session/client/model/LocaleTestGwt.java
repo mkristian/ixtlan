@@ -34,9 +34,9 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     protected Resource<Locale> resourceSetUp() {
-        this.locale = this.factory.newResource();
+        this.locale = ((LocaleFactory) this.factory).newResource("en");
 
-        this.locale.code = "en";
+        // this.locale.code = "en";
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -52,9 +52,10 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     public void doTestUpdate() {
-        this.locale.code = changedValue();
+        // is immutable
+        // this.locale.code = changedValue();
         this.locale.save();
-        assertEquals(this.locale.code, changedValue());
+        assertEquals(this.locale.code, this.locale.code);
     }
 
     @Override

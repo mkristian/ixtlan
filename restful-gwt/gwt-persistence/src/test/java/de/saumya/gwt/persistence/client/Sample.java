@@ -5,15 +5,13 @@ package de.saumya.gwt.persistence.client;
 
 import com.google.gwt.xml.client.Element;
 
-import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceWithID;
-
 public class Sample extends ResourceWithID<Sample> {
 
     private final SampleFactory factory;
 
-    Sample(final Repository repository, final SampleFactory factory) {
-        super(repository, factory);
+    Sample(final Repository repository, final SampleFactory factory,
+            final int id) {
+        super(repository, factory, id);
         this.factory = factory;
     }
 

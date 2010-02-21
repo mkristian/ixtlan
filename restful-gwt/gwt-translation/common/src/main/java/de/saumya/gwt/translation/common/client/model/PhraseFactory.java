@@ -37,11 +37,17 @@ public class PhraseFactory extends ResourceFactory<Phrase> {
 
     @Override
     public Phrase newResource() {
+        return newResource(null);
+    }
+
+    @Override
+    public Phrase newResource(final String key) {
         return new Phrase(this.repository,
                 this,
                 this.translationFactory,
                 this.factory,
-                this.localeFactory);
+                this.localeFactory,
+                key);
     }
 
     @Override

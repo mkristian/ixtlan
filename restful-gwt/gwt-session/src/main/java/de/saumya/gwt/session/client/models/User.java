@@ -80,6 +80,11 @@ public class User extends Resource<User> {
         for (final Group group : this.groups) {
             result.addAll(group.locales);
         }
+        // TODO remove later
+        final Locale en = this.localeFactory.get("en");
+        // en.code = "en";
+        result.add(en);
+        // result.add(this.localeFactory.get("de"));
         return result;
     }
 

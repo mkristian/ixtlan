@@ -9,6 +9,7 @@ import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
@@ -35,7 +36,8 @@ public class LocaleScreen extends ResourceScreen<Locale> {
             final GetTextController getTextController,
             final LocaleFactory factory, final Session session,
             final ResourceBindings<Locale> bindings,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
                 session,
@@ -47,13 +49,16 @@ public class LocaleScreen extends ResourceScreen<Locale> {
                                 getTextController),
                         new ResourceCollectionListing<Locale>(session,
                                 factory,
-                                getTextController)),
+                                getTextController,
+                                hyperlinkFactory)),
                 new DefaultResourceActionPanel<Locale>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications),
-                notifications);
+                        notifications,
+                        hyperlinkFactory),
+                notifications,
+                hyperlinkFactory);
     }
 
 }

@@ -39,6 +39,11 @@ public class ConfigurationFactory extends ResourceFactory<Configuration> {
     }
 
     @Override
+    public Configuration newResource(final String key) {
+        return newResource();
+    }
+
+    @Override
     public String defaultSearchParameterName() {
         return null;
     }

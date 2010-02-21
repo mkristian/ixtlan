@@ -22,11 +22,13 @@ public class Phrase extends Resource<Phrase> {
 
     Phrase(final Repository repository, final PhraseFactory factory,
             final TranslationFactory translationFactory,
-            final UserFactory userFactory, final LocaleFactory localeFactory) {
+            final UserFactory userFactory, final LocaleFactory localeFactory,
+            final String code) {
         super(repository, factory);
         this.translationFactory = translationFactory;
         this.userFactory = userFactory;
         this.localeFactory = localeFactory;
+        this.code = code;
     }
 
     public String      code;

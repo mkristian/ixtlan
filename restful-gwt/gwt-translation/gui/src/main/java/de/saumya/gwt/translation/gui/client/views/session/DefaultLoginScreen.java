@@ -14,14 +14,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.saumya.gwt.session.client.LoginScreen;
 import de.saumya.gwt.session.client.Notifications;
 
-public class LoginPanel extends VerticalPanel implements LoginScreen {
+public class DefaultLoginScreen extends VerticalPanel implements LoginScreen {
 
     private final Notifications notifications;
     private final TextBox       username = new TextBox();
     private final TextBox       password = new PasswordTextBox();
     private final Button        loginButton;
 
-    public LoginPanel(final Notifications notifications) {
+    public DefaultLoginScreen(final Notifications notifications) {
         setStyleName("login");
         this.notifications = notifications;
         add(new Label("username"));

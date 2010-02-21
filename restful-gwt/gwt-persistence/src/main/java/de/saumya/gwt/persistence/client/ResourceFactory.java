@@ -14,11 +14,13 @@ import de.saumya.gwt.persistence.client.Resource.State;
 
 public abstract class ResourceFactory<E extends Resource<E>> {
 
-    private final Map<String, E> cache = new HashMap<String, E>();
+    protected final Map<String, E> cache = new HashMap<String, E>();
 
-    protected final Repository   repository;
+    protected final Repository     repository;
 
-    private E                    singleton;
+    private E                      singleton;
+
+    private ResourceCollection<E>  all;
 
     public ResourceFactory(final Repository repository,
             final ResourceNotifications notifications) {
@@ -76,14 +78,14 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return this.singleton;
     }
 
-    E getResource(final String key) {
+    protected E getResource(final String key) {
         if (key == null) {
             return newResource();
         }
         else {
             E result = this.cache.get(key);
             if (result == null) {
-                result = newResource();
+                result = newResource(key);
                 this.cache.put(key, result);
             }
             return result;
@@ -128,6 +130,8 @@ public abstract class ResourceFactory<E extends Resource<E>> {
 
     abstract public E newResource();
 
+    abstract public E newResource(String key);
+
     public ResourceCollection<E> newResources() {
         return new ResourceCollection<E>(this);
     }
@@ -147,6 +151,9 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     public E get(final ResourceChangeListener<E> listener,
             final ResourceNotifications notifications) {
         final E resource = getResource();
+        if (resource.isImmutable() && resource.state != State.NEW) {
+            return resource;
+        }
         if (notifications != null) {
             resource.setResourceNotification(notifications);
         }
@@ -189,6 +196,9 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     public E get(final String key, final ResourceChangeListener<E> listener,
             final ResourceNotifications notifications) {
         final E resource = getResource(key);
+        if (resource.isImmutable() && resource.state != State.NEW) {
+            return resource;
+        }
         if (notifications != null) {
             resource.setResourceNotification(notifications);
         }
@@ -214,7 +224,20 @@ public abstract class ResourceFactory<E extends Resource<E>> {
 
     public ResourceCollection<E> all(final Map<String, String> query,
             final ResourcesChangeListener<E> listener) {
-        final ResourceCollection<E> list = new ResourceCollection<E>(this);
+        final ResourceCollection<E> list;
+        if (query == null || query.isEmpty()) {
+            if (this.all == null) {
+                list = new ResourceCollection<E>(this);
+                list.addAll(this.cache.values());
+                this.all = list;
+            }
+            else {
+                list = this.all;
+            }
+        }
+        else {
+            list = new ResourceCollection<E>(this);
+        }
         list.addResourcesChangeListener(listener);
         this.repository.all(storagePluralName(),
                             query,

@@ -11,6 +11,7 @@ import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
@@ -92,7 +93,8 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
             final ConfigurationFactory configFactory,
             final ResourceBindings<Configuration> bindings,
             final GetTextController getTextController, final Session session,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 configFactory,
                 session,
@@ -103,8 +105,10 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                         bindings,
                         session,
                         configFactory,
-                        notifications),
-                notifications);
+                        notifications,
+                        hyperlinkFactory),
+                notifications,
+                hyperlinkFactory);
     }
 
     // TODO put all these methods below except reset(...) into

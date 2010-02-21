@@ -26,22 +26,30 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
 
     public void fromXml(final String xml) {
         GWT.log(xml, null);
-        fromXml(XMLParser.parse(xml).getDocumentElement());
+        fromXml(XMLParser.parse(xml).getDocumentElement(), false);
+        fireResourcesLoadedEvents();
     }
 
     public void fromXml(final Element root) {
+        fromXml(root, true);
+    }
+
+    private void fromXml(final Element root, final boolean all) {
+        clear();
         final NodeList list = root.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
             if (list.item(i) instanceof Element) {
                 final Element element = (Element) list.item(i);
                 final E resource = this.factory.getResource(element);
+                // final boolean isNew = resource.isNew();
                 resource.fromXml(element);
                 resource.state = State.UP_TO_DATE;
+                // if (isNew || all) {
                 add(resource);
                 // fireResourcesChangeEvents(resource);
+                // }
             }
         }
-        fireResourcesLoadedEvents();
     }
 
     public String toXml() {

@@ -36,6 +36,11 @@ public class UserFactory extends ResourceFactory<User> {
     }
 
     @Override
+    public User newResource(final String key) {
+        return newResource();
+    }
+
+    @Override
     public String defaultSearchParameterName() {
         return "name";
     }

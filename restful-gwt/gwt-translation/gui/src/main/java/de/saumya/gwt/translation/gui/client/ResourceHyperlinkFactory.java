@@ -3,34 +3,46 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Hyperlink;
 
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 
 public class ResourceHyperlinkFactory {
 
-    private final PathFactory pathFactory;
+    private final PathFactory      pathFactory;
+    private final HyperlinkFactory hyperlinkFactory;
 
-    public ResourceHyperlinkFactory(final PathFactory factory) {
+    public ResourceHyperlinkFactory(final HyperlinkFactory hyperlinkFactory,
+            final PathFactory factory) {
         this.pathFactory = factory;
+        this.hyperlinkFactory = hyperlinkFactory;
     }
 
     public Hyperlink editResourceHyperklink(final Resource<?> resource) {
-        return new Hyperlink(resource.display(),
-                this.pathFactory.editPath(resource.key()));
+        GWT.log(this.pathFactory.editPath(resource.key())
+                .replaceFirst("/[a-zA-Z_]*/", "/")
+                + " --> " + this.pathFactory.editPath(resource.key()), null);
+        return this.hyperlinkFactory.newHyperlink(resource.display(),
+                                                  this.pathFactory.editPath(resource.key(),
+                                                                            false));
     }
 
     public Hyperlink showResourceHyperlink(final Resource<?> resource) {
-        return new Hyperlink(resource.display(),
-                this.pathFactory.showPath(resource.key()));
+        return this.hyperlinkFactory.newHyperlink(resource.display(),
+                                                  this.pathFactory.showPath(resource.key(),
+                                                                            false));
     }
 
     public Hyperlink showAllResourcesHyperlink(final String name) {
-        return new Hyperlink(name, this.pathFactory.showAllPath());
+        return this.hyperlinkFactory.newHyperlink(name,
+                                                  this.pathFactory.showAllPath(false));
     }
 
     public Hyperlink newResourceHyperlink(final String name) {
-        return new Hyperlink(name, this.pathFactory.newPath());
+        return this.hyperlinkFactory.newHyperlink(name,
+                                                  this.pathFactory.newPath(false));
     }
 }

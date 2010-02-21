@@ -16,6 +16,7 @@ import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.widget.ButtonAction;
 import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.MutatingButtonAction;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 
@@ -25,13 +26,17 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
 
     private final ButtonAction<Phrase> approveHandler;
 
-    private String                     locale;
-
     public PhraseActions(final GetTextController getTextController,
             final ResourceBindings<Phrase> bindings, final Session session,
             final PhraseFactory factory,
-            final ResourceNotifications changeNotification) {
-        super(getTextController, bindings, session, factory, changeNotification);
+            final ResourceNotifications changeNotification,
+            final HyperlinkFactory hyperlinkFactory) {
+        super(getTextController,
+                bindings,
+                session,
+                factory,
+                changeNotification,
+                hyperlinkFactory);
         this.approveHandler = new MutatingButtonAction<Phrase>(changeNotification,
                 bindings) {
 
@@ -54,10 +59,6 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
         this.approve = button(this, "approve", this.approveHandler);
     }
 
-    void setLocale(final String locale) {
-        this.locale = locale;
-    }
-
     @Override
     public void reset(final ResourceCollection<Phrase> resources) {
         this.approve.setVisible(false);
@@ -72,25 +73,25 @@ class PhraseActions extends DefaultResourceActionPanel<Phrase> {
                 && !phrase.isApproved()
                 && this.session.isAllowed("approve",
                                           this.resourceName,
-                                          this.locale));
+                                          phrase.locale));
         this.save.setVisible(!phrase.isNew()
                 && !phrase.isDeleted()
                 && this.session.isAllowed(Action.UPDATE,
                                           this.resourceName,
-                                          this.locale));
+                                          phrase.locale));
         super.reset(phrase);
 
         GWT.log("actions: "
-                + this.locale
+                + phrase.locale
                 + " "
                 + this.resourceName
                 + " "
                 + this.session.isAllowed("approve",
                                          this.resourceName,
-                                         this.locale)
+                                         phrase.locale)
                 + " "
                 + this.session.isAllowed(Action.UPDATE,
                                          this.resourceName,
-                                         this.locale), null);
+                                         phrase.locale), null);
     }
 }

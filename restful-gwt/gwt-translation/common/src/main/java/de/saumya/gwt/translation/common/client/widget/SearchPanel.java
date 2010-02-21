@@ -16,9 +16,10 @@ public class SearchPanel extends TextBoxWithButton {
     private final String      defaultSearchParameterName;
 
     public SearchPanel(final GetTextController getTextController,
-            final ResourceFactory<?> factory) {
+            final ResourceFactory<?> factory,
+            final HyperlinkFactory hyperlinkFactory) {
         super(getTextController);
-        this.pathFactory = new PathFactory(factory.storagePluralName());
+        this.pathFactory = hyperlinkFactory.newPathFactory(factory.storagePluralName());
         this.defaultSearchParameterName = factory.defaultSearchParameterName();
         setStyleName("search");
         insert(new TranslatableLabel(getTextController, "search"), 0);

@@ -10,8 +10,10 @@ import de.saumya.gwt.persistence.client.Resource;
 
 public class Word extends Resource<Word> {
 
-    Word(final Repository repository, final WordFactory factory) {
+    Word(final Repository repository, final WordFactory factory,
+            final String code) {
         super(repository, factory);
+        this.code = code;
     }
 
     public String code;

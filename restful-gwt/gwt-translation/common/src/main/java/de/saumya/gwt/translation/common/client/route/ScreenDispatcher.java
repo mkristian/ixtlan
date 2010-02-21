@@ -6,8 +6,6 @@ package de.saumya.gwt.translation.common.client.route;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
-
 public class ScreenDispatcher {
 
     private final Map<String, Screen<?>> registry = new HashMap<String, Screen<?>>();
@@ -17,7 +15,9 @@ public class ScreenDispatcher {
     }
 
     void dispatch(final ScreenPath path) {
-        dispatch(this.registry.get(path.controllerName), path);
+        if (path.controllerName != null) {
+            dispatch(this.registry.get(path.controllerName), path);
+        }
     }
 
     private void dispatch(final Screen<?> screen, final ScreenPath path) {
@@ -58,7 +58,6 @@ public class ScreenDispatcher {
                         }
                     }
                 }
-                GWT.log("query " + query.toString(), null);
                 screen.showAll(query);
             }
         }

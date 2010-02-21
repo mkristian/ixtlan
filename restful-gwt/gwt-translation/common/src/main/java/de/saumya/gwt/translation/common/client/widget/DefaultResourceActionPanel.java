@@ -38,6 +38,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
     private final ResourceChangeListener<E> createdListener;
     private final ResourceFactory<E>        factory;
+    private final HyperlinkFactory          hyperlinkFactory;
 
     private E                               resource;
     private boolean                         isReadOnly;
@@ -46,10 +47,12 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             final GetTextController getTextController,
             final ResourceBindings<E> bindings, final Session session,
             final ResourceFactory<E> factory,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory) {
         super(getTextController, bindings, session, factory);
         this.session = session;
         this.factory = factory;
+        this.hyperlinkFactory = hyperlinkFactory;
 
         this.createdListener = new ResourceChangeListener<E>() {
 
@@ -168,11 +171,14 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     protected ComplexPanel createGetByPanel() {
         return new GetByPanel(this.getTextController,
                 this.factory,
-                this.session);
+                this.session,
+                this.hyperlinkFactory);
     }
 
     protected ComplexPanel createSearchPanel() {
-        return new SearchPanel(this.getTextController, this.factory);
+        return new SearchPanel(this.getTextController,
+                this.factory,
+                this.hyperlinkFactory);
     }
 
     // TODO move into abstract class
@@ -219,9 +225,11 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                     && this.session.isAllowed(Action.SHOW, this.resourceName));
             this.edit.setVisible(this.isReadOnly && !this.resource.isNew()
                     && !this.resource.isDeleted()
+                    && !this.resource.isImmutable()
                     && this.session.isAllowed(Action.UPDATE, this.resourceName));
             this.save.setVisible(!this.isReadOnly && !this.resource.isNew()
                     && !this.resource.isDeleted()
+                    && !this.resource.isImmutable()
                     && this.session.isAllowed(Action.UPDATE, this.resourceName));
             this.create.setVisible(this.resource.isNew()
                     && this.session.isAllowed(Action.CREATE, this.resourceName));

@@ -21,39 +21,51 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.session.client.models.Locale;
-import de.saumya.gwt.session.client.models.LocaleFactory;
-import de.saumya.gwt.translation.common.client.GetText;
 import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.widget.LocaleController;
+import de.saumya.gwt.translation.common.client.widget.Locatable;
 import de.saumya.gwt.translation.common.client.widget.TranslatableButton;
 import de.saumya.gwt.translation.common.client.widget.TranslatableLabel;
 
 public class DefaultSessionScreen extends VerticalPanel implements
         SessionScreen {
 
-    private final Label         welcome;
-    private final Label         userLabel;
+    private final Label            welcome;
+    private final Label            userLabel;
 
-    private final Button        logoutButton;
+    private final Button           logoutButton;
 
-    private final Session       session;
-    private final ListBox       localeBox;
-    private final LocaleFactory localeFactory;
-    private final GetText       getText;
+    private final Session          session;
+    private final LocaleBox        localeBox;
+    private final LocaleController localeController;
+
+    public static class LocaleBox extends ListBox implements Locatable {
+
+        @Override
+        public void reset(final String locale) {
+            for (int i = 0; i < getItemCount(); i++) {
+                if (getItemText(i).equals(locale)) {
+                    setSelectedIndex(i);
+                    return;
+                }
+            }
+        }
+
+    }
 
     public DefaultSessionScreen(final GetTextController getTextController,
-            final GetText getText, final Session session,
-            final Notifications notifications, final LocaleFactory localeFactory) {
+            final Session session, final Notifications notifications,
+            final LocaleController localeController) {
         setStyleName("session");
         this.session = session;
-        this.localeFactory = localeFactory;
-        this.getText = getText;
+        this.localeController = localeController;
         final ComplexPanel header = new FlowPanel();
         header.setStyleName("session-header");
         this.welcome = new TranslatableLabel(getTextController);
         this.userLabel = new Label();
         this.logoutButton = new TranslatableButton(getTextController, "logout");
 
-        this.localeBox = new ListBox();
+        this.localeBox = new LocaleBox();
 
         this.localeBox.addChangeHandler(new ChangeHandler() {
 
@@ -62,20 +74,20 @@ public class DefaultSessionScreen extends VerticalPanel implements
                 loadWordsForLocale();
             }
         });
+        localeController.add(this.localeBox);
         session.addSessionListern(new SessionListenerAdapter() {
 
             @Override
             public void onLogin() {
                 if (session.getUser().getAllowedLocales().size() > 0) {
                     DefaultSessionScreen.this.localeBox.clear();
-                    DefaultSessionScreen.this.localeBox.addItem("normal mode",
-                                                                "en");
+                    // TODO get info from Configuration
+                    DefaultSessionScreen.this.localeBox.addItem("DEFAULT", "en");
                     for (final Locale locale : session.getUser()
                             .getAllowedLocales()) {
+                        GWT.log("locale " + locale.code, null);
                         if (!Locale.ALL_CODE.equals(locale.code)) {
-                            DefaultSessionScreen.this.localeBox.addItem(locale.code
-                                                                                + " "
-                                                                                + "mode",
+                            DefaultSessionScreen.this.localeBox.addItem(locale.code,
                                                                         locale.code);
                         }
                     }
@@ -122,22 +134,10 @@ public class DefaultSessionScreen extends VerticalPanel implements
 
     private void loadWordsForLocale() {
         final int selected = this.localeBox.getSelectedIndex();
-        if (selected <= 0) {
-            GWT.log("load default locale", null);
-            this.getText.load(this.localeFactory.defaultLocale(), false);
-        }
-        else {
-            Locale locale = null;
-            for (final Locale l : this.session.getUser().getAllowedLocales()) {
-                if (l.code.equals(this.localeBox.getValue(selected))) {
-                    locale = l;
-                    break;
-                }
-            }
-            GWT.log("selected locale " + selected + " "
-                    + this.localeBox.getValue(selected), null);
-            this.getText.load(locale, true);
-        }
+        final String locale = selected <= 0
+                ? Locale.DEFAULT_CODE
+                : this.localeBox.getValue(selected);
+        this.localeController.reset(locale);
     }
 
     @Override

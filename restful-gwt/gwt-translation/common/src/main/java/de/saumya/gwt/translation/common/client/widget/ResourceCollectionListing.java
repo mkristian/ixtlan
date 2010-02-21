@@ -3,9 +3,7 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 
 import de.saumya.gwt.persistence.client.Resource;
@@ -28,12 +26,16 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
 
     private PathFactory                pathFactory;
 
+    private final HyperlinkFactory     hyperlinkFactory;
+
     public ResourceCollectionListing(final Session session,
             final ResourceFactory<E> factory,
-            final GetTextController getTextController) {
+            final GetTextController getTextController,
+            final HyperlinkFactory hyperlinkFactory) {
         setStylePrimaryName("resource-collection-listing");
 
         this.session = session;
+        this.hyperlinkFactory = hyperlinkFactory;
         this.factory = factory;
         this.noResult = new TranslatableLabel(getTextController, "no "
                 + factory.storagePluralName());
@@ -63,15 +65,17 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
                 if (this.session.isAllowed(Action.UPDATE,
                                            this.factory.storagePluralName())) {
                     for (final E resource : resources) {
-                        add(new Hyperlink(resource.display(),
-                                this.pathFactory.editPath(resource.key())));
+                        add(this.hyperlinkFactory.newHyperlink(resource.display(),
+                                                               this.pathFactory.editPath(resource.key(),
+                                                                                         false)));
                     }
                 }
                 else if (this.session.isAllowed(Action.SHOW,
                                                 this.factory.storagePluralName())) {
                     for (final E resource : resources) {
-                        add(new Hyperlink(resource.display(),
-                                this.pathFactory.showPath(resource.key())));
+                        add(this.hyperlinkFactory.newHyperlink(resource.display(),
+                                                               this.pathFactory.showPath(resource.key(),
+                                                                                         false)));
                     }
                 }
                 else {
@@ -79,7 +83,6 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
                         add(new Label(resource.display()));
                     }
                 }
-                GWT.log(resources.toString(), null);
                 setVisible(true);
             }
         }

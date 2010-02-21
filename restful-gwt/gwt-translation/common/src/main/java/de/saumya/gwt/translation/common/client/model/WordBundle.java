@@ -14,9 +14,10 @@ public class WordBundle extends Resource<WordBundle> {
     private final WordFactory wordFactory;
 
     WordBundle(final Repository repository, final WordBundleFactory factory,
-            final WordFactory wordFactory) {
+            final WordFactory wordFactory, final String locale) {
         super(repository, factory);
         this.wordFactory = wordFactory;
+        this.locale = locale;
     }
 
     public String                   locale;

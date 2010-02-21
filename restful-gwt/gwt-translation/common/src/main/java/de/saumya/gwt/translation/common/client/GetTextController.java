@@ -4,6 +4,7 @@
 package de.saumya.gwt.translation.common.client;
 
 import de.saumya.gwt.session.client.Session;
+import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 
 public class GetTextController {
@@ -15,6 +16,10 @@ public class GetTextController {
     public GetTextController(final GetText getText, final Session session) {
         this.getText = getText;
         this.popup = new TranslationPopupPanel(this, session);
+    }
+
+    public void load(final Locale locale, final boolean isInTranslation) {
+        this.getText.load(locale, isInTranslation);
     }
 
     public void reset(final Phrase phrase) {

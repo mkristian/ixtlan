@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 
@@ -52,7 +53,7 @@ public class Session {
                     cancel();
                     GWT.log("session timeout "
                             + Session.this.authentication.user.login, null);
-                    logout();
+                    doLogout();
                     fireSessionTimeout();
                 }
             }
@@ -69,9 +70,12 @@ public class Session {
     final AuthenticationFactory                              authenticationFactory;
 
     private final ConfigurationFactory                       configurationFactory;
-    private final ResourceChangeListener<Configuration>      resourceChangeListener;
+    private final ResourceChangeListener<Configuration>      configurationListener;
     private final Map<String, Map<String, Collection<Role>>> permissions;
     private final Repository                                 repository;
+    private final PermissionFactory                          permissionFactory;
+    private final ResourcesChangeListener<Permission>        permissionListener;
+    private final ResourceChangeListener<Authentication>     authenticationListener;
 
     public Session(final Repository repository,
             final AuthenticationFactory authenticationFactory,
@@ -80,7 +84,7 @@ public class Session {
         this.repository = repository;
         this.authenticationFactory = authenticationFactory;
         this.configurationFactory = configurationFactory;
-        this.resourceChangeListener = new ResourceChangeListener<Configuration>() {
+        this.configurationListener = new ResourceChangeListener<Configuration>() {
 
             @Override
             public void onChange(final Configuration resource) {
@@ -93,9 +97,27 @@ public class Session {
             public void onError(final Configuration resource) {
             }
         };
+        this.authenticationListener = new ResourceChangeListener<Authentication>() {
 
+            @Override
+            public void onChange(final Authentication resource) {
+                if (resource.isUptodate()) {
+                    doLogin(resource);
+                    Session.this.repository.setAuthenticationToken(resource.token);
+                }
+                else if (!resource.isDeleted()) {
+                    doAccessDenied();
+                }
+            }
+
+            @Override
+            public void onError(final Authentication resource) {
+                doAccessDenied();
+            }
+        };
         this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
-        permissionFactory.all(new ResourcesChangeListener<Permission>() {
+        this.permissionFactory = permissionFactory;
+        this.permissionFactory.all(new ResourcesChangeListener<Permission>() {
 
             @Override
             public void onLoaded(final ResourceCollection<Permission> resources) {
@@ -117,6 +139,15 @@ public class Session {
                 }
             }
         });
+        this.permissionListener = new ResourcesChangeListener<Permission>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<Permission> resources) {
+                if (hasUser()) {
+                    History.fireCurrentHistoryState();
+                }
+            }
+        };
     }
 
     private final List<SessionListener> listeners = new ArrayList<SessionListener>();
@@ -158,8 +189,12 @@ public class Session {
         this.timer.scheduleRepeating(10000);
         GWT.log("login of " + authentication.user.login, null);
         // load configuration and reset the timeout of the timer
-        this.configurationFactory.get(this.resourceChangeListener);
+        this.configurationFactory.get(this.configurationListener);
         fireSuccessfulLogin();
+        if (this.permissions.size() == 0) {
+
+            this.permissionFactory.all(this.permissionListener);
+        }
     }
 
     void doAccessDenied() {
@@ -167,38 +202,23 @@ public class Session {
         fireAccessDenied();
     }
 
+    void doLogout() {
+        this.authentication.destroy();
+        this.authentication = null;
+    }
+
     void login(final String username, final String password) {
         final Authentication authentication = this.authenticationFactory.newResource();
         authentication.login = username;
         authentication.password = password;
-        authentication.addResourceChangeListener(new ResourceChangeListener<Authentication>() {
-
-            @Override
-            public void onChange(final Authentication resource) {
-                if (resource.user.login.equals(username)) {
-                    if (resource.isUptodate()) {
-                        doLogin(resource);
-                        Session.this.repository.setAuthenticationToken(resource.token);
-                    }
-                }
-                else {
-                    doAccessDenied();
-                }
-            }
-
-            @Override
-            public void onError(final Authentication resource) {
-                doAccessDenied();
-            }
-        });
+        authentication.addResourceChangeListener(this.authenticationListener);
         authentication.save();
     }
 
     void logout() {
         this.timer.cancel();
         GWT.log("log out " + this.authentication.user.login, null);
-        this.authentication.destroy();
-        this.authentication = null;
+        doLogout();
         fireLoggedOut();
     }
 
@@ -216,14 +236,13 @@ public class Session {
     }
 
     public boolean isAllowed(final Action action, final String resourceName,
-            final String localeCode) {
-        return isAllowed(action.toString().toLowerCase(),
-                         resourceName,
-                         localeCode);
+            final Locale locale) {
+        return isAllowed(action.toString().toLowerCase(), resourceName, locale);
     }
 
     public boolean isAllowed(final String action, final String resourceName,
-            final String localeCode) {
+            final Locale locale) {
+        final String localeCode = locale.code;
         GWT.log(resourceName + "#" + action + " " + localeCode + "?", null);
         for (final Group group : this.authentication.user.groups) {
             GWT.log(group.toString(), null);

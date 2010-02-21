@@ -27,7 +27,12 @@ public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
 
     @Override
     public PhraseBook newResource() {
-        return new PhraseBook(this.repository, this, this.factory);
+        return new PhraseBook(this.repository, this, this.factory, null);
+    }
+
+    @Override
+    public PhraseBook newResource(final String key) {
+        return new PhraseBook(this.repository, this, this.factory, key);
     }
 
     @Override

@@ -30,13 +30,15 @@ import de.saumya.gwt.translation.common.client.model.TranslationFactory;
 import de.saumya.gwt.translation.common.client.model.WordBundleFactory;
 import de.saumya.gwt.translation.common.client.model.WordFactory;
 import de.saumya.gwt.translation.common.client.route.ScreenController;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.LocaleController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.gui.client.views.configuration.ConfigurationScreen;
 import de.saumya.gwt.translation.gui.client.views.groups.GroupScreen;
 import de.saumya.gwt.translation.gui.client.views.locales.LocaleScreen;
 import de.saumya.gwt.translation.gui.client.views.phrases.PhraseScreen;
-import de.saumya.gwt.translation.gui.client.views.session.LoginPanel;
+import de.saumya.gwt.translation.gui.client.views.session.DefaultLoginScreen;
 import de.saumya.gwt.translation.gui.client.views.session.DefaultSessionScreen;
 import de.saumya.gwt.translation.gui.client.views.users.UserScreen;
 
@@ -60,7 +62,6 @@ public class GUIContainer {
                                                                    this.notifications,
                                                                    this.localeFactory,
                                                                    this.groupFactory);
-
     public final WordFactory          wordFactory          = new WordFactory(this.repository,
                                                                    this.notifications);
     public final TranslationFactory   translationFactory   = new TranslationFactory(this.repository,
@@ -100,45 +101,55 @@ public class GUIContainer {
 
     public final LoadingNotice        loadingNotice        = new LoadingNotice(this.getTextController);
 
-    public final DefaultSessionScreen         sessionPanel         = new DefaultSessionScreen(this.getTextController,
-                                                                   this.getText,
+    public final LocaleController     localeController     = new LocaleController(this.localeFactory);
+    public final HyperlinkFactory     hyperlinkFactory     = new HyperlinkFactory(this.getTextController,
+                                                                   this.localeController);
+    public final DefaultSessionScreen sessionPanel         = new DefaultSessionScreen(this.getTextController,
                                                                    this.session,
                                                                    this.notifications,
-                                                                   this.localeFactory);
+                                                                   this.localeController);
     public final ScreenController     screenController     = new ScreenController(this.sessionPanel,
                                                                    this.getTextController,
-                                                                   this.session);
-    public final LoginPanel           loginPanel           = new LoginPanel(this.notifications);
+                                                                   this.session,
+                                                                   this.localeFactory,
+                                                                   this.hyperlinkFactory);
+    public final DefaultLoginScreen   loginPanel           = new DefaultLoginScreen(this.notifications);
     public final PhraseScreen         phraseScreen         = new PhraseScreen(this.loadingNotice,
                                                                    this.getTextController,
                                                                    this.phraseFactory,
                                                                    new ResourceBindings<Phrase>(),
                                                                    this.session,
-                                                                   this.notifications);
+                                                                   this.notifications,
+                                                                   this.hyperlinkFactory,
+                                                                   this.localeController);
     public final ConfigurationScreen  configurationScreen  = new ConfigurationScreen(this.loadingNotice,
                                                                    this.configurationFactory,
                                                                    new ResourceBindings<Configuration>(),
                                                                    this.getTextController,
                                                                    this.session,
-                                                                   this.notifications);
+                                                                   this.notifications,
+                                                                   this.hyperlinkFactory);
     public final UserScreen           userScreen           = new UserScreen(this.loadingNotice,
                                                                    this.getTextController,
                                                                    this.userFactory,
                                                                    this.session,
                                                                    new ResourceBindings<User>(),
-                                                                   this.notifications);
+                                                                   this.notifications,
+                                                                   this.hyperlinkFactory);
     public final GroupScreen          groupScreen          = new GroupScreen(this.loadingNotice,
                                                                    this.getTextController,
                                                                    this.groupFactory,
                                                                    this.session,
                                                                    new ResourceBindings<Group>(),
-                                                                   this.notifications);
+                                                                   this.notifications,
+                                                                   this.hyperlinkFactory);
     public final LocaleScreen         localeScreen         = new LocaleScreen(this.loadingNotice,
                                                                    this.getTextController,
                                                                    this.localeFactory,
                                                                    this.session,
                                                                    new ResourceBindings<Locale>(),
-                                                                   this.notifications);
+                                                                   this.notifications,
+                                                                   this.hyperlinkFactory);
 
     public GUIContainer(final Panel panel) {
         // add the screens to the screen controller which hangs them into a

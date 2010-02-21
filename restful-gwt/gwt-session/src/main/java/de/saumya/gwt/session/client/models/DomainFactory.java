@@ -30,6 +30,11 @@ public class DomainFactory extends ResourceFactory<Domain> {
     }
 
     @Override
+    public Domain newResource(final String id) {
+        return new Domain(this.repository, this, id);
+    }
+
+    @Override
     public String defaultSearchParameterName() {
         return keyName();
     }

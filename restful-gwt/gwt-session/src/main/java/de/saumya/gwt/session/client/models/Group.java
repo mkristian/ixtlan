@@ -17,8 +17,9 @@ public class Group extends ResourceWithID<Group> {
     private final DomainFactory domainFactory;
 
     protected Group(final Repository repository, final GroupFactory factory,
-            final LocaleFactory localeFactory, final DomainFactory domainFactory) {
-        super(repository, factory);
+            final LocaleFactory localeFactory,
+            final DomainFactory domainFactory, final int id) {
+        super(repository, factory, id);
         this.localeFactory = localeFactory;
         this.domainFactory = domainFactory;
     }

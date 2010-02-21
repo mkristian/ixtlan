@@ -19,8 +19,8 @@ public class Translation extends ResourceWithID<Translation> {
 
     protected Translation(final Repository repository,
             final ResourceFactory<Translation> factory,
-            final UserFactory userFactory) {
-        super(repository, factory);
+            final UserFactory userFactory, final int id) {
+        super(repository, factory, id);
         this.userFactory = userFactory;
     }
 

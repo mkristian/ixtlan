@@ -8,7 +8,10 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.LocaleController;
+import de.saumya.gwt.translation.common.client.widget.Locatable;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -17,7 +20,7 @@ import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
 
-public class PhraseScreen extends ResourceScreen<Phrase> {
+public class PhraseScreen extends ResourceScreen<Phrase> implements Locatable {
 
     static class PhraseHeaders extends ResourceHeaderPanel<Phrase> {
 
@@ -36,7 +39,9 @@ public class PhraseScreen extends ResourceScreen<Phrase> {
             final GetTextController getTextController,
             final PhraseFactory phraseFactory,
             final ResourceBindings<Phrase> binding, final Session session,
-            final ResourceNotifications notifications) {
+            final ResourceNotifications notifications,
+            final HyperlinkFactory hyperlinkFactory,
+            final LocaleController localeController) {
         super(loadingNotice,
                 phraseFactory,
                 session,
@@ -48,13 +53,16 @@ public class PhraseScreen extends ResourceScreen<Phrase> {
                                 getTextController),
                         new ResourceCollectionListing<Phrase>(session,
                                 phraseFactory,
-                                getTextController)),
+                                getTextController,
+                                hyperlinkFactory)),
                 new PhraseActions(getTextController,
                         binding,
                         session,
                         phraseFactory,
-                        notifications),
-                notifications);
+                        notifications,
+                        hyperlinkFactory),
+                notifications,
+                hyperlinkFactory);
     }
 
     @Override
@@ -62,4 +70,11 @@ public class PhraseScreen extends ResourceScreen<Phrase> {
         throw new UnsupportedOperationException("phrase does not show new");
     }
 
+    @Override
+    public void reset(final String locale) {
+        if (this.display.isVisible()) {
+            // final Phrase phrase = factory.
+            // this.actions.reset(resource)
+        }
+    }
 }

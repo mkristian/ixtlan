@@ -33,6 +33,9 @@ public class ResourceFields<E extends Resource<E>> extends FlowPanel implements
 
     public void reset(final E resource) {
         this.bindings.pullFromResource(resource);
+        if (resource.isImmutable() && !resource.isNew()) {
+            setReadOnly(true);
+        }
         setVisible(true);
     }
 

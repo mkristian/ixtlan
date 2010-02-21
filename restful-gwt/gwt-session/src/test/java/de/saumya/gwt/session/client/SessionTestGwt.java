@@ -92,8 +92,8 @@ public class SessionTestGwt extends GWTTestCase {
                     final Group root = groupFactory.newResource();
                     root.name = "root";
                     root.locales = SessionTestGwt.this.localeFactory.newResources();
-                    final Locale en = SessionTestGwt.this.localeFactory.newResource();
-                    en.code = "en";
+                    final Locale en = SessionTestGwt.this.localeFactory.newResource("en");
+                    // en.code = "en";
                     root.locales = SessionTestGwt.this.localeFactory.newResources();
                     root.locales.add(en);
                     user.groups.add(root);
@@ -206,8 +206,8 @@ public class SessionTestGwt extends GWTTestCase {
 
     public void testIsAllowedWithLocale() {
         this.session.login("dhamma", "mudita");
-
-        assertTrue(this.session.isAllowed("create", "user", "en"));
+        final Locale en = this.localeFactory.newResource("en");
+        assertTrue(this.session.isAllowed("create", "user", en));
     }
 
     public void testNotIsAllowed() {
@@ -219,9 +219,9 @@ public class SessionTestGwt extends GWTTestCase {
 
     public void testNotIsAllowedWithLocale() {
         this.session.login("dhamma", "mudita");
-
-        assertFalse(this.session.isAllowed("create", "user", "de"));
-        assertFalse(this.session.isAllowed("update", "user", "de"));
-        assertFalse(this.session.isAllowed("create", "locale", "de"));
+        final Locale de = this.localeFactory.newResource("de");
+        assertFalse(this.session.isAllowed("create", "user", de));
+        assertFalse(this.session.isAllowed("update", "user", de));
+        assertFalse(this.session.isAllowed("create", "locale", de));
     }
 }

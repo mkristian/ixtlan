@@ -18,35 +18,45 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
 import de.saumya.gwt.session.client.Session.Action;
+import de.saumya.gwt.session.client.models.Locale;
+import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class ScreenController {
 
     private final TabPanel          bodyPanel  = new TabPanel();
 
-    private final GetTextController getText;
+    private final GetTextController getTextController;
 
     private final ScreenDispatcher  dispatcher = new ScreenDispatcher();
 
     private final List<String>      names      = new ArrayList<String>();
 
+    private final LocaleFactory     localeFactory;
+
+    private final HyperlinkFactory  hyperlinkFactory;
+
     public ScreenController(final SessionScreen panel,
-            final GetTextController getText, final Session session) {
-        this.getText = getText;
+            final GetTextController getTextController, final Session session,
+            final LocaleFactory localeFactory,
+            final HyperlinkFactory hyperlinkFactory) {
+        this.getTextController = getTextController;
+        this.localeFactory = localeFactory;
+        this.hyperlinkFactory = hyperlinkFactory;
         panel.add(this.bodyPanel);
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
 
             @Override
             public void onValueChange(final ValueChangeEvent<String> event) {
                 if (event.getValue().length() > 0 && session.hasUser()) {
-                    GWT.log("dispatch: " + event.getValue(), null);
-                    final ScreenPath path = new ScreenPath(event.getValue());
-
-                    ScreenController.this.bodyPanel.selectTab(ScreenController.this.names.indexOf(path.controllerName));
-                    ScreenController.this.dispatcher.dispatch(path);
+                    GWT.log("dispatch history change: " + event.getValue(),
+                            null);
+                    dispatch(new ScreenPath(event.getValue()));
                 }
             }
+
         });
         session.addSessionListern(new SessionListenerAdapter() {
 
@@ -59,27 +69,32 @@ public class ScreenController {
                     bar.setTabEnabled(i, session.isAllowed(Action.INDEX, name)
                             || session.isAllowed(Action.SHOW, name)
                             || session.isAllowed(Action.UPDATE, name));
-
-                    // TODO something better when no Tab gets enabled
-                    GWT.log(bar.toString(), null);
                 }
-                final String pathValue = History.getToken().length() == 0
-                        ? "/"
-                        : History.getToken();
-                GWT.log(pathValue, null);
-                final ScreenPath path = new ScreenPath(pathValue);
-
-                ScreenController.this.bodyPanel.selectTab(ScreenController.this.names.indexOf(path.controllerName));
-                ScreenController.this.dispatcher.dispatch(path);
+                // final String pathValue = History.getToken().length() == 0
+                // ? "/"
+                // : History.getToken();
+                dispatch(new ScreenPath(History.getToken()));
             }
 
         });
     }
 
+    private void dispatch(final ScreenPath path) {
+        if (path.controllerName != null) {
+            this.bodyPanel.selectTab(this.names.indexOf(path.controllerName));
+        }
+        else {
+            // select no tab !!!
+            this.bodyPanel.selectTab(-1);
+        }
+        this.dispatcher.dispatch(path);
+        switchLocale(path.locale);
+    }
+
     public void addScreen(final Screen<?> screen, final String name) {
-        addScreen(screen, new TranslatableHyperlink(name,
-                "/" + name,
-                this.getText));
+        addScreen(screen,
+                  this.hyperlinkFactory.newTranslatableHyperlink(name, "/"
+                          + name));
     }
 
     public void addScreen(final Screen<?> screen,
@@ -87,5 +102,19 @@ public class ScreenController {
         this.bodyPanel.add((Widget) screen, link);
         this.dispatcher.register(link.getCode(), screen);
         this.names.add(link.getCode());
+    }
+
+    private void switchLocale(String localeCode) {
+        if (localeCode == null || localeCode.length() == 0) {
+            localeCode = Locale.DEFAULT_CODE;
+        }
+        boolean isInTranslation = false;
+        if (localeCode.startsWith("_")) {
+            localeCode = localeCode.substring(1);
+            isInTranslation = true;
+        }
+        final Locale locale = this.localeFactory.get(localeCode);
+        // locale.code = localeCode;
+        this.getTextController.load(locale, isInTranslation);
     }
 }

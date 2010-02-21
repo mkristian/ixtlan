@@ -63,6 +63,11 @@ public class SingletonTestGwt extends PersistenceTestGwt {
         }
 
         @Override
+        public Singleton newResource(final String key) {
+            return new Singleton(this.repository, this);
+        }
+
+        @Override
         public String defaultSearchParameterName() {
             return null;
         }

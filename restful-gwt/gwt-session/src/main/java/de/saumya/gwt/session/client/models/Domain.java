@@ -11,7 +11,13 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
 public class Domain extends Resource<Domain> {
 
     Domain(final Repository repository, final ResourceFactory<Domain> factory) {
+        this(repository, factory, null);
+    }
+
+    Domain(final Repository repository, final ResourceFactory<Domain> factory,
+            final String id) {
         super(repository, factory);
+        this.id = id;
     }
 
     public String    id;

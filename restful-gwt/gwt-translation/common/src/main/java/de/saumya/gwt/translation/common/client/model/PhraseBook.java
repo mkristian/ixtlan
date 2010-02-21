@@ -14,9 +14,10 @@ public class PhraseBook extends Resource<PhraseBook> {
     private final PhraseFactory phraseFactory;
 
     PhraseBook(final Repository repository, final PhraseBookFactory factory,
-            final PhraseFactory phraseFactory) {
+            final PhraseFactory phraseFactory, final String locale) {
         super(repository, factory);
         this.phraseFactory = phraseFactory;
+        this.locale = locale;
     }
 
     public String                     locale;

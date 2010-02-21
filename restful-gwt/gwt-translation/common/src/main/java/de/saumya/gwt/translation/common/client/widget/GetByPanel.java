@@ -15,9 +15,10 @@ import de.saumya.gwt.translation.common.client.route.PathFactory;
 public class GetByPanel extends TextBoxWithButton {
 
     public GetByPanel(final GetTextController getTextController,
-            final ResourceFactory<?> factory, final Session session) {
+            final ResourceFactory<?> factory, final Session session,
+            final HyperlinkFactory hyperlinkFactory) {
         super(getTextController);
-        final PathFactory pathFactory = new PathFactory(factory.storagePluralName());
+        final PathFactory pathFactory = hyperlinkFactory.newPathFactory(factory.storagePluralName());
         setStyleName("get-by");
 
         this.button.setText("get by " + factory.storageName() + " key");

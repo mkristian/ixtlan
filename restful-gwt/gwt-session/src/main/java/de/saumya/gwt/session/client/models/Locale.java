@@ -17,15 +17,28 @@ public class Locale extends Resource<Locale> {
     public static final String ALL_CODE     = "ALL";
 
     Locale(final Repository repository, final LocaleFactory factory) {
-        super(repository, factory);
+        this(repository, factory, null);
+        // throw new RuntimeException("immutable - needs key");
     }
 
+    Locale(final Repository repository, final LocaleFactory factory,
+            final String code) {
+        super(repository, factory);
+        this.code = code;
+    }
+
+    // public final String code;
     public String    code;
     public Timestamp createdAt;
 
     @Override
     public String key() {
         return this.code;
+    }
+
+    @Override
+    public boolean isImmutable() {
+        return true;
     }
 
     @Override
@@ -36,7 +49,7 @@ public class Locale extends Resource<Locale> {
 
     @Override
     protected void fromXml(final Element root) {
-        this.code = getString(root, "code");
+        // this.code = getString(root, "code");
         this.createdAt = getTimestamp(root, "created_at");
     }
 
