@@ -7,7 +7,7 @@ module Ixtlan
     
     def call(env)
       ['REQUEST_PATH','PATH_INFO','REQUEST_URI','SCRIPT_NAME'].each do |key|
-        if(env[key] =~ /[.]xml$/)
+        if(env[key] =~ /[.]xml([?].*)?$/)
           env[key].gsub!(/^\/#{@rootpath}/, "")
         end
       end
