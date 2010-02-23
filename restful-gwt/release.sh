@@ -11,7 +11,7 @@ find -name "pom.xml" | xargs git add
 git ci -m "release of version ${VERSION}" || exit
 git tag restful_${VERSION}
 
-mvn clean deploy -DskiptTest=true
+mvn clean deploy -DskipTests=true
 
 find -name "pom.xml" | xargs sed -i s/${VERSION}/${NEXT}-SNAPSHOT/
 
