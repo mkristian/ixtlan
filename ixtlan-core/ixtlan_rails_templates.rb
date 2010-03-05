@@ -128,6 +128,7 @@ if ENV['RAILS_ENV']
   require 'ixtlan/optimistic_persistence'
   require 'ixtlan/monkey_patches'
 end
+require 'datamapper4rails'
 CODE
 
 # logger config
