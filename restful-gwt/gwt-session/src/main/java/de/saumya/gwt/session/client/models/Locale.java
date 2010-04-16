@@ -18,21 +18,24 @@ public class Locale extends Resource<Locale> {
 
     Locale(final Repository repository, final LocaleFactory factory) {
         this(repository, factory, null);
-        throw new RuntimeException("immutable - needs key");
+        // can not throw exception to allow to create Locales
+        // throw new RuntimeException("immutable - needs key");
     }
 
     Locale(final Repository repository, final LocaleFactory factory,
             final String code) {
         super(repository, factory);
-        if (code == null) {
-            throw new IllegalArgumentException("needs code");
-        }
+        // can not throw exception to allow to create Locales
+
+        // if (code == null) {
+        // throw new IllegalArgumentException("needs code");
+        // }
         this.code = code;
     }
 
-    public final String code;
-    // public String code;
-    public Timestamp    createdAt;
+    // can not be final to allow to create Locales
+    public String    code;
+    public Timestamp createdAt;
 
     @Override
     public String key() {

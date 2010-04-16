@@ -8,9 +8,9 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.NoSearchNoGetByResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
@@ -113,7 +113,7 @@ public class ConfigurationScreen extends SingletonResourceScreen<Configuration> 
                 new ResourcePanel<Configuration>(new ConfigurationHeaders(getTextController),
                         new ConfigurationFields(getTextController, bindings)),
                 // default action panel (save, delete, new, etc buttons)
-                new DefaultResourceActionPanel<Configuration>(getTextController,
+                new NoSearchNoGetByResourceActionPanel<Configuration>(getTextController,
                         bindings,
                         session,
                         configFactory,

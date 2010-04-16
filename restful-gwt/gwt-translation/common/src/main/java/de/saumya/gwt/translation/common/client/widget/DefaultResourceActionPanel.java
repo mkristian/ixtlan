@@ -149,8 +149,8 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
         final ComplexPanel actionButtons = new FlowPanel();
         actionButtons.setStyleName("action-buttons");
         this.reload = button(actionButtons, "reload", this.reloadHandler);
-        this.edit = button(actionButtons, "edit", this.editHandler);
         this.save = button(actionButtons, "save", this.saveHandler);
+        this.edit = button(actionButtons, "edit", this.editHandler);
         this.delete = button(actionButtons, "delete", this.destroyHandler);
 
         if (factory.keyName() != null) { // unless it is a singleton resource
@@ -216,24 +216,27 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     private void resetVisibility() {
         if (this.resource != null) {
             // TODO this status check needs improvement
-            this.delete.setVisible(!this.resource.isNew()
+            this.delete.setVisible(this.resource.key() != null
+                    && !this.resource.isNew()
                     && !this.resource.isDeleted()
                     && this.session.isAllowed(Action.DESTROY, this.resourceName));
 
             this.reload.setVisible(!this.resource.isNew()
                     && !this.resource.isDeleted()
                     && this.session.isAllowed(Action.SHOW, this.resourceName));
-            this.edit.setVisible(this.isReadOnly && !this.resource.isNew()
-                    && !this.resource.isDeleted()
+            this.edit.setVisible(this.resource.key() != null && this.isReadOnly
+                    && !this.resource.isNew() && !this.resource.isDeleted()
                     && !this.resource.isImmutable()
                     && this.session.isAllowed(Action.UPDATE, this.resourceName));
             this.save.setVisible(!this.isReadOnly && !this.resource.isNew()
                     && !this.resource.isDeleted()
                     && !this.resource.isImmutable()
                     && this.session.isAllowed(Action.UPDATE, this.resourceName));
-            this.create.setVisible(this.resource.isNew()
+            this.create.setVisible(this.resource.key() != null
+                    && this.resource.isNew()
                     && this.session.isAllowed(Action.CREATE, this.resourceName));
-            this.fresh.setVisible(!this.resource.isNew()
+            this.fresh.setVisible(this.resource.key() != null
+                    && !this.resource.isNew()
                     && this.session.isAllowed(Action.CREATE, this.resourceName));
         }
     }
