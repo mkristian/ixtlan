@@ -49,16 +49,18 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
     }
 
     public void testRetrieveAll() {
-        this.repository.addXmlResponse(resourcesXml());
+        if (resourcesXml() != null) {
+            this.repository.addXmlResponse(resourcesXml());
 
-        final ResourceCollection<T> resources = this.factory.all(this.countingResourcesListener);
+            final ResourceCollection<T> resources = this.factory.all(this.countingResourcesListener);
 
-        assertEquals(2, this.countingResourcesListener.count());
-        int id = 0;
-        final String[] xmls = { resource1Xml(), resource2Xml() };
-        for (final Resource<T> rsrc : resources) {
-            assertTrue(this.resource.isUptodate());
-            assertEquals(xmls[id++], rsrc.toXml());
+            assertEquals(2, this.countingResourcesListener.count());
+            int id = 0;
+            final String[] xmls = { resource1Xml(), resource2Xml() };
+            for (final Resource<T> rsrc : resources) {
+                assertTrue(this.resource.isUptodate());
+                assertEquals(xmls[id++], rsrc.toXml());
+            }
         }
     }
 
@@ -82,17 +84,21 @@ abstract public class AbstractResourceTestGwt<T extends Resource<T>> extends
     }
 
     public void testMarshallingUnmarshallingResource() {
-        final Resource<T> resource = this.factory.newResource();
+        final Resource<T> resource = this.resource.isImmutable()
+                ? this.factory.newResource(keyValue())
+                : this.factory.newResource();
         resource.fromXml(marshallingXml());
 
         assertEquals(marshallingXml(), resource.toXml());
     }
 
     public void testMarshallingUnmarshallingResources() {
-        final ResourceCollection<T> resources = new ResourceCollection<T>(this.factory);
-        resources.fromXml(resourcesXml());
+        if (resourcesXml() != null) {
+            final ResourceCollection<T> resources = new ResourceCollection<T>(this.factory);
+            resources.fromXml(resourcesXml());
 
-        assertEquals(resourcesXml(), resources.toXml());
+            assertEquals(resourcesXml(), resources.toXml());
+        }
     }
 
     protected String resourceNewXml() {
