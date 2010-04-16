@@ -32,10 +32,10 @@ CODE
 end
 
 # ixtlan gems
-gem 'ixtlan', :version => '0.2.2'
+gem 'ixtlan'#, :version => '0.2.2'
 
 # this pulls in rack_datamapper
-gem 'datamapper4rails', :version => '0.4.0'
+#gem 'datamapper4rails', :version => '0.4.0'
 
 # assume sqlite3 to be database
 gem 'do_sqlite3'
@@ -128,7 +128,9 @@ if ENV['RAILS_ENV']
   require 'ixtlan/optimistic_persistence'
   require 'ixtlan/monkey_patches'
 end
+# auto require to load needed libraries . . .
 require 'datamapper4rails'
+require 'slf4r'
 CODE
 
 # logger config

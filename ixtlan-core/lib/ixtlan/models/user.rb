@@ -103,7 +103,9 @@ module Ixtlan
         protected
 
         def to_xml_document(opts={}, doc = nil)
-          opts.merge!({:exclude => [:hashed_password], :methods => [:groups]})
+          unless(opts[:methods] || opts[:exclude])
+            opts.merge!({:exclude => [:hashed_password], :methods => [:groups]})
+          end
           to_x(opts, doc)
         end
       end
