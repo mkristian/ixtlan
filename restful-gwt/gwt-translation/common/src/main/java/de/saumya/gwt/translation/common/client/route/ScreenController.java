@@ -99,9 +99,16 @@ public class ScreenController {
 
     public void addScreen(final Screen<?> screen,
             final TranslatableHyperlink link) {
-        this.bodyPanel.add((Widget) screen, link);
+        final int index = this.names.indexOf(link.getCode());
+        if (index < 0) {
+            this.bodyPanel.add((Widget) screen, link);
+            this.names.add(link.getCode());
+        }
+        else {
+            this.bodyPanel.remove(index);
+            this.bodyPanel.insert((Widget) screen, link, index);
+        }
         this.dispatcher.register(link.getCode(), screen);
-        this.names.add(link.getCode());
     }
 
     private void switchLocale(String localeCode) {
