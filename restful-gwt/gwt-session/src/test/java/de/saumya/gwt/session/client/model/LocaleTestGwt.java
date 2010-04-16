@@ -60,7 +60,8 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     protected String changedValue() {
-        return "en_JP";
+        // is immutable
+        return "en";
     }
 
     @Override

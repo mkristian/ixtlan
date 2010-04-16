@@ -13,9 +13,9 @@ public class ConfigurationFactory extends ResourceFactory<Configuration> {
     private final LocaleFactory localeFactory;
 
     public ConfigurationFactory(final Repository repository,
-            final ResourceNotifications notification,
+            final ResourceNotifications notifications,
             final UserFactory userFactory, final LocaleFactory localeFactory) {
-        super(repository, notification);
+        super(repository, notifications);
         this.userFactory = userFactory;
         this.localeFactory = localeFactory;
     }
