@@ -3,8 +3,6 @@
  */
 package de.saumya.gwt.translation.gui.client.views.configuration;
 
-import java.util.Map;
-
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Configuration;
@@ -17,11 +15,11 @@ import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
-import de.saumya.gwt.translation.common.client.widget.ResourceScreen;
+import de.saumya.gwt.translation.common.client.widget.SingletonResourceScreen;
 import de.saumya.gwt.translation.gui.client.bindings.IntegerTextBoxBinding;
 import de.saumya.gwt.translation.gui.client.bindings.TextBoxBinding;
 
-public class ConfigurationScreen extends ResourceScreen<Configuration> {
+public class ConfigurationScreen extends SingletonResourceScreen<Configuration> {
 
     private static class ConfigurationFields extends
             ResourceFields<Configuration> {
@@ -73,6 +71,20 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                     }
                 },
                 254);
+            add("email address of sender for error notification",
+                new TextBoxBinding<Configuration>() {
+
+                    @Override
+                    public void pullFrom(final Configuration resource) {
+                        setText(resource.notificationSenderEmail);
+                    }
+
+                    @Override
+                    public void pushInto(final Configuration resource) {
+                        resource.notificationSenderEmail = getText();
+                    }
+                },
+                64);
         }
     }
 
@@ -109,30 +121,6 @@ public class ConfigurationScreen extends ResourceScreen<Configuration> {
                         hyperlinkFactory),
                 notifications,
                 hyperlinkFactory);
-    }
-
-    // TODO put all these methods below except reset(...) into
-    // SingletonResourceScreen
-    @Override
-    public void showAll(final Map<String, String> query) {
-        // singletons act on urls which look like a collection of resources =>
-        // no showNew, showRead, showEdit. only showAll
-        showSingleton();
-    }
-
-    @Override
-    public void showNew() {
-        throw new UnsupportedOperationException("configuration has no 'new'");
-    }
-
-    @Override
-    public void showRead(final String key) {
-        throw new UnsupportedOperationException("configuration has no 'show'");
-    }
-
-    @Override
-    public void showEdit(final String key) {
-        throw new UnsupportedOperationException("configuration has no 'edit'");
     }
 
 }
