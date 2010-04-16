@@ -196,14 +196,15 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     public E get(final String key, final ResourceChangeListener<E> listener,
             final ResourceNotifications notifications) {
         final E resource = getResource(key);
+        resource.addResourceChangeListener(listener);
         if (resource.isImmutable() && resource.state != State.NEW) {
+            resource.fireResourceChangeEvents(resource.state.message);
             return resource;
         }
         if (notifications != null) {
             resource.setResourceNotification(notifications);
         }
         resource.state = State.TO_BE_LOADED;
-        resource.addResourceChangeListener(listener);
         this.repository.get(storagePluralName(),
                             key,
                             new ResourceRequestCallback<E>(resource, this));
