@@ -2,10 +2,12 @@ module Ixtlan
   module Controllers
     module ConfigurationsController
 
+      CONFIGURATION = Object.full_const_get(::Ixtlan::Models::CONFIGURATION)
+
       # GET /configuration
       # GET /configuration.xml
       def show
-        @configuration = Configuration.instance
+        @configuration = CONFIGURATION.instance
 
         respond_to do |format|
           format.html # show.html.erb
@@ -15,13 +17,13 @@ module Ixtlan
 
       # GET /configuration/edit
       def edit
-        @configuration = Configuration.instance
+        @configuration = CONFIGURATION.instance
       end
 
       # PUT /configuration
       # PUT /configuration.xml
       def update
-        @configuration = Configuration.instance
+        @configuration = CONFIGURATION.instance
         @configuration.current_user = current_user
 
         locales =  params[:configuration].delete(:locales)
