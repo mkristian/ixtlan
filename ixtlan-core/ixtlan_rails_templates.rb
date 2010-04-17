@@ -197,7 +197,9 @@ migration 3, :create_locale do
     # get/create default locale
     Locale.default
     # get/create "every" locale
-    Locale.every
+    Locale.every    
+
+    Ixtlan::Models::GroupLocaleUser.create(:group => Group.first, :user => User.first, :locale => Locale.every)
   end
 
   down do
@@ -400,9 +402,12 @@ ixtlan_model 'group'
 ixtlan_model 'i18n_text'
 
 # TODO rename TextsController to PhraseController i.e. make a new one
-ixtlan_controller "phrases", nil
+ixtlan_controller "phrases"
 
 # locale model/controller
+# TODO add to controller
+#  skip_before_filter :guard, :only => :show
+#  skip_before_filter :authenticate, :only => :show
 generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
 ixtlan_model "locale"
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
@@ -464,7 +469,8 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   rescue_from Ixtlan::GuardException, :with => :page_not_found
   rescue_from Ixtlan::PermissionDenied, :with => :page_not_found
 
-  # rest is standard rails or datamapper
+  #standard rails or datamapper/dataobjects
+  rescue_from DataObjects::SQLError, :with => :internal_server_error
   rescue_from DataMapper::ObjectNotFoundError, :with => :page_not_found
   rescue_from ActionController::RoutingError, :with => :page_not_found
   rescue_from ActionController::UnknownAction, :with => :page_not_found
