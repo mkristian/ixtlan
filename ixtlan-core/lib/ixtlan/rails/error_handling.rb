@@ -9,7 +9,7 @@ module Ixtlan
       end
 
       def internal_server_error(exception)
-        dump_error(exception, Object.full_const_get(::Ixtlan::Models.CONFIGURATION).instance)
+        dump_error(exception, Object.full_const_get(::Ixtlan::Models::CONFIGURATION).instance)
         status = :internal_server_error
         error_page(:internal_server_error, exception) do |exception|
           "internal server error: #{exception.class.name}"
@@ -50,7 +50,8 @@ module Ixtlan
       def dump_error(exception, config)
         log_user_error(exception)
         dumper = DumpError.new(config.notification_sender_email, 
-                               config.notification_recipient_email)
+                               config.notification_recipient_emails,
+                               config.errors_dump_directory)
         dumper.dump(self, exception)
       end
     end
@@ -74,9 +75,10 @@ module Ixtlan
     
     class DumpError
       
-      def initialize(email_from, email_to, errors_dir = "#{RAILS_ROOT}/log/errors")
-        FileUtils.mkdir_p(errors_dir)
-        @errors_dir = File.new(errors_dir)
+      def initialize(email_from, email_to, errors_dir = nil)
+        errors_dir ||= "#{RAILS_ROOT}/log/errors"
+        FileUtils.mkdir_p(errors_dir || "#{RAILS_ROOT}/log/errors")
+        @errors_dir = Dir.new(errors_dir)
         @email_from = email_from
         @email_to = email_to
       end
