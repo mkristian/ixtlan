@@ -25,6 +25,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
     private User                resource;
 
     private static final String RESOURCE_XML = "<user>"
+                                                     + "<id>1</id>"
                                                      + "<login>root</login>"
                                                      + "<name>root user</name>"
                                                      + "<email>root@example.com</email>"
@@ -36,6 +37,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
     protected Resource<User> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.id = 1;
         this.resource.login = "root";
         this.resource.name = "root user";
         this.resource.email = "root@example.com";
@@ -50,7 +52,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
     @Override
     protected String resourceNewXml() {
         return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
-                                         "");
+                                         "").replace("<id>1</id>", "");
     }
 
     @Override
@@ -66,6 +68,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
     }
 
     private final static String XML = "<user>"
+                                            + "<id>1</id>"
                                             + "<login>root</login>"
                                             + "<name>root user</name>"
                                             + "<email>root@com</email>"
@@ -131,7 +134,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
 
     @Override
     protected String keyValue() {
-        return "root";
+        return "1";
     }
 
     @Override
@@ -146,7 +149,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
 
     @Override
     protected String resource2Xml() {
-        return RESOURCE_XML.replace(">root<", ">admin<");
+        return RESOURCE_XML.replace(">root<", ">admin<").replace(">1<", ">2<");
     }
 
     @Override

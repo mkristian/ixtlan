@@ -1,10 +1,10 @@
 package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class UserFactory extends ResourceFactory<User> {
+public class UserFactory extends ResourceFactoryWithID<User> {
 
     private final LocaleFactory localeFactory;
     private final GroupFactory  groupFactory;
@@ -24,20 +24,16 @@ public class UserFactory extends ResourceFactory<User> {
 
     @Override
     public String keyName() {
-        return "login";
+        return "id";
     }
 
     @Override
-    public User newResource() {
+    public User newResource(final int key) {
         return new User(this.repository,
                 this,
                 this.localeFactory,
-                this.groupFactory);
-    }
-
-    @Override
-    public User newResource(final String key) {
-        return newResource();
+                this.groupFactory,
+                key);
     }
 
     @Override

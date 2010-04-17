@@ -10,17 +10,18 @@ import java.util.HashSet;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceWithID;
 
-public class User extends Resource<User> {
+public class User extends ResourceWithID<User> {
 
     private final LocaleFactory localeFactory;
     private final GroupFactory  groupFactory;
 
     protected User(final Repository repository, final UserFactory factory,
-            final LocaleFactory localeFactory, final GroupFactory groupFactory) {
-        super(repository, factory);
+            final LocaleFactory localeFactory, final GroupFactory groupFactory,
+            final int id) {
+        super(repository, factory, id);
         this.localeFactory = localeFactory;
         this.groupFactory = groupFactory;
     }
@@ -37,11 +38,12 @@ public class User extends Resource<User> {
 
     @Override
     public String key() {
-        return this.login;
+        return this.id + "";
     }
 
     @Override
     protected void appendXml(final StringBuilder buf) {
+        super.appendXml(buf);
         appendXml(buf, "login", this.login);
         appendXml(buf, "name", this.name);
         appendXml(buf, "email", this.email);
@@ -53,6 +55,7 @@ public class User extends Resource<User> {
 
     @Override
     public void fromXml(final Element root) {
+        super.fromXml(root);
         this.login = getString(root, "login");
         this.name = getString(root, "name");
         this.email = getString(root, "email");
@@ -66,6 +69,7 @@ public class User extends Resource<User> {
 
     @Override
     public void toString(final StringBuilder buf) {
+        super.toString(buf);
         toString(buf, "login", this.login);
         toString(buf, "name", this.name);
         toString(buf, "email", this.email);
