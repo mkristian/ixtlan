@@ -19,7 +19,7 @@ module Ixtlan
 
       property :email, String, :nullable => false, :format => :email_address, :nullable => false, :length => 8..64, :index => :unique_index, :field => "mail"
 
-      property :language, String, :nullable => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
+      property :language, String, :nullable => true, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
 
       property :hashed_password, String, :nullable => true, :length => 128, :accessor => :private, :field => "userpassword"
 

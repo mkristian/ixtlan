@@ -1,5 +1,6 @@
 require 'dm-core'
 require 'ixtlan/modified_by'
+require 'dm-serializer'
 module Ixtlan
   module Models
     class Configuration
@@ -67,7 +68,7 @@ module Ixtlan
       alias :to_x :to_xml_document
       def to_xml_document(opts, doc = nil)
         unless(opts[:methods] || opts[:exclude])
-          opts.merge!({:methods => [:updated_by, :locales], :exclude => [:updated_by_id, :id], :updated_by => {:methods => [], :excludes => [:created_at, :updated_at]}, :exclude => [:id, :updated_by_id]}})
+          opts.merge!({:methods => [:updated_by, :locales], :exclude => [:updated_by_id, :id], :updated_by => {:methods => [], :excludes => [:created_at, :updated_at]}, :exclude => [:id, :updated_by_id]})
         end
         to_x(opts, doc)
       end

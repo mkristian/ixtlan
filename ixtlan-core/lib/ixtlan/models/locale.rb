@@ -1,3 +1,4 @@
+require 'dm-serializer'
 module Ixtlan
   module Models
     class Locale
