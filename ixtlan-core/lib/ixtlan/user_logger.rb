@@ -30,7 +30,10 @@ module Ixtlan
           else
             audit = controller.instance_variable_get("@#{controller.params[:controller].singular.to_sym}")
             if(audit)
-              "#{controller.params[:controller]}##{controller.params[:action]} #{audit.model}(#{audit.key})#{as_xml}#{message}"
+              errors = if audit.respond_to? :errors
+                         " - errors: " + audit.errors.full_messages.join(", ") 
+                       end
+              "#{controller.params[:controller]}##{controller.params[:action]} #{audit.model}(#{audit.key})#{as_xml}#{message}#{errors}"
             else
               "#{controller.params[:controller]}##{controller.params[:action]}#{as_xml}#{message}"
             end
