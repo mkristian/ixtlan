@@ -10,11 +10,11 @@ module Ixtlan
       
       property :id, Serial
 
-      property :text, String, :nullable => false, :length => 256
+      property :text, String, :required => true, :length => 256
       
-      property :previous_text, String, :nullable => true, :length => 256
+      property :previous_text, String, :required => false, :length => 256
       
-      property :approved_at, DateTime, :nullable => false, :auto_validation => false
+      property :approved_at, DateTime, :required => true, :auto_validation => false
       
       belongs_to :approved_by, :model => Models::USER
       

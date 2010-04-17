@@ -9,7 +9,7 @@ module Ixtlan
         "Role"
       end
 
-      property :name, String, :nullable => false , :format => /^[a-zA-Z0-9\-_.]*$/, :length => 32, :key => true
+      property :name, String, :required => true , :format => /^[a-zA-Z0-9\-_.]*$/, :length => 32, :key => true
 
       def hash
         attribute_get(:name).hash

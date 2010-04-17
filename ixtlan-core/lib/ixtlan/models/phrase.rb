@@ -10,21 +10,21 @@ module Ixtlan
 
       property :id, Serial
 
-      property :code, String, :nullable => false, :length => 64
+      property :code, String, :required => true, :length => 64
       
-      property :text, String, :nullable => false, :length => 256
+      property :text, String, :required => true, :length => 256
       
-      property :current_text, String, :nullable => true, :length => 256
+      property :current_text, String, :required => false, :length => 256
       
-      property :updated_at, DateTime, :nullable => false, :auto_validation => false
+      property :updated_at, DateTime, :required => true, :auto_validation => false
       
       belongs_to :updated_by, :model => Models::USER
       
       belongs_to :locale, :model => Models::LOCALE
       
-      belongs_to :default_translation, :model => Models::TRANSLATION, :nullable => true
+      belongs_to :default_translation, :model => Models::TRANSLATION, :required => false
 
-      belongs_to :parent_translation, :model => Models::TRANSLATION, :nullable => true
+      belongs_to :parent_translation, :model => Models::TRANSLATION, :required => false
 
       alias :to_x :to_xml_document
       def to_xml_document(opts = {}, doc = nil)

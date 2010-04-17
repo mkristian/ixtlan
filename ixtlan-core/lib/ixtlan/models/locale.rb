@@ -13,7 +13,7 @@ module Ixtlan
         ALL = "ALL"
       end
 
-      property :code, String, :nullable => false , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^#{DEFAULT}$|^#{ALL}$/, :length => 7, :key => true
+      property :code, String, :required => true , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^#{DEFAULT}$|^#{ALL}$/, :length => 7, :key => true
       
       timestamps :created_at
 

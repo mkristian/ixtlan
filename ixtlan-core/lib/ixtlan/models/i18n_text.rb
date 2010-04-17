@@ -10,23 +10,23 @@ module Ixtlan
 
       property :id, Serial
       
-      property :code, String, :nullable => false, :length => 64
+      property :code, String, :required => true, :length => 64
       
-      property :text, String, :nullable => false, :length => 256
+      property :text, String, :required => true, :length => 256
       
-      property :version, Integer, :nullable => true
+      property :version, Integer, :required => false
       
-      property :current, Boolean, :nullable => false, :auto_validation => false
+      property :current, Boolean, :required => true, :auto_validation => false
 
-      property :previous, Boolean, :nullable => false, :auto_validation => false
+      property :previous, Boolean, :required => true, :auto_validation => false
 
-      property :updated_at, DateTime, :nullable => false, :auto_validation => false
+      property :updated_at, DateTime, :required => true, :auto_validation => false
       
       belongs_to :updated_by, :model => Models::USER
       
-      property :approved_at, DateTime, :nullable => true
+      property :approved_at, DateTime, :required => false
       
-      belongs_to :approved_by, :model => Models::USER, :nullable => true
+      belongs_to :approved_by, :model => Models::USER, :required => false
       
       belongs_to :locale, :model => Models::LOCALE
 

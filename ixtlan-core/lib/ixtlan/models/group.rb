@@ -11,7 +11,7 @@ module Ixtlan
 
       property :id, Serial, :field => "gidnumber"
       
-      property :name, String, :nullable => false , :format => /^[^<'&">]*$/, :length => 32, :field => "cn", :unique_index => true
+      property :name, String, :required => true , :format => /^[^<'&">]*$/, :length => 32, :field => "cn", :unique_index => true
       
       timestamps :created_at
       

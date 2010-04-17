@@ -12,14 +12,16 @@ module Ixtlan
 
       property :id, Serial
 
-      property :session_idle_timeout, Integer, :nullable => false
+      property :session_idle_timeout, Integer, :required => true
       
-      property :keep_audit_logs, Integer, :nullable => false 
+      property :keep_audit_logs, Integer, :required => true 
       
-      property :notification_sender_email, String, :format => :email, :nullable => true, :length => 64
+      property :notification_sender_email, String, :format => :email, :required => false, :length => 64
 
-      property :notification_recipient_emails, String, :format => Proc.new { |email| emails = email.split(','); emails.find_all { |e| e =~ DataMapper::Validate::Format::Email::EmailAddress }.size == emails.size}, :nullable => true, :length => 254 #honour mysql max varchar length
+      property :notification_recipient_emails, String, :format => Proc.new { |email| emails = email.split(','); emails.find_all { |e| e =~ DataMapper::Validate::Format::Email::EmailAddress }.size == emails.size}, :required => false, :length => 254 #honour mysql max varchar length
       
+      property :errors_dump_directory, String, :required => false, :length => 192
+
       timestamps :updated_at
 
       modified_by ::Ixtlan::Models::USER, :updated_by

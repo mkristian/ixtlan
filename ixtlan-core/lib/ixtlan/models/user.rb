@@ -13,15 +13,15 @@ module Ixtlan
 
       property :id, Serial, :field => "uidnumber"
 
-      property :login, String, :nullable => false , :length => 4..32, :index => :unique_index, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
+      property :login, String, :required => true , :length => 4..32, :index => :unique_index, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
 
-      property :name, String, :nullable => false, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
+      property :name, String, :required => true, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
 
-      property :email, String, :nullable => false, :format => :email_address, :nullable => false, :length => 8..64, :index => :unique_index, :field => "mail"
+      property :email, String, :required => true, :format => :email_address, :required => true, :length => 8..64, :index => :unique_index, :field => "mail"
 
-      property :language, String, :nullable => true, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
+      property :language, String, :required => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
 
-      property :hashed_password, String, :nullable => true, :length => 128, :accessor => :private, :field => "userpassword"
+      property :hashed_password, String, :required => false, :length => 128, :accessor => :private, :field => "userpassword"
 
       timestamps :at
 
