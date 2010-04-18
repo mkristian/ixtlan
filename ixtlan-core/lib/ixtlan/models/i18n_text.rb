@@ -71,7 +71,7 @@ module Ixtlan
           when 2
             self.model.latest_approved(:code => code, :locale => Locale.default).size 
           when 5
-            self.model.latest_approved(:code => code, :locale => Locale.get(locale.code[0,1])).size
+            self.model.latest_approved(:code => code, :locale => Locale.first(:code => locale.code[0,1])).size
           else
             1
           end

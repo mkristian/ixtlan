@@ -28,7 +28,7 @@ module Ixtlan
 
       alias :to_x :to_xml_document
       def to_xml_document(opts = {}, doc = nil)
-        opts.merge!({:exclude => [:id, :parent_translation_id, :default_translation_id, :locale_code], :element_name => 'phrase', :methods => [:default_translation, :parent_translation, :locale]})
+        opts.merge!({:exclude => [:id, :parent_translation_id, :default_translation_id, :locale_id], :element_name => 'phrase', :methods => [:default_translation, :parent_translation, :locale]})
         to_x(opts, doc)
       end
 

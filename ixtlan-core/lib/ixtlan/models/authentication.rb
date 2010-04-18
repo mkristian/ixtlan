@@ -8,7 +8,9 @@ module Ixtlan
         "Authentication"
       end
 
-      property :login, String,:format => /^[a-zA-Z0-9\-!=+$%^&*\(\){}|\[\]<>_.]*$/, :key => true
+      property :id, Serial, :default => 1
+
+      property :login, String,:format => /^[a-zA-Z0-9\-!=+$%^&*\(\){}|\[\]<>_.]*$/
       
       property :password, String,:format => /^[a-zA-Z0-9_.]*$/
       

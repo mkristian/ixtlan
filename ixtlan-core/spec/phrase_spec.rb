@@ -14,11 +14,15 @@ require 'ixtlan/models/phrase'
 def setup(code)
   len = 6
   Controller.send(:include, Ixtlan::Controllers::TextsController)
+  Ixtlan::Models::I18nText.all.destroy!
+  Ixtlan::Models::Locale.all.destroy!
+  Ixtlan::Models::Locale.first_or_create(:id => 1, :code => "DEFAULT")
   @controller2 = Controller.new
-  @en =  Ixtlan::Models::Locale.first_or_create(:code => "en")
-  @en_in =  Ixtlan::Models::Locale.first_or_create(:code => "en_IN")
+  @en =  Ixtlan::Models::Locale.first_or_create(:id => 1000, :code => "en")
+  @en_in =  Ixtlan::Models::Locale.first_or_create(:id => 2000, :code => "en_IN")
   (1..len).each do |j|
-    text = Ixtlan::Models::I18nText.create(:code => code, 
+    text = Ixtlan::Models::I18nText.create(:id => j,
+                                           :code => code, 
                                        :text => "text_#{j}",
                                        :current_user => @controller2.current_user, 
                                        :locale => Ixtlan::Models::Locale.default, 
@@ -34,45 +38,45 @@ end
 
 describe "with default locale" do
   before(:each) do
-    setup("code_1")
+    setup("cccc_1")
   end
   it "should xml-serialize" do
-    #Ixtlan::Models::Text.all.each {|t| p t}
-    Ixtlan::Models::Phrase.all(:code => "code_1").to_xml.cleanup.should == "<phrases><phrase><code>code_1</code><text>text_6</text><current_text>text_6</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><locale><code>DEFAULT</code><created_at>date</created_at></locale></phrase></phrases>" 
+    #Ixtlan::Models::I18nText.all.each {|t| p t}
+    Ixtlan::Models::Phrase.all(:code => "cccc_1").to_xml.cleanup.should == "<phrases><phrase><code>cccc_1</code><text>text_6</text><current_text>text_6</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><locale><id>1</id><code>DEFAULT</code><created_at>date</created_at></locale></phrase></phrases>" 
   end
 end
 
 describe "with default locale" do
   before(:each) do
-    setup("code_2")
+    setup("cccc_2")
   end
   it "should xml-serialize with edited text" do
-    Ixtlan::Models::I18nText.create(:code => "code_2", 
+    Ixtlan::Models::I18nText.create(:code => "cccc_2", 
                                 :text => "text_edited",
                                 :current_user => @controller2.current_user, 
                                 :locale => Ixtlan::Models::Locale.default, 
                                 :updated_at => DateTime.now, 
                                 :updated_by => @controller2.current_user)
-    # Ixtlan::Models::Text.all.each {|t| p t}
-    Ixtlan::Models::Phrase.all(:code => "code_2").to_xml.cleanup.should == "<phrases><phrase><code>code_2</code><text>text_edited</text><current_text>text_6</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><locale><code>DEFAULT</code><created_at>date</created_at></locale></phrase></phrases>" 
+    # Ixtlan::Models::I18nText.all.each {|t| p t}
+    Ixtlan::Models::Phrase.all(:code => "cccc_2").to_xml.cleanup.should == "<phrases><phrase><code>cccc_2</code><text>text_edited</text><current_text>text_6</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><locale><id>1</id><code>DEFAULT</code><created_at>date</created_at></locale></phrase></phrases>" 
   end
 
 end
 describe "with default locale" do
   before(:each) do
-    setup("code_3")
+    setup("cccc_3")
     Ixtlan::Models::I18nText.all.destroy!
   end
   
   it "should xml-serialize with edited text and not approved" do
-    Ixtlan::Models::I18nText.create(:code => "code_3", 
+    Ixtlan::Models::I18nText.create(:code => "cccc_3", 
                                 :text => "text_edited",
                                 :current_user => @controller2.current_user, 
                                 :locale => Ixtlan::Models::Locale.default, 
                                 :updated_at => DateTime.now, 
                                 :updated_by => @controller2.current_user)
-    #Ixtlan::Models::Text.all.each {|t| p t}
-    Ixtlan::Models::Phrase.all(:code => "code_3").to_xml.cleanup.should == "<phrases><phrase><code>code_3</code><text>text_edited</text><current_text>text_edited</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><locale><code>DEFAULT</code><created_at>date</created_at></locale></phrase></phrases>" 
+    #Ixtlan::Models::I18nText.all.each {|t| p t}
+    Ixtlan::Models::Phrase.all(:code => "cccc_3").to_xml.cleanup.should == "<phrases><phrase><code>cccc_3</code><text>text_edited</text><current_text>text_edited</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><locale><id>1</id><code>DEFAULT</code><created_at>date</created_at></locale></phrase></phrases>" 
   end
 end
 
@@ -81,8 +85,8 @@ describe "with 'de' locale" do
     setup("de_code")
   end
   it "should xml-serialize" do
-    #Ixtlan::Models::Text.all.each {|t| p t}
-    Ixtlan::Models::Phrase.all(:code => "de_code", :locale => Ixtlan::Models::Locale.first_or_create(:code => 'de')).to_xml.cleanup.should == "<phrases><phrase><code>de_code</code><text>text_6</text><current_text>text_6</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><default_translation><text>text_6</text><previous_text>text_5</previous_text><approved_at>date</approved_at><approved_by_id>1</approved_by_id></default_translation><locale><code>de</code><created_at>date</created_at></locale></phrase></phrases>" 
+    #Ixtlan::Models::I18nText.all.each {|t| p t}
+    Ixtlan::Models::Phrase.all(:code => "de_code", :locale => Ixtlan::Models::Locale.first_or_create(:id => 3000, :code => 'de')).to_xml.cleanup.should == "<phrases><phrase><code>de_code</code><text>text_6</text><current_text>text_6</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><default_translation><text>text_6</text><previous_text>text_5</previous_text><approved_at>date</approved_at><approved_by_id>1</approved_by_id></default_translation><locale><id>3000</id><code>de</code><created_at>date</created_at></locale></phrase></phrases>" 
   end
 end
 
@@ -105,8 +109,8 @@ describe "with 'en' locale" do
   end
   
   it "should xml-serialize with edited text" do
-    #Ixtlan::Models::Text.all(:code => "en_code").each {|t| puts "code=#{t.code} locale=#{t.locale.code} version=#{t.version} current=#{t.current} previous=#{t.previous}"}
-    Ixtlan::Models::Phrase.all(:code => "en_code", :locale => @en).to_xml.cleanup.should == "<phrases><phrase><code>en_code</code><text>en_text_edited</text><current_text>en_text_edited</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><default_translation><text>text_6</text><previous_text>text_5</previous_text><approved_at>date</approved_at><approved_by_id>1</approved_by_id></default_translation><locale><code>en</code><created_at>date</created_at></locale></phrase></phrases>" 
+    #Ixtlan::Models::I18nText.all(:code => "en_code").each {|t| puts "code=#{t.code} locale=#{t.locale.code} version=#{t.version} current=#{t.current} previous=#{t.previous}"}
+    Ixtlan::Models::Phrase.all(:code => "en_code", :locale => @en).to_xml.cleanup.should == "<phrases><phrase><code>en_code</code><text>en_text_edited</text><current_text>en_text_edited</current_text><updated_at>date</updated_at><updated_by_id>1</updated_by_id><default_translation><text>text_6</text><previous_text>text_5</previous_text><approved_at>date</approved_at><approved_by_id>1</approved_by_id></default_translation><locale><id>1000</id><code>en</code><created_at>date</created_at></locale></phrase></phrases>" 
   end
 
 end

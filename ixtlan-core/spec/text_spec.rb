@@ -12,10 +12,10 @@ describe Ixtlan::Models::I18nText do
 
   before(:each) do
     @controller = Controller.new
-    Ixtlan::Models::Text.all.destroy!
+    Ixtlan::Models::I18nText.all.destroy!
     @approved = Ixtlan::Models::I18nText.create(:code => "code", :text => "other text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
     @approved.approve(:current_user => @controller.current_user)
-    @text = Ixtlan::Models::Text.create(:code => "code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
+    @text = Ixtlan::Models::I18nText.create(:code => "code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
   end
   
   it "should create default" do
@@ -98,7 +98,7 @@ describe Ixtlan::Models::I18nText do
   end
 
   it 'should produce xml via the Word model' do
-    text = Ixtlan::Models::Text.create(:code => "word", :text => "word text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
+    text = Ixtlan::Models::I18nText.create(:code => "word", :text => "word text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
     Ixtlan::Models::Word.first(:code => "word").to_xml.should == "<word><code>word</code><text>word text</text></word>"
     Ixtlan::Models::Word.all(:id => @approved.id).to_xml(:collection_element_name => "words").should == "<words type='array'><word><code>code</code><text>other text</text></word></words>"
   end

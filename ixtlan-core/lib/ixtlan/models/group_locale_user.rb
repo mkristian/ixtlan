@@ -12,7 +12,7 @@ module Ixtlan
       
       property :user_id, Integer, :key => true
       
-      property :locale_code, String, :key => true
+      property :locale_id, Integer, :key => true
 
       belongs_to :group, :model => Models::GROUP
       belongs_to :user, :model => Models::USER

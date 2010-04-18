@@ -182,6 +182,7 @@ file "db/migrate/2_create_configuration.rb", <<-CODE
 migration 2, :create_configuration do
   up do
     Configuration.auto_migrate!
+    Ixtlan::Models::ConfigurationLocale.auto_migrate!
     Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => User.first)
   end
 
@@ -411,15 +412,15 @@ ixtlan_controller "phrases"
 generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
 ixtlan_model "locale"
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
-file 'spec/support/locale.rb', <<-CODE
-module Ixtlan
-  module Models
-    class Locale
-      property :id, Integer
-    end
-  end
-end
-CODE
+#file 'spec/support/locale.rb', <<-CODE
+#module Ixtlan
+#  module Models
+#    class Locale
+#      property :id, Integer
+#    end
+#  end
+#end
+#CODE
 
 # configuration guard/model/controller
 file 'app/models/configuration.rb', <<-CODE

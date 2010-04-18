@@ -38,7 +38,7 @@ module Ixtlan
           @locales.configuration = self
           def @locales.<<(locale)
             unless member? locale
-              ConfigurationLocale.create(:configuration_id => @configuration.id, :locale_code => locale.code)
+              ConfigurationLocale.create(:configuration_id => @configuration.id, :locale_id => locale.id)
               super
             end
             
@@ -46,7 +46,7 @@ module Ixtlan
           end
           
           def @locales.delete(locale) 
-            cl = ConfigurationLocale.first(:configuration_id => @configuration.id, :user_id => @user.id, :locale_code => locale.code)
+            cl = ConfigurationLocale.first(:configuration_id => @configuration.id, :user_id => @user.id, :locale_id => locale.id)
             if cl
               cl.destroy
             end

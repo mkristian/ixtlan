@@ -38,14 +38,14 @@ module Ixtlan
           @locales.user = user
           def @locales.<<(locale)
             unless member? locale
-              GroupLocaleUser.create(:group_id => @group.id, :user_id => @user.id, :locale_code => locale.code)
+              GroupLocaleUser.create(:group_id => @group.id, :user_id => @user.id, :locale_id => locale.id)
               super
             end
             
             self
           end
           def @locales.delete(locale) 
-            glu = GroupLocaleUser.first(:group_id => @group.id, :user_id => @user.id, :locale_code => locale.code)
+            glu = GroupLocaleUser.first(:group_id => @group.id, :user_id => @user.id, :locale_id => locale.id)
             if glu
               glu.destroy
             end

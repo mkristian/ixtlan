@@ -10,7 +10,7 @@ module Ixtlan
 
       property :configuration_id, Integer, :key => true
       
-      property :locale_code, String, :key => true
+      property :locale_id, Integer, :key => true
 
       belongs_to :configuration, :model => Models::CONFIGURATION
       belongs_to :locale, :model => Models::LOCALE

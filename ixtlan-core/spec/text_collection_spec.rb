@@ -4,7 +4,7 @@ require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
 require 'ixtlan/controllers/texts_controller'
 
-require 'ixtlan/models/text'
+require 'ixtlan/models/i18n_text'
 require 'ixtlan/models/word'
 require 'ixtlan/models/translation'
 
@@ -15,23 +15,27 @@ describe "Ixtlan::Models::TextCollection" do
   before(:all) do
     Controller.send(:include, Ixtlan::Controllers::TextsController)
     @controller = Controller.new
+    Ixtlan::Models::Locale.all.destroy!
     Ixtlan::Models::I18nText.all.destroy!
     (1..len).each do |i|
-      locale = Ixtlan::Models::Locale.first_or_create(:code => "c#{(96 +i).chr}")
-      text = Ixtlan::Models::I18nText.create(:code => "code_#{i}", :text => "text_#{i}",
-:current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default, :updated_at => DateTime.now, :updated_by => @controller.current_user)
+      locale = Ixtlan::Models::Locale.first_or_create(:id => 10 + len + i, :code => "c#{(96 +i).chr}")
+      text = Ixtlan::Models::I18nText.create(:code => "code_#{i}", 
+                                             :text => "text_#{i}",
+                                             :current_user => @controller.current_user, 
+                                             :locale => Ixtlan::Models::Locale.default, 
+                                             :updated_at => DateTime.now, 
+                                             :updated_by => @controller.current_user)
       text.approve(:current_user => @controller.current_user)
       (1..len).each do |j|
         text = Ixtlan::Models::I18nText.create(:code => "code_#{i}", :text => "text_#{i}_#{j}",
 :current_user => @controller.current_user, :locale => locale, :updated_at => DateTime.now, :updated_by => @controller.current_user)
-        
         text.approve(:current_user => @controller.current_user) unless j == len
       end
     end
   end
 
   it "should have #{len} second latest approved" do
-    set = Ixtlan::Models::Text.second_latest_approved
+    set = Ixtlan::Models::I18nText.second_latest_approved
     set.size.should == len
     set.each do |t|
       t.version.should_not be_nil

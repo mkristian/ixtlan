@@ -24,7 +24,7 @@ describe Ixtlan::Models::Authentication do
 
   it "should" do
     xml = @authentication.to_xml
-    xml.gsub!(/[0-9-]{10}T[0-9+-:]{14}/, "").gsub!(/ type='[^']+'/, '').gsub!(/<created_at><\/created_at>/, "<created_at/>").should == "<authentication><login>marvin2</login><user><id>1356</id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email><language>xx</language><created_at/><updated_at></updated_at><created_by_id>1356</created_by_id><updated_by_id>1356</updated_by_id><groups><group><id>1356</id><name>marvin2_root</name><created_at/><created_by_id>1356</created_by_id><updated_by_id>1356</updated_by_id><locales><locale><code>DEFAULT</code><created_at/></locale><locale><code>en</code><created_at/></locale></locales></group></groups></user></authentication>"
+    xml.gsub!(/[0-9-]{10}T[0-9+-:]{14}/, "").gsub!(/ type='[^']+'/, '').gsub!(/<created_at><\/created_at>/, "<created_at/>").gsub!(/<locale><id>[0-9]*<\/id>/, "<locale>").should == "<authentication><id>1</id><login>marvin2</login><user><id>1356</id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email><language>xx</language><created_at/><updated_at></updated_at><created_by_id>1356</created_by_id><updated_by_id>1356</updated_by_id><groups><group><id>1356</id><name>marvin2_root</name><created_at/><created_by_id>1356</created_by_id><updated_by_id>1356</updated_by_id><locales><locale><code>DEFAULT</code><created_at/></locale><locale><code>en</code><created_at/></locale></locales></group></groups></user></authentication>"
   end
 
 end

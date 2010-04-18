@@ -13,7 +13,8 @@ module Ixtlan
         ALL = "ALL"
       end
 
-      property :code, String, :required => true , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^#{DEFAULT}$|^#{ALL}$/, :length => 7, :key => true
+      property :id, Serial
+      property :code, String, :required => true , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^#{DEFAULT}$|^#{ALL}$/, :length => 7, :unique_index => true
       
       timestamps :created_at
 
@@ -30,11 +31,11 @@ module Ixtlan
       end
 
       def self.default
-        get(DEFAULT) || create(:code => DEFAULT)
+        first_or_create(:code => DEFAULT)
       end
 
       def self.every
-        get(ALL) || create(:code => ALL)
+        first_or_create(:code => ALL)
       end
 
       def hash
