@@ -42,6 +42,19 @@ public abstract class ListBoxBinding<T extends Resource<T>, S extends Resource<S
                                 resources.contains(this.map.get(getValue(i))));
             }
         }
+        else {
+            for (int i = 0; i < getItemCount(); i++) {
+                setItemSelected(i, false);
+            }
+        }
+    }
+
+    protected void select(final S resource) {
+        if (resource != null) {
+            for (int i = 0; i < getItemCount(); i++) {
+                setItemSelected(i, resource.key().equals(getValue(i)));
+            }
+        }
     }
 
     protected S getResource() {

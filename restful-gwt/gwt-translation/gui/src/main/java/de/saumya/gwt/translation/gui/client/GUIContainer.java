@@ -133,6 +133,7 @@ public class GUIContainer {
                                                                    this.getTextController,
                                                                    this.userFactory,
                                                                    this.groupFactory,
+                                                                   this.localeFactory,
                                                                    this.session,
                                                                    new ResourceBindings<User>(),
                                                                    this.notifications,
