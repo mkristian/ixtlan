@@ -45,7 +45,7 @@ module Ixtlan
     end
      
     def log_user(user, message = nil, &block)
-      user = "???" unless user
+      user ||= "???"
       @logger.info {"[#{user}] #{message}#{block.call if block}" } 
     end
   end
