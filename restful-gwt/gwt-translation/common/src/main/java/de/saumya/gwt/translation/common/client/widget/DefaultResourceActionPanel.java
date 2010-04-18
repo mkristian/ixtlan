@@ -232,11 +232,9 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
                     && !this.resource.isDeleted()
                     && !this.resource.isImmutable()
                     && this.session.isAllowed(Action.UPDATE, this.resourceName));
-            this.create.setVisible(this.resource.key() != null
-                    && this.resource.isNew()
+            this.create.setVisible(this.resource.isNew()
                     && this.session.isAllowed(Action.CREATE, this.resourceName));
-            this.fresh.setVisible(this.resource.key() != null
-                    && !this.resource.isNew()
+            this.fresh.setVisible(!this.resource.isNew()
                     && this.session.isAllowed(Action.CREATE, this.resourceName));
         }
     }
