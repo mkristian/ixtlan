@@ -1,10 +1,14 @@
 module Ixtlan
   module Controllers
     module PhrasesController
-      
+
+      private
+
       LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
       TEXT = Object.full_const_get(::Ixtlan::Models::TEXT)
-      
+
+      public
+
       def index
         version = params[:version]
         

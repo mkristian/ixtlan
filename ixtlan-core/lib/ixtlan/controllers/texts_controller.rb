@@ -2,10 +2,10 @@ module Ixtlan
   module Controllers
     module TextsController
 
+      private
+
       LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
       TEXT = Object.full_const_get(::Ixtlan::Models::TEXT)
-      
-      private
       
       def locale_guard
         # TODO
