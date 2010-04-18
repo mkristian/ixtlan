@@ -132,6 +132,7 @@ public class GUIContainer {
     public final UserScreen           userScreen           = new UserScreen(this.loadingNotice,
                                                                    this.getTextController,
                                                                    this.userFactory,
+                                                                   this.groupFactory,
                                                                    this.session,
                                                                    new ResourceBindings<User>(),
                                                                    this.notifications,
