@@ -51,7 +51,7 @@ module Rails
         when :post
           user = login_from_params
           if user.instance_of? String
-            authentication_logger.log_user(params[:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
+            authentication_logger.log_user(params[:login] || params[:authentication][:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
             session.clear
             render_access_denied
           else
