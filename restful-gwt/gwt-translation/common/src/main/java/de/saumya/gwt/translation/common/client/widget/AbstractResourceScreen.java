@@ -22,7 +22,8 @@ import de.saumya.gwt.translation.common.client.route.Screen;
 public abstract class AbstractResourceScreen<E extends Resource<E>> extends
         FlowPanel implements Screen<E>, ResourceResetable<E> {
 
-    protected static final int                     RESOURCE = 0;
+    protected static final int                     RESOURCE  = 0;
+    protected static final int                     RESOURCES = 1;
 
     protected final ResourceNotifications          notifications;
 

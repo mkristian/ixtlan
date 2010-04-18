@@ -42,22 +42,12 @@ public class SingletonResourceScreen<E extends Resource<E>> extends
     }
 
     protected void showSingleton() {
-        if (this.session.isAllowed(Action.UPDATE,
-                                   this.factory.storagePluralName())
-                || this.session.isAllowed(Action.SHOW,
-                                          this.factory.storagePluralName())) {
-
-            this.displayAllowReadOnly.setReadOnly(!this.session.isAllowed(Action.UPDATE,
-                                                                          this.factory.storagePluralName()));
-            this.loading.setVisible(true);
-            final E resource = this.factory.get(this.resourceChangeListener,
-                                                this.notifications);
-            reset(resource);
-        }
-        else {
-            this.loading.setVisible(false);
-            this.display.setVisible(false);
-        }
+        this.displayAllowReadOnly.setReadOnly(!this.session.isAllowed(Action.UPDATE,
+                                                                      this.factory.storagePluralName()));
+        this.loading.setVisible(true);
+        final E resource = this.factory.get(this.resourceChangeListener,
+                                            this.notifications);
+        reset(resource);
     }
 
     @Override

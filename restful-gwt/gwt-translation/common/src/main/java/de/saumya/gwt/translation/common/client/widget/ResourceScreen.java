@@ -19,8 +19,6 @@ import de.saumya.gwt.translation.common.client.route.Screen;
 public class ResourceScreen<E extends Resource<E>> extends
         AbstractResourceScreen<E> implements ResourceCollectionResetable<E> {
 
-    private static final int RESOURCE_COLLECTION = 1;
-
     // protected final ResourceNotifications notifications;
     //
     // protected final ResourceFactory<E> factory;
@@ -177,7 +175,7 @@ public class ResourceScreen<E extends Resource<E>> extends
     public void reset(final ResourceCollection<E> resources) {
         this.displayCollectionResetable.reset(resources);
         this.actions.reset(resources);
-        this.deck.showWidget(RESOURCE_COLLECTION);
+        this.deck.showWidget(RESOURCES);
         this.loading.setVisible(false);
         setVisible(true);
     }
