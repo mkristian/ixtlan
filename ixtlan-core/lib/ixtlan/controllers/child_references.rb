@@ -3,7 +3,11 @@ module Ixtlan
     module ChildReferences
 
       def setup_children(new_children, old_children, model)
-        new_children ||= []
+        new_children = if new_children.nil?
+                         []
+                       else
+                         new_children[new_children.keys[0]]
+                       end
         new_children = [new_children] unless new_children.is_a? Array
         new_ids = new_children.collect { |v| v[:id].to_i }
         old_children.select do |g|

@@ -31,6 +31,7 @@ module Ixtlan
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the locales collection is empty before filling it
           @locales = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Object.full_const_get(::Ixtlan::Models::LOCALE)), [])
+p ConfigurationLocale.all(:configuration_id => id)
           ConfigurationLocale.all(:configuration_id => id).each{ |cl| @locales << cl.locale }
           def @locales.configuration=(configuration)
             @configuration = configuration
@@ -46,13 +47,14 @@ module Ixtlan
           end
           
           def @locales.delete(locale) 
-            cl = ConfigurationLocale.first(:configuration_id => @configuration.id, :user_id => @user.id, :locale_id => locale.id)
+            cl = ConfigurationLocale.first(:configuration_id => @configuration.id, :locale_id => locale.id)
             if cl
               cl.destroy
             end
             super
           end
         end
+p @locales
         @locales
       end
 

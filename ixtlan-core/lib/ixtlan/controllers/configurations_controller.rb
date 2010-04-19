@@ -15,7 +15,8 @@ module Ixtlan
       # GET /configuration.xml
       def show
         @configuration = CONFIGURATION.instance
-
+p  @configuration.locales
+p  @configuration.to_xml
         respond_to do |format|
           format.html # show.html.erb
           format.xml  { render :xml => @configuration }
@@ -33,7 +34,7 @@ module Ixtlan
         @configuration = CONFIGURATION.instance
         @configuration.current_user = current_user
 
-        locales =  params[:configuration].delete(:locales)[:locale]
+        locales = params[:configuration].delete(:locales)
         setup_children(locales, @configuration.locales, LOCALE)
 
         respond_to do |format|
