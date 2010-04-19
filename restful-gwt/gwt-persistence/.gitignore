@@ -2,3 +2,4 @@ target
 tomcat
 .gwt-tmp
 *.launch
+www-test
