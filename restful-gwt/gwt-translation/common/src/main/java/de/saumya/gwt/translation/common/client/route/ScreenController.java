@@ -120,8 +120,7 @@ public class ScreenController {
             localeCode = localeCode.substring(1);
             isInTranslation = true;
         }
-        final Locale locale = this.localeFactory.get(localeCode);
-        // locale.code = localeCode;
+        final Locale locale = this.localeFactory.first(localeCode);
         this.getTextController.load(locale, isInTranslation);
     }
 }

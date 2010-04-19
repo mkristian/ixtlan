@@ -32,42 +32,35 @@ public class LocaleFactory extends ResourceFactoryWithID<Locale> {
         return new Locale(this.repository, this, id);
     }
 
+    public Locale first(final String code) {
+        final Locale locale = newResource();
+        locale.code = code;
+        final Map<String, String> q = new HashMap<String, String>();
+        q.put("code", locale.code);
+        all(q, new ResourcesChangeListener<Locale>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<Locale> resources) {
+                final Locale l = resources.get(0);
+                locale.id = l.id;
+                locale.code = l.code;
+                locale.createdAt = l.createdAt;
+                // TODO maybe fire resource change
+            }
+        });
+        return locale;
+    }
+
     public Locale defaultLocale() {
         if (this.defaultLocale == null) {
-            this.defaultLocale = newResource();
-            this.defaultLocale.code = "DEFAULT";
-            final Map<String, String> q = new HashMap<String, String>();
-            q.put("code", this.defaultLocale.code);
-            all(q, new ResourcesChangeListener<Locale>() {
-
-                @Override
-                public void onLoaded(final ResourceCollection<Locale> resources) {
-                    final Locale l = resources.get(0);
-                    LocaleFactory.this.defaultLocale.id = l.id;
-                    LocaleFactory.this.defaultLocale.code = l.code;
-                    LocaleFactory.this.defaultLocale.createdAt = l.createdAt;
-                }
-            });
+            this.defaultLocale = first("DEFAULT");
         }
         return this.defaultLocale;
     }
 
     public Locale allLocale() {
         if (this.allLocale == null) {
-            this.allLocale = newResource();
-            this.allLocale.code = "ALL";
-            final Map<String, String> q = new HashMap<String, String>();
-            q.put("code", this.allLocale.code);
-            all(q, new ResourcesChangeListener<Locale>() {
-
-                @Override
-                public void onLoaded(final ResourceCollection<Locale> resources) {
-                    final Locale l = resources.get(0);
-                    LocaleFactory.this.allLocale.id = l.id;
-                    LocaleFactory.this.allLocale.code = l.code;
-                    LocaleFactory.this.allLocale.createdAt = l.createdAt;
-                }
-            });
+            this.allLocale = first("ALL");
         }
         return this.allLocale;
     }
