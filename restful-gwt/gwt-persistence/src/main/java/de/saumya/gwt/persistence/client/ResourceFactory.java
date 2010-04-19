@@ -107,8 +107,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     public abstract String defaultSearchParameterName();
 
     public E getChildResource(final Element root, final String name) {
-        final Element element = (Element) root.getElementsByTagName(name)
-                .item(0);
+        final Element element = child(root, name);
         if (element == null) {
             return null;
         }
@@ -117,10 +116,19 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         return resource;
     }
 
+    private Element child(final Element root, final String name) {
+        final NodeList list = root.getElementsByTagName(name);
+        for (int i = 0; i < list.getLength(); i++) {
+            if (list.item(i).getParentNode().equals(root)) {
+                return (Element) list.item(i);
+            }
+        }
+        return null;
+    }
+
     public ResourceCollection<E> getChildResourceCollection(final Element root,
             final String name) {
-        final Element element = (Element) root.getElementsByTagName(name)
-                .item(0);
+        final Element element = child(root, name);
         final ResourceCollection<E> resources = newResources();
         if (element != null) {
             resources.fromXml(element);
