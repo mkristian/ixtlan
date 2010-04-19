@@ -27,6 +27,11 @@ class Authentication extends ResourceWithId<Authentication> {
     User   user;
 
     @Override
+    public String key() {
+        return null;
+    }
+
+    @Override
     protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
         appendXml(buf, "login", this.login);
