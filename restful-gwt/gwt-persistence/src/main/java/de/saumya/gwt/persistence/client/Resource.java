@@ -37,7 +37,7 @@ public abstract class Resource<E extends Resource<E>> {
     private final Set<ResourceChangeListener<E>> listeners = new HashSet<ResourceChangeListener<E>>();
     private ResourceNotifications                changeNotifications;
 
-    final ResourceFactory<E>                     factory;
+    protected final ResourceFactory<E>           factory;
 
     protected State                              state     = State.NEW;
 
