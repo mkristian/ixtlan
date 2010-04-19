@@ -4,5 +4,15 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/kristian/.eclipse/org.eclipse.platform_3.5.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle.linux_1.7.1.v200909221731/gwt-linux-1.7.1/gwt-user.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/kristian/.eclipse/org.eclipse.platform_3.5.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle.linux_1.7.1.v200909221731/gwt-linux-1.7.1/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/kristian/.eclipse/org.eclipse.platform_3.5.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle.linux_1.7.1.v200909221731/gwt-linux-1.7.1/gwt-dev-linux.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/kristian/.eclipse/org.eclipse.platform_3.5.0_155965261/plugins/com.google.gwt.eclipse.sdkbundle.linux_1.7.1.v200909221731/gwt-linux-1.7.1/doc/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
