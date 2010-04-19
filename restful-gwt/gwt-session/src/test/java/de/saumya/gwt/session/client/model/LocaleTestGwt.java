@@ -22,6 +22,7 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
     private Locale              locale;
 
     private static final String RESOURCE_XML = "<locale>"
+                                                     + "<id>1</id>"
                                                      + "<code>en</code>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                                      + "</locale>";
@@ -29,14 +30,14 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
     @Override
     protected String resourceNewXml() {
         return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
-                                         "");
+                                         "").replace("<id>1</id>", "");
     }
 
     @Override
     protected Resource<Locale> resourceSetUp() {
-        this.locale = ((LocaleFactory) this.factory).newResource("en");
+        this.locale = ((LocaleFactory) this.factory).newResource(1);
 
-        // this.locale.code = "en";
+        this.locale.code = "en";
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -71,7 +72,7 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     protected String keyValue() {
-        return "en";
+        return "1";
     }
 
     @Override
@@ -86,7 +87,7 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
 
     @Override
     protected String resource2Xml() {
-        return RESOURCE_XML.replace(">en<", ">fr<");
+        return RESOURCE_XML.replace(">en<", ">fr<").replace(">1<", ">2<");
     }
 
     @Override

@@ -4,7 +4,7 @@
 package de.saumya.gwt.persistence.client;
 
 
-public abstract class ResourceFactoryWithID<E extends ResourceWithID<E>>
+public abstract class ResourceFactoryWithID<E extends ResourceWithId<E>>
         extends ResourceFactory<E> {
 
     @Override

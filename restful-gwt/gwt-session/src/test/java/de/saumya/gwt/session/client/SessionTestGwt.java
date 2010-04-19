@@ -92,8 +92,8 @@ public class SessionTestGwt extends GWTTestCase {
                     final Group root = groupFactory.newResource();
                     root.name = "root";
                     root.locales = SessionTestGwt.this.localeFactory.newResources();
-                    final Locale en = SessionTestGwt.this.localeFactory.newResource("en");
-                    // en.code = "en";
+                    final Locale en = SessionTestGwt.this.localeFactory.newResource(123);
+                    en.code = "en";
                     root.locales = SessionTestGwt.this.localeFactory.newResources();
                     root.locales.add(en);
                     user.groups.add(root);
@@ -122,9 +122,9 @@ public class SessionTestGwt extends GWTTestCase {
                 + "<token>1234567890</token>" + "<user><login>dhamma</login>"
                 + "<groups>" + "<group>" + "<name>admin</name>"
                 + "<created_at>2005-07-09 17:14:48.0</created_at>"
-                + "<locales>" + "<locale>" + "<code>en</code>" + "</locale>"
-                + "</locales>" + "</group>" + "</groups>" + "</user>"
-                + "</authentication>" + "</authentications>");
+                + "<locales>" + "<locale>" + "<id>1</id><code>en</code>"
+                + "</locale>" + "</locales>" + "</group>" + "</groups>"
+                + "</user>" + "</authentication>" + "</authentications>");
     }
 
     static class SessionListenerMock implements SessionListener {
@@ -206,7 +206,8 @@ public class SessionTestGwt extends GWTTestCase {
 
     public void testIsAllowedWithLocale() {
         this.session.login("dhamma", "mudita");
-        final Locale en = this.localeFactory.newResource("en");
+        final Locale en = this.localeFactory.newResource(1234);
+        en.code = "en";
         assertTrue(this.session.isAllowed("create", "user", en));
     }
 
@@ -219,7 +220,8 @@ public class SessionTestGwt extends GWTTestCase {
 
     public void testNotIsAllowedWithLocale() {
         this.session.login("dhamma", "mudita");
-        final Locale de = this.localeFactory.newResource("de");
+        final Locale de = this.localeFactory.newResource(432);
+        de.code = "de";
         assertFalse(this.session.isAllowed("create", "user", de));
         assertFalse(this.session.isAllowed("update", "user", de));
         assertFalse(this.session.isAllowed("create", "locale", de));

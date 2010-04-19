@@ -22,21 +22,23 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
     private Domain              resource;
 
     private static final String RESOURCE_XML = "<domain>"
-                                                     + "<id>dhara</id>"
+                                                     + "<id>1</id>"
+                                                     + "<name>dhara</name>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                                      + "</domain>";
 
     @Override
     protected String resourceNewXml() {
         return RESOURCE_XML.replaceFirst("<created_at>[0-9-:. ]*</created_at>",
-                                         "");
+                                         "").replace("<id>1</id>", "");
     }
 
     @Override
     protected Resource<Domain> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.id = "dhara";
+        this.resource.id = 1;
+        this.resource.name = "dhara";
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -47,15 +49,15 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
 
     @Override
     public void doTestCreate() {
-        assertEquals("dhara", this.resource.id);
+        assertEquals("dhara", this.resource.name);
     }
 
     @Override
     public void doTestUpdate() {
-        this.resource.id = changedValue();
+        this.resource.name = changedValue();
         this.resource.save();
 
-        assertEquals(this.resource.id, changedValue());
+        assertEquals(this.resource.name, changedValue());
     }
 
     @Override
@@ -70,7 +72,7 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
 
     @Override
     protected String keyValue() {
-        return "dhara";
+        return "1";
     }
 
     @Override
@@ -85,7 +87,7 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
 
     @Override
     protected String resource2Xml() {
-        return RESOURCE_XML.replace(">dhara<", ">dvara<");
+        return RESOURCE_XML.replace(">dhara<", ">dvara<").replace(">1<", ">2<");
     }
 
     @Override

@@ -11,9 +11,9 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceWithID;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class User extends ResourceWithID<User> {
+public class User extends ResourceWithId<User> {
 
     private final LocaleFactory localeFactory;
     private final GroupFactory  groupFactory;
@@ -84,11 +84,6 @@ public class User extends ResourceWithID<User> {
         for (final Group group : this.groups) {
             result.addAll(group.locales);
         }
-        // TODO remove later
-        final Locale en = this.localeFactory.get("en");
-        // en.code = "en";
-        result.add(en);
-        // result.add(this.localeFactory.get("de"));
         return result;
     }
 

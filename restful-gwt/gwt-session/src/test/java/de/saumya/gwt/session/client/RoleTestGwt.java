@@ -79,7 +79,7 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
 
     @Override
     protected String keyValue() {
-        return "root";
+        return "1";
     }
 
     @Override

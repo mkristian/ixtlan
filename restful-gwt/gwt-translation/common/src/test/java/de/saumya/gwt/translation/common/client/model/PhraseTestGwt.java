@@ -1,6 +1,5 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
@@ -11,15 +10,7 @@ import de.saumya.gwt.session.client.models.UserFactory;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
-
-    /**
-     * Must refer to a valid module that sources this class.
-     */
-    @Override
-    public String getModuleName() {
-        return "de.saumya.gwt.translation.common.CommonTest";
-    }
+public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
 
     private Phrase resource;
 
@@ -45,7 +36,8 @@ public class PhraseTestGwt extends AbstractResourceTestGwt<Phrase> {
                                     + "<current_text>text</current_text>"
                                     + "<text>some text</text>"
                                     + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
-                                    + "<updated_by>" + "<login>root</login>"
+                                    + "<updated_by>"
+                                    + "<id>0</id><login>root</login>"
                                     + "<groups></groups>" + "</updated_by>"
                                     + "</phrase>";
 

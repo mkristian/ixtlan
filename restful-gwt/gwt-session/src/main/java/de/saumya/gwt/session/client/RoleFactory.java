@@ -1,10 +1,9 @@
 package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class RoleFactory extends ResourceFactory<Role> {
+public class RoleFactory extends ResourceFactoryWithIdGenerator<Role> {
 
     public RoleFactory(final Repository repository,
             final ResourceNotifications notification) {
@@ -17,18 +16,8 @@ public class RoleFactory extends ResourceFactory<Role> {
     }
 
     @Override
-    public String keyName() {
-        return "name";
-    }
-
-    @Override
-    public Role newResource() {
-        return new Role(this.repository, this);
-    }
-
-    @Override
-    public Role newResource(final String key) {
-        return new Role(this.repository, this);
+    public Role newResource(final int id) {
+        return new Role(this.repository, this, id);
     }
 
     @Override

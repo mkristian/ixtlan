@@ -3,11 +3,19 @@
  */
 package de.saumya.gwt.session.client.models;
 
-import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
+import java.util.HashMap;
+import java.util.Map;
 
-public class LocaleFactory extends ResourceFactory<Locale> {
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.ResourcesChangeListener;
+
+public class LocaleFactory extends ResourceFactoryWithID<Locale> {
+
+    private Locale allLocale;
+    private Locale defaultLocale;
 
     public LocaleFactory(final Repository repository,
             final ResourceNotifications notifications) {
@@ -20,53 +28,52 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     }
 
     @Override
-    public String keyName() {
-        return "code";
-    }
-
-    @Override
-    public Locale newResource() {
-        return new Locale(this.repository, this);
+    public Locale newResource(final int id) {
+        return new Locale(this.repository, this, id);
     }
 
     public Locale defaultLocale() {
-        final Locale locale = get("DEFAULT");
-        // if (locale.code == null) {
-        // locale.code = "DEFAULT";
-        // }
-        return locale;
+        if (this.defaultLocale == null) {
+            this.defaultLocale = newResource();
+            this.defaultLocale.code = "DEFAULT";
+            final Map<String, String> q = new HashMap<String, String>();
+            q.put("code", this.defaultLocale.code);
+            all(q, new ResourcesChangeListener<Locale>() {
+
+                @Override
+                public void onLoaded(final ResourceCollection<Locale> resources) {
+                    final Locale l = resources.get(0);
+                    LocaleFactory.this.defaultLocale.id = l.id;
+                    LocaleFactory.this.defaultLocale.code = l.code;
+                    LocaleFactory.this.defaultLocale.createdAt = l.createdAt;
+                }
+            });
+        }
+        return this.defaultLocale;
     }
 
     public Locale allLocale() {
-        final Locale locale = get("ALL");
-        // if (locale.code == null) {
-        // locale.code = "ALL";
-        // }
-        return locale;
+        if (this.allLocale == null) {
+            this.allLocale = newResource();
+            this.allLocale.code = "ALL";
+            final Map<String, String> q = new HashMap<String, String>();
+            q.put("code", this.allLocale.code);
+            all(q, new ResourcesChangeListener<Locale>() {
+
+                @Override
+                public void onLoaded(final ResourceCollection<Locale> resources) {
+                    final Locale l = resources.get(0);
+                    LocaleFactory.this.allLocale.id = l.id;
+                    LocaleFactory.this.allLocale.code = l.code;
+                    LocaleFactory.this.allLocale.createdAt = l.createdAt;
+                }
+            });
+        }
+        return this.allLocale;
     }
 
     @Override
     public String defaultSearchParameterName() {
         return "code";
-    }
-
-    public Locale newResource(final String code) {
-        final Locale locale = new Locale(this.repository, this, code);
-        return locale;
-    }
-
-    @Override
-    protected Locale getResource(final String key) {
-        if (key == null) {
-            return newResource();
-        }
-        else {
-            Locale result = this.cache.get(key);
-            if (result == null) {
-                result = newResource(key);
-                this.cache.put(key, result);
-            }
-            return result;
-        }
     }
 }

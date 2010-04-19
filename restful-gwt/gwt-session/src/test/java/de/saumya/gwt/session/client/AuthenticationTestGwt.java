@@ -26,6 +26,7 @@ public class AuthenticationTestGwt extends
     private UserFactory         userFactory;
 
     private static final String RESOURCE_XML = "<authentication>"
+                                                     + "<id>1</id>"
                                                      + "<token>asdqwe</token>"
                                                      + "<user>"
                                                      + "<login>root</login>"
@@ -39,7 +40,7 @@ public class AuthenticationTestGwt extends
 
     @Override
     protected String resourceNewXml() {
-        return XML;
+        return XML.replace("<id>1</id>", "");
     }
 
     @Override
@@ -82,7 +83,7 @@ public class AuthenticationTestGwt extends
         resource.login = "asd";
         resource.password = "pwd";
 
-        assertEquals("<authentication><login>asd</login><password>pwd</password></authentication>",
+        assertEquals("<authentication><id>0</id><login>asd</login><password>pwd</password></authentication>",
                      resource.toXml());
     }
 
@@ -109,7 +110,7 @@ public class AuthenticationTestGwt extends
 
     @Override
     protected String keyValue() {
-        return "asdqwe";
+        return "1";
     }
 
     @Override

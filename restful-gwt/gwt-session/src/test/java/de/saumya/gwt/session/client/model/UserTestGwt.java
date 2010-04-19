@@ -78,7 +78,8 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "<name>admin</name>"
                                             + "<locales>"
                                             + "<locale>"
-                                            + "<code>de</code>"
+                                            + "<id>0</id>"
+                                            + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "</locales>"
@@ -89,17 +90,20 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "<name>root</name>"
                                             + "<locales>"
                                             + "<locale>"
-                                            + "<code>de</code>"
+                                            + "<id>0</id>"
+                                            + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "<locale>"
+                                            + "<id>0</id>"
                                             + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "</locales>"
                                             + "<domains>"
                                             + "<domain>"
-                                            + "<id>dvara</id>"
+                                            + "<id>1</id>"
+                                            + "<name>dvara</name>"
                                             + "<created_at>2007-07-09 17:14:48.0</created_at>"
                                             + "</domain>"
                                             + "</domains>"
@@ -111,7 +115,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
         final User resource = this.factory.newResource();
         resource.fromXml(XML);
 
-        assertEquals(2, resource.getAllowedLocales().size());
+        assertEquals(1, resource.getAllowedLocales().size());
     }
 
     @Override

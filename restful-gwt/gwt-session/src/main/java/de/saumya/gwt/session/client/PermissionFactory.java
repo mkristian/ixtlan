@@ -1,10 +1,10 @@
 package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class PermissionFactory extends ResourceFactory<Permission> {
+public class PermissionFactory extends
+        ResourceFactoryWithIdGenerator<Permission> {
 
     private final RoleFactory groupFactory;
 
@@ -26,13 +26,8 @@ public class PermissionFactory extends ResourceFactory<Permission> {
     }
 
     @Override
-    public Permission newResource() {
-        return new Permission(this.repository, this, this.groupFactory);
-    }
-
-    @Override
-    public Permission newResource(final String key) {
-        return new Permission(this.repository, this, this.groupFactory);
+    public Permission newResource(final int id) {
+        return new Permission(this.repository, this, this.groupFactory, id);
     }
 
     @Override

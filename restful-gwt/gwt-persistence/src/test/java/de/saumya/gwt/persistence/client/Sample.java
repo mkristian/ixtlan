@@ -5,7 +5,7 @@ package de.saumya.gwt.persistence.client;
 
 import com.google.gwt.xml.client.Element;
 
-public class Sample extends ResourceWithID<Sample> {
+public class Sample extends ResourceWithId<Sample> {
 
     private final SampleFactory factory;
 

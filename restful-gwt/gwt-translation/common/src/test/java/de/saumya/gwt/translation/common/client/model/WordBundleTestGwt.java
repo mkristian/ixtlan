@@ -1,20 +1,11 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class WordBundleTestGwt extends AbstractResourceTestGwt<WordBundle> {
-
-    /**
-     * Must refer to a valid module that sources this class.
-     */
-    @Override
-    public String getModuleName() {
-        return "de.saumya.gwt.translation.common.CommonTest";
-    }
+public class WordBundleTestGwt extends AbstractCommonTestGwt<WordBundle> {
 
     private WordBundle resource;
 

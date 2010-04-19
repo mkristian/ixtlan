@@ -9,9 +9,9 @@ import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceWithID;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class Group extends ResourceWithID<Group> {
+public class Group extends ResourceWithId<Group> {
 
     private final LocaleFactory localeFactory;
     private final DomainFactory domainFactory;

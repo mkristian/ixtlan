@@ -29,7 +29,8 @@ public class ConfigurationTestGwt extends
     private static final String RESOURCE_XML = "<configuration>"
                                                      + "<session_idle_timeout>1</session_idle_timeout>"
                                                      + "<keep_audit_logs>0</keep_audit_logs>"
-                                                     + "<locales></locales>"
+                                                     + "<locales>"
+                                                     + "</locales>"
                                                      + "<updated_at>2009-07-09 17:14:48.0</updated_at>"
                                                      + "</configuration>";
 
@@ -46,7 +47,7 @@ public class ConfigurationTestGwt extends
 
     @Override
     protected String resource2Xml() {
-        return RESOURCE_XML.replace(">1<", ">2<");
+        return RESOURCE_XML;
     }
 
     @Override
@@ -90,7 +91,13 @@ public class ConfigurationTestGwt extends
     private final static String XML = "<configuration>"
                                             + "<session_idle_timeout>1</session_idle_timeout>"
                                             + "<keep_audit_logs>0</keep_audit_logs>"
-                                            + "<locales></locales>"
+                                            + "<locales>"
+                                            + "<locale>"
+                                            + "<id>20</id>"
+                                            + "<code>de</code>"
+                                            + "<created_at>2009-07-09 17:14:48.0</created_at>"
+                                            + "</locale>"
+                                            + "</locales>"
                                             + "<updated_at>2007-07-09 17:14:48.0</updated_at>"
                                             + "</configuration>";
 

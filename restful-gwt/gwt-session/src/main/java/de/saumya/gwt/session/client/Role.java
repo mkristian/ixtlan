@@ -6,20 +6,19 @@ package de.saumya.gwt.session.client;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-class Role extends Resource<Role> {
+class Role extends ResourceWithId<Role> {
 
-    protected Role(final Repository repository, final RoleFactory factory) {
-        super(repository, factory);
+    private final RoleFactory factory;
+
+    protected Role(final Repository repository, final RoleFactory factory,
+            final int id) {
+        super(repository, factory, id);
+        this.factory = factory;
     }
 
     String name;
-
-    @Override
-    public String key() {
-        return this.name;
-    }
 
     @Override
     protected void appendXml(final StringBuilder buf) {
@@ -28,6 +27,7 @@ class Role extends Resource<Role> {
 
     @Override
     protected void fromXml(final Element root) {
+        this.id = this.factory.nextId();
         this.name = getString(root, "name");
     }
 

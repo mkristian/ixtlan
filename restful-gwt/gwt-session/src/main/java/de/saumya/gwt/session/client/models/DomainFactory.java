@@ -4,10 +4,10 @@
 package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class DomainFactory extends ResourceFactory<Domain> {
+public class DomainFactory extends ResourceFactoryWithID<Domain> {
 
     public DomainFactory(final Repository repository,
             final ResourceNotifications notifications) {
@@ -20,23 +20,13 @@ public class DomainFactory extends ResourceFactory<Domain> {
     }
 
     @Override
-    public String keyName() {
-        return "id";
-    }
-
-    @Override
-    public Domain newResource() {
-        return new Domain(this.repository, this);
-    }
-
-    @Override
-    public Domain newResource(final String id) {
+    public Domain newResource(final int id) {
         return new Domain(this.repository, this, id);
     }
 
     @Override
     public String defaultSearchParameterName() {
-        return keyName();
+        return "name";
     }
 
 }

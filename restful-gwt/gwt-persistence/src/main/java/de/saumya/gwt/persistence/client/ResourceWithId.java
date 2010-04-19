@@ -5,9 +5,9 @@ package de.saumya.gwt.persistence.client;
 
 import com.google.gwt.xml.client.Element;
 
-public abstract class ResourceWithID<E extends Resource<E>> extends Resource<E> {
+public abstract class ResourceWithId<E extends Resource<E>> extends Resource<E> {
 
-    protected ResourceWithID(final Repository repository,
+    protected ResourceWithId(final Repository repository,
             final ResourceFactory<E> factory, final int id) {
         super(repository, factory);
         this.id = id;

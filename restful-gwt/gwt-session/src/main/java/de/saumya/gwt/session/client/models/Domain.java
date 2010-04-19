@@ -5,51 +5,43 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class Domain extends Resource<Domain> {
+public class Domain extends ResourceWithId<Domain> {
 
-    Domain(final Repository repository, final ResourceFactory<Domain> factory) {
-        this(repository, factory, null);
+    Domain(final Repository repository, final DomainFactory factory,
+            final int id) {
+        super(repository, factory, id);
     }
 
-    Domain(final Repository repository, final ResourceFactory<Domain> factory,
-            final String id) {
-        super(repository, factory);
-        this.id = id;
-    }
-
-    public String    id;
+    public String    name;
 
     public Timestamp createdAt;
 
     @Override
     protected void appendXml(final StringBuilder buf) {
-        appendXml(buf, "id", this.id);
+        super.appendXml(buf);
+        appendXml(buf, "name", this.name);
         appendXml(buf, "created_at", this.createdAt);
     }
 
     @Override
     public void fromXml(final Element root) {
-        this.id = getString(root, "id");
+        super.fromXml(root);
+        this.name = getString(root, "name");
         this.createdAt = getTimestamp(root, "created_at");
     }
 
     @Override
-    public String key() {
-        return this.id;
-    }
-
-    @Override
-    protected void toString(final StringBuilder buf) {
-        toString(buf, "id", this.id);
+    public void toString(final StringBuilder buf) {
+        super.toString(buf);
+        toString(buf, "name", this.name);
         toString(buf, "created_at", this.createdAt);
     }
 
     @Override
     public String display() {
-        return this.id;
+        return this.name;
     }
 
 }
