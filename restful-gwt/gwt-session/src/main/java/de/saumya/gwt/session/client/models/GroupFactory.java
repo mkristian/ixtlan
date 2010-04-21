@@ -40,4 +40,11 @@ public class GroupFactory extends ResourceFactoryWithID<Group> {
         return "name";
     }
 
+    @Override
+    protected Group getResource(final String key) {
+        // no cache since the resource gets used in many context carry different
+        // locales, i.e. each user has their own sets of locales for the same group
+        return newResource(key);
+    }
+
 }
