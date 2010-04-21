@@ -275,10 +275,6 @@ public class Session {
         return false;
     }
 
-    // public Configuration getConfiguration() {
-    // return this.configurationFactory.get();
-    // }
-
     public User getUser() {
         return this.authentication != null ? this.authentication.user : null;
     }

@@ -16,12 +16,6 @@ public class Locale extends ResourceWithId<Locale> {
 
     public static final String ALL_CODE     = "ALL";
 
-    // Locale(final Repository repository, final LocaleFactory factory) {
-    // this(repository, factory, null);
-    // // can not throw exception to allow to create Locales
-    // // throw new RuntimeException("immutable - needs key");
-    // }
-
     Locale(final Repository repository, final LocaleFactory factory,
             final int id) {
         super(repository, factory, id);
@@ -29,11 +23,6 @@ public class Locale extends ResourceWithId<Locale> {
 
     public String    code;
     public Timestamp createdAt;
-
-    @Override
-    public String key() {
-        return this.code;
-    }
 
     @Override
     public boolean isImmutable() {
