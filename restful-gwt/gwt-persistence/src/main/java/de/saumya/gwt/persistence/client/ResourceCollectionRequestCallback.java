@@ -8,12 +8,12 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
-public class ResourceListRequestCallback implements RequestCallback {
+public class ResourceCollectionRequestCallback implements RequestCallback {
 
-    private final ResourceCollection<? extends Resource<?>> list;
+    private final ResourceCollection<? extends Resource<?>> collection;
 
-    ResourceListRequestCallback(ResourceCollection<? extends Resource<?>> list) {
-        this.list = list;
+    ResourceCollectionRequestCallback(ResourceCollection<? extends Resource<?>> collection) {
+        this.collection = collection;
     }
 
     public void onError(Request request, Throwable exception) {
@@ -21,6 +21,6 @@ public class ResourceListRequestCallback implements RequestCallback {
     }
 
     public void onResponseReceived(Request request, Response response) {
-        list.fromXml(response.getText());
+        collection.fromXml(response.getText());
     }
 }

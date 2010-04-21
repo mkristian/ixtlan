@@ -1,5 +1,7 @@
 package de.saumya.gwt.persistence.client;
 
+import java.util.Iterator;
+
 import de.saumya.gwt.persistence.client.Resource.State;
 
 public class CacheTestGwt extends PersistenceTestGwt {
@@ -44,11 +46,12 @@ public class CacheTestGwt extends PersistenceTestGwt {
         this.repository.addXmlResponse("<samples>" + RESOURCE_XML
                 + RESOURCE_XML.replace("123", "234") + "</samples>");
         final ResourceCollection<Sample> samples = this.factory.all();
-        assertSame(this.sample, samples.get(0));
+        final Iterator<Sample> iterator = samples.iterator();
+        assertSame(this.sample, iterator.next());
 
         this.repository.reset();
         final Sample second = this.factory.get(234);
-        assertSame(second, samples.get(1));
+        assertSame(second, iterator.next());
     }
 
     public void testGetWithNested() {

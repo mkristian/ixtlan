@@ -20,6 +20,8 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
 
     private final ResourceFactory<E>               factory;
 
+    private boolean                                frozen    = false;
+
     public ResourceCollection(final ResourceFactory<E> factory) {
         this.factory = factory;
     }
@@ -27,6 +29,7 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
     public void fromXml(final String xml) {
         GWT.log(xml, null);
         fromXml(XMLParser.parse(xml).getDocumentElement(), false);
+        // freeze();
         fireResourcesLoadedEvents();
     }
 
@@ -35,7 +38,7 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
     }
 
     private void fromXml(final Element root, final boolean all) {
-        clear();
+        super.clear();
         final NodeList list = root.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
             if (list.item(i) instanceof Element) {
@@ -45,7 +48,7 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
                 resource.fromXml(element);
                 resource.state = State.UP_TO_DATE;
                 // if (isNew || all) {
-                add(resource);
+                super.add(resource);
                 // fireResourcesChangeEvents(resource);
                 // }
             }
@@ -87,6 +90,71 @@ public class ResourceCollection<E extends Resource<E>> extends ArrayList<E> {
     private void fireResourcesLoadedEvents() {
         for (final ResourcesChangeListener<E> listener : this.listeners) {
             listener.onLoaded(this);
+        }
+    }
+
+    boolean addResource(final E e) {
+        return super.add(e);
+    }
+
+    void clearResources() {
+        super.clear();
+    }
+
+    boolean removeResource(final Object o) {
+        return super.remove(o);
+    }
+
+    public void freeze() {
+        this.frozen = true;
+    }
+
+    public boolean isFrozen() {
+        return this.frozen;
+    }
+
+    @Override
+    public ResourceCollection<E> clone() {
+        final ResourceCollection<E> result = new ResourceCollection<E>(this.factory);
+        final boolean old = this.frozen;
+        this.frozen = false;
+        result.addAll(this);
+        this.frozen = old;
+        return result;
+    }
+
+    @Override
+    public boolean add(final E e) {
+        if (this.frozen) {
+            throw new UnsupportedOperationException();
+        }
+        else {
+            if (!contains(e)) {
+                return super.add(e);
+            }
+            else {
+                return true;
+            }
+        }
+    }
+
+    @Override
+    public void clear() {
+        if (this.frozen) {
+            throw new UnsupportedOperationException();
+        }
+        else {
+            super.clear();
+        }
+    }
+
+    @Override
+    public boolean remove(final Object o) {
+        if (this.frozen) {
+            throw new UnsupportedOperationException();
+        }
+        else {
+            return super.remove(o);
         }
     }
 

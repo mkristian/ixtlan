@@ -16,6 +16,19 @@ public abstract class ResourceWithId<E extends Resource<E>> extends Resource<E> 
     public int id;
 
     @Override
+    public boolean equals(final Object other) {
+        if (key() == null || !(other instanceof ResourceWithId<?>)) {
+            return false;
+        }
+        return this.id == ((ResourceWithId<?>) other).id;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    @Override
     public String key() {
         return "" + this.id;
     }

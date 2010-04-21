@@ -116,7 +116,6 @@ public abstract class Resource<E extends Resource<E>> {
     }
 
     public void reload() {
-        // TODO switch on state - why ?
         if (key() == null) {
             this.factory.get();
         }

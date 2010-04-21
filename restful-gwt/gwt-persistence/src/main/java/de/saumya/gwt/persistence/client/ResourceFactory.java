@@ -14,13 +14,13 @@ import de.saumya.gwt.persistence.client.Resource.State;
 
 public abstract class ResourceFactory<E extends Resource<E>> {
 
-    protected final Map<String, E> cache = new HashMap<String, E>();
+    protected final Map<String, E>  cache = new HashMap<String, E>();
 
-    protected final Repository     repository;
+    protected final Repository      repository;
 
-    private E                      singleton;
+    private E                       singleton;
 
-    private ResourceCollection<E>  all;
+    protected ResourceCollection<E> all;
 
     public ResourceFactory(final Repository repository,
             final ResourceNotifications notifications) {
@@ -62,6 +62,9 @@ public abstract class ResourceFactory<E extends Resource<E>> {
 
     void removeFromCache(final E resource) {
         if (resource.key() != null) {
+            if (this.all != null) {
+                this.all.removeResource(resource);
+            }
             this.cache.remove(resource.key());
         }
     }
@@ -69,6 +72,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
     void clearCache() {
         this.singleton = null;
         this.cache.clear();
+        this.all.clearResources();
     }
 
     E getResource() {
@@ -236,13 +240,11 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         final ResourceCollection<E> list;
         if (query == null || query.isEmpty()) {
             if (this.all == null) {
-                list = new ResourceCollection<E>(this);
-                list.addAll(this.cache.values());
-                this.all = list;
+                this.all = new ResourceCollection<E>(this);
+                this.all.addAll(this.cache.values());
             }
-            else {
-                list = this.all;
-            }
+            list = this.all;
+            this.all.freeze();
         }
         else {
             list = new ResourceCollection<E>(this);
@@ -250,7 +252,7 @@ public abstract class ResourceFactory<E extends Resource<E>> {
         list.addResourcesChangeListener(listener);
         this.repository.all(storagePluralName(),
                             query,
-                            new ResourceListRequestCallback(list));
+                            new ResourceCollectionRequestCallback(list));
         return list;
     }
 }
