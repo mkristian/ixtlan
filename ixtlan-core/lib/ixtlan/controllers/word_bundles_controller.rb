@@ -10,7 +10,7 @@ module Ixtlan
         # * DEFAULT latest_approved
         # * locale-parent latest_approved
         # * locale latest_approved
-        l = Locale.get!(locale)
+        l = Locale.first(:code => locale) || Locale.get!(locale)
         wordMap = {}
         Ixtlan::Models::Word.not_approved(:locale => Locale.default).each do |word|
           wordMap[word.code] = word
