@@ -73,12 +73,4 @@ public abstract class ListBoxBinding<T extends Resource<T>, S extends Resource<S
         return result;
     }
 
-    // protected void setResource(final T value) {
-    // setItemSelected(index, selected)
-    // final String val = value == null ? null : value.toString();
-    // for (final RadioButton button : this.buttons) {
-    // button.setValue(button.getFormValue().equals(val));
-    // }
-    // }
-
 }

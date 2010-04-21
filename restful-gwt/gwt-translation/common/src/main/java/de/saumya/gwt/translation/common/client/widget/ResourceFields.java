@@ -187,9 +187,4 @@ public class ResourceFields<E extends Resource<E>> extends FlowPanel implements
         panel.add(textBox);
         add(panel);
     }
-
-    // public <T extends Widget & Binding<E>> void addWidget(final T widget) {
-    // this.bindings.add(widget);
-    // add(widget);
-    // }
 }
