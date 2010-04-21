@@ -18,6 +18,8 @@ module Ixtlan
       
       timestamps :created_at
 
+      modified_by Models::USER
+
       def parent
         c = attribute_get(:code)
         case c.size

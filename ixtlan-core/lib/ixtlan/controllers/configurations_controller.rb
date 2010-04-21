@@ -15,8 +15,6 @@ module Ixtlan
       # GET /configuration.xml
       def show
         @configuration = CONFIGURATION.instance
-p  @configuration.locales
-p  @configuration.to_xml
         respond_to do |format|
           format.html # show.html.erb
           format.xml  { render :xml => @configuration }
