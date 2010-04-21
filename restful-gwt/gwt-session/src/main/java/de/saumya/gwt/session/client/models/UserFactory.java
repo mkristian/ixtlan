@@ -38,7 +38,7 @@ public class UserFactory extends ResourceFactoryWithID<User> {
 
     @Override
     public String defaultSearchParameterName() {
-        return "name";
+        return "login";
     }
 
 }

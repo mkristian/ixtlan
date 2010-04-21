@@ -8,9 +8,9 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -51,7 +51,7 @@ public class LocaleScreen extends ResourceScreen<Locale> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new DefaultResourceActionPanel<Locale>(getTextController,
+                new NoGetByResourceActionPanel<Locale>(getTextController,
                         bindings,
                         session,
                         factory,

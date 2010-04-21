@@ -10,9 +10,9 @@ import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -58,7 +58,7 @@ public class UserScreen extends ResourceScreen<User> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new DefaultResourceActionPanel<User>(getTextController,
+                new NoGetByResourceActionPanel<User>(getTextController,
                         bindings,
                         session,
                         factory,

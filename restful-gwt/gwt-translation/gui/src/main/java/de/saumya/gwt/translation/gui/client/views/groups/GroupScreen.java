@@ -8,9 +8,9 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -51,7 +51,7 @@ public class GroupScreen extends ResourceScreen<Group> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new DefaultResourceActionPanel<Group>(getTextController,
+                new NoGetByResourceActionPanel<Group>(getTextController,
                         bindings,
                         session,
                         factory,
