@@ -24,6 +24,7 @@ public class User extends ResourceWithId<User> {
         super(repository, factory, id);
         this.localeFactory = localeFactory;
         this.groupFactory = groupFactory;
+        this.groups = groupFactory.newResources();
     }
 
     public String                    login;
