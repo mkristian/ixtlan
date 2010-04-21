@@ -37,11 +37,6 @@ public class User extends ResourceWithId<User> {
     public ResourceCollection<Group> groups;
 
     @Override
-    public String key() {
-        return this.id + "";
-    }
-
-    @Override
     protected void appendXml(final StringBuilder buf) {
         super.appendXml(buf);
         appendXml(buf, "login", this.login);
@@ -93,5 +88,14 @@ public class User extends ResourceWithId<User> {
         buf.append("<").append(this.email).append(">");
         buf.append(" (").append(this.login).append(")");
         return buf.toString();
+    }
+
+    public boolean isRoot() {
+        for (final Group g : this.groups) {
+            if (g.isRoot()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

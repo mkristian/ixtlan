@@ -64,4 +64,8 @@ public class Group extends ResourceWithId<Group> {
     public String display() {
         return this.name;
     }
+
+    public boolean isRoot() {
+        return "root".equals(this.name);
+    }
 }
