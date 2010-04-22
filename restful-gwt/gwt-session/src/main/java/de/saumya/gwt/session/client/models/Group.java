@@ -68,4 +68,8 @@ public class Group extends ResourceWithId<Group> {
     public boolean isRoot() {
         return "root".equals(this.name);
     }
+
+    public boolean isLocalesAdmin() {
+        return "locales".equals(this.name);
+    }
 }

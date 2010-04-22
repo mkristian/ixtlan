@@ -99,4 +99,13 @@ public class User extends ResourceWithId<User> {
         }
         return false;
     }
+
+    public boolean isLocalesAdmin() {
+        for (final Group g : this.groups) {
+            if (g.isLocalesAdmin()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
