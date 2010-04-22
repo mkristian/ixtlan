@@ -9,7 +9,7 @@ module Ixtlan
       end
 
       def internal_server_error(exception)
-        dump_error(exception, Object.full_const_get(::Ixtlan::Models::CONFIGURATION).instance)
+        dump_error(exception)
         status = :internal_server_error
         error_page(:internal_server_error, exception) do |exception|
           "internal server error: #{exception.class.name}"
@@ -47,13 +47,16 @@ module Ixtlan
         end
       end
 
-      def dump_error(exception, config)
+      def dump_error(exception)
         log_user_error(exception)
         begin
+          config = Object.full_const_get(::Ixtlan::Models::CONFIGURATION).instance
           dumper = DumpError.new(config.notification_sender_email,
                                  config.notification_recipient_emails,
                                  config.errors_dump_directory)
-        rescue
+        rescue => e
+          # maybe that gives a double entry in the log file
+          log_user_error(e)
           # at least dump the file !!
           dumper = DumpError.new
         end
@@ -79,7 +82,7 @@ module Ixtlan
         logger = Logger.new(log_file)
 
         dump_environment(logger, exception, controller)
-        Ixtlan::Mailer.deliver_error_notification(@email_from, @email_to, exception, log_file) unless @email_to.blank?
+        Ixtlan::Mailer.deliver_error_notification(@email_from, @email_to, exception, log_file) unless (@email_to.blank? || @email_from.blank?)
         log_file
       end
 
