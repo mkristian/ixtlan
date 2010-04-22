@@ -43,7 +43,7 @@ public class Configuration extends Resource<Configuration> {
         appendXml(buf, "keep_audit_logs", this.keepAuditLogs);
         appendXml(buf, "locales", this.locales);
         appendXml(buf,
-                  "notification_sender_emailn",
+                  "notification_sender_email",
                   this.notificationSenderEmail);
         appendXml(buf,
                   "notification_recipient_emails",
