@@ -49,33 +49,21 @@ module Ixtlan
 
       def dump_error(exception, config)
         log_user_error(exception)
-        dumper = DumpError.new(config.notification_sender_email,
-                               config.notification_recipient_emails,
-                               config.errors_dump_directory)
+        begin
+          dumper = DumpError.new(config.notification_sender_email,
+                                 config.notification_recipient_emails,
+                                 config.errors_dump_directory)
+        rescue
+          # at least dump the file !!
+          dumper = DumpError.new
+        end
         dumper.dump(self, exception)
       end
     end
 
-    class ErrorNotifier < ActionMailer::Base
-      require 'pathname'
-
-      def error_notification(email_from, email_to, exception, error_file)
-        @subject    = exception.to_s
-        @body       = {:text => "#{error_file}"}
-        @recipients = email_to
-        @from       = email_from
-        @sent_on    = Time.now
-        @headers    = {}
-        path = Pathname(__FILE__).parent.dirname.to_s
-        view_paths << path unless view_paths.member? path
-        @template   = "error_notification.rhtml"
-      end
-
-    end
-
     class DumpError
 
-      def initialize(email_from, email_to, errors_dir = nil)
+      def initialize(email_from = nil, email_to = nil, errors_dir = nil)
         errors_dir ||= "#{RAILS_ROOT}/log/errors"
         FileUtils.mkdir_p(errors_dir || "#{RAILS_ROOT}/log/errors")
         @errors_dir = Dir.new(errors_dir)
@@ -91,7 +79,7 @@ module Ixtlan
         logger = Logger.new(log_file)
 
         dump_environment(logger, exception, controller)
-        ErrorNotifier.deliver_error_notification(@email_from, @email_to, exception, log_file) unless @email_to.blank?
+        Ixtlan::Mailer.deliver_error_notification(@email_from, @email_to, exception, log_file) unless @email_to.blank?
         log_file
       end
 
