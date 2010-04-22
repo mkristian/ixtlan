@@ -17,11 +17,11 @@ module Ixtlan
 
       property :id, Serial, :field => "uidnumber"
 
-      property :login, String, :required => true , :length => 4..32, :index => :unique_index, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
+      property :login, String, :required => true , :length => 4..32, :unique_index => true, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
 
       property :name, String, :required => true, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
 
-      property :email, String, :required => true, :format => :email_address, :required => true, :length => 8..64, :index => :unique_index, :field => "mail"
+      property :email, String, :required => true, :format => :email_address, :required => true, :length => 8..64, :unique_index => true, :field => "mail"
 
       property :language, String, :required => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
 
