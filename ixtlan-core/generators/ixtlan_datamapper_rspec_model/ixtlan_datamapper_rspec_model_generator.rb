@@ -8,7 +8,7 @@ class IxtlanDatamapperRspecModelGenerator < DatamapperRspecModelGenerator
     overlay_dirs.add_generator("ixtlan_datamapper_model")
     super
   end
-  
+
   def add_options!(opt)
     opt.separator ''
     opt.separator 'Options:'

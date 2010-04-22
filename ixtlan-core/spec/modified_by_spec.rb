@@ -25,7 +25,7 @@ describe Ixtlan::ModifiedBy do
     @second = User.create(:login => 'dr pill')
     @name = AuditedName.create(:name => 'kirk', :current_user => @user)
   end
-  
+
   it 'should create resource with modified by properties' do
     @name.new?.should be_false
     @name.instance_variable_get(:@current_user).should be_nil
@@ -40,7 +40,7 @@ describe Ixtlan::ModifiedBy do
     name.created_by.should == @user
     name.updated_by.should == @user
   end
-  
+
   it 'should modify updated_by on change' do
     @name.current_user = @second
     @name.name = "scotty"

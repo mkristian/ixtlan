@@ -1,9 +1,9 @@
 require 'logging'
 
 module Ixtlan
-  
+
   class RollingFile < ::Logging::Appenders::RollingFile
-    
+
     def current_logfile
       "#{@filename_base}_#{Time.now.strftime(@date_pattern)}.#{@extension}"
     end
@@ -31,7 +31,7 @@ module Ixtlan
           ::File.delete file
         end
       end
-    end 
+    end
 
     def write( event )
       str = event.instance_of?(::Logging::LogEvent) ?

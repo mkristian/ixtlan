@@ -15,7 +15,7 @@ class GwtIxtlanDatamapperRspecScaffoldGenerator < IxtlanDatamapperRspecScaffoldG
   def find_client_dir(dir)
     dir.entries.each do |entry|
       path = File.join(dir.path, entry)
-      if File.directory? path 
+      if File.directory? path
         if entry == "client"
           return path
         elsif entry != ".." && entry != "."
@@ -32,7 +32,7 @@ class GwtIxtlanDatamapperRspecScaffoldGenerator < IxtlanDatamapperRspecScaffoldG
     m = super
 
     base = "src/main/java/"
-      
+
     basedir = find_client_dir(Dir.new(base))
     basedir_test = basedir.sub(/main/, 'test')
 
@@ -76,7 +76,7 @@ module Rails
               "#{match}"
             end
             sentinel = 'ActionController::Routing::Routes.draw do |map|'
-            
+
             logger.route "map.resources #{resource_list}" +  (skip_route ? " - skipped" : " - added")
             unless skip_route
               gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|

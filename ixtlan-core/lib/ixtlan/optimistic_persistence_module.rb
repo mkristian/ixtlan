@@ -6,10 +6,10 @@ module Ixtlan
         qu = {}
         c = model.key_conditions(repository, key)
         c.each {|p,v| qu[p.name] = v}
-        
+
         s = self.model.first(qu)
-        if s.nil? 
-          false 
+        if s.nil?
+          false
         else
           # use to_s to get it to work in both MRI and JRuby
           s.updated_at.to_s != updated_at.to_s

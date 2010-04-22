@@ -15,7 +15,7 @@ module Ixtlan
 
       property :id, Serial
       property :code, String, :required => true , :format => /^[a-z][a-z](_[A-Z][A-Z])?$|^#{DEFAULT}$|^#{ALL}$/, :length => 7, :unique_index => true
-      
+
       timestamps :created_at
 
       modified_by Models::USER
@@ -33,17 +33,25 @@ module Ixtlan
       end
 
       def self.default
-        first_or_create(:code => DEFAULT)
+        first(:code => DEFAULT)
       end
 
       def self.every
-        first_or_create(:code => ALL)
+        first(:code => ALL)
+      end
+
+      def self.first_or_get!(id_or_code)
+        first(:code => id_or_code) || get!(id_or_code)
+      end
+
+      def self.first_or_get(id_or_code)
+        first(:code => id_or_code) || get(id_or_code)
       end
 
       def hash
         attribute_get(:code).hash
       end
-      
+
       alias :eql? :==
         def ==(other)
           attribute_get(:code).eql?(other.attribute_get(:code))

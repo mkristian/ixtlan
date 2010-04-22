@@ -9,13 +9,13 @@ class IxtlanDatamapperRspecScaffoldGenerator < DatamapperRspecScaffoldGenerator
     overlay_dirs.add_generator("datamapper_rspec_scaffold")
 
     m = super
-    
-    unless options[:skip_guard] 
+
+    unless options[:skip_guard]
       m.directory(File.join('app/guards', controller_class_path))
       m.template 'guard.rb', File.join('app/guards', controller_class_path, "#{table_name}_guard.rb")
     end
-    
-    if options[:i18n] 
+
+    if options[:i18n]
       m.directory(File.join('config/locales', controller_class_path))
       m.template 'i18n.rb', File.join('config/locales', controller_class_path, "#{table_name}.yml")
     end

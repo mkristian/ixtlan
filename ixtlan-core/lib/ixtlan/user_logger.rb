@@ -1,20 +1,20 @@
 require 'slf4r'
 module Ixtlan
-  
+
   class UserLogger
-    
+
     def initialize(arg)
       @logger = Slf4r::LoggerFacade.new(arg)
     end
 
-    private 
+    private
 
     def login_from(controller)
       user = controller.respond_to?(:current_user) ? controller.send(:current_user) : nil
       user.nil? ? nil: user.login
     end
 
-    public 
+    public
 
     def log(controller, message = nil, &block)
       log_user(login_from(controller), message, &block)
@@ -31,7 +31,7 @@ module Ixtlan
             audit = controller.instance_variable_get("@#{controller.params[:controller].singular.to_sym}")
             if(audit)
               errors = if(audit.respond_to?(:errors) && !audit.errors.empty?)
-                         " - errors: " + audit.errors.full_messages.join(", ") 
+                         " - errors: " + audit.errors.full_messages.join(", ")
                        end
               "#{controller.params[:controller]}##{controller.params[:action]} #{audit.model}(#{audit.key})#{as_xml}#{message}#{errors}"
             else
@@ -43,10 +43,10 @@ module Ixtlan
         end
       end
     end
-     
+
     def log_user(user, message = nil, &block)
       user ||= "???"
-      @logger.info {"[#{user}] #{message}#{block.call if block}" } 
+      @logger.info {"[#{user}] #{message}#{block.call if block}" }
     end
   end
 end

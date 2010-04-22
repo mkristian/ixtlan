@@ -1,13 +1,13 @@
 module Ixtlan
   module ActionController #:nodoc:
     module Guard #:nodoc:
-      def self.included(base)      
+      def self.included(base)
         base.send(:include, InstanceMethods)
       end
       module InstanceMethods #:nodoc:
-        
+
         protected
-        
+
         def guard(locale = nil)
           guard!(params[:controller], params[:action], locale)
         end
@@ -27,7 +27,7 @@ module Ixtlan
     def self.included(base)
       base.send(:include, InstanceMethods)
     end
-    
+
     module InstanceMethods #:nodoc:
       def allowed(resource, action, locale = nil)
         ::Ixtlan::Guard.check(helpers.controller, resource, action, locale)
@@ -36,11 +36,11 @@ module Ixtlan
   end
 
   class Guard
-    
+
     @@map = {}
 
     def self.load(logger = Logger.new(STDOUT), superuser = :root, guard_dir = "#{RAILS_ROOT}/app/guards", &block)
-      @@block = 
+      @@block =
         if block
           block
         else
@@ -52,7 +52,7 @@ module Ixtlan
       DataMapper.setup(:guard_memory, :adapter => :in_memory)
       @@logger = logger
       @@superuser = superuser
-      if File.exists?(guard_dir) 
+      if File.exists?(guard_dir)
         Dir.new(guard_dir).to_a.each do |f|
           if f.match(".rb$")
             require(File.join(guard_dir, f))
@@ -66,7 +66,7 @@ module Ixtlan
 
     def self.symbolize(h)
       result = {}
-      
+
       h.each do |k, v|
         if v.is_a?(Hash)
           result[k.to_sym] = symbolize_keys(v) unless v.size == 0
@@ -76,10 +76,10 @@ module Ixtlan
           result[k.to_sym] = val
         end
       end
-      
+
       result
     end
-    
+
     def self.initialize(controller, map)
       msg = map.collect{ |k,v| "\n\t#{k} => [#{v.join(',')}]"}
       @@logger.debug("#{controller} guard: #{msg}")
@@ -106,7 +106,7 @@ module Ixtlan
         permission_const.all.destroy!
         role_const.all.destroy!
         xml
-      end   
+      end
     end
 
     def self.check(controller, resource, action, locale = nil)
@@ -138,4 +138,3 @@ module Ixtlan
   class GuardException < Exception; end
   class PermissionDenied < GuardException; end
 end
-

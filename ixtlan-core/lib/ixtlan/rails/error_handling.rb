@@ -17,8 +17,8 @@ module Ixtlan
       end
 
       def error_page(status, exception, &block)
-        respond_to do |format| 
-          format.html { 
+        respond_to do |format|
+          format.html {
             @notice = block.call(exception)
             if logged_in?
               render :template => "errors/error", :status => status
@@ -39,8 +39,8 @@ module Ixtlan
 
       def stale_resource(exception)
         log_user_error(exception)
-        respond_to do |format| 
-          format.html { 
+        respond_to do |format|
+          format.html {
             render :template => "errors/stale", :status => :conflict
           }
           format.xml { head :conflict }
@@ -49,13 +49,13 @@ module Ixtlan
 
       def dump_error(exception, config)
         log_user_error(exception)
-        dumper = DumpError.new(config.notification_sender_email, 
+        dumper = DumpError.new(config.notification_sender_email,
                                config.notification_recipient_emails,
                                config.errors_dump_directory)
         dumper.dump(self, exception)
       end
     end
-    
+
     class ErrorNotifier < ActionMailer::Base
       require 'pathname'
 
@@ -72,9 +72,9 @@ module Ixtlan
       end
 
     end
-    
+
     class DumpError
-      
+
       def initialize(email_from, email_to, errors_dir = nil)
         errors_dir ||= "#{RAILS_ROOT}/log/errors"
         FileUtils.mkdir_p(errors_dir || "#{RAILS_ROOT}/log/errors")
@@ -86,35 +86,35 @@ module Ixtlan
       def dump(controller, exception)
         time = Time.now
         error_log_id = "#{time.tv_sec}#{time.tv_usec}"
-        
+
         log_file = File.join(@errors_dir.path.to_s, "error-#{error_log_id}.log")
         logger = Logger.new(log_file)
-        
+
         dump_environment(logger, exception, controller)
         ErrorNotifier.deliver_error_notification(@email_from, @email_to, exception, log_file) unless @email_to.blank?
         log_file
-      end 
+      end
 
       private
 
       def dump_environment_header(logger, header)
         logger.error("\n===================================================================\n#{header}\n===================================================================\n");
       end
-      
+
       def dump_environment(logger, exception, controller)
         dump_environment_header(logger, "REQUEST DUMP");
         dump_hashmap(logger, controller.request.env)
-        
+
         dump_environment_header(logger, "RESPONSE DUMP");
         dump_hashmap(logger, controller.response.headers)
-        
+
         dump_environment_header(logger, "SESSION DUMP");
         dump_hashmap(logger, controller.session)
-        
+
         dump_environment_header(logger, "PARAMETER DUMP");
         map = {}
         dump_hashmap(logger, controller.params.each{ |k,v| map[k]=v })
-        
+
         dump_environment_header(logger, "EXCEPTION");
         logger.error("#{exception.class}:#{exception.message}")
         logger.error("\t" + exception.backtrace.join("\n\t"))

@@ -21,7 +21,7 @@ module Rails
     def current_user
       session[:user] = login_from_session if logged_in? and session[:user].nil?
       session[:user]
-    end 
+    end
 
     def current_user=(new_user)
       session[:user_id] = new_user ? new_user.id : nil
@@ -45,7 +45,7 @@ module Rails
         end
       else
         case(request.method)
-        when :get   
+        when :get
           session.clear
           render_login_page
         when :post
@@ -128,7 +128,7 @@ module Rails
         end
         format.xml { head :ok }
       end
-    end    
+    end
   end
 end
 end

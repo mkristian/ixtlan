@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package <%= package %>.views.<%= plural_name %>;
 

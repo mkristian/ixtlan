@@ -6,7 +6,7 @@ module Ixtlan
           base.prepend_around_filter(Filter)
         end
       end
-      
+
       class Filter
         def self.filter(controller)
           name = controller.params[:controller]

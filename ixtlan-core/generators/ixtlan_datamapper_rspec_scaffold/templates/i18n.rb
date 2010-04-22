@@ -8,4 +8,4 @@ en:
     list: <%= singular_name %>list
 <% for attribute in attributes -%>
     <%= attribute.column.name %>: <%= attribute.column.human_name %>
-<% end -%>     
+<% end -%>

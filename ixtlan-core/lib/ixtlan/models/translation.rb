@@ -7,17 +7,17 @@ module Ixtlan
       def self.default_storage_name
         "Translation"
       end
-      
+
       property :id, Serial
 
       property :text, String, :required => true, :length => 256
-      
+
       property :previous_text, String, :required => false, :length => 256
-      
+
       property :approved_at, DateTime, :required => true, :auto_validation => false
-      
+
       belongs_to :approved_by, :model => Models::USER
-      
+
       def self.map_for(args = {})
         map = {}
         I18nText.latest_approved(args.dup).each do |text|
@@ -38,4 +38,3 @@ module Ixtlan
     end
   end
 end
-

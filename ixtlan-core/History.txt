@@ -12,7 +12,7 @@
 
 * symbolize internal map of guard
 
-* gwt generator: parametrizied package generated java classes - find client directory and use this as base package 
+* gwt generator: parametrizied package generated java classes - find client directory and use this as base package
 
 * make phrases to work
 

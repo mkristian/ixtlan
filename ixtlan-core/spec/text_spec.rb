@@ -17,7 +17,7 @@ describe Ixtlan::Models::I18nText do
     @approved.approve(:current_user => @controller.current_user)
     @text = Ixtlan::Models::I18nText.create(:code => "code", :text => "text", :current_user => @controller.current_user, :locale => Ixtlan::Models::Locale.default)
   end
-  
+
   it "should create default" do
     @text.new?.should_not be_nil
     @text.id.should_not be_nil

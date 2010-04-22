@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package <%= package %>.models;
 
@@ -48,7 +48,7 @@ public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt
     @Override
     protected ResourceFactory<<%= class_name %>> factorySetUp() {
         return new <%= class_name %>Factory(this.repository,
-					    this.notifications<% unless options[:skip_modified_by] -%>, this.userFactory<% end -%>);
+         this.notifications<% unless options[:skip_modified_by] -%>, this.userFactory<% end -%>);
     }
 
     @Override

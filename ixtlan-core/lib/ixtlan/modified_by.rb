@@ -1,7 +1,7 @@
 #require 'dm-core'
 module Ixtlan
 
-  module ModifiedBy    
+  module ModifiedBy
     extend ::DataMapper::Chainable
 
     MODIFIED_BY_PROPERTIES = {
@@ -22,7 +22,7 @@ module Ixtlan
 
     def current_user
       raise ::DataMapper::MissingCurrentUserError.new("current_user not set. it can be set like any other property") unless @current_user
-      
+
       @current_user
     end
 

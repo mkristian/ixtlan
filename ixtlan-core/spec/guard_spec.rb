@@ -7,13 +7,13 @@ module ActionView
 end
 module Erector
   class Widget
-    
+
     attr_writer :controller
-    
+
     class Helpers
       attr_accessor :controller
     end
-    
+
     def helpers
       @helpers ||= Helpers.new
       @helpers.controller = @controller
@@ -38,7 +38,7 @@ describe Ixtlan::Models::Permission do
 
 end
 
-class Controller 
+class Controller
   include ActionController::Base
 end
 

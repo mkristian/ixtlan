@@ -40,7 +40,7 @@ YARD::Rake::YardocTask.new
 
 module Datamapper4Rails
   class IntegrationTest
-    def command(command) 
+    def command(command)
       FileUtils.cd(@directory) do
       unless system("#{command}")
         puts

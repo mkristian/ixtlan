@@ -9,25 +9,25 @@ module Ixtlan
       end
 
       property :id, Serial
-      
+
       property :code, String, :required => true, :length => 64
-      
+
       property :text, String, :required => true, :length => 256
-      
+
       property :version, Integer, :required => false
-      
+
       property :current, Boolean, :required => true, :auto_validation => false
 
       property :previous, Boolean, :required => true, :auto_validation => false
 
       property :updated_at, DateTime, :required => true, :auto_validation => false
-      
+
       belongs_to :updated_by, :model => Models::USER
-      
+
       property :approved_at, DateTime, :required => false
-      
+
       belongs_to :approved_by, :model => Models::USER, :required => false
-      
+
       belongs_to :locale, :model => Models::LOCALE
 
       validates_with_method :invariant
@@ -66,10 +66,10 @@ module Ixtlan
       validates_with_method :cascade
 
       def cascade
-        size = 
+        size =
           case locale.code.size
           when 2
-            self.model.latest_approved(:code => code, :locale => Locale.default).size 
+            self.model.latest_approved(:code => code, :locale => Locale.default).size
           when 5
             self.model.latest_approved(:code => code, :locale => Locale.first(:code => locale.code[0,1])).size
           else
@@ -102,17 +102,17 @@ module Ixtlan
 # TODO approved is not need since after approval the resource is inmutable !!!
         params[:approved_at] = attribute_get(:updated_at)
         params[:approved_by] = params[:current_user] || current_user
-        
+
         p = (previous.nil? ? true : previous.update(:previous => false,
                                                     :current_user => params[:current_user] || current_user))
-        l = (latest.nil? ? true : latest.update(:current => false, 
+        l = (latest.nil? ? true : latest.update(:current => false,
                                                 :previous => true,
                                                 :current_user => params[:current_user] || current_user))
         u = update(params)
-        
+
         u && l && p
       end
-      
+
       def approved?
         !attribute_get(:version).nil?
       end
@@ -139,4 +139,3 @@ module Ixtlan
     end
   end
 end
-

@@ -7,9 +7,9 @@ require 'ixtlan/audit_config'
 module Ixtlan
   class LoggerConfig
     def self.rolling_appender(name)
-      appender = Ixtlan::RollingFile.new(name, 
-                                         :filename_base => log_filebase(name), 
-                                         :keep => 2, 
+      appender = Ixtlan::RollingFile.new(name,
+                                         :filename_base => log_filebase(name),
+                                         :keep => 2,
                                          :date_pattern => '%Y-%m')
       appender.layout = Logging::Layouts::Pattern.new(:pattern => "%d [%-l] (%c) %m\n")
       appender
@@ -27,30 +27,30 @@ module Ixtlan
     end
 
     def self.log_level(level = :warn)
-      ENV['RAILS_ENV'] == 'production' ? level : :debug 
+      ENV['RAILS_ENV'] == 'production' ? level : :debug
     end
 
     Logging.init :debug, :info, :warn, :error, :fatal unless Logging.const_defined? 'MAX_LEVEL_LENGTH'
 
     # setup rails logger
-    rails_appender = Logging::Appenders::File.new('rails', 
+    rails_appender = Logging::Appenders::File.new('rails',
                                             :filename => log_filebase(RAILS_ENV) + ".log")
     rails_appender.layout = Logging::Layouts::Pattern.new(:pattern => "%-20c\t- %m\n")
-    
+
     logger = logger(rails_appender, Rails)
     logger.info "initialized logger ..."
-    
+
     # datamapper + dataobject logger
     appender = rolling_appender('sql')
-  
+
     DataMapper.logger = logger([appender,rails_appender], DataMapper)
-    
+
     #TODO better find out which database !!!
     DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
 
     # configure audit logger
-    Ixtlan::AuditConfig.configure(Ixtlan::Models::Configuration.instance.keep_audit_logs, 
-                                  log_filebase('audit'), 
+    Ixtlan::AuditConfig.configure(Ixtlan::Models::Configuration.instance.keep_audit_logs,
+                                  log_filebase('audit'),
                                   [
                                    Ixtlan::Models::User,
                                    Ixtlan::Rails::Audit,

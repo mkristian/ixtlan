@@ -11,11 +11,11 @@ module Ixtlan
     end
 
     def self.reconfigure(keep, file)
-      audit_appender = 
-        RollingFile.new('audit', 
-                        { :filename_base => file, 
-                          :keep => keep, 
-                          :safe => true, 
+      audit_appender =
+        RollingFile.new('audit',
+                        { :filename_base => file,
+                          :keep => keep,
+                          :safe => true,
                           :layout => Logging::Layouts::Pattern.new(:pattern => "%d %m\n") }
                         )
 

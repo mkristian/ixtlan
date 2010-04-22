@@ -1,12 +1,12 @@
-Ixtlan::Guard.initialize(:permissions, 
-                         { :show => [:guest], 
-                           :edit => [:root, :admin], 
-                           :update => [:root, :admin], 
+Ixtlan::Guard.initialize(:permissions,
+                         { :show => [:guest],
+                           :edit => [:root, :admin],
+                           :update => [:root, :admin],
                            :destroy => [:root] }
                          )
 
-Ixtlan::Guard.initialize(:configurations, 
-                         { :show => [:admin], 
-                           :edit => [:root], 
+Ixtlan::Guard.initialize(:configurations,
+                         { :show => [:admin],
+                           :edit => [:root],
                            :update => [:root] }
                          )

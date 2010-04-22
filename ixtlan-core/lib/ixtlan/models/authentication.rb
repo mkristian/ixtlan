@@ -1,7 +1,7 @@
 require 'dm-serializer'
 module Ixtlan
   module Models
-    class Authentication 
+    class Authentication
       include DataMapper::Resource
 
       def self.name
@@ -11,15 +11,15 @@ module Ixtlan
       property :id, Serial, :default => 1
 
       property :login, String,:format => /^[a-zA-Z0-9\-!=+$%^&*\(\){}|\[\]<>_.]*$/
-      
+
       property :password, String,:format => /^[a-zA-Z0-9_.]*$/
-      
+
       attr_accessor :token
-      
+
       belongs_to :user, :model => ::Ixtlan::Models::USER
 
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?
-       
+
         protected
 
         alias :to_x :to_xml_document

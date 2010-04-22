@@ -9,7 +9,7 @@ require 'ixtlan/models/word'
 require 'ixtlan/models/translation'
 
 describe "Ixtlan::Models::TextCollection" do
-  
+
   len = 6
 
   before(:all) do
@@ -19,11 +19,11 @@ describe "Ixtlan::Models::TextCollection" do
     Ixtlan::Models::I18nText.all.destroy!
     (1..len).each do |i|
       locale = Ixtlan::Models::Locale.first_or_create(:id => 10 + len + i, :code => "c#{(96 +i).chr}")
-      text = Ixtlan::Models::I18nText.create(:code => "code_#{i}", 
+      text = Ixtlan::Models::I18nText.create(:code => "code_#{i}",
                                              :text => "text_#{i}",
-                                             :current_user => @controller.current_user, 
-                                             :locale => Ixtlan::Models::Locale.default, 
-                                             :updated_at => DateTime.now, 
+                                             :current_user => @controller.current_user,
+                                             :locale => Ixtlan::Models::Locale.default,
+                                             :updated_at => DateTime.now,
                                              :updated_by => @controller.current_user)
       text.approve(:current_user => @controller.current_user)
       (1..len).each do |j|

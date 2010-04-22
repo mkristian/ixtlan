@@ -6,10 +6,10 @@ module Ixtlan
         args = {}
         args[:limit] = params[:limit].to_i + 1 if params[:limit]
         args[:offset] = params[:offset].to_i if params[:offset]
-        
+
         if login = params[search_parameter]
           if "false" == params[:fuzzy]
-            args[search_parameter] = login 
+            args[search_parameter] = login
           else
             args[search_parameter.like] = "%" + login.to_s + "%"
           end

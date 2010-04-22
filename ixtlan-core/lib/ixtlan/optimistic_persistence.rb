@@ -6,9 +6,9 @@ module DataMapper
 
 end
 
-module Ixtlan   
+module Ixtlan
   module OptimisticPersistence
-    
+
     def self.included(base)
       base.send(:include, ::Ixtlan::OptimisticPersistenceModule)
       base.before :valid? do

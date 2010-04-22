@@ -16,9 +16,9 @@ module Ixtlan
       has n, :roles, :model => Models::ROLE
 
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?
-       
+
         protected
-        
+
         alias :to_x :to_xml_document
         def to_xml_document(opts, doc = nil)
           opts.merge!({:methods => [:roles]})

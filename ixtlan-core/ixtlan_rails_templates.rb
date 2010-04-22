@@ -11,11 +11,11 @@ def ixtlan_model(name)
 class #{name.camelcase} < Ixtlan::Models::#{name.camelcase}; end
 CODE
 end
-def ixtlan_controller(name, guards = [:index,:show,:new,:create,:edit,:update,:destroy], singleton = nil)
+def ixtlan_controller(name, guards = {:actions => [:index,:show,:new,:create,:edit,:update,:destroy], :default => nil}, singleton = nil)
   if guards
     file "app/guards/#{name}_guard.rb", <<-CODE
-Ixtlan::Guard.initialize(:#{name}, { 
-#{guards.collect {|g| ":#{g} => []" }.join(",\n") }
+Ixtlan::Guard.initialize(:#{name}, {
+#{guards[:actions].collect {|g| ":#{g} => [#{guards[:default]}]" }.join(",\n") }
 })
 CODE
   end
@@ -87,8 +87,8 @@ environment "DM_VERSION='#{DM_VERSION}'"
 
 # init a session store
 initializer 'datamapper_store.rb', <<-CODE
-# init a session store which uses a memory cache and drops the user object 
-# and the flash which results into a very thin session and hardly any 
+# init a session store which uses a memory cache and drops the user object
+# and the flash which results into a very thin session and hardly any
 # database updates !
 # cleanup can be a problem. jruby uses soft-references for the cache so
 # memory cleanup with jruby is no problem.
@@ -159,7 +159,7 @@ migration 1, :create_root_user do
     Ixtlan::Models::GroupUser.auto_migrate!
     Ixtlan::Models::GroupLocaleUser.auto_migrate!
 
-    u = User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1)
+    u = User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :id => 1)
     #u.current_user = u
     u.created_at = DateTime.now
     u.updated_at = u.created_at
@@ -170,7 +170,17 @@ migration 1, :create_root_user do
     g = Group.create(:name => 'root', :current_user => u)
     u.groups << g
     u.save
-    File.open("root", 'w') { |f| f.puts "\#{u.password}" }
+
+    a = User.create(:login => 'admin', :email => 'admin@exmple.com', :name => 'Administrator', :id => 2, :current_user => u)
+    a.reset_password
+    a.save!
+    users = Group.create(:name => 'users', :current_user => u)
+    a.groups << users
+    locales = Group.create(:name => 'locales', :current_user => u)
+    a.groups << locales
+    a.save
+
+    File.open("root", 'w') { |f| f.puts "root\n\#{u.password}\nadmin\n\#{a.password}\n" }
   end
 
   down do
@@ -198,8 +208,9 @@ migration 3, :create_locale do
     # get/create default locale
     Locale.default
     # get/create "every" locale
-    Locale.every    
+    Locale.every
 
+    # root user has access to ALL locales
     Ixtlan::Models::GroupLocaleUser.create(:group => Group.first, :user => User.first, :locale => Locale.every)
   end
 
@@ -222,7 +233,7 @@ CODE
 #some small html pages
 file "app/views/sessions/login.html.erb", <<-CODE
 <p style="color: darkgreen"><%= @notice %></p>
-<form method="post"> 
+<form method="post">
   <p>
     <label for="login">login</label><br />
     <input type="text" name="login" />
@@ -292,7 +303,7 @@ file 'pom.xml', <<-CODE
   </pluginRepositories>
   <build>
     <!-- allow the gwt plugin to work with this pom -->
-    <outputDirectory>war/WEB-INF/classes</outputDirectory> 
+    <outputDirectory>war/WEB-INF/classes</outputDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -305,17 +316,17 @@ file 'pom.xml', <<-CODE
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>rails-maven-plugin</artifactId>
-	<version>${jruby.plugins.version}</version>
+ <version>${jruby.plugins.version}</version>
       </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>jruby-maven-plugin</artifactId>
-	<version>${jruby.plugins.version}</version>
+ <version>${jruby.plugins.version}</version>
       </plugin>
       <plugin>
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
-	<version>${jruby.plugins.version}</version>
+ <version>${jruby.plugins.version}</version>
       </plugin>
     </plugins>
   </build>
@@ -333,37 +344,37 @@ if ENV['GWT'] == 'true' || (!ENV['GWT'] && yes?("install GWT interface ?"))
   file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="war/WEB-INF/classes" path="src/main/java"/>
-	<classpathentry excluding="**" kind="src" output="war/WEB-INF/classes" path="src/main/resources"/>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+ <classpathentry kind="src" output="war/WEB-INF/classes" path="src/main/java"/>
+ <classpathentry excluding="**" kind="src" output="war/WEB-INF/classes" path="src/main/resources"/>
+ <classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+ <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+ <classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+ <classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
 CODE
   file '.project', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ixtlan-test</name>
-	<comment></comment>
-	<projects>
-	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.maven.ide.eclipse.maven2Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.maven.ide.eclipse.maven2Nature</nature>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-	</natures>
+ <name>ixtlan-test</name>
+ <comment></comment>
+ <projects>
+ </projects>
+ <buildSpec>
+  <buildCommand>
+   <name>org.eclipse.jdt.core.javabuilder</name>
+   <arguments>
+   </arguments>
+  </buildCommand>
+  <buildCommand>
+   <name>org.maven.ide.eclipse.maven2Builder</name>
+   <arguments>
+   </arguments>
+  </buildCommand>
+ </buildSpec>
+ <natures>
+  <nature>org.maven.ide.eclipse.maven2Nature</nature>
+  <nature>org.eclipse.jdt.core.javanature</nature>
+ </natures>
 </projectDescription>
 CODE
   file '.settings/org.maven.ide.eclipse.prefs', <<-CODE
@@ -430,7 +441,7 @@ class Configuration < Ixtlan::Models::Configuration
   end
 end
 CODE
-ixtlan_controller 'configurations', [:show, :edit, :update], 'configuration'
+ixtlan_controller 'configurations', {:actions => [:show, :edit, :update]}, 'configuration'
 
 # authentication model/controller
 ixtlan_model "authentication"
@@ -494,7 +505,7 @@ module Ixtlan
 
     def self.symbolize_keys(h, compact)
       result = {}
-      
+
       h.each do |k, v|
         v = ' ' if v.nil?
         if v.is_a?(Hash)
@@ -503,10 +514,10 @@ module Ixtlan
           result[k.to_sym] = v unless compact and k.to_sym == v.to_sym
         end
       end
-      
+
       result
     end
-    
+
     def self.load(dir, file, compact = true)
       symbolize_keys(YAML::load(ERB.new(IO.read(File.join(dir, file))).result), compact)
     end
@@ -547,14 +558,14 @@ ActionMailer::Base.smtp_settings = {
 :authentication => CONFIG[:smtp][:authentication],
 :user_name => CONFIG[:smtp][:user_name],
 :password => CONFIG[:smtp][:password]
-} 
+}
 CODE
 
-logger.info 
-logger.info 
+logger.info
+logger.info
 logger.info "info mavenized rails application"
 logger.info "\thttp://github.org/mkristian/rails-maven-plugin"
-logger.info 
+logger.info
 logger.info "if you want to run jruby please first uninstall"
 logger.info "the native extension of do_sqlite3"
 logger.info "\truby -S gem uninstall do_sqlite3"
@@ -564,8 +575,8 @@ logger.info "rake gems:unpack does NOT work with jruby due to a bug in rail <=2.
 logger.info "you can try"
 logger.info "\tmvn rails:rails-freeze-gems"
 logger.info "which patches rails after freezing it"
-logger.info 
-logger.info 
+logger.info
+logger.info
 
 
 # setup the database

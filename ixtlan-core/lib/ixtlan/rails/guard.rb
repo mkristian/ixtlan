@@ -8,4 +8,3 @@ module Erector
     include Ixtlan::Allowed
   end
 end
-

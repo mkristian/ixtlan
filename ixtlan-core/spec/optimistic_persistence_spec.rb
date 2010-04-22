@@ -11,14 +11,14 @@ class Name
 
   timestamps :updated_at
 end
-  
+
 class Number
   include DataMapper::Resource
 
   property :id, Serial
   property :number, Integer
 end
-  
+
 describe "Ixtlan::OptimisticPersistence" do
 
   before :each do

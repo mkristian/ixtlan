@@ -18,7 +18,7 @@ module Ixtlan
         Ixtlan::Models::Word.approved(:locale => Locale.default).each do |word|
           wordMap[word.code] = word
         end
-        
+
         render :xml => "<word_bundle><locale>#{locale}</locale><words>" + wordMap.values.collect { |w| w.to_xml }.join + "</words></word_bundle>"
       end
     end

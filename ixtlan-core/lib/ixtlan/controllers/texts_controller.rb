@@ -6,7 +6,7 @@ module Ixtlan
 
       LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
       TEXT = Object.full_const_get(::Ixtlan::Models::TEXT)
-      
+
       def locale_guard
         # TODO
       end
@@ -44,7 +44,7 @@ module Ixtlan
         @text.current_user = current_user
 
         respond_to do |format|
-          success = @text.save 
+          success = @text.save
           if success && approve_it
             @text.current_user = current_user
             success = @text.approve
@@ -63,7 +63,7 @@ module Ixtlan
       def update
         phrase = params[:phrase]
         phrase[:text] ||= phrase.delete(:current_text)
-        
+
         respond_to do |format|
           if @text.update(phrase)
             flash[:notice] = phrase[:text].nil? ? 'Text was successfully approved.' : 'Text was successfully updated.'

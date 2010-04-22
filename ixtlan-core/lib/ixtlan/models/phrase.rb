@@ -11,17 +11,17 @@ module Ixtlan
       property :id, Serial
 
       property :code, String, :required => true, :length => 64
-      
+
       property :text, String, :required => true, :length => 256
-      
+
       property :current_text, String, :required => false, :length => 256
-      
+
       property :updated_at, DateTime, :required => true, :auto_validation => false
-      
+
       belongs_to :updated_by, :model => Models::USER
-      
+
       belongs_to :locale, :model => Models::LOCALE
-      
+
       belongs_to :default_translation, :model => Models::TRANSLATION, :required => false
 
       belongs_to :parent_translation, :model => Models::TRANSLATION, :required => false
@@ -56,7 +56,7 @@ module Ixtlan
             ph = map[code]
             if(ph.nil?)
               map[code] = Phrase.new(:code => code, :text => trans.text, :current_text => trans.text, :locale => locale, :updated_at => trans.approved_at, :updated_by => trans.approved_by, :default_translation => trans)
-            else  
+            else
               ph.default_translation = trans
             end
           end
@@ -69,4 +69,3 @@ module Ixtlan
     end
   end
 end
-

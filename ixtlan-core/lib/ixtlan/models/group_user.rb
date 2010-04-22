@@ -8,29 +8,29 @@ module Ixtlan
       end
 
       # dn_prefix { |group_user| "cn=#{group_user.group.name}" }
-      
+
       #treebase "ou=groups"
-      
+
       # multivalue_field :memberuid
-      
+
       #ldap_properties do |group_user|
       #   {:cn=>"#{group_user.group.name}",  :objectclass => "posixGroup"}
       # end
       property :memberuid, String, :key => true
       property :gidnumber, Integer, :key => true
-      
+
       def group
         Object.full_const_get(Models::GROUP).get!(gidnumber)
       end
-      
+
       def group=(group)
         gidnumber = group.id
       end
-      
+
       def user
         Object.full_const_get(Models::USER).first(:login => memberuid)
       end
-      
+
       def user=(user)
         memberuid = user.login
       end

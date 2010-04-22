@@ -6,6 +6,8 @@ module Ixtlan
     class Configuration
       include DataMapper::Resource
 
+      LOCALE = Object.full_const_get(Models::LOCALE)
+
       def self.default_storage_name
         "Configuration"
       end
@@ -13,15 +15,15 @@ module Ixtlan
       property :id, Serial
 
       property :session_idle_timeout, Integer, :required => true
-      
-      property :keep_audit_logs, Integer, :required => true 
-      
+
+      property :keep_audit_logs, Integer, :required => true
+
       property :password_sender_email, String, :format => :email, :required => false, :length => 64
 
       property :notification_sender_email, String, :format => :email, :required => false, :length => 64
 
       property :notification_recipient_emails, String, :format => Proc.new { |email| emails = email.split(','); emails.find_all { |e| e =~ DataMapper::Validate::Format::Email::EmailAddress }.size == emails.size}, :required => false, :length => 254 #honour mysql max varchar length
-      
+
       property :errors_dump_directory, String, :required => false, :length => 192
       property :logfiles_directory, String, :required => false, :length => 192
 
@@ -30,11 +32,10 @@ module Ixtlan
       modified_by ::Ixtlan::Models::USER, :updated_by
 
       def locales
-        if @locales.nil? 
+        if @locales.nil?
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the locales collection is empty before filling it
           @locales = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Object.full_const_get(::Ixtlan::Models::LOCALE)), [])
-p ConfigurationLocale.all(:configuration_id => id)
           ConfigurationLocale.all(:configuration_id => id).each{ |cl| @locales << cl.locale }
           def @locales.configuration=(configuration)
             @configuration = configuration
@@ -45,11 +46,11 @@ p ConfigurationLocale.all(:configuration_id => id)
               ConfigurationLocale.create(:configuration_id => @configuration.id, :locale_id => locale.id)
               super
             end
-            
+
             self
           end
-          
-          def @locales.delete(locale) 
+
+          def @locales.delete(locale)
             cl = ConfigurationLocale.first(:configuration_id => @configuration.id, :locale_id => locale.id)
             if cl
               cl.destroy
@@ -57,7 +58,6 @@ p ConfigurationLocale.all(:configuration_id => id)
             super
           end
         end
-p @locales
         @locales
       end
 

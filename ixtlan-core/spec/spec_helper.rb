@@ -12,9 +12,9 @@ require 'slf4r'
 require 'ixtlan' / 'models'
 require 'ixtlan' / 'user_logger'
 require 'ixtlan' / 'modified_by'
-require 'ixtlan' / 'models' / 'user'
 require 'ixtlan' / 'models' / 'locale'
 require 'ixtlan' / 'models' / 'group'
+require 'ixtlan' / 'models' / 'user'
 require 'ixtlan' / 'models' / 'configuration'
 require 'ixtlan' / 'models' / 'group_user'
 require 'ixtlan' / 'models' / 'group_locale_user'
@@ -64,7 +64,7 @@ class Controller
   def initialize
     @params = {}
     u = Ixtlan::Models::User.first(:login => :marvin)
-    if u.nil? 
+    if u.nil?
       u = Ixtlan::Models::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
       if(u.respond_to? :created_by_id)
         u.created_by_id = 1
@@ -132,15 +132,15 @@ if RUBY_PLATFORM =~ /java/
   module DataMapper
     module Validate
       class NumericValidator
-        
+
         def validate_with_comparison(value, cmp, expected, error_message_name, errors, negated = false)
           return if expected.nil?
-          if cmp == :=~ 
+          if cmp == :=~
               return value =~ expected
           end
           comparison = value.send(cmp, expected)
           return if negated ? !comparison : comparison
-          
+
           errors << ValidationErrors.default_error_message(error_message_name, field_name, expected)
         end
       end
