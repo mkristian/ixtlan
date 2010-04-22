@@ -117,23 +117,28 @@ module Ixtlan
         groups.detect { |g| g.locales_admin? } || false
       end
 
-      def update_all_children(new_groups, actor)
-        if actor.root?
+      def domains_admin?
+        groups.detect { |g| g.domains_admin? } || false
+      end
+
+      def update_all_children(new_groups)
+        if current_user.root?
           # root has no restrictions
           update_children(new_groups, :groups)
-          update_locales(new_groups)
+          update_locales_domains(new_groups)
         else
-          update_restricted_children(new_groups, :groups, actor.groups)
-          if actor.locales_admin?
-            # locales admin can use all locales
-            update_locales(new_groups)
-          else
-            update_restricted_locales(new_groups, actor.groups)
+          update_restricted_children(new_groups, :groups, current_user.groups)
+          if current_user.locales_admin? || current_user.domains_admin?
+            # locales/domains admin can use all locales/domains
+            update_locales_domains(new_groups)
+          end
+          if !current_user.locales_admin? || !current_user.domains_admin?
+            update_restricted_locales_domains(new_groups, current_user.groups)
           end
         end
       end
 
-      def update_locales(new_groups)
+      def update_locales_domains(new_groups)
         if(new_groups)
           # make sure we have an array
           new_groups = new_groups[:group]
@@ -143,14 +148,17 @@ module Ixtlan
           user_groups_map = {}
           groups.each { |g| user_groups_map[g.id.to_s] = g }
 
-          # for each new groups update the locales respectively
+          # for each new groups update the locales/domains respectively
           new_groups.each do |group|
-            user_groups_map[group[:id]].update_children(group[:locales], :locales) if user_groups_map.key?(group[:id])
+             if user_groups_map.key?(group[:id])
+               user_groups_map[group[:id]].update_children(group[:locales], :locales) if current_user.locales_admin? || current_user.root?
+               user_groups_map[group[:id]].update_children(group[:domains], :domains) if current_user.domains_admin? || current_user.root?
+             end
           end
         end
       end
 
-      def update_restricted_locales(new_groups, ref_groups)
+      def update_restricted_locales_domains(new_groups, ref_groups)
         if(new_groups)
           # make sure we have an array
           new_groups = new_groups[:group]
@@ -162,10 +170,15 @@ module Ixtlan
           # create a map group_id =>  group for the reference group
           ref_group_locales = {}
           ref_groups.each { |g| ref_group_locales[g.id.to_s] = g.locales }
+          ref_group_domains = {}
+          ref_groups.each { |g| ref_group_domains[g.id.to_s] = g.domains }
 
           # for each new groups update the locales respectively
           new_groups.each do |group|
-            user_groups_map[group[:id]].update_restricted_children(group[:locales], :locales, ref_group_locales[group[:id]] || []) if user_groups_map.key?(group[:id])
+            if user_groups_map.key?(group[:id])
+              user_groups_map[group[:id]].update_restricted_children(group[:locales], :locales, ref_group_locales[group[:id]] || []) unless current_user.locales_admin?
+              user_groups_map[group[:id]].update_restricted_children(group[:domains], :domains, ref_group_domains[group[:id]] || []) unless current_user.domains_admin?
+            end
           end
         end
       end

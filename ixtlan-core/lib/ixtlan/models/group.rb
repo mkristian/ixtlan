@@ -6,11 +6,11 @@ module Ixtlan
       include DataMapper::Resource
       include UpdateChildren
 
-      if defined? :LOCALE
-        #p LOCALE
-        # TODO where is LOCALE defined and remove the double defintion
-      end
+      #p LOCALE
+      # TODO where is LOCALE defined and remove the double defintion
+
       LOCALE = Object.full_const_get(Models::LOCALE)
+      DOMAIN = Object.full_const_get(Models::DOMAIN)
 
       def self.default_storage_name
         "Group"
@@ -69,12 +69,53 @@ module Ixtlan
         @locales
       end
 
+      def domains(user = nil)
+        if @domains.nil? or not user.nil?
+
+          # TODO spec the empty array to make sure new relations are stored
+          # in the database or the domains collection is empty before filling it
+          @domains = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, DOMAIN), [])
+
+          return @domains if user.nil?
+
+          GroupDomainUser.all(:group_id => id, :user_id => user.id).each{ |glu| @domains << glu.domain }
+          def @domains.group=(group)
+            @group = group
+          end
+          @domains.group = self
+          def @domains.user=(user)
+            @user = user
+          end
+          @domains.user = user
+          def @domains.<<(domain)
+            unless member? domain
+              GroupDomainUser.create(:group_id => @group.id, :user_id => @user.id, :domain_id => domain.id)
+              super
+            end
+
+            self
+          end
+          def @domains.delete(domain)
+            glu = GroupDomainUser.first(:group_id => @group.id, :user_id => @user.id, :domain_id => domain.id)
+            if glu
+              glu.destroy
+            end
+            super
+          end
+        end
+        @domains
+      end
+
       def root?
         attribute_get(:name) == 'root'
       end
 
       def locales_admin?
         attribute_get(:name) == 'locales'
+      end
+
+      def domains_admin?
+        attribute_get(:name) == 'domains'
       end
 
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?

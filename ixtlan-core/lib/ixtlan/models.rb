@@ -6,6 +6,7 @@ module Ixtlan
     ROLE = "::Ixtlan::Models::Role" unless const_defined? "ROLE"
     PERMISSION = "::Ixtlan::Models::Permission" unless const_defined? "PERMISSION"
     LOCALE = "::Ixtlan::Models::Locale" unless const_defined? "LOCALE"
+    DOMAIN = "::Ixtlan::Models::Domain" unless const_defined? "DOMAIN"
     CONFIGURATION = "::Ixtlan::Models::Configuration" unless const_defined? "CONFIGURATION"
     TRANSLATION = "::Ixtlan::Models::Translation" unless const_defined? "TRANSLATION"
     TEXT = "::Ixtlan::Models::I18nText" unless const_defined? "TEXT"
