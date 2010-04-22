@@ -7,8 +7,6 @@ module Ixtlan
       CONFIGURATION = Object.full_const_get(::Ixtlan::Models::CONFIGURATION)
       LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
 
-      include ChildReferences
-
       public
 
       # GET /configuration
@@ -33,10 +31,11 @@ module Ixtlan
         @configuration.current_user = current_user
 
         locales = params[:configuration].delete(:locales)
-        setup_children(locales, @configuration.locales, LOCALE)
+        @configuration.update_children(locales, :locales)
+        @configuration.attributes = params[:configuration]
 
         respond_to do |format|
-          if @configuration.update(params[:configuration]) or not @configuration.dirty?
+          if @configuration.save() or not @configuration.dirty?
             flash[:notice] = 'Configuration was successfully updated.'
             format.html { redirect_to(configuration_url) }
             format.xml  { render :xml => @configuration }
