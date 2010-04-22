@@ -32,6 +32,7 @@ lib/ixtlan/models/user.rb
 lib/ixtlan/models/permission.rb
 lib/ixtlan/models/locale.rb
 lib/ixtlan/models/configuration_locale.rb
+lib/ixtlan/models/update_children.rb
 lib/ixtlan/models/word.rb
 lib/ixtlan/models/configuration.rb
 lib/ixtlan/models/authentication.rb
@@ -56,7 +57,6 @@ lib/ixtlan/controllers/phrases_controller.rb
 lib/ixtlan/controllers/permissions_controller.rb
 lib/ixtlan/controllers/authentications_controller.rb
 lib/ixtlan/controllers/configurations_controller.rb
-lib/ixtlan/controllers/child_references.rb
 lib/ixtlan/controllers/word_bundles_controller.rb
 lib/ixtlan/guard.rb
 lib/ixtlan/rails/audit.rb
