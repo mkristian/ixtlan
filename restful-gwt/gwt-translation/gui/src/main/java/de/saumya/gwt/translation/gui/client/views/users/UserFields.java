@@ -189,7 +189,8 @@ public class UserFields extends ResourceFields<User> {
             this.map.clear();
             for (final Group resource : resources) {
                 final Collection<Locale> locales;
-                if (this.session.getUser().isRoot()) {
+                if (this.session.getUser().isRoot()
+                        || this.session.getUser().isLocalesAdmin()) {
                     locales = this.localeFactory.realLocales(new ResourcesChangeListener<Locale>() {
 
                         @Override
@@ -245,6 +246,10 @@ public class UserFields extends ResourceFields<User> {
                         this.map.put(locale.id + "", locale);
                         this.list.addItem(locale.code, locale.id + "");
                     }
+                    this.list.setVisible(this.list.getItemCount() != 0);
+                }
+                else {
+                    this.list.setVisible(false);
                 }
             }
 
