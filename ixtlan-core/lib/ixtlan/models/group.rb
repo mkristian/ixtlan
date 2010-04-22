@@ -6,6 +6,10 @@ module Ixtlan
       include DataMapper::Resource
       include UpdateChildren
 
+      if defined? :LOCALE
+        #p LOCALE
+        # TODO where is LOCALE defined and remove the double defintion
+      end
       LOCALE = Object.full_const_get(Models::LOCALE)
 
       def self.default_storage_name
@@ -29,7 +33,6 @@ module Ixtlan
       end
 
       def locales(user = nil)
-#        return ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Locale), [])
         if @locales.nil? or not user.nil?
 
           # TODO spec the empty array to make sure new relations are stored
