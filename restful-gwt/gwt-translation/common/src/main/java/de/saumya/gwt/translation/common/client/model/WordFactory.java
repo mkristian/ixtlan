@@ -4,10 +4,10 @@
 package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class WordFactory extends ResourceFactory<Word> {
+public class WordFactory extends ResourceFactoryWithIdGenerator<Word> {
 
     public WordFactory(final Repository repository,
             final ResourceNotifications notification) {
@@ -20,17 +20,7 @@ public class WordFactory extends ResourceFactory<Word> {
     }
 
     @Override
-    public String keyName() {
-        return "code";
-    }
-
-    @Override
-    public Word newResource() {
-        return new Word(this.repository, this, null);
-    }
-
-    @Override
-    public Word newResource(final String key) {
+    public Word newResource(final int key) {
         return new Word(this.repository, this, key);
     }
 
@@ -38,7 +28,5 @@ public class WordFactory extends ResourceFactory<Word> {
     public String defaultSearchParameterName() {
         return null;
     }
-
-    // TODO you can NOT save or delete this resource !!
 
 }

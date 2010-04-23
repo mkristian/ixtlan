@@ -1,6 +1,7 @@
 package de.saumya.gwt.session.client;
 
 import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class RoleFactory extends ResourceFactoryWithIdGenerator<Role> {

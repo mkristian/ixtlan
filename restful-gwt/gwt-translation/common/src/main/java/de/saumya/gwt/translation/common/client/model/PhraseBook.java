@@ -6,18 +6,19 @@ package de.saumya.gwt.translation.common.client.model;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class PhraseBook extends Resource<PhraseBook> {
+public class PhraseBook extends ResourceWithId<PhraseBook> {
 
-    private final PhraseFactory phraseFactory;
+    private final PhraseBookFactory factory;
+    private final PhraseFactory     phraseFactory;
 
     PhraseBook(final Repository repository, final PhraseBookFactory factory,
-            final PhraseFactory phraseFactory, final String locale) {
-        super(repository, factory);
+            final PhraseFactory phraseFactory, final int id) {
+        super(repository, factory, id);
+        this.factory = factory;
         this.phraseFactory = phraseFactory;
-        this.locale = locale;
     }
 
     public String                     locale;
@@ -31,6 +32,7 @@ public class PhraseBook extends Resource<PhraseBook> {
 
     @Override
     protected void fromXml(final Element root) {
+        this.id = this.factory.nextId();
         this.locale = getString(root, "locale");
         this.phrases = this.phraseFactory.getChildResourceCollection(root,
                                                                      "phrases");
@@ -42,7 +44,7 @@ public class PhraseBook extends Resource<PhraseBook> {
     }
 
     @Override
-    protected void toString(final StringBuilder buf) {
+    public void toString(final StringBuilder buf) {
         buf.append(":locale => ").append(this.locale);
         if (this.phrases != null) {
             buf.append(", :phrases => ").append(this.phrases);

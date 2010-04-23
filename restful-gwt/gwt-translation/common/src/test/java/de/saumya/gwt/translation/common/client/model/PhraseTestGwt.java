@@ -65,6 +65,7 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
     protected Resource<Phrase> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.id = 1;
         this.resource.code = "123";
         this.resource.currentText = "some text";
 
@@ -92,7 +93,7 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
 
     @Override
     protected String keyValue() {
-        return "code";
+        return "1";
     }
 
     @Override

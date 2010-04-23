@@ -60,6 +60,7 @@ public class PhraseBookTestGwt extends AbstractCommonTestGwt<PhraseBook> {
     protected Resource<PhraseBook> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.id = 1;
         this.resource.locale = "en";
         this.repository.addXmlResponse(RESOURCE_XML);
 

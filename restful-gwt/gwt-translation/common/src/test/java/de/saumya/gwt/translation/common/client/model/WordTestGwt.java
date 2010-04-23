@@ -34,6 +34,7 @@ public class WordTestGwt extends AbstractCommonTestGwt<Word> {
     protected Resource<Word> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.id = 1;
         this.resource.code = "CODE";
         this.resource.text = "code";
 
@@ -61,7 +62,7 @@ public class WordTestGwt extends AbstractCommonTestGwt<Word> {
 
     @Override
     protected String keyValue() {
-        return "CODE";
+        return "1";
     }
 
     @Override

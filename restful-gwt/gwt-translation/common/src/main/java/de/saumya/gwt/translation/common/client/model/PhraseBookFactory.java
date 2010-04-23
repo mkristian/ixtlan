@@ -1,10 +1,11 @@
 package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
+public class PhraseBookFactory extends
+        ResourceFactoryWithIdGenerator<PhraseBook> {
 
     private final PhraseFactory factory;
 
@@ -21,23 +22,13 @@ public class PhraseBookFactory extends ResourceFactory<PhraseBook> {
     }
 
     @Override
-    public String keyName() {
-        return "locale";
-    }
-
-    @Override
-    public PhraseBook newResource() {
-        return new PhraseBook(this.repository, this, this.factory, null);
-    }
-
-    @Override
-    public PhraseBook newResource(final String key) {
+    public PhraseBook newResource(final int key) {
         return new PhraseBook(this.repository, this, this.factory, key);
     }
 
     @Override
     public String defaultSearchParameterName() {
-        return keyName();
+        return null;
     }
 
 }

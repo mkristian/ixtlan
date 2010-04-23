@@ -41,6 +41,7 @@ public class WordBundleTestGwt extends AbstractCommonTestGwt<WordBundle> {
     protected Resource<WordBundle> resourceSetUp() {
         this.resource = this.factory.newResource();
 
+        this.resource.id = 1;
         this.resource.locale = "en";
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -55,7 +56,7 @@ public class WordBundleTestGwt extends AbstractCommonTestGwt<WordBundle> {
 
     @Override
     protected String keyValue() {
-        return "en";
+        return "1";
     }
 
     @Override

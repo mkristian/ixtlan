@@ -6,18 +6,19 @@ package de.saumya.gwt.translation.common.client.model;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class WordBundle extends Resource<WordBundle> {
+public class WordBundle extends ResourceWithId<WordBundle> {
 
-    private final WordFactory wordFactory;
+    private final WordFactory       wordFactory;
+    private final WordBundleFactory factory;
 
     WordBundle(final Repository repository, final WordBundleFactory factory,
-            final WordFactory wordFactory, final String locale) {
-        super(repository, factory);
+            final WordFactory wordFactory, final int id) {
+        super(repository, factory, id);
         this.wordFactory = wordFactory;
-        this.locale = locale;
+        this.factory = factory;
     }
 
     public String                   locale;
@@ -31,17 +32,13 @@ public class WordBundle extends Resource<WordBundle> {
 
     @Override
     protected void fromXml(final Element root) {
+        this.id = this.factory.nextId();
         this.locale = getString(root, "locale");
         this.words = this.wordFactory.getChildResourceCollection(root, "words");
     }
 
     @Override
-    public String key() {
-        return this.locale;
-    }
-
-    @Override
-    protected void toString(final StringBuilder buf) {
+    public void toString(final StringBuilder buf) {
         buf.append(":locale => ").append(this.locale);
         if (this.words != null) {
             buf.append(", :words => ").append(this.words);

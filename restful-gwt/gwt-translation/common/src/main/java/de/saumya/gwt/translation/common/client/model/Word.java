@@ -6,14 +6,15 @@ package de.saumya.gwt.translation.common.client.model;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class Word extends Resource<Word> {
+public class Word extends ResourceWithId<Word> {
 
-    Word(final Repository repository, final WordFactory factory,
-            final String code) {
-        super(repository, factory);
-        this.code = code;
+    private final WordFactory factory;
+
+    Word(final Repository repository, final WordFactory factory, final int id) {
+        super(repository, factory, id);
+        this.factory = factory;
     }
 
     public String code;
@@ -27,6 +28,7 @@ public class Word extends Resource<Word> {
 
     @Override
     protected void fromXml(final Element root) {
+        this.id = this.factory.nextId();
         this.code = getString(root, "code");
         this.text = getString(root, "text");
     }
@@ -44,9 +46,15 @@ public class Word extends Resource<Word> {
 
     @Override
     public String display() {
-        return new StringBuffer(this.text).append("<")
+        return new StringBuffer(this.text).append(" <")
                 .append(this.code)
                 .append(">")
                 .toString();
     }
+
+    @Override
+    public boolean isImmutable() {
+        return true;
+    }
+
 }

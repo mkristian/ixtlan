@@ -1,10 +1,11 @@
 package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class WordBundleFactory extends ResourceFactory<WordBundle> {
+public class WordBundleFactory extends
+        ResourceFactoryWithIdGenerator<WordBundle> {
 
     private final WordFactory wordFactory;
 
@@ -21,17 +22,7 @@ public class WordBundleFactory extends ResourceFactory<WordBundle> {
     }
 
     @Override
-    public String keyName() {
-        return "locale";
-    }
-
-    @Override
-    public WordBundle newResource() {
-        return new WordBundle(this.repository, this, this.wordFactory, null);
-    }
-
-    @Override
-    public WordBundle newResource(final String key) {
+    public WordBundle newResource(final int key) {
         return new WordBundle(this.repository, this, this.wordFactory, key);
     }
 
