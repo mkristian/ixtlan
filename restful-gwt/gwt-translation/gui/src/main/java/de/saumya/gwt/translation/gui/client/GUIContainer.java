@@ -14,6 +14,7 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
+import de.saumya.gwt.session.client.models.Domain;
 import de.saumya.gwt.session.client.models.DomainFactory;
 import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.session.client.models.GroupFactory;
@@ -35,6 +36,7 @@ import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.LocaleController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.gui.client.views.configuration.ConfigurationScreen;
+import de.saumya.gwt.translation.gui.client.views.domains.DomainScreen;
 import de.saumya.gwt.translation.gui.client.views.groups.GroupScreen;
 import de.saumya.gwt.translation.gui.client.views.locales.LocaleScreen;
 import de.saumya.gwt.translation.gui.client.views.phrases.PhraseScreen;
@@ -48,6 +50,8 @@ public class GUIContainer {
     public final DomainFactory        venueFactory         = new DomainFactory(this.repository,
                                                                    this.notifications);
     public final LocaleFactory        localeFactory        = new LocaleFactory(this.repository,
+                                                                   this.notifications);
+    public final DomainFactory        domainFactory        = new DomainFactory(this.repository,
                                                                    this.notifications);
     public final GroupFactory         groupFactory         = new GroupFactory(this.repository,
                                                                    this.notifications,
@@ -152,6 +156,13 @@ public class GUIContainer {
                                                                    new ResourceBindings<Locale>(),
                                                                    this.notifications,
                                                                    this.hyperlinkFactory);
+    public final DomainScreen         domainScreen         = new DomainScreen(this.loadingNotice,
+                                                                   this.getTextController,
+                                                                   this.domainFactory,
+                                                                   this.session,
+                                                                   new ResourceBindings<Domain>(),
+                                                                   this.notifications,
+                                                                   this.hyperlinkFactory);
 
     public GUIContainer(final Panel panel) {
         // add the screens to the screen controller which hangs them into a
@@ -162,6 +173,7 @@ public class GUIContainer {
         this.screenController.addScreen(this.userScreen, "users");
         this.screenController.addScreen(this.groupScreen, "groups");
         this.screenController.addScreen(this.localeScreen, "locales");
+        this.screenController.addScreen(this.domainScreen, "domains");
 
         // activate the session controller
         new SessionController(this.session, this.loginPanel, this.sessionPanel);
