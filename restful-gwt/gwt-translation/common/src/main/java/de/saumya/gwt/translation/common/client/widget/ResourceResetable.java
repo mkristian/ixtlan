@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.saumya.gwt.translation.common.client.widget;
 
@@ -9,7 +9,7 @@ public interface ResourceResetable<E extends AbstractResource<E>> {
 
     /**
      * reset the panel content with the new data
-     * 
+     *
      * @param resource
      */
     void reset(final E resource);

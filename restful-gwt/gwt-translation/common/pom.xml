@@ -16,17 +16,17 @@
     <dependency>
       <groupId>de.saumya.gwt</groupId>
       <artifactId>persistence</artifactId>
-      <version>${project.version}</version> 
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>de.saumya.gwt</groupId>
       <artifactId>session</artifactId>
-      <version>${project.version}</version> 
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>de.saumya.gwt</groupId>
       <artifactId>persistence</artifactId>
-      <version>${project.version}</version> 
+      <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -46,4 +46,3 @@
   </build>
 
 </project>
-

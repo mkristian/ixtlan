@@ -15,7 +15,7 @@
     <dependency>
       <groupId>de.saumya.gwt</groupId>
       <artifactId>session</artifactId>
-      <version>${project.version}</version> 
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
   <modules>
@@ -27,4 +27,3 @@
   </modules>
 
 </project>
-

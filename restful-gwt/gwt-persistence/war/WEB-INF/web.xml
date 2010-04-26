@@ -9,13 +9,13 @@
   <welcome-file-list>
     <welcome-file>Datamapper.html</welcome-file>
   </welcome-file-list>
-  
+
   <!-- Servlets -->
   <servlet>
     <servlet-name>xmlProxyServlet</servlet-name>
     <servlet-class>de.saumya.gwt.datamapper.server.ProxyServlet</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>xmlProxyServlet</servlet-name>
     <url-pattern>*.xml</url-pattern>

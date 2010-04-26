@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.saumya.gwt.translation.common.client.widget;
 
@@ -142,7 +142,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
      * to the
      * {@link AbstractResourceScreen#reset(AbstractResource, Timestamp, User)}
      * using null where the info does not exists
-     * 
+     *
      * @param resource
      */
     @Override

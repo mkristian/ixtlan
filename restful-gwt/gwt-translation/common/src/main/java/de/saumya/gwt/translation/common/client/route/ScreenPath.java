@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package de.saumya.gwt.translation.common.client.route;
 
@@ -40,11 +40,11 @@ public class ScreenPath {
      * <li>/locale/name/1/nested/3</li>
      * <li>/locale/name/1/nested/3/edit</li>
      * </ul>
-     * 
+     *
      * a key with with value <b>new</b> will produce the wrong action and a
      * controllerName with <b>edit</b> will produce the wrong action on the
      * wrong controller !
-     * 
+     *
      * @param fullpath
      */
     public ScreenPath(final String fullpath) {

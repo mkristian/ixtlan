@@ -17,7 +17,7 @@
     <dependency>
       <groupId>de.saumya.gwt.translation</groupId>
       <artifactId>common</artifactId>
-      <version>${pom.version}</version> 
+      <version>${pom.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -48,4 +48,3 @@
   </build>
 
 </project>
-

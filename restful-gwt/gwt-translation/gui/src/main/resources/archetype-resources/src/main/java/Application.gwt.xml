@@ -2,7 +2,7 @@
 <!DOCTYPE module PUBLIC "//gwt-module/" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.2/distro-source/core/src/gwt-module.dtd">
 <module>
 
-      <!-- Inherit the core restful GWT stuff -->    
+      <!-- Inherit the core restful GWT stuff -->
       <inherits name="de.saumya.gwt.session.Session"/>
       <inherits name="de.saumya.gwt.translation.common.Common"/>
       <inherits name="de.saumya.gwt.translation.gui.GUI"/>

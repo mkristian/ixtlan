@@ -7,7 +7,7 @@ body {
 .info-notification, .warn-notification, .showall-notification {
 margin-top: 3em;
 margin-left: 20%;
-margin-right: 20%; 
+margin-right: 20%;
 opacity: 0.9;
 font-weight: bold;
 padding: 1em;
@@ -45,13 +45,13 @@ border: 1px solid darkgreen;
   color: darkblue;
   background-color: #ddddff;
   opacity: 0.95;
-  position:fixed; 
+  position:fixed;
   top: 0em;
   right: 0em;
   left: 0em;
   padding: .5%;
 }
-.login-control input { 
+.login-control input {
   color: darkblue;
   font-weight: bold;
 }
@@ -69,7 +69,7 @@ border: 1px solid darkgreen;
 .login-control * {
   float: left;
 }
-.phrase-context{ 
+.phrase-context{
   border: 1px solid darkblue;
   color: darkblue;
   background-color: #ddddff;

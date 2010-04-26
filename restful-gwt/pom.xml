@@ -29,7 +29,7 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <version>${gwt.version}</version> 
+      <version>${gwt.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -82,7 +82,7 @@
           </configuration>
         </plugin>
       </plugins>
-    </pluginManagement>    
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -100,7 +100,7 @@
         </configuration>
       </plugin>
     </plugins>
-    <outputDirectory>war/WEB-INF/classes</outputDirectory> 
+    <outputDirectory>war/WEB-INF/classes</outputDirectory>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -122,7 +122,7 @@
         </includes>
       </testResource>
     </testResources>
-    
+
   </build>
   <modules>
     <module>gwt-persistence</module>
@@ -130,4 +130,3 @@
     <module>gwt-translation</module>
   </modules>
 </project>
-
