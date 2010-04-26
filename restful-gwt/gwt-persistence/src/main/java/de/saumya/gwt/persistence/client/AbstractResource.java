@@ -284,10 +284,6 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
         return null;
     }
 
-    // void setResourceNotification(final ResourceNotifications
-    // changeNotifications) {
-    // this.changeNotifications = changeNotifications;
-    // }
     public void addResourceChangeListener(
             final OneTimeResourceChangeListener<E> listener) {
         if (listener != null) {

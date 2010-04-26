@@ -103,25 +103,13 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
         return get(key, null);
     }
 
-    // private E get(final int key, final ResourceNotifications notifications) {
-    // return get(key, null, notifications);
-    // }
-
     public E get(final int key, final ResourceChangeListener<E> listener) {
-        // return get(key, listener);
-        // }
-        //
-        // private E get(final int key, final ResourceChangeListener listener) {
-        // final ResourceNotifications notifications) {
         final E resource = getResource(key);
         resource.addResourceChangeListener(listener);
         if (resource.isImmutable() && resource.state != State.NEW) {
             resource.fireResourceChangeEvents(resource.state.message);
             return resource;
         }
-        // if (notifications != null) {
-        // resource.setResourceNotification(notifications);
-        // }
         resource.state = State.TO_BE_LOADED;
         this.repository.get(storagePluralName(),
                             key,
