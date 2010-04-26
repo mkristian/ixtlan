@@ -1,20 +1,14 @@
 /**
  * 
  */
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.AbstractUserResourceTestGwt;
-import de.saumya.gwt.session.client.models.Configuration;
-import de.saumya.gwt.session.client.models.ConfigurationFactory;
-import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.SingletonResourceFactory;
+import de.saumya.gwt.session.client.AbstractUserSingletonResourceTestGwt;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
 public class ConfigurationTestGwt extends
-        AbstractUserResourceTestGwt<Configuration> {
+        AbstractUserSingletonResourceTestGwt<Configuration> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -45,18 +39,18 @@ public class ConfigurationTestGwt extends
         return RESOURCE_XML;
     }
 
-    @Override
-    protected String resource2Xml() {
-        return RESOURCE_XML;
-    }
+    // @Override
+    // protected String resource2Xml() {
+    // return RESOURCE_XML;
+    // }
+    //
+    // @Override
+    // protected String resourcesXml() {
+    // return null;
+    // }
 
     @Override
-    protected String resourcesXml() {
-        return null;
-    }
-
-    @Override
-    protected ResourceFactory<Configuration> factorySetUp() {
+    protected SingletonResourceFactory<Configuration> factorySetUp() {
         return new ConfigurationFactory(this.repository,
                 this.notifications,
                 this.userFactory,
@@ -64,7 +58,7 @@ public class ConfigurationTestGwt extends
     }
 
     @Override
-    protected Resource<Configuration> resourceSetUp() {
+    protected AbstractResource<Configuration> resourceSetUp() {
         this.resource = this.factory.newResource();
 
         this.resource.sessionIdleTimeout = 1;
@@ -107,17 +101,12 @@ public class ConfigurationTestGwt extends
     }
 
     @Override
-    protected String keyValue() {
-        return null;
+    protected String value() {
+        return "1";
     }
 
     @Override
     protected String marshallingXml() {
         return XML;
-    }
-
-    @Override
-    protected String value() {
-        return "1";
     }
 }

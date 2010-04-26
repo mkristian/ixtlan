@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class PopupNotifications implements Notifications, ResourceNotifications {
@@ -161,13 +161,13 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
 
     @Override
     public void error(final int status, final String message,
-            final Resource<?> resource) {
+            final AbstractResource<?> resource) {
         // TODO make the resource clickable inside the text
         warn(status + ": " + message + " " + resource.display());
     }
 
     @Override
-    public void info(final String message, final Resource<?> resource) {
+    public void info(final String message, final AbstractResource<?> resource) {
         // TODO make the resource clickable inside the text
         info(message + " " + resource.display());
     }

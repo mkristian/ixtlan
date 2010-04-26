@@ -3,14 +3,14 @@
  */
 package de.saumya.gwt.translation.gui.client.views.locales;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
-import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -36,7 +36,7 @@ public class LocaleScreen extends ResourceScreen<Locale> {
             final GetTextController getTextController,
             final LocaleFactory factory, final Session session,
             final ResourceBindings<Locale> bindings,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
@@ -51,13 +51,15 @@ public class LocaleScreen extends ResourceScreen<Locale> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new NoGetByResourceActionPanel<Locale>(getTextController,
+                new ResourceActionPanel<Locale>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications,
-                        hyperlinkFactory),
-                notifications,
+                        listeners,
+                        hyperlinkFactory,
+                        true,
+                        false),
+                listeners,
                 hyperlinkFactory);
     }
 

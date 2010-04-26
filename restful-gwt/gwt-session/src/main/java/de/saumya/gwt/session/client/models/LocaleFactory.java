@@ -8,11 +8,11 @@ import java.util.Map;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 
-public class LocaleFactory extends ResourceFactoryWithID<Locale> {
+public class LocaleFactory extends ResourceFactory<Locale> {
 
     private Locale allLocale;
     private Locale defaultLocale;
@@ -33,7 +33,7 @@ public class LocaleFactory extends ResourceFactoryWithID<Locale> {
     }
 
     public Locale first(final String code) {
-        final Locale locale = newResource();
+        final Locale locale = newResource(0);
         locale.code = code;
         final Map<String, String> q = new HashMap<String, String>();
         q.put("code", locale.code);

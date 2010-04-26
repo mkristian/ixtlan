@@ -16,11 +16,11 @@ import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
-import de.saumya.gwt.session.client.models.Group;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserGroup;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionResetable;
@@ -33,8 +33,8 @@ public class UserFields extends ResourceFields<User> {
 
     public UserFields(final GetTextController getTextController,
             final ResourceBindings<User> bindings,
-            final GroupFactory groupFactory, final LocaleFactory localeFactory,
-            final Session session) {
+            final UserGroupFactory groupFactory,
+            final LocaleFactory localeFactory, final Session session) {
         super(getTextController, bindings);
         add("login", new TextBoxBinding<User>() {
 
@@ -106,11 +106,11 @@ public class UserFields extends ResourceFields<User> {
             @Override
             public void onLogin() {
                 if (session.getUser().isRoot()) {
-                    groupFactory.all(new ResourcesChangeListener<Group>() {
+                    groupFactory.all(new ResourcesChangeListener<UserGroup>() {
 
                         @Override
                         public void onLoaded(
-                                final ResourceCollection<Group> resources) {
+                                final ResourceCollection<UserGroup> resources) {
                             groupsWidget.reset(resources);
                         }
                     });
@@ -124,7 +124,7 @@ public class UserFields extends ResourceFields<User> {
     }
 
     static class GroupLocaleWidget extends VerticalPanel implements
-            Binding<User>, ResourceCollectionResetable<Group> {
+            Binding<User>, ResourceCollectionResetable<UserGroup> {
 
         private final Map<Integer, GroupWidget> map = new HashMap<Integer, GroupWidget>();
 
@@ -152,7 +152,7 @@ public class UserFields extends ResourceFields<User> {
                 }
             }
             if (resource != null && resource.groups != null) {
-                for (final Group group : resource.groups) {
+                for (final UserGroup group : resource.groups) {
                     final GroupWidget widget = this.map.get(group.id);
                     if (widget != null) {
                         widget.checkbox.setValue(true);
@@ -184,10 +184,10 @@ public class UserFields extends ResourceFields<User> {
         }
 
         @Override
-        public void reset(final ResourceCollection<Group> resources) {
+        public void reset(final ResourceCollection<UserGroup> resources) {
             clear();
             this.map.clear();
-            for (final Group resource : resources) {
+            for (final UserGroup resource : resources) {
                 final Collection<Locale> locales;
                 if (this.session.getUser().isRoot()
                         || this.session.getUser().isLocalesAdmin()) {
@@ -218,12 +218,12 @@ public class UserFields extends ResourceFields<User> {
         }
 
         static class GroupWidget extends FlowPanel {
-            final Group         group;
+            final UserGroup     group;
             final CheckBox      checkbox;
             final ListBox       list;
             Map<String, Locale> map = new HashMap<String, Locale>();
 
-            GroupWidget(final Group group, final Collection<Locale> locales) {
+            GroupWidget(final UserGroup group, final Collection<Locale> locales) {
                 this.group = group;
                 this.checkbox = new CheckBox(group.name);
                 add(this.checkbox);

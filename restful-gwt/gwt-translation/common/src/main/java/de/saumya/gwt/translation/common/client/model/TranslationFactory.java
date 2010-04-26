@@ -4,11 +4,11 @@
 package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.models.UserFactory;
 
-public class TranslationFactory extends ResourceFactoryWithID<Translation> {
+public class TranslationFactory extends ResourceFactory<Translation> {
 
     private final UserFactory userFactory;
 
@@ -27,11 +27,6 @@ public class TranslationFactory extends ResourceFactoryWithID<Translation> {
     @Override
     public String storageName() {
         return "translation";
-    }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return null;
     }
 
 }

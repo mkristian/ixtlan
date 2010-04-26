@@ -10,36 +10,35 @@ import java.util.HashSet;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class User extends ResourceWithId<User> {
+public class User extends Resource<User> {
 
-    private final LocaleFactory localeFactory;
-    private final GroupFactory  groupFactory;
+    private final LocaleFactory    localeFactory;
+    private final UserGroupFactory groupFactory;
 
     protected User(final Repository repository, final UserFactory factory,
-            final LocaleFactory localeFactory, final GroupFactory groupFactory,
-            final int id) {
+            final LocaleFactory localeFactory,
+            final UserGroupFactory groupFactory, final int id) {
         super(repository, factory, id);
         this.localeFactory = localeFactory;
         this.groupFactory = groupFactory;
         this.groups = groupFactory.newResources();
     }
 
-    public String                    login;
-    public String                    email;
-    public String                    name;
-    public Locale                    preferedLanguage;
+    public String                        login;
+    public String                        email;
+    public String                        name;
+    public Locale                        preferedLanguage;
 
-    public Timestamp                 createdAt;
-    public Timestamp                 updatedAt;
+    public Timestamp                     createdAt;
+    public Timestamp                     updatedAt;
 
-    public ResourceCollection<Group> groups;
+    public ResourceCollection<UserGroup> groups;
 
     @Override
     protected void appendXml(final StringBuilder buf) {
-        super.appendXml(buf);
         appendXml(buf, "login", this.login);
         appendXml(buf, "name", this.name);
         appendXml(buf, "email", this.email);
@@ -50,8 +49,7 @@ public class User extends ResourceWithId<User> {
     }
 
     @Override
-    public void fromXml(final Element root) {
-        super.fromXml(root);
+    public void fromElement(final Element root) {
         this.login = getString(root, "login");
         this.name = getString(root, "name");
         this.email = getString(root, "email");
@@ -65,7 +63,6 @@ public class User extends ResourceWithId<User> {
 
     @Override
     public void toString(final StringBuilder buf) {
-        super.toString(buf);
         toString(buf, "login", this.login);
         toString(buf, "name", this.name);
         toString(buf, "email", this.email);
@@ -77,7 +74,7 @@ public class User extends ResourceWithId<User> {
 
     public Collection<Locale> getAllowedLocales() {
         final Collection<Locale> result = new HashSet<Locale>();
-        for (final Group group : this.groups) {
+        for (final UserGroup group : this.groups) {
             result.addAll(group.locales);
         }
         return result;
@@ -92,7 +89,7 @@ public class User extends ResourceWithId<User> {
     }
 
     public boolean isRoot() {
-        for (final Group g : this.groups) {
+        for (final UserGroup g : this.groups) {
             if (g.isRoot()) {
                 return true;
             }
@@ -101,7 +98,7 @@ public class User extends ResourceWithId<User> {
     }
 
     public boolean isLocalesAdmin() {
-        for (final Group g : this.groups) {
+        for (final UserGroup g : this.groups) {
             if (g.isLocalesAdmin()) {
                 return true;
             }

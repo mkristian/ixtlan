@@ -3,14 +3,14 @@
  */
 package de.saumya.gwt.translation.gui.client.views.domains;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Domain;
 import de.saumya.gwt.session.client.models.DomainFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
-import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -36,7 +36,7 @@ public class DomainScreen extends ResourceScreen<Domain> {
             final GetTextController getTextController,
             final DomainFactory factory, final Session session,
             final ResourceBindings<Domain> bindings,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
@@ -51,13 +51,15 @@ public class DomainScreen extends ResourceScreen<Domain> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new NoGetByResourceActionPanel<Domain>(getTextController,
+                new ResourceActionPanel<Domain>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications,
-                        hyperlinkFactory),
-                notifications,
+                        listeners,
+                        hyperlinkFactory,
+                        true,
+                        false),
+                listeners,
                 hyperlinkFactory);
     }
 

@@ -8,17 +8,17 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 
-import de.saumya.gwt.persistence.client.Resource.State;
+import de.saumya.gwt.persistence.client.AbstractResource.State;
 
-public class ResourceRequestCallback<E extends Resource<E>> implements
+public class ResourceRequestCallback<E extends AbstractResource<E>> implements
         RequestCallback {
 
-    private final Resource<E>        resource;
+    private final AbstractResource<E>        resource;
 
-    private final ResourceFactory<E> factory;
+    private final AbstractResourceFactory<E> factory;
 
-    ResourceRequestCallback(final Resource<E> resource,
-            final ResourceFactory<E> factory) {
+    ResourceRequestCallback(final AbstractResource<E> resource,
+            final AbstractResourceFactory<E> factory) {
         this.resource = resource;
         this.factory = factory;
     }
@@ -35,10 +35,10 @@ public class ResourceRequestCallback<E extends Resource<E>> implements
             final String message = this.resource.state.message;
             switch (this.resource.state) {
             case TO_BE_CREATED:
-                if (this.factory.all != null) {
-                    // TODO remove cast
-                    this.factory.all.addResource((E) this.resource);
-                }
+                // if (this.factory.all != null) {
+                // // TODO remove cast
+                // this.factory.all.addResource((E) this.resource);
+                // }
             case TO_BE_LOADED:
             case TO_BE_UPDATED:
                 this.resource.fromXml(response.getText());

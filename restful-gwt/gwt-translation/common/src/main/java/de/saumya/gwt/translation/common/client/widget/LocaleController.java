@@ -54,8 +54,7 @@ public class LocaleController {
 
     public Locale currentLocale() {
         final ScreenPath path = new ScreenPath(History.getToken());
-        final Locale locale = this.localeFactory.get(path.locale);
-        // locale.code = path.locale;
+        final Locale locale = this.localeFactory.first(path.locale);
         return locale;
     }
 

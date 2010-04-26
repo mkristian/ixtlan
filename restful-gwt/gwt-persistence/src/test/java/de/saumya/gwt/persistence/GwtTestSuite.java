@@ -7,7 +7,7 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 
 import de.saumya.gwt.persistence.client.CacheTestGwt;
 import de.saumya.gwt.persistence.client.SampleTestGwt;
-import de.saumya.gwt.persistence.client.SingletonTestGwt;
+import de.saumya.gwt.persistence.client.SingletonCacheTestGwt;
 
 public class GwtTestSuite extends GWTTestSuite {
 
@@ -15,7 +15,7 @@ public class GwtTestSuite extends GWTTestSuite {
         final TestSuite suite = new TestSuite("Test for GWT Persistence");
         suite.addTestSuite(SampleTestGwt.class);
         suite.addTestSuite(CacheTestGwt.class);
-        suite.addTestSuite(SingletonTestGwt.class);
+        suite.addTestSuite(SingletonCacheTestGwt.class);
         return suite;
     }
 }

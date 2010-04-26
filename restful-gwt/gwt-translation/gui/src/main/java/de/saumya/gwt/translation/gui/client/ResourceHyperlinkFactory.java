@@ -3,7 +3,6 @@
  */
 package de.saumya.gwt.translation.gui.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Hyperlink;
 
 import de.saumya.gwt.persistence.client.Resource;
@@ -22,17 +21,14 @@ public class ResourceHyperlinkFactory {
     }
 
     public Hyperlink editResourceHyperklink(final Resource<?> resource) {
-        GWT.log(this.pathFactory.editPath(resource.key())
-                .replaceFirst("/[a-zA-Z_]*/", "/")
-                + " --> " + this.pathFactory.editPath(resource.key()), null);
         return this.hyperlinkFactory.newHyperlink(resource.display(),
-                                                  this.pathFactory.editPath(resource.key(),
+                                                  this.pathFactory.editPath(resource.id,
                                                                             false));
     }
 
     public Hyperlink showResourceHyperlink(final Resource<?> resource) {
         return this.hyperlinkFactory.newHyperlink(resource.display(),
-                                                  this.pathFactory.showPath(resource.key(),
+                                                  this.pathFactory.showPath(resource.id,
                                                                             false));
     }
 

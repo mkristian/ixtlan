@@ -4,10 +4,11 @@
 package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.SingletonResourceFactory;
 
-public class ConfigurationFactory extends ResourceFactory<Configuration> {
+public class ConfigurationFactory extends
+        SingletonResourceFactory<Configuration> {
 
     private final UserFactory   userFactory;
     private final LocaleFactory localeFactory;
@@ -26,26 +27,10 @@ public class ConfigurationFactory extends ResourceFactory<Configuration> {
     }
 
     @Override
-    public String keyName() {
-        return null;
-    }
-
-    @Override
     public Configuration newResource() {
         return new Configuration(this.repository,
                 this,
                 this.userFactory,
                 this.localeFactory);
     }
-
-    @Override
-    public Configuration newResource(final String key) {
-        return newResource();
-    }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return null;
-    }
-
 }

@@ -3,20 +3,20 @@
  */
 package de.saumya.gwt.session.client;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
 import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.ResourceTestGwt;
 import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 
 public abstract class AbstractUserResourceTestGwt<E extends Resource<E>>
-        extends AbstractResourceTestGwt<E> {
+        extends ResourceTestGwt<E> {
 
-    protected LocaleFactory localeFactory;
-    protected DomainFactory domainFactory;
-    protected GroupFactory  groupFactory;
-    protected UserFactory   userFactory;
+    protected LocaleFactory    localeFactory;
+    protected DomainFactory    domainFactory;
+    protected UserGroupFactory groupFactory;
+    protected UserFactory      userFactory;
 
     @Override
     protected void gwtSetUp() {
@@ -24,7 +24,7 @@ public abstract class AbstractUserResourceTestGwt<E extends Resource<E>>
                 this.notifications);
         this.domainFactory = new DomainFactory(this.repository,
                 this.notifications);
-        this.groupFactory = new GroupFactory(this.repository,
+        this.groupFactory = new UserGroupFactory(this.repository,
                 this.notifications,
                 this.localeFactory,
                 this.domainFactory);

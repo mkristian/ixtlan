@@ -8,13 +8,13 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceWithId;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
 
-public class Phrase extends ResourceWithId<Phrase> {
+public class Phrase extends Resource<Phrase> {
 
     private final TranslationFactory translationFactory;
     private final UserFactory        userFactory;
@@ -52,8 +52,7 @@ public class Phrase extends ResourceWithId<Phrase> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        super.fromXml(root);
+    protected void fromElement(final Element root) {
         this.code = getString(root, "code");
         this.defaultTranslation = this.translationFactory.getChildResource(root,
                                                                            "default");
@@ -68,7 +67,6 @@ public class Phrase extends ResourceWithId<Phrase> {
 
     @Override
     public void toString(final StringBuilder buf) {
-        super.toString(buf);
         toString(buf, "code", this.code);
         toString(buf, "current_text", this.currentText);
         toString(buf, "text", this.text);

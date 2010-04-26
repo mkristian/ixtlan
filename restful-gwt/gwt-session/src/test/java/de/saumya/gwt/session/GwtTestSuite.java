@@ -9,10 +9,11 @@ import de.saumya.gwt.session.client.AuthenticationTestGwt;
 import de.saumya.gwt.session.client.PermissionTestGwt;
 import de.saumya.gwt.session.client.RoleTestGwt;
 import de.saumya.gwt.session.client.SessionTestGwt;
-import de.saumya.gwt.session.client.model.DomainTestGwt;
-import de.saumya.gwt.session.client.model.GroupTestGwt;
-import de.saumya.gwt.session.client.model.LocaleTestGwt;
-import de.saumya.gwt.session.client.model.UserTestGwt;
+import de.saumya.gwt.session.client.models.DomainTestGwt;
+import de.saumya.gwt.session.client.models.GroupTestGwt;
+import de.saumya.gwt.session.client.models.LocaleTestGwt;
+import de.saumya.gwt.session.client.models.UserGroupTestGwt;
+import de.saumya.gwt.session.client.models.UserTestGwt;
 
 public class GwtTestSuite extends GWTTestSuite {
 
@@ -22,6 +23,7 @@ public class GwtTestSuite extends GWTTestSuite {
         suite.addTestSuite(DomainTestGwt.class);
         suite.addTestSuite(RoleTestGwt.class);
         suite.addTestSuite(GroupTestGwt.class);
+        suite.addTestSuite(UserGroupTestGwt.class);
         suite.addTestSuite(UserTestGwt.class);
         suite.addTestSuite(PermissionTestGwt.class);
         suite.addTestSuite(SessionTestGwt.class);

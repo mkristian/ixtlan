@@ -3,7 +3,7 @@
  */
 package de.saumya.gwt.persistence.client;
 
-public class CountingResourcesChangeListener<T extends Resource<T>> implements
+public class CountingResourcesChangeListener<T extends AbstractResource<T>> implements
         ResourcesChangeListener<T> {
 
     private int count = 0;

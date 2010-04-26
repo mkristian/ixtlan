@@ -4,12 +4,12 @@
 package de.saumya.gwt.translation.common.client.model;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
 
-public class PhraseFactory extends ResourceFactoryWithID<Phrase> {
+public class PhraseFactory extends ResourceFactory<Phrase> {
 
     private final TranslationFactory translationFactory;
     private final UserFactory        factory;
@@ -31,13 +31,13 @@ public class PhraseFactory extends ResourceFactoryWithID<Phrase> {
     }
 
     @Override
-    public Phrase newResource(final int key) {
+    public Phrase newResource(final int id) {
         return new Phrase(this.repository,
                 this,
                 this.translationFactory,
                 this.factory,
                 this.localeFactory,
-                key);
+                id);
     }
 
     @Override

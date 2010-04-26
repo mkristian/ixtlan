@@ -12,6 +12,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Widget;
 
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceChangeListenerAdapter;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.translation.common.client.model.Phrase;
@@ -58,17 +59,17 @@ public class GetText {
         this.wordFactory = wordFactory;
         this.phraseFactory = phraseFactory;
         this.locale = localeFactory.defaultLocale();
-        this.wordBundleListener = new ResourceChangeListener<WordBundle>() {
+        this.wordBundleListener = new ResourceChangeListenerAdapter<WordBundle>() {
 
             @Override
-            public void onChange(final WordBundle resource) {
-                for (final Word word : resource.words) {
+            public void onChange(final WordBundle bundle) {
+                for (final Word word : bundle.words) {
                     GetText.this.wordMap.put(word.code, word);
                 }
-                final Locale locale = localeFactory.get(resource.locale);
+                final Locale locale = localeFactory.first(bundle.locale);
                 for (final Word word : GetText.this.wordMap.values()) {
                     if (word.isNew()) {
-                        final Phrase phrase = phraseFactory.newResource();
+                        final Phrase phrase = phraseFactory.newResource(0);
                         phrase.code = word.code;
                         phrase.currentText = word.code;
                         phrase.locale = locale;
@@ -80,13 +81,8 @@ public class GetText {
                 }
                 resetTranslatables();
             }
-
-            @Override
-            public void onError(final WordBundle resource) {
-                // nothing to do
-            }
         };
-        this.phraseBookChangeListener = new ResourceChangeListener<PhraseBook>() {
+        this.phraseBookChangeListener = new ResourceChangeListenerAdapter<PhraseBook>() {
 
             @Override
             public void onChange(final PhraseBook resource) {
@@ -94,11 +90,6 @@ public class GetText {
                     GetText.this.phraseMap.put(phrase.code, phrase);
                 }
                 resetTranslatables();
-            }
-
-            @Override
-            public void onError(final PhraseBook resource) {
-                // nothing to do
             }
         };
     }
@@ -112,7 +103,7 @@ public class GetText {
             this.wordMap = this.wordCache.get(locale.code);
         }
         resetTranslatables();
-        this.bundleFactory.get(locale.code, this.wordBundleListener);
+        this.bundleFactory.first(locale.code, this.wordBundleListener);
     }
 
     private void loadPhraseBook(final Locale locale) {
@@ -124,13 +115,13 @@ public class GetText {
             this.phraseMap = this.phraseCache.get(locale.code);
         }
         resetTranslatables();
-        this.bookFactory.get(locale.code, this.phraseBookChangeListener);
+        this.bookFactory.first(locale.code, this.phraseBookChangeListener);
     }
 
     public Phrase getPhrase(final String code, final String defaultPhrase) {
         Phrase phrase = this.phraseMap.get(code);
         if (phrase == null && defaultPhrase != null) {
-            phrase = this.phraseFactory.newResource();
+            phrase = this.phraseFactory.newResource(0);
             phrase.code = code;
             phrase.currentText = defaultPhrase;
             phrase.locale = this.locale;

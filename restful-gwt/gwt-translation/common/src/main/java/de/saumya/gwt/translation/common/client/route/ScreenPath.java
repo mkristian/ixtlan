@@ -14,12 +14,12 @@ public class ScreenPath {
     public final String            locale;
     public final String            controllerName;
     public final ScreenPath.Action action;
-    public final String            key;
+    public final int               key;
     public final ScreenPath        child;
     public final String            query;
 
     private ScreenPath(final String locale, final String controller,
-            final Action action, final String key, final ScreenPath child,
+            final Action action, final int key, final ScreenPath child,
             final String query) {
         this.locale = locale;
         this.controllerName = controller;
@@ -62,12 +62,13 @@ public class ScreenPath {
                     // case "/name/new"
                     this.action = Action.NEW;
                     this.query = null;
-                    this.key = null;
+                    this.key = 0;
                     this.child = null;
                 }
                 else if (subpath.contains("/")) {
                     // case "/name/id/edit" or "/name/id/nested"
-                    this.key = subpath.substring(0, subpath.indexOf("/"));
+                    this.key = Integer.parseInt(subpath.substring(0,
+                                                                  subpath.indexOf("/")));
                     final String subsubpath = subpath.substring(subpath.indexOf("/") + 1);
                     if (subsubpath.equals("edit")) {
                         // case "/name/id/edit"
@@ -85,7 +86,7 @@ public class ScreenPath {
                 else {
                     // case "/name/id
                     this.action = Action.SHOW;
-                    this.key = subpath;
+                    this.key = Integer.parseInt(subpath);
                     this.query = null;
                     this.child = null;
                 }
@@ -98,7 +99,7 @@ public class ScreenPath {
                         ? path.replaceFirst(".*[$]", "")
                         : "";
                 this.action = Action.INDEX;
-                this.key = null;
+                this.key = 0;
                 this.child = null;
             }
         }
@@ -107,7 +108,7 @@ public class ScreenPath {
             this.action = null;
             this.controllerName = null;
             this.query = null;
-            this.key = null;
+            this.key = 0;
             this.child = null;
         }
     }
@@ -127,16 +128,31 @@ public class ScreenPath {
     }
 
     public String toString(final String query) {
+        final StringBuilder result = new StringBuilder("/");
+        result.append(this.locale);
+        if (this.controllerName != null) {
+            result.append("/").append(this.controllerName);
+        }
+        if (this.key != 0) {
+            result.append("/").append(this.key);
+        }
+        if (this.action == Action.EDIT || this.action == Action.NEW) {
+            result.append("/").append(this.action.toString().toLowerCase());
+        }
+        if (query != null && query.length() > 0) {
+            result.append("$").append(query);
+        }
+        return result.toString();
         // TODO use stringbuilder and apply all cases properly
-        return "/"
-                + this.locale
-                + "/"
-                + (this.controllerName != null ? this.controllerName : "")
-                + (this.key != null ? "/" + this.key : "")
-                + (this.action == Action.EDIT || this.action == Action.NEW
-                        ? "/" + this.action.toString().toLowerCase()
-                        : "")
-                + (query != null && query.length() > 0 ? "$" + query : "");
+        // return "/"
+        // + this.locale
+        // + "/"
+        // + (this.controllerName != null ? this.controllerName : "")
+        // + (this.key != 0 ? "/" + this.key : "")
+        // + (this.action == Action.EDIT || this.action == Action.NEW
+        // ? "/" + this.action.toString().toLowerCase()
+        // : "")
+        // + (query != null && query.length() > 0 ? "$" + query : "");
     }
 
     @Override

@@ -9,25 +9,25 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.AbstractResourceFactory;
+import de.saumya.gwt.persistence.client.NotificationResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 import de.saumya.gwt.translation.common.client.route.Screen;
 
-public abstract class AbstractResourceScreen<E extends Resource<E>> extends
-        FlowPanel implements Screen<E>, ResourceResetable<E> {
+public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
+        extends FlowPanel implements Screen<E>, ResourceResetable<E> {
 
     protected static final int                     RESOURCE  = 0;
     protected static final int                     RESOURCES = 1;
 
-    protected final ResourceNotifications          notifications;
+    // protected final ResourceNotifications notifications;
 
-    protected final ResourceFactory<E>             factory;
+    protected final AbstractResourceFactory<E>     factory;
 
     protected final AbstractResourceActionPanel<E> actions;
 
@@ -50,12 +50,13 @@ public abstract class AbstractResourceScreen<E extends Resource<E>> extends
 
     protected <ResourceWidget extends Widget & AllowReadOnly<E>> AbstractResourceScreen(
             final LoadingNotice loadingNotice,
-            final ResourceFactory<E> factory, final Session session,
+            final AbstractResourceFactory<E> factory, final Session session,
             final ResourceWidget display, final Widget displayCollection,
             final ResourceCollectionResetable<E> displayCollectionResetable,
             final HasPathFactory displayCollectionPathFactory,
             final AbstractResourceActionPanel<E> actions,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
+            // final ResourceNotifications notifications,
             final HyperlinkFactory hyperlinkFactory) {
         setStyleName("resource-screen");
         this.loading = loadingNotice;
@@ -75,7 +76,7 @@ public abstract class AbstractResourceScreen<E extends Resource<E>> extends
 
         this.factory = factory;
         this.session = session;
-        this.notifications = notifications;
+        // this.notifications = notifications;
 
         this.deck = new DeckPanel();
         this.deck.add(display);
@@ -89,15 +90,19 @@ public abstract class AbstractResourceScreen<E extends Resource<E>> extends
 
         this.resourceChangeListener = new ResourceChangeListener<E>() {
 
+            NotificationResourceChangeListener listener = listeners.loaded;
+
             @Override
             public void onChange(final E resource) {
+                // TODO make the reset AbstractResource aware !!!
                 reset(resource);
+                this.listener.onChange(resource);
             }
 
             @Override
-            public void onError(final E resource) {
-                reset(resource);
-                AbstractResourceScreen.this.loading.setVisible(false);
+            public void onError(final int status, final String errorMessage,
+                    final E resource) {
+                this.listener.onError(status, errorMessage, resource);
             }
         };
 
@@ -132,10 +137,11 @@ public abstract class AbstractResourceScreen<E extends Resource<E>> extends
     }
 
     /**
-     * only the resource knows whether it has updated Timestamp and/or updatedBy
-     * User. an implementation needs to forward the respective info to the
-     * {@link AbstractResourceScreen#reset(Resource, Timestamp, User)} using
-     * null where the info does not exists
+     * only the resource knows whether it has "updated" Timestamp and/or
+     * "updatedBy" User. an implementation needs to forward the respective info
+     * to the
+     * {@link AbstractResourceScreen#reset(AbstractResource, Timestamp, User)}
+     * using null where the info does not exists
      * 
      * @param resource
      */
@@ -160,7 +166,7 @@ public abstract class AbstractResourceScreen<E extends Resource<E>> extends
     // }
 
     @Override
-    public Screen<?> child(final String parentKey) {
+    public Screen<?> child(final int parentKey) {
         // that is the default !!!
         return null;
     }

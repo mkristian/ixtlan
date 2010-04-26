@@ -1,15 +1,10 @@
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.models.Domain;
-import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.persistence.client.ResourceTestGwt;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
+public class DomainTestGwt extends ResourceTestGwt<Domain> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -34,10 +29,9 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
     }
 
     @Override
-    protected Resource<Domain> resourceSetUp() {
-        this.resource = this.factory.newResource();
+    protected AbstractResource<Domain> resourceSetUp() {
+        this.resource = this.factory.newResource(1);
 
-        this.resource.id = 1;
         this.resource.name = "dhara";
 
         this.repository.addXmlResponse(RESOURCE_XML);
@@ -71,8 +65,8 @@ public class DomainTestGwt extends AbstractResourceTestGwt<Domain> {
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
+    protected int idValue() {
+        return 1;
     }
 
     @Override

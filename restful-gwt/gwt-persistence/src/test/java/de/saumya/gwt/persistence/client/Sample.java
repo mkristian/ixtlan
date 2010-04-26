@@ -5,7 +5,7 @@ package de.saumya.gwt.persistence.client;
 
 import com.google.gwt.xml.client.Element;
 
-public class Sample extends ResourceWithId<Sample> {
+public class Sample extends Resource<Sample> {
 
     private final SampleFactory factory;
 
@@ -22,15 +22,13 @@ public class Sample extends ResourceWithId<Sample> {
 
     @Override
     protected void appendXml(final StringBuilder buf) {
-        super.appendXml(buf);
         appendXml(buf, "language", this.language);
         appendXml(buf, "country", this.country);
         appendXml(buf, "child", this.child);
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        super.fromXml(root);
+    protected void fromElement(final Element root) {
         this.country = getString(root, "country");
         this.language = getString(root, "language");
         this.child = this.factory.getChildResource(root, "child");
@@ -38,7 +36,6 @@ public class Sample extends ResourceWithId<Sample> {
 
     @Override
     public void toString(final StringBuilder buf) {
-        super.toString(buf);
         buf.append(", :language => ").append(this.language);
         if (this.country != null) {
             buf.append(", :country => ").append(this.country);
@@ -53,4 +50,11 @@ public class Sample extends ResourceWithId<Sample> {
     public String display() {
         return "sample(" + this.language + "_" + this.country + ")";
     }
+
+    // @Override
+    // protected void appendXml(final StringBuilder buf, final String name,
+    // final Sample value) {
+    // // TODO Auto-generated method stub
+    //
+    // }
 }

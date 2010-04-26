@@ -1,15 +1,12 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
 public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
 
     private Translation resource;
@@ -40,7 +37,7 @@ public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
                                     + "<text>some text</text>"
                                     + "<approved_at>2009-07-09 17:14:48.9</approved_at>"
                                     + "<approved_by>"
-                                    + "<id>0</id><login>root</login>"
+                                    + "<id>1</id><login>root</login>"
                                     + "<groups></groups>" + "</approved_by>"
                                     + "</translation>";
 
@@ -51,7 +48,7 @@ public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
                 new UserFactory(this.repository,
                         this.notifications,
                         new LocaleFactory(this.repository, this.notifications),
-                        new GroupFactory(this.repository,
+                        new UserGroupFactory(this.repository,
                                 this.notifications,
                                 new LocaleFactory(this.repository,
                                         this.notifications),
@@ -60,8 +57,8 @@ public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
     }
 
     @Override
-    protected Resource<Translation> resourceSetUp() {
-        this.resource = this.factory.newResource();
+    protected AbstractResource<Translation> resourceSetUp() {
+        this.resource = this.factory.newResource(123);
 
         this.resource.text = "some text";
         this.resource.previousText = "text";
@@ -89,8 +86,8 @@ public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
     }
 
     @Override
-    protected String keyValue() {
-        return "123";
+    protected int idValue() {
+        return 123;
     }
 
     @Override

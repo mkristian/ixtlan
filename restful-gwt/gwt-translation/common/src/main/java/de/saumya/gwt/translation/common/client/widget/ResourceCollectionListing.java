@@ -6,9 +6,9 @@ package de.saumya.gwt.translation.common.client.widget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
+import de.saumya.gwt.persistence.client.AbstractResourceFactory;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
@@ -18,18 +18,18 @@ import de.saumya.gwt.translation.common.client.route.PathFactory;
 public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
         implements ResourceCollectionResetable<E>, HasPathFactory {
 
-    protected final Session            session;
+    protected final Session                    session;
 
-    protected final ResourceFactory<E> factory;
+    protected final AbstractResourceFactory<E> factory;
 
-    private final Label                noResult;
+    private final Label                        noResult;
 
-    private PathFactory                pathFactory;
+    private PathFactory                        pathFactory;
 
-    private final HyperlinkFactory     hyperlinkFactory;
+    private final HyperlinkFactory             hyperlinkFactory;
 
     public ResourceCollectionListing(final Session session,
-            final ResourceFactory<E> factory,
+            final AbstractResourceFactory<E> factory,
             final GetTextController getTextController,
             final HyperlinkFactory hyperlinkFactory) {
         setStylePrimaryName("resource-collection-listing");
@@ -66,7 +66,7 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
                                            this.factory.storagePluralName())) {
                     for (final E resource : resources) {
                         add(this.hyperlinkFactory.newHyperlink(resource.display(),
-                                                               this.pathFactory.editPath(resource.key(),
+                                                               this.pathFactory.editPath(resource.id,
                                                                                          false)));
                     }
                 }
@@ -74,7 +74,7 @@ public class ResourceCollectionListing<E extends Resource<E>> extends FlowPanel
                                                 this.factory.storagePluralName())) {
                     for (final E resource : resources) {
                         add(this.hyperlinkFactory.newHyperlink(resource.display(),
-                                                               this.pathFactory.showPath(resource.key(),
+                                                               this.pathFactory.showPath(resource.id,
                                                                                          false)));
                     }
                 }

@@ -9,12 +9,12 @@ public class GWTResourceNotification implements ResourceNotifications {
 
     @Override
     public void error(final int status, final String message,
-            final Resource<?> resource) {
+            final AbstractResource<?> resource) {
         GWT.log(status + ": " + message + " " + resource, null);
     }
 
     @Override
-    public void info(final String message, final Resource<?> resource) {
+    public void info(final String message, final AbstractResource<?> resource) {
         GWT.log(message + " " + resource, null);
     }
 

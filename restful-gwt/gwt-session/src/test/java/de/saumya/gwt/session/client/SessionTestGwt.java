@@ -8,16 +8,13 @@ import de.saumya.gwt.persistence.client.RepositoryMock;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.Group;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroup;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
 public class SessionTestGwt extends GWTTestCase {
 
     protected RepositoryMock        repository;
@@ -49,7 +46,7 @@ public class SessionTestGwt extends GWTTestCase {
                 this.notification);
         this.localeFactory = new LocaleFactory(this.repository,
                 this.notification);
-        final GroupFactory groupFactory = new GroupFactory(this.repository,
+        final UserGroupFactory groupFactory = new UserGroupFactory(this.repository,
                 this.notification,
                 this.localeFactory,
                 venueFactory);
@@ -84,12 +81,12 @@ public class SessionTestGwt extends GWTTestCase {
                 if ("dhamma".equals(username) && "mudita".equals(password)) {
                     final Authentication authentication = this.authenticationFactory.newResource();
                     authentication.login = username;
-                    final User user = SessionTestGwt.this.userFactory.newResource();
+                    final User user = SessionTestGwt.this.userFactory.newResource(1);
                     user.login = username;
                     authentication.user = user;
                     authentication.token = "blabla123";
                     user.groups = groupFactory.newResources();
-                    final Group root = groupFactory.newResource();
+                    final UserGroup root = groupFactory.newResource(1);
                     root.name = "root";
                     root.locales = SessionTestGwt.this.localeFactory.newResources();
                     final Locale en = SessionTestGwt.this.localeFactory.newResource(123);

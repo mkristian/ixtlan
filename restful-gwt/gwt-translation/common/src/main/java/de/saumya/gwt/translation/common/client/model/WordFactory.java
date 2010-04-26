@@ -3,11 +3,11 @@
  */
 package de.saumya.gwt.translation.common.client.model;
 
+import de.saumya.gwt.persistence.client.AnonymousResourceFactory;
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class WordFactory extends ResourceFactoryWithIdGenerator<Word> {
+public class WordFactory extends AnonymousResourceFactory<Word> {
 
     public WordFactory(final Repository repository,
             final ResourceNotifications notification) {
@@ -20,13 +20,8 @@ public class WordFactory extends ResourceFactoryWithIdGenerator<Word> {
     }
 
     @Override
-    public Word newResource(final int key) {
-        return new Word(this.repository, this, key);
-    }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return null;
+    public Word newResource() {
+        return new Word(this.repository, this);
     }
 
 }

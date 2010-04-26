@@ -13,11 +13,11 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings.Binding;
 
-public class ResourceFields<E extends Resource<E>> extends FlowPanel implements
+public class ResourceFields<E extends AbstractResource<E>> extends FlowPanel implements
         AllowReadOnly<E> {
 
     protected final GetTextController getTextController;

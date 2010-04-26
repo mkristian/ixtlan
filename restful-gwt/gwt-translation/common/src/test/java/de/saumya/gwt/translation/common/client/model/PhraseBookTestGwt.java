@@ -1,15 +1,13 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class PhraseBookTestGwt extends AbstractCommonTestGwt<PhraseBook> {
+public class PhraseBookTestGwt extends
+        AbstractCommonAnonymousTestGwt<PhraseBook> {
 
     private PhraseBook resource;
 
@@ -41,7 +39,7 @@ public class PhraseBookTestGwt extends AbstractCommonTestGwt<PhraseBook> {
         final UserFactory userFactory = new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new GroupFactory(this.repository,
+                new UserGroupFactory(this.repository,
                         this.notifications,
                         localeFactory,
                         new DomainFactory(this.repository, this.notifications)));
@@ -57,57 +55,11 @@ public class PhraseBookTestGwt extends AbstractCommonTestGwt<PhraseBook> {
     }
 
     @Override
-    protected Resource<PhraseBook> resourceSetUp() {
+    protected AbstractResource<PhraseBook> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.id = 1;
         this.resource.locale = "en";
-        this.repository.addXmlResponse(RESOURCE_XML);
 
-        this.resource.save();
         return this.resource;
     }
-
-    @Override
-    public void doTestCreate() {
-        assertEquals("en", this.resource.locale);
-    }
-
-    @Override
-    protected String keyValue() {
-        return "en";
-    }
-
-    @Override
-    protected String value() {
-        return "en";
-    }
-
-    @Override
-    protected String changedValue() {
-        return "en_JP";
-    }
-
-    @Override
-    protected void doTestUpdate() {
-        this.resource.locale = changedValue();
-        this.resource.save();
-        assertEquals(changedValue(), this.resource.locale);
-    }
-
-    @Override
-    protected String marshallingXml() {
-        return XML;
-    }
-
-    private static final String XML = "<phrase_book>"
-                                            + "<locale>en</locale>"
-                                            + "<phrases>"
-                                            + "<phrase>"
-                                            // + "<id>1</id>"
-                                            + "<code>CODE</code>"
-                                            + "<current_text>code</current_text>"
-                                            + "</phrase>" + "</phrases>"
-                                            + "</phrase_book>";
-
 }

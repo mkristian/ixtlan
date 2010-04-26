@@ -1,11 +1,16 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
+import java.util.HashMap;
+import java.util.Map;
 
-public class WordBundleFactory extends
-        ResourceFactoryWithIdGenerator<WordBundle> {
+import de.saumya.gwt.persistence.client.AnonymousResourceFactory;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.ResourcesChangeListener;
+
+public class WordBundleFactory extends AnonymousResourceFactory<WordBundle> {
 
     private final WordFactory wordFactory;
 
@@ -22,13 +27,28 @@ public class WordBundleFactory extends
     }
 
     @Override
-    public WordBundle newResource(final int key) {
-        return new WordBundle(this.repository, this, this.wordFactory, key);
+    public WordBundle newResource() {
+        return new WordBundle(this.repository, this, this.wordFactory);
     }
 
-    @Override
-    public String defaultSearchParameterName() {
-        return null;
+    public WordBundle first(final String localeCode,
+            final ResourceChangeListener<WordBundle> listener) {
+        final WordBundle bundle = newResource();
+        bundle.addResourceChangeListener(listener);
+        bundle.locale = localeCode;
+        final Map<String, String> q = new HashMap<String, String>();
+        q.put("code", bundle.locale);
+        all(q, new ResourcesChangeListener<WordBundle>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<WordBundle> resources) {
+                final WordBundle words = resources.iterator().next();
+                bundle.locale = words.locale;
+                bundle.words = words.words;
+                // TODO maybe fire resource change
+            }
+        });
+        return bundle;
     }
 
 }

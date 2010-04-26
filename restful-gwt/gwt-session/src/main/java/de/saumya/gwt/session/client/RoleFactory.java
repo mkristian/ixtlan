@@ -1,10 +1,10 @@
 package de.saumya.gwt.session.client;
 
+import de.saumya.gwt.persistence.client.AnonymousResourceFactory;
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class RoleFactory extends ResourceFactoryWithIdGenerator<Role> {
+public class RoleFactory extends AnonymousResourceFactory<Role> {
 
     public RoleFactory(final Repository repository,
             final ResourceNotifications notification) {
@@ -17,13 +17,7 @@ public class RoleFactory extends ResourceFactoryWithIdGenerator<Role> {
     }
 
     @Override
-    public Role newResource(final int id) {
-        return new Role(this.repository, this, id);
+    public Role newResource() {
+        return new Role(this.repository, this);
     }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return null;
-    }
-
 }

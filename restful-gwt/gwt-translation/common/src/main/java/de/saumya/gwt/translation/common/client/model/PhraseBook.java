@@ -5,19 +5,17 @@ package de.saumya.gwt.translation.common.client.model;
 
 import com.google.gwt.xml.client.Element;
 
+import de.saumya.gwt.persistence.client.AnonymousResource;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class PhraseBook extends ResourceWithId<PhraseBook> {
+public class PhraseBook extends AnonymousResource<PhraseBook> {
 
-    private final PhraseBookFactory factory;
-    private final PhraseFactory     phraseFactory;
+    private final PhraseFactory phraseFactory;
 
     PhraseBook(final Repository repository, final PhraseBookFactory factory,
-            final PhraseFactory phraseFactory, final int id) {
-        super(repository, factory, id);
-        this.factory = factory;
+            final PhraseFactory phraseFactory) {
+        super(repository, factory);
         this.phraseFactory = phraseFactory;
     }
 
@@ -31,16 +29,10 @@ public class PhraseBook extends ResourceWithId<PhraseBook> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        this.id = this.factory.nextId();
+    protected void fromElement(final Element root) {
         this.locale = getString(root, "locale");
         this.phrases = this.phraseFactory.getChildResourceCollection(root,
                                                                      "phrases");
-    }
-
-    @Override
-    public String key() {
-        return this.locale;
     }
 
     @Override

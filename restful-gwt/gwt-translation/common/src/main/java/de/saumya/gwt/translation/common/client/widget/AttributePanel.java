@@ -6,10 +6,10 @@ package de.saumya.gwt.translation.common.client.widget;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-public abstract class AttributePanel<E extends Resource<E>> extends
+public abstract class AttributePanel<E extends AbstractResource<E>> extends
         HorizontalPanel {
 
     private final TextBox box = new TextBox();

@@ -3,14 +3,14 @@
  */
 package de.saumya.gwt.translation.gui.client.views.groups;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
-import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -36,7 +36,7 @@ public class GroupScreen extends ResourceScreen<Group> {
             final GetTextController getTextController,
             final GroupFactory factory, final Session session,
             final ResourceBindings<Group> bindings,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
@@ -51,13 +51,15 @@ public class GroupScreen extends ResourceScreen<Group> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new NoGetByResourceActionPanel<Group>(getTextController,
+                new ResourceActionPanel<Group>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications,
-                        hyperlinkFactory),
-                notifications,
+                        listeners,
+                        hyperlinkFactory,
+                        true,
+                        false),
+                listeners,
                 hyperlinkFactory);
     }
 }

@@ -8,16 +8,17 @@ import java.util.Map;
 
 import com.google.gwt.user.client.ui.ListBox;
 
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.AbstractResourceFactory;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionResetable;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings.Binding;
 
-public abstract class ListBoxBinding<T extends Resource<T>, S extends Resource<S>>
+public abstract class ListBoxBinding<T extends AbstractResource<T>, S extends Resource<S>>
         extends ListBox implements Binding<T>, ResourceCollectionResetable<S> {
 
-    private final Map<String, S> map = new HashMap<String, S>();
+    private final Map<Integer, S> map = new HashMap<Integer, S>();
 
     protected ListBoxBinding(final boolean multiselect) {
         super(multiselect);
@@ -30,8 +31,8 @@ public abstract class ListBoxBinding<T extends Resource<T>, S extends Resource<S
     public void reset(final ResourceCollection<S> resources) {
         clear();
         for (final S resource : resources) {
-            this.map.put(resource.key(), resource);
-            addItem(resource.display(), resource.key());
+            this.map.put(resource.id, resource);
+            addItem(resource.display(), resource.id + "");
         }
     }
 
@@ -52,7 +53,7 @@ public abstract class ListBoxBinding<T extends Resource<T>, S extends Resource<S
     protected void select(final S resource) {
         if (resource != null) {
             for (int i = 0; i < getItemCount(); i++) {
-                setItemSelected(i, resource.key().equals(getValue(i)));
+                setItemSelected(i, (resource.id + "").equals(getValue(i)));
             }
         }
     }
@@ -63,7 +64,7 @@ public abstract class ListBoxBinding<T extends Resource<T>, S extends Resource<S
     }
 
     protected ResourceCollection<S> getResources(
-            final ResourceFactory<S> factory) {
+            final AbstractResourceFactory<S> factory) {
         final ResourceCollection<S> result = new ResourceCollection<S>(factory);
         for (int i = 0; i < getItemCount(); i++) {
             if (isItemSelected(i)) {

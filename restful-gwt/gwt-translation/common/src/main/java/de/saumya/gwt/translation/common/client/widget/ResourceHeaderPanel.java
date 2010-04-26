@@ -8,17 +8,17 @@ import java.sql.Timestamp;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
-        FlowPanel implements ResourceResetable<E> {
+public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
+        extends FlowPanel implements ResourceResetable<E> {
 
     private final GetTextController getTextController;
 
-    private final Label             keyLabel;
-    private final Label             keyValue;
+    // private final Label keyLabel;
+    // private final Label keyValue;
     private final Label             modifiedAtLabel;
     private final Label             modifiedAtValue;
     private final Label             byLabel;
@@ -28,8 +28,8 @@ public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
     public ResourceHeaderPanel(final GetTextController getTextController) {
         setStyleName("resource-header-panel");
         this.getTextController = getTextController;
-        this.keyLabel = label("key");
-        this.keyValue = label();
+        // this.keyLabel = label("key");
+        // this.keyValue = label();
         this.modifiedAtLabel = label("modified at");
         this.modifiedAtValue = label();
         this.byLabel = label("by");
@@ -40,17 +40,17 @@ public abstract class ResourceHeaderPanel<E extends Resource<E>> extends
     /**
      * only the resource knows whether it has updated Timestamp and/or updatedBy
      * User. an implementation needs to forward the respective info to the
-     * {@link ResourceScreen#reset(Resource, Timestamp, User)} using null where
-     * the info does not exists
+     * {@link ResourceScreen#reset(AbstractResource, Timestamp, User)} using
+     * null where the info does not exists
      */
     protected void reset(final E resource, final Timestamp updatedAt,
             final User updatedBy) {
-        final String keyValue = resource.isNew() ? null : resource.key();
-        if (keyValue != null) {
-            this.keyValue.setText("\u00a0" + keyValue + "\u00a0");
-        }
-        this.keyValue.setVisible(keyValue != null);
-        this.keyLabel.setVisible(keyValue != null);
+        // final int keyValue = resource.isNew() ? 0 : resource.id;
+        // if (keyValue != 0) {
+        // this.keyValue.setText("\u00a0" + keyValue + "\u00a0");
+        // }
+        // this.keyValue.setVisible(keyValue != 0);
+        // this.keyLabel.setVisible(keyValue != 0);
         this.modifiedByLabel.setVisible(false);
         this.byLabel.setVisible(false);
         if (updatedAt != null) {

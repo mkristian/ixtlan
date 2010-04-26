@@ -1,28 +1,25 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
 public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
 
     private Phrase resource;
 
     @Override
     protected String resource1Xml() {
-        return "<phrase>" + "<code>123</code>"
+        return "<phrase>" + "<id>1</id><code>123</code>"
                 + "<current_text>some text</current_text>" + "</phrase>";
     }
 
     @Override
     protected String resource2Xml() {
-        return "<phrase>" + "<code>345</code>"
+        return "<phrase>" + "<id>2</id><code>345</code>"
                 + "<current_text>some text</current_text>" + "</phrase>";
     }
 
@@ -32,12 +29,13 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
     }
 
     static final String XML = "<phrase>"
+                                    + "<id>1</id>"
                                     + "<code>123</code>"
                                     + "<current_text>text</current_text>"
                                     + "<text>some text</text>"
                                     + "<updated_at>2009-07-09 17:14:48.9</updated_at>"
-                                    + "<updated_by>"
-                                    + "<id>0</id><login>root</login>"
+                                    + "<updated_by>" + "<id>1</id>"
+                                    + "<login>root</login>"
                                     + "<groups></groups>" + "</updated_by>"
                                     + "</phrase>";
 
@@ -48,7 +46,7 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
         final UserFactory userFactory = new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new GroupFactory(this.repository,
+                new UserGroupFactory(this.repository,
                         this.notifications,
                         localeFactory,
                         new DomainFactory(this.repository, this.notifications)));
@@ -62,10 +60,9 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
     }
 
     @Override
-    protected Resource<Phrase> resourceSetUp() {
-        this.resource = this.factory.newResource();
+    protected AbstractResource<Phrase> resourceSetUp() {
+        this.resource = this.factory.newResource(1);
 
-        this.resource.id = 1;
         this.resource.code = "123";
         this.resource.currentText = "some text";
 
@@ -92,8 +89,8 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
+    protected int idValue() {
+        return 1;
     }
 
     @Override
@@ -107,5 +104,4 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
     protected String marshallingXml() {
         return XML;
     }
-
 }

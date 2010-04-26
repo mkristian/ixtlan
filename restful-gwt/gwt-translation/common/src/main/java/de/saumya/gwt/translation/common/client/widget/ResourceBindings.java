@@ -3,11 +3,11 @@ package de.saumya.gwt.translation.common.client.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 
-public class ResourceBindings<E extends Resource<E>> {
+public class ResourceBindings<E extends AbstractResource<E>> {
 
-    public interface Binding<E extends Resource<E>> {
+    public interface Binding<E extends AbstractResource<E>> {
 
         void pushInto(E resource);
 

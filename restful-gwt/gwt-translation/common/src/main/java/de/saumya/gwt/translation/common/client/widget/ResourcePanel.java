@@ -6,9 +6,9 @@ package de.saumya.gwt.translation.common.client.widget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 
-public class ResourcePanel<E extends Resource<E>> extends FlowPanel implements
+public class ResourcePanel<E extends AbstractResource<E>> extends FlowPanel implements
         AllowReadOnly<E> {
     private final ResourceResetable<E> header;
     private final AllowReadOnly<E>     fields;

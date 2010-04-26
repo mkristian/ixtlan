@@ -7,20 +7,22 @@ import java.util.Map;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.SingletonResource;
+import de.saumya.gwt.persistence.client.SingletonResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 
-public class SingletonResourceScreen<E extends Resource<E>> extends
+public class SingletonResourceScreen<E extends SingletonResource<E>> extends
         AbstractResourceScreen<E> {
+
+    private final SingletonResourceFactory<E> factory;
+
     protected <ResourceWidget extends Widget & AllowReadOnly<E>> SingletonResourceScreen(
             final LoadingNotice loadingNotice,
-            final ResourceFactory<E> factory, final Session session,
+            final SingletonResourceFactory<E> factory, final Session session,
             final ResourceWidget display,
             final AbstractResourceActionPanel<E> actions,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
@@ -30,8 +32,9 @@ public class SingletonResourceScreen<E extends Resource<E>> extends
                 null,
                 null,
                 actions,
-                notifications,
+                listeners,
                 hyperlinkFactory);
+        this.factory = factory;
     }
 
     @Override
@@ -45,8 +48,7 @@ public class SingletonResourceScreen<E extends Resource<E>> extends
         this.displayAllowReadOnly.setReadOnly(!this.session.isAllowed(Action.UPDATE,
                                                                       this.factory.storagePluralName()));
         this.loading.setVisible(true);
-        final E resource = this.factory.get(this.resourceChangeListener,
-                                            this.notifications);
+        final E resource = this.factory.get(this.resourceChangeListener);
         reset(resource);
     }
 
@@ -56,12 +58,12 @@ public class SingletonResourceScreen<E extends Resource<E>> extends
     }
 
     @Override
-    public void showRead(final String key) {
+    public void showRead(final int key) {
         throw new UnsupportedOperationException("singleton resource has no 'show'");
     }
 
     @Override
-    public void showEdit(final String key) {
+    public void showEdit(final int key) {
         throw new UnsupportedOperationException("singleton resource has no 'edit'");
     }
 

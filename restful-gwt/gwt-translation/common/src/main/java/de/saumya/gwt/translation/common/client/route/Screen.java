@@ -5,19 +5,19 @@ package de.saumya.gwt.translation.common.client.route;
 
 import java.util.Map;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 
-public interface Screen<E extends Resource<E>> extends HasPathFactory {
+public interface Screen<E extends AbstractResource<E>> extends HasPathFactory {
 
     void setupPathFactory(String parentPath);
 
-    Screen<?> child(String parentKey);
+    Screen<?> child(int parentKey);
 
-    void showRead(String key);
+    void showRead(int key);
 
     void showAll(Map<String, String> query);
 
-    void showEdit(String key);
+    void showEdit(int key);
 
     void showNew();
 }

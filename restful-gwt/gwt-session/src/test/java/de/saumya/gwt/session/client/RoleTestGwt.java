@@ -1,13 +1,9 @@
 package de.saumya.gwt.session.client;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.AnonymousResourceTestGwt;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
+public class RoleTestGwt extends AnonymousResourceTestGwt<Role> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -21,11 +17,6 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
 
     private static final String RESOURCE_XML = "<role>" + "<name>root</name>"
                                                      + "</role>";
-
-    @Override
-    protected String resourceNewXml() {
-        return RESOURCE_XML;
-    }
 
     @Override
     protected String resource1Xml() {
@@ -43,52 +34,16 @@ public class RoleTestGwt extends AbstractResourceTestGwt<Role> {
     }
 
     @Override
-    protected ResourceFactory<Role> factorySetUp() {
+    protected RoleFactory factorySetUp() {
         return new RoleFactory(this.repository, this.notifications);
     }
 
     @Override
-    protected Resource<Role> resourceSetUp() {
+    protected AbstractResource<Role> resourceSetUp() {
         this.resource = this.factory.newResource();
 
         this.resource.name = "root";
 
-        this.repository.addXmlResponse(RESOURCE_XML);
-
-        this.resource.save();
-
         return this.resource;
-    }
-
-    @Override
-    public void doTestCreate() {
-        assertEquals("root", this.resource.name);
-    }
-
-    @Override
-    public void doTestUpdate() {
-        this.resource.name = changedValue();
-        this.resource.save();
-        assertEquals(this.resource.name, changedValue());
-    }
-
-    @Override
-    protected String changedValue() {
-        return "superuser";
-    }
-
-    @Override
-    protected String keyValue() {
-        return "1";
-    }
-
-    @Override
-    protected String marshallingXml() {
-        return RESOURCE_XML;
-    }
-
-    @Override
-    protected String value() {
-        return "root";
     }
 }

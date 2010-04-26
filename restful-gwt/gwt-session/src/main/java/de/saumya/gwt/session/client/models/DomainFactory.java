@@ -4,10 +4,10 @@
 package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class DomainFactory extends ResourceFactoryWithID<Domain> {
+public class DomainFactory extends ResourceFactory<Domain> {
 
     public DomainFactory(final Repository repository,
             final ResourceNotifications notifications) {

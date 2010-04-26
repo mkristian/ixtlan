@@ -3,11 +3,11 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 
-public interface ResourceCollectionResetableWithPathFactory<E extends Resource<E>>
+public interface ResourceCollectionResetableWithPathFactory<E extends AbstractResource<E>>
         extends ResourceCollectionResetable<E>, HasPathFactory {
 
     /**

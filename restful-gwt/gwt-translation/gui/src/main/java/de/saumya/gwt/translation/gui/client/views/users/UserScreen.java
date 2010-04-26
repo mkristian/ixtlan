@@ -3,16 +3,16 @@
  */
 package de.saumya.gwt.translation.gui.client.views.users;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
-import de.saumya.gwt.translation.common.client.widget.NoGetByResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -36,10 +36,10 @@ public class UserScreen extends ResourceScreen<User> {
 
     public UserScreen(final LoadingNotice loadingNotice,
             final GetTextController getTextController,
-            final UserFactory factory, final GroupFactory groupFactory,
+            final UserFactory factory, final UserGroupFactory groupFactory,
             final LocaleFactory localeFactory, final Session session,
             final ResourceBindings<User> bindings,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
@@ -58,13 +58,15 @@ public class UserScreen extends ResourceScreen<User> {
                                 factory,
                                 getTextController,
                                 hyperlinkFactory)),
-                new NoGetByResourceActionPanel<User>(getTextController,
+                new ResourceActionPanel<User>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications,
-                        hyperlinkFactory),
-                notifications,
+                        listeners,
+                        hyperlinkFactory,
+                        true,
+                        false),
+                listeners,
                 hyperlinkFactory);
     }
 

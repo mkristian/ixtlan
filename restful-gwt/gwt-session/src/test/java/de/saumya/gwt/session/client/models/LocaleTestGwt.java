@@ -1,15 +1,10 @@
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.models.Locale;
-import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.persistence.client.ResourceTestGwt;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
+public class LocaleTestGwt extends ResourceTestGwt<Locale> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -34,7 +29,7 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
     }
 
     @Override
-    protected Resource<Locale> resourceSetUp() {
+    protected AbstractResource<Locale> resourceSetUp() {
         this.locale = ((LocaleFactory) this.factory).newResource(1);
 
         this.locale.code = "en";
@@ -71,8 +66,8 @@ public class LocaleTestGwt extends AbstractResourceTestGwt<Locale> {
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
+    protected int idValue() {
+        return 1;
     }
 
     @Override

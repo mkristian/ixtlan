@@ -3,18 +3,17 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
 
-public abstract class MutatingButtonAction<E extends Resource<E>> extends
-        ButtonAction<E> {
+public abstract class MutatingButtonAction<E extends AbstractResource<E>>
+        extends ButtonAction<E> {
 
     private final ResourceBindings<E> bindings;
 
-    public MutatingButtonAction(
-            final ResourceNotifications changeNotification,
+    public MutatingButtonAction(final ResourceChangeListener<E> listener,
             final ResourceBindings<E> bindings) {
-        super(changeNotification);
+        super(listener);
         this.bindings = bindings;
     }
 

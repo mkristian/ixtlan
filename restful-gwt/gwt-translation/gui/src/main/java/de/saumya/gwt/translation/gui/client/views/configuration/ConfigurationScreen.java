@@ -3,18 +3,18 @@
  */
 package de.saumya.gwt.translation.gui.client.views.configuration;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
-import de.saumya.gwt.translation.common.client.widget.NoSearchNoGetByResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceFields;
 import de.saumya.gwt.translation.common.client.widget.ResourceHeaderPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourcePanel;
+import de.saumya.gwt.translation.common.client.widget.SingletonResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.SingletonResourceScreen;
 import de.saumya.gwt.translation.gui.client.bindings.IntegerTextBoxBinding;
 import de.saumya.gwt.translation.gui.client.bindings.TextBoxBinding;
@@ -105,7 +105,7 @@ public class ConfigurationScreen extends SingletonResourceScreen<Configuration> 
             final ConfigurationFactory configFactory,
             final ResourceBindings<Configuration> bindings,
             final GetTextController getTextController, final Session session,
-            final ResourceNotifications notifications,
+            final NotificationListeners notifications,
             final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 configFactory,
@@ -113,7 +113,7 @@ public class ConfigurationScreen extends SingletonResourceScreen<Configuration> 
                 new ResourcePanel<Configuration>(new ConfigurationHeaders(getTextController),
                         new ConfigurationFields(getTextController, bindings)),
                 // default action panel (save, delete, new, etc buttons)
-                new NoSearchNoGetByResourceActionPanel<Configuration>(getTextController,
+                new SingletonResourceActionPanel<Configuration>(getTextController,
                         bindings,
                         session,
                         configFactory,

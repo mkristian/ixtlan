@@ -10,14 +10,14 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.AbstractResourceFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 import de.saumya.gwt.translation.common.client.route.PathFactory;
 
-public abstract class AbstractResourceActionPanel<E extends Resource<E>>
+public abstract class AbstractResourceActionPanel<E extends AbstractResource<E>>
         extends FlowPanel implements ResourceCollectionResetable<E>,
         AllowReadOnly<E>, HasPathFactory, ResourceResetable<E> {
 
@@ -30,7 +30,7 @@ public abstract class AbstractResourceActionPanel<E extends Resource<E>>
     public AbstractResourceActionPanel(
             final GetTextController getTextController,
             final ResourceBindings<E> binding, final Session session,
-            final ResourceFactory<E> factory) {
+            final AbstractResourceFactory<E> factory) {
         setStyleName("resource-action-panel");
         this.getTextController = getTextController;
         this.resourceName = factory.storagePluralName();

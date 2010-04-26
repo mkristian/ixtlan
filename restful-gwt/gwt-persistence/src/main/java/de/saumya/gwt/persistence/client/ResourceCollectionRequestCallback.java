@@ -10,9 +10,9 @@ import com.google.gwt.http.client.Response;
 
 public class ResourceCollectionRequestCallback implements RequestCallback {
 
-    private final ResourceCollection<? extends Resource<?>> collection;
+    private final ResourceCollection<? extends AbstractResource<?>> collection;
 
-    ResourceCollectionRequestCallback(ResourceCollection<? extends Resource<?>> collection) {
+    ResourceCollectionRequestCallback(ResourceCollection<? extends AbstractResource<?>> collection) {
         this.collection = collection;
     }
 

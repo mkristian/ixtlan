@@ -14,13 +14,14 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceChangeListenerAdapter;
 import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
-import de.saumya.gwt.session.client.models.Group;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.User;
+import de.saumya.gwt.session.client.models.UserGroup;
 
 public class Session {
 
@@ -84,34 +85,31 @@ public class Session {
         this.repository = repository;
         this.authenticationFactory = authenticationFactory;
         this.configurationFactory = configurationFactory;
-        this.configurationListener = new ResourceChangeListener<Configuration>() {
+        this.configurationListener = new ResourceChangeListenerAdapter<Configuration>() {
 
             @Override
-            public void onChange(final Configuration resource) {
-                Session.this.timer.timeout = resource.sessionIdleTimeout;
-                GWT.log("set timeout to " + resource.sessionIdleTimeout
+            public void onChange(final Configuration configuration) {
+                Session.this.timer.timeout = configuration.sessionIdleTimeout;
+                GWT.log("set timeout to " + configuration.sessionIdleTimeout
                         + " minutes", null);
-            }
-
-            @Override
-            public void onError(final Configuration resource) {
             }
         };
         this.authenticationListener = new ResourceChangeListener<Authentication>() {
 
             @Override
-            public void onChange(final Authentication resource) {
-                if (resource.isUptodate()) {
-                    doLogin(resource);
-                    Session.this.repository.setAuthenticationToken(resource.token);
+            public void onChange(final Authentication authentication) {
+                if (authentication.isUptodate()) {
+                    doLogin(authentication);
+                    Session.this.repository.setAuthenticationToken(authentication.token);
                 }
-                else if (!resource.isDeleted()) {
+                else if (!authentication.isDeleted()) {
                     doAccessDenied();
                 }
             }
 
             @Override
-            public void onError(final Authentication resource) {
+            public void onError(final int status, final String errorMessage,
+                    final Authentication resource) {
                 doAccessDenied();
             }
         };
@@ -227,7 +225,7 @@ public class Session {
     }
 
     public boolean isAllowed(final String action, final String resourceName) {
-        for (final Group role : this.authentication.user.groups) {
+        for (final UserGroup role : this.authentication.user.groups) {
             if (isAllowed(action, resourceName, role)) {
                 return true;
             }
@@ -243,9 +241,7 @@ public class Session {
     public boolean isAllowed(final String action, final String resourceName,
             final Locale locale) {
         final String localeCode = locale.code;
-        GWT.log(resourceName + "#" + action + " " + localeCode + "?", null);
-        for (final Group group : this.authentication.user.groups) {
-            GWT.log(group.toString(), null);
+        for (final UserGroup group : this.authentication.user.groups) {
             if (isAllowed(action, resourceName, group)) {
                 for (final Locale l : group.locales) {
                     if (l.code.equals(localeCode)
@@ -259,7 +255,7 @@ public class Session {
     }
 
     private boolean isAllowed(final String action, final String resourceName,
-            final Group group) {
+            final UserGroup group) {
         if (this.authentication != null) {
             final Map<String, Collection<Role>> permission = this.permissions.get(resourceName);
             if (permission != null) {

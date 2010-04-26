@@ -2,7 +2,7 @@ package de.saumya.gwt.persistence.client;
 
 import java.util.Iterator;
 
-import de.saumya.gwt.persistence.client.Resource.State;
+import de.saumya.gwt.persistence.client.AbstractResource.State;
 
 public class CacheTestGwt extends PersistenceTestGwt {
 
@@ -23,7 +23,7 @@ public class CacheTestGwt extends PersistenceTestGwt {
         this.repository = new RepositoryMock();
         this.factory = new SampleFactory(this.repository,
                 new GWTResourceNotification());
-        this.sample = this.factory.newResource();
+        this.sample = this.factory.newResource(123);
 
         this.sample.country = "GE";
         this.sample.language = "en";

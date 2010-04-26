@@ -1,18 +1,15 @@
 package de.saumya.gwt.session.client;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceFactory;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.SingletonResourceFactory;
+import de.saumya.gwt.persistence.client.SingletonResourceTestGwt;
 import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.session.client.models.UserGroupFactory;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
 public class AuthenticationTestGwt extends
-        AbstractResourceTestGwt<Authentication> {
+        SingletonResourceTestGwt<Authentication> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -29,6 +26,7 @@ public class AuthenticationTestGwt extends
                                                      + "<id>1</id>"
                                                      + "<token>asdqwe</token>"
                                                      + "<user>"
+                                                     + "<id>1</id>"
                                                      + "<login>root</login>"
                                                      + "<name>root</name>"
                                                      + "<email>root@example.com</email>"
@@ -44,7 +42,7 @@ public class AuthenticationTestGwt extends
     }
 
     @Override
-    protected Resource<Authentication> resourceSetUp() {
+    protected AbstractResource<Authentication> resourceSetUp() {
         this.resource = this.factory.newResource();
 
         this.resource.login = "root";
@@ -68,13 +66,14 @@ public class AuthenticationTestGwt extends
     }
 
     @Override
-    public void testRetrieveAll() {
-        // not applicable
+    protected void doTestUpdate() {
+        // obsolete
     }
 
     @Override
-    public void testMarshallingUnmarshallingResources() {
-        // not applicable
+    protected String changedValue() {
+        // obsolete
+        return null;
     }
 
     @Override
@@ -83,23 +82,18 @@ public class AuthenticationTestGwt extends
         resource.login = "asd";
         resource.password = "pwd";
 
-        assertEquals("<authentication><id>0</id><login>asd</login><password>pwd</password></authentication>",
+        assertEquals("<authentication><login>asd</login><password>pwd</password></authentication>",
                      resource.toXml());
     }
 
     @Override
-    protected String changedValue() {
-        return "newtoken";
-    }
-
-    @Override
-    protected ResourceFactory<Authentication> factorySetUp() {
+    protected SingletonResourceFactory<Authentication> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
                 this.notifications);
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new GroupFactory(this.repository,
+                new UserGroupFactory(this.repository,
                         this.notifications,
                         localeFactory,
                         new DomainFactory(this.repository, this.notifications)));
@@ -109,30 +103,8 @@ public class AuthenticationTestGwt extends
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
-    }
-
-    @Override
-    protected String marshallingXml() {
-        // obsolete
-        return null;
-    }
-
-    @Override
     protected String resource1Xml() {
         return RESOURCE_XML;
-    }
-
-    @Override
-    protected String resource2Xml() {
-        return RESOURCE_XML.replace(">asdqwe", ">1234567890");
-    }
-
-    @Override
-    protected String resourcesXml() {
-        return "<authentications>" + resource1Xml() + resource2Xml()
-                + "</authentications>";
     }
 
     @Override
@@ -141,8 +113,7 @@ public class AuthenticationTestGwt extends
     }
 
     @Override
-    protected void doTestUpdate() {
-        // obsolete
+    protected String marshallingXml() {
+        return RESOURCE_XML;
     }
-
 }

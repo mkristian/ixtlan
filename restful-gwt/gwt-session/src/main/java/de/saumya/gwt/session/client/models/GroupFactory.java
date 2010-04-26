@@ -1,20 +1,14 @@
 package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithID;
+import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 
-public class GroupFactory extends ResourceFactoryWithID<Group> {
-
-    private final LocaleFactory localeFactory;
-    private final DomainFactory domainFactory;
+public class GroupFactory extends ResourceFactory<Group> {
 
     public GroupFactory(final Repository repository,
-            final ResourceNotifications notifications,
-            final LocaleFactory localeFactory, final DomainFactory domainFactory) {
+            final ResourceNotifications notifications) {
         super(repository, notifications);
-        this.localeFactory = localeFactory;
-        this.domainFactory = domainFactory;
     }
 
     @Override
@@ -24,11 +18,7 @@ public class GroupFactory extends ResourceFactoryWithID<Group> {
 
     @Override
     public Group newResource(final int id) {
-        return new Group(this.repository,
-                this,
-                this.localeFactory,
-                this.domainFactory,
-                id);
+        return new Group(this.repository, this, id);
     }
 
     public boolean isImmutable() {
@@ -39,12 +29,4 @@ public class GroupFactory extends ResourceFactoryWithID<Group> {
     public String defaultSearchParameterName() {
         return "name";
     }
-
-    @Override
-    protected Group getResource(final String key) {
-        // no cache since the resource gets used in many context carry different
-        // locales, i.e. each user has their own sets of locales for the same group
-        return newResource(key);
-    }
-
 }

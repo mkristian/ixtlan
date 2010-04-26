@@ -9,18 +9,18 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 
-import de.saumya.gwt.persistence.client.Resource;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.AbstractResource;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
 
-public abstract class ButtonAction<E extends Resource<E>> implements
+public abstract class ButtonAction<E extends AbstractResource<E>> implements
         ClickHandler, KeyUpHandler {
 
-    private E                           resource;
+    private E                               resource;
 
-    private final ResourceNotifications changeNotification;
+    private final ResourceChangeListener<E> listener;
 
-    public ButtonAction(final ResourceNotifications changeNotification) {
-        this.changeNotification = changeNotification;
+    public ButtonAction(final ResourceChangeListener<E> listener) {
+        this.listener = listener;
     }
 
     public void reset(final E resource) {
@@ -34,7 +34,7 @@ public abstract class ButtonAction<E extends Resource<E>> implements
 
     protected void doAction() {
         if (this.resource != null) {
-            this.resource.setResourceNotification(this.changeNotification);
+            this.resource.addResourceChangeListener(this.listener);
         }
         action(this.resource);
     }

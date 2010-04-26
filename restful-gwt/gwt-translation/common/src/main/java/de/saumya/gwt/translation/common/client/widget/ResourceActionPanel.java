@@ -3,81 +3,78 @@
  */
 package de.saumya.gwt.translation.common.client.widget;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 
+import de.saumya.gwt.persistence.client.AbstractResourceFactory;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceChangeListenerAdapter;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
 
-public class DefaultResourceActionPanel<E extends Resource<E>> extends
+public class ResourceActionPanel<E extends Resource<E>> extends
         AbstractResourceActionPanel<E> {
-    protected final Button                  fresh;
-    protected final Button                  create;
-    protected final Button                  save;
-    protected final Button                  edit;
-    protected final Button                  reload;
-    protected final Button                  delete;
+    protected final Button                   fresh;
+    protected final Button                   create;
+    protected final Button                   save;
+    protected final Button                   edit;
+    protected final Button                   reload;
+    protected final Button                   delete;
 
-    private final ButtonAction<E>           newHandler;
-    private final ButtonAction<E>           createHandler;
-    private final ButtonAction<E>           reloadHandler;
-    private final ButtonAction<E>           editHandler;
-    private final ButtonAction<E>           saveHandler;
-    private final ButtonAction<E>           destroyHandler;
+    private final ButtonAction<E>            newHandler;
+    private final ButtonAction<E>            createHandler;
+    private final ButtonAction<E>            reloadHandler;
+    private final ButtonAction<E>            editHandler;
+    private final ButtonAction<E>            saveHandler;
+    private final ButtonAction<E>            destroyHandler;
 
-    protected final Session                 session;
+    protected final Session                  session;
 
-    private final ResourceChangeListener<E> createdListener;
-    private final ResourceFactory<E>        factory;
-    private final HyperlinkFactory          hyperlinkFactory;
+    private final ResourceChangeListener<E>  createdListener;
+    private final AbstractResourceFactory<E> factory;
+    private final HyperlinkFactory           hyperlinkFactory;
 
-    private E                               resource;
-    private boolean                         isReadOnly;
+    private E                                resource;
+    private boolean                          isReadOnly;
 
-    public DefaultResourceActionPanel(
-            final GetTextController getTextController,
+    @SuppressWarnings("unchecked")
+    public ResourceActionPanel(final GetTextController getTextController,
             final ResourceBindings<E> bindings, final Session session,
-            final ResourceFactory<E> factory,
-            final ResourceNotifications notifications,
-            final HyperlinkFactory hyperlinkFactory) {
+            final AbstractResourceFactory<E> factory,
+            final NotificationListeners listeners,
+            final HyperlinkFactory hyperlinkFactory, final boolean hasSearch,
+            final boolean hasGetById) {
         super(getTextController, bindings, session, factory);
         this.session = session;
         this.factory = factory;
         this.hyperlinkFactory = hyperlinkFactory;
 
-        this.createdListener = new ResourceChangeListener<E>() {
+        // TODO remove this hack and display the right screen directly
+        this.createdListener = new ResourceChangeListenerAdapter<E>() {
 
             @Override
             public void onChange(final E resource) {
                 if (resource.isUptodate()
                         && History.getToken()
-                                .equals(DefaultResourceActionPanel.this.pathFactory.newPath())) {
-                    History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                                .equals(ResourceActionPanel.this.pathFactory.newPath())) {
+                    History.newItem(ResourceActionPanel.this.pathFactory.editPath(((Resource<?>) resource).id));
                 }
             }
-
-            @Override
-            public void onError(final E resource) {
-            }
         };
-        this.newHandler = new ButtonAction<E>(notifications) {
+        this.newHandler = new ButtonAction<E>(null) {
 
             @Override
             protected void action(final E resource) {
-                History.newItem(DefaultResourceActionPanel.this.pathFactory.newPath());
+                History.newItem(ResourceActionPanel.this.pathFactory.newPath());
             }
 
         };
-        this.reloadHandler = new ButtonAction<E>(notifications) {
+        this.reloadHandler = new ButtonAction<E>(listeners.loaded) {
 
             @Override
             protected void action(final E resource) {
@@ -86,41 +83,27 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
 
         };
 
-        this.editHandler = new ButtonAction<E>(notifications) {
+        this.editHandler = new ButtonAction<E>(null) {
 
             @Override
             protected void action(final E resource) {
-                History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(resource.key()));
+                History.newItem(ResourceActionPanel.this.pathFactory.editPath(resource.id));
             }
 
         };
 
-        this.createHandler = new MutatingButtonAction<E>(notifications,
+        this.createHandler = new MutatingButtonAction<E>(listeners.created,
                 bindings) {
 
             @Override
             protected void action(final E resource) {
-                resource.addResourceChangeListener(new ResourceChangeListener<E>() {
-
-                    @Override
-                    public void onChange(final E resource) {
-                        if (resource.isUptodate()
-                                && History.getToken()
-                                        .equals(DefaultResourceActionPanel.this.pathFactory.newPath())) {
-                            History.newItem(DefaultResourceActionPanel.this.pathFactory.editPath(resource.key()));
-                        }
-                    }
-
-                    @Override
-                    public void onError(final E resource) {
-                        // TODO Auto-generated method stub
-                        GWT.log("TODO error on create resource", null);
-                    }
-                });
+                resource.addResourceChangeListener(ResourceActionPanel.this.createdListener);
                 resource.save();
             }
         };
-        this.saveHandler = new MutatingButtonAction<E>(notifications, bindings) {
+
+        this.saveHandler = new MutatingButtonAction<E>(listeners.updated,
+                bindings) {
 
             @Override
             protected void action(final E resource) {
@@ -128,19 +111,19 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             }
 
         };
-        this.destroyHandler = new ButtonAction<E>(notifications) {
+        this.destroyHandler = new ButtonAction<E>(listeners.deleted) {
 
             @Override
             protected void action(final E resource) {
                 resource.destroy();
-                History.newItem(DefaultResourceActionPanel.this.pathFactory.showAllPath());
+                History.newItem(ResourceActionPanel.this.pathFactory.showAllPath());
             }
 
         };
 
-        final ComplexPanel search = createSearchPanel();
+        final ComplexPanel search = hasSearch ? createSearchPanel() : null;
 
-        final ComplexPanel getBy = createGetByPanel();
+        final ComplexPanel getBy = hasGetById ? createGetByPanel() : null;
 
         final ComplexPanel newCreate = new FlowPanel();
         newCreate.setStyleName("new-create");
@@ -153,13 +136,11 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
         this.edit = button(actionButtons, "edit", this.editHandler);
         this.delete = button(actionButtons, "delete", this.destroyHandler);
 
-        if (factory.keyName() != null) { // unless it is a singleton resource
-            if (search != null) {
-                add(search);
-            }
-            if (getBy != null) {
-                add(getBy);
-            }
+        if (search != null) {
+            add(search);
+        }
+        if (getBy != null) {
+            add(getBy);
         }
         final FlowPanel buttons = new FlowPanel();
         buttons.setStyleName("resource-buttons");
@@ -216,7 +197,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
     private void resetVisibility() {
         if (this.resource != null) {
             // TODO this status check needs improvement
-            this.delete.setVisible(this.resource.key() != null
+            this.delete.setVisible(this.resource.id != 0
                     && !this.resource.isNew()
                     && !this.resource.isDeleted()
                     && this.session.isAllowed(Action.DESTROY, this.resourceName));
@@ -224,7 +205,7 @@ public class DefaultResourceActionPanel<E extends Resource<E>> extends
             this.reload.setVisible(!this.resource.isNew()
                     && !this.resource.isDeleted()
                     && this.session.isAllowed(Action.SHOW, this.resourceName));
-            this.edit.setVisible(this.resource.key() != null && this.isReadOnly
+            this.edit.setVisible(this.resource.id != 0 && this.isReadOnly
                     && !this.resource.isNew() && !this.resource.isDeleted()
                     && !this.resource.isImmutable()
                     && this.session.isAllowed(Action.UPDATE, this.resourceName));

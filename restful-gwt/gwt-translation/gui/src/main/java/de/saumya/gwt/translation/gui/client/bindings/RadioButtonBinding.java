@@ -10,12 +10,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.TranslatableRadioButton;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings.Binding;
 
-public abstract class RadioButtonBinding<T extends Resource<T>> extends
+public abstract class RadioButtonBinding<T extends AbstractResource<T>> extends
         FlowPanel implements Binding<T> {
 
     private final List<RadioButton> buttons;

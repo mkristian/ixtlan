@@ -1,18 +1,10 @@
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.GroupFactory;
-import de.saumya.gwt.session.client.models.LocaleFactory;
-import de.saumya.gwt.session.client.models.User;
-import de.saumya.gwt.session.client.models.UserFactory;
+import de.saumya.gwt.persistence.client.ResourceTestGwt;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class UserTestGwt extends AbstractResourceTestGwt<User> {
+public class UserTestGwt extends ResourceTestGwt<User> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -34,10 +26,9 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                                      + "</user>";
 
     @Override
-    protected Resource<User> resourceSetUp() {
-        this.resource = this.factory.newResource();
+    protected AbstractResource<User> resourceSetUp() {
+        this.resource = this.factory.newResource(1);
 
-        this.resource.id = 1;
         this.resource.login = "root";
         this.resource.name = "root user";
         this.resource.email = "root@example.com";
@@ -78,7 +69,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "<name>admin</name>"
                                             + "<locales>"
                                             + "<locale>"
-                                            + "<id>0</id>"
+                                            + "<id>1</id>"
                                             + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
@@ -90,12 +81,12 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "<name>root</name>"
                                             + "<locales>"
                                             + "<locale>"
-                                            + "<id>0</id>"
+                                            + "<id>1</id>"
                                             + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
                                             + "<locale>"
-                                            + "<id>0</id>"
+                                            + "<id>1</id>"
                                             + "<code>en</code>"
                                             + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                             + "</locale>"
@@ -112,7 +103,7 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
                                             + "</user>";
 
     public void testAllowedLocales() {
-        final User resource = this.factory.newResource();
+        final User resource = this.factory.newResource(1);
         resource.fromXml(XML);
 
         assertEquals(1, resource.getAllowedLocales().size());
@@ -130,15 +121,15 @@ public class UserTestGwt extends AbstractResourceTestGwt<User> {
         return new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new GroupFactory(this.repository,
+                new UserGroupFactory(this.repository,
                         this.notifications,
                         localeFactory,
                         new DomainFactory(this.repository, this.notifications)));
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
+    protected int idValue() {
+        return 1;
     }
 
     @Override

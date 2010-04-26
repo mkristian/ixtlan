@@ -35,22 +35,22 @@ public class PathFactory implements Locatable {
         return path(withLocale).append("/new").toString();
     }
 
-    public String editPath(final String key) {
+    public String editPath(final int key) {
         return editPath(key, true);
     }
 
-    public String editPath(final String key, final boolean withLocale) {
+    public String editPath(final int key, final boolean withLocale) {
         return path(withLocale).append("/")
                 .append(key)
                 .append("/edit")
                 .toString();
     }
 
-    public String showPath(final String key) {
+    public String showPath(final int key) {
         return showPath(key, true);
     }
 
-    public String showPath(final String key, final boolean withLocale) {
+    public String showPath(final int key, final boolean withLocale) {
         return path(withLocale).append("/").append(key).toString();
     }
 

@@ -5,20 +5,18 @@ package de.saumya.gwt.translation.common.client.model;
 
 import com.google.gwt.xml.client.Element;
 
+import de.saumya.gwt.persistence.client.AnonymousResource;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceWithId;
 
-public class WordBundle extends ResourceWithId<WordBundle> {
+public class WordBundle extends AnonymousResource<WordBundle> {
 
-    private final WordFactory       wordFactory;
-    private final WordBundleFactory factory;
+    private final WordFactory wordFactory;
 
     WordBundle(final Repository repository, final WordBundleFactory factory,
-            final WordFactory wordFactory, final int id) {
-        super(repository, factory, id);
+            final WordFactory wordFactory) {
+        super(repository, factory);
         this.wordFactory = wordFactory;
-        this.factory = factory;
     }
 
     public String                   locale;
@@ -31,8 +29,7 @@ public class WordBundle extends ResourceWithId<WordBundle> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        this.id = this.factory.nextId();
+    protected void fromElement(final Element root) {
         this.locale = getString(root, "locale");
         this.words = this.wordFactory.getChildResourceCollection(root, "words");
     }

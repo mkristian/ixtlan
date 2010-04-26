@@ -1,11 +1,16 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactoryWithIdGenerator;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
+import java.util.HashMap;
+import java.util.Map;
 
-public class PhraseBookFactory extends
-        ResourceFactoryWithIdGenerator<PhraseBook> {
+import de.saumya.gwt.persistence.client.AnonymousResourceFactory;
+import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.ResourceNotifications;
+import de.saumya.gwt.persistence.client.ResourcesChangeListener;
+
+public class PhraseBookFactory extends AnonymousResourceFactory<PhraseBook> {
 
     private final PhraseFactory factory;
 
@@ -22,13 +27,27 @@ public class PhraseBookFactory extends
     }
 
     @Override
-    public PhraseBook newResource(final int key) {
-        return new PhraseBook(this.repository, this, this.factory, key);
+    public PhraseBook newResource() {
+        return new PhraseBook(this.repository, this, this.factory);
     }
 
-    @Override
-    public String defaultSearchParameterName() {
-        return null;
-    }
+    public PhraseBook first(final String localeCode,
+            final ResourceChangeListener<PhraseBook> listener) {
+        final PhraseBook book = newResource();
+        book.addResourceChangeListener(listener);
+        book.locale = localeCode;
+        final Map<String, String> q = new HashMap<String, String>();
+        q.put("code", book.locale);
+        all(q, new ResourcesChangeListener<PhraseBook>() {
 
+            @Override
+            public void onLoaded(final ResourceCollection<PhraseBook> resources) {
+                final PhraseBook phrases = resources.iterator().next();
+                book.locale = phrases.locale;
+                book.phrases = phrases.phrases;
+                // TODO maybe fire resource change
+            }
+        });
+        return book;
+    }
 }

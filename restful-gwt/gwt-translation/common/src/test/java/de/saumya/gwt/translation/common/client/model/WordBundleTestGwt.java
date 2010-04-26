@@ -1,11 +1,9 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class WordBundleTestGwt extends AbstractCommonTestGwt<WordBundle> {
+public class WordBundleTestGwt extends
+        AbstractCommonAnonymousTestGwt<WordBundle> {
 
     private WordBundle resource;
 
@@ -38,53 +36,11 @@ public class WordBundleTestGwt extends AbstractCommonTestGwt<WordBundle> {
     }
 
     @Override
-    protected Resource<WordBundle> resourceSetUp() {
+    protected AbstractResource<WordBundle> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.id = 1;
         this.resource.locale = "en";
-        this.repository.addXmlResponse(RESOURCE_XML);
 
-        this.resource.save();
         return this.resource;
     }
-
-    @Override
-    public void doTestCreate() {
-        assertEquals("en", this.resource.locale);
-    }
-
-    @Override
-    protected String keyValue() {
-        return "1";
-    }
-
-    @Override
-    protected String value() {
-        return "en";
-    }
-
-    @Override
-    protected String changedValue() {
-        return "en_JP";
-    }
-
-    @Override
-    protected void doTestUpdate() {
-        this.resource.locale = changedValue();
-        this.resource.save();
-        assertEquals(changedValue(), this.resource.locale);
-    }
-
-    @Override
-    protected String marshallingXml() {
-        return XML;
-    }
-
-    private static final String XML = "<word_bundle>" + "<locale>en</locale>"
-                                            + "<words>" + "<word>"
-                                            + "<code>CODE</code>"
-                                            + "<text>code</text>" + "</word>"
-                                            + "</words>" + "</word_bundle>";
-
 }

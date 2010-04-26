@@ -8,18 +8,17 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceWithId;
+import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
 
-public class Translation extends ResourceWithId<Translation> {
+public class Translation extends Resource<Translation> {
 
     private final UserFactory userFactory;
 
     protected Translation(final Repository repository,
-            final ResourceFactory<Translation> factory,
-            final UserFactory userFactory, final int id) {
+            final TranslationFactory factory, final UserFactory userFactory,
+            final int id) {
         super(repository, factory, id);
         this.userFactory = userFactory;
     }
@@ -31,7 +30,6 @@ public class Translation extends ResourceWithId<Translation> {
 
     @Override
     protected void appendXml(final StringBuilder buf) {
-        super.appendXml(buf);
         appendXml(buf, "previous_text", this.previousText);
         appendXml(buf, "text", this.text);
         appendXml(buf, "approved_at", this.approvedAt);
@@ -39,8 +37,7 @@ public class Translation extends ResourceWithId<Translation> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        super.fromXml(root);
+    protected void fromElement(final Element root) {
         this.previousText = getString(root, "previous_text");
         this.text = getString(root, "text");
         this.approvedAt = getTimestamp(root, "approved_at");
@@ -49,7 +46,6 @@ public class Translation extends ResourceWithId<Translation> {
 
     @Override
     public void toString(final StringBuilder buf) {
-        super.toString(buf);
         buf.append(":previous_text => ").append(this.previousText);
         buf.append(":text => ").append(this.text);
         buf.append(", :approved_at => ").append(this.approvedAt);

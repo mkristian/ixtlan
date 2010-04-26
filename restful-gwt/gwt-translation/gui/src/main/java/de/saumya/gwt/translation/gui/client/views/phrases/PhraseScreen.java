@@ -3,7 +3,6 @@
  */
 package de.saumya.gwt.translation.gui.client.views.phrases;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
@@ -12,6 +11,7 @@ import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.LocaleController;
 import de.saumya.gwt.translation.common.client.widget.Locatable;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -39,7 +39,7 @@ public class PhraseScreen extends ResourceScreen<Phrase> implements Locatable {
             final GetTextController getTextController,
             final PhraseFactory phraseFactory,
             final ResourceBindings<Phrase> binding, final Session session,
-            final ResourceNotifications notifications,
+            final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory,
             final LocaleController localeController) {
         super(loadingNotice,
@@ -59,9 +59,9 @@ public class PhraseScreen extends ResourceScreen<Phrase> implements Locatable {
                         binding,
                         session,
                         phraseFactory,
-                        notifications,
+                        listeners,
                         hyperlinkFactory),
-                notifications,
+                listeners,
                 hyperlinkFactory);
     }
 

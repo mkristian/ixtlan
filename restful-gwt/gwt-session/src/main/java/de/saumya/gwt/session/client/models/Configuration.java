@@ -8,10 +8,10 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceCollection;
+import de.saumya.gwt.persistence.client.SingletonResource;
 
-public class Configuration extends Resource<Configuration> {
+public class Configuration extends SingletonResource<Configuration> {
 
     private final UserFactory   userFactory;
     private final LocaleFactory localeFactory;
@@ -33,11 +33,6 @@ public class Configuration extends Resource<Configuration> {
     public User                       updatedBy;
 
     @Override
-    public String key() {
-        return null;
-    }
-
-    @Override
     protected void appendXml(final StringBuilder buf) {
         appendXml(buf, "session_idle_timeout", this.sessionIdleTimeout);
         appendXml(buf, "keep_audit_logs", this.keepAuditLogs);
@@ -53,7 +48,7 @@ public class Configuration extends Resource<Configuration> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
+    protected void fromElement(final Element root) {
         this.sessionIdleTimeout = getInt(root, "session_idle_timeout");
         this.keepAuditLogs = getInt(root, "keep_audit_logs");
         this.locales = this.localeFactory.getChildResourceCollection(root,

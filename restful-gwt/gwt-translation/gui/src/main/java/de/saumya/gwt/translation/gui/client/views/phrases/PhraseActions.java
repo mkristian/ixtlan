@@ -6,47 +6,45 @@ package de.saumya.gwt.translation.gui.client.views.phrases;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 
-import de.saumya.gwt.persistence.client.ResourceChangeListener;
+import de.saumya.gwt.persistence.client.ResourceChangeListenerAdapter;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.Session.Action;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.model.Phrase;
 import de.saumya.gwt.translation.common.client.model.PhraseFactory;
 import de.saumya.gwt.translation.common.client.widget.ButtonAction;
-import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.MutatingButtonAction;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 
-class PhraseActions extends DefaultResourceActionPanel<Phrase> {
+class PhraseActions extends ResourceActionPanel<Phrase> {
 
     private final Button               approve;
 
     private final ButtonAction<Phrase> approveHandler;
 
+    @SuppressWarnings("unchecked")
     public PhraseActions(final GetTextController getTextController,
             final ResourceBindings<Phrase> bindings, final Session session,
-            final PhraseFactory factory,
-            final ResourceNotifications changeNotification,
+            final PhraseFactory factory, final NotificationListeners listeners,
             final HyperlinkFactory hyperlinkFactory) {
         super(getTextController,
                 bindings,
                 session,
                 factory,
-                changeNotification,
-                hyperlinkFactory);
-        this.approveHandler = new MutatingButtonAction<Phrase>(changeNotification,
+                listeners,
+                hyperlinkFactory,
+                true,
+                true);
+        this.approveHandler = new MutatingButtonAction<Phrase>(listeners.updated,
                 bindings) {
 
             @Override
             protected void action(final Phrase resource) {
-                resource.addResourceChangeListener(new ResourceChangeListener<Phrase>() {
-
-                    @Override
-                    public void onError(final Phrase resource) {
-                    }
+                resource.addResourceChangeListener(new ResourceChangeListenerAdapter<Phrase>() {
 
                     @Override
                     public void onChange(final Phrase resource) {

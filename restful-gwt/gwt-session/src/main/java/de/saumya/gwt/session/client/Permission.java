@@ -5,20 +5,18 @@ package de.saumya.gwt.session.client;
 
 import com.google.gwt.xml.client.Element;
 
+import de.saumya.gwt.persistence.client.AnonymousResource;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourceWithId;
 
-class Permission extends ResourceWithId<Permission> {
+class Permission extends AnonymousResource<Permission> {
 
-    private final RoleFactory       roleFactory;
-    private final PermissionFactory factory;
+    private final RoleFactory roleFactory;
 
     Permission(final Repository repository, final PermissionFactory factory,
-            final RoleFactory roleFactory, final int id) {
-        super(repository, factory, id);
+            final RoleFactory roleFactory) {
+        super(repository, factory);
         this.roleFactory = roleFactory;
-        this.factory = factory;
     }
 
     String                   resource;
@@ -33,16 +31,10 @@ class Permission extends ResourceWithId<Permission> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        this.id = this.factory.nextId();
+    protected void fromElement(final Element root) {
         this.resource = getString(root, "resource");
         this.action = getString(root, "action");
         this.roles = this.roleFactory.getChildResourceCollection(root, "roles");
-    }
-
-    @Override
-    public String key() {
-        return null;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.saumya.gwt.persistence.client;
 
-public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
+public class SampleTestGwt extends ResourceTestGwt<Sample> {
 
     @Override
     public String getModuleName() {
@@ -12,7 +12,7 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
     private final String RESOURCE_XML = "<sample>" + "<id>123</id>"
                                               + "<language>en</language>"
                                               + "<country>GE</country>"
-                                              + "<child>" + "<id>0</id>"
+                                              + "<child>" + "<id>1</id>"
                                               // + "<language>en</language>"
                                               // + "<country>AT</country>"
                                               + "</child>" + "</sample>";
@@ -23,12 +23,12 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
     }
 
     @Override
-    protected Resource<Sample> resourceSetUp() {
-        this.sample = this.factory.newResource();
+    protected AbstractResource<Sample> resourceSetUp() {
+        this.sample = this.factory.newResource(123);
 
         this.sample.country = "GE";
         this.sample.language = "en";
-        this.sample.child = this.factory.newResource();
+        this.sample.child = this.factory.newResource(1);
 
         this.repository.addXmlResponse(resource1Xml());
 
@@ -57,8 +57,8 @@ public class SampleTestGwt extends AbstractResourceTestGwt<Sample> {
     }
 
     @Override
-    protected String keyValue() {
-        return "123";
+    protected int idValue() {
+        return 123;
     }
 
     @Override

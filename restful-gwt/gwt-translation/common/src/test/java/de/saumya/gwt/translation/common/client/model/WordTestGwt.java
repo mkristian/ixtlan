@@ -1,11 +1,8 @@
 package de.saumya.gwt.translation.common.client.model;
 
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class WordTestGwt extends AbstractCommonTestGwt<Word> {
+public class WordTestGwt extends AbstractCommonAnonymousTestGwt<Word> {
 
     private Word resource;
 
@@ -31,50 +28,12 @@ public class WordTestGwt extends AbstractCommonTestGwt<Word> {
     }
 
     @Override
-    protected Resource<Word> resourceSetUp() {
+    protected AbstractResource<Word> resourceSetUp() {
         this.resource = this.factory.newResource();
 
-        this.resource.id = 1;
         this.resource.code = "CODE";
         this.resource.text = "code";
 
-        this.repository.addXmlResponse(resource1Xml());
-
-        this.resource.save();
-
         return this.resource;
     }
-
-    @Override
-    protected void doTestCreate() {
-        assertEquals(value(), this.resource.text);
-    }
-
-    @Override
-    protected String changedValue() {
-        return "something else";
-    }
-
-    @Override
-    protected String value() {
-        return "code";
-    }
-
-    @Override
-    protected String keyValue() {
-        return "1";
-    }
-
-    @Override
-    protected void doTestUpdate() {
-        this.resource.text = changedValue();
-        this.resource.save();
-        assertEquals(changedValue(), this.resource.text);
-    }
-
-    @Override
-    protected String marshallingXml() {
-        return resource1Xml();
-    }
-
 }

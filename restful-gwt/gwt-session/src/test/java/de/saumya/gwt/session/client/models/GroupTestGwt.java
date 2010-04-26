@@ -1,17 +1,10 @@
-package de.saumya.gwt.session.client.model;
+package de.saumya.gwt.session.client.models;
 
-import de.saumya.gwt.persistence.client.AbstractResourceTestGwt;
-import de.saumya.gwt.persistence.client.Resource;
+import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.session.client.models.DomainFactory;
-import de.saumya.gwt.session.client.models.Group;
-import de.saumya.gwt.session.client.models.GroupFactory;
-import de.saumya.gwt.session.client.models.LocaleFactory;
+import de.saumya.gwt.persistence.client.ResourceTestGwt;
 
-/**
- * GWT JUnit tests must extend GWTTestCase.
- */
-public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
+public class GroupTestGwt extends ResourceTestGwt<Group> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -26,8 +19,6 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
     private static final String RESOURCE_XML = "<group>"
                                                      + "<id>1</id>"
                                                      + "<name>root</name>"
-                                                     + "<locales></locales>"
-                                                     + "<domains></domains>"
                                                      + "<created_at>2009-07-09 17:14:48.0</created_at>"
                                                      + "</group>";
 
@@ -54,17 +45,13 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
 
     @Override
     protected ResourceFactory<Group> factorySetUp() {
-        return new GroupFactory(this.repository,
-                this.notifications,
-                new LocaleFactory(this.repository, this.notifications),
-                new DomainFactory(this.repository, this.notifications));
+        return new GroupFactory(this.repository, this.notifications);
     }
 
     @Override
-    protected Resource<Group> resourceSetUp() {
-        this.resource = this.factory.newResource();
+    protected AbstractResource<Group> resourceSetUp() {
+        this.resource = this.factory.newResource(1);
 
-        this.resource.id = 1;
         this.resource.name = "root";
 
         this.repository.addXmlResponse(RESOURCE_XML);
@@ -89,20 +76,6 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
     private final static String XML = "<group>"
                                             + "<id>1</id>"
                                             + "<name>root</name>"
-                                            + "<locales>"
-                                            + "<locale>"
-                                            + "<id>1</id>"
-                                            + "<code>de</code>"
-                                            + "<created_at>2009-07-09 17:14:48.0</created_at>"
-                                            + "</locale>"
-                                            + "</locales>"
-                                            + "<domains>"
-                                            + "<domain>"
-                                            + "<id>1</id>"
-                                            + "<name>dvara</name>"
-                                            + "<created_at>2007-07-09 17:14:48.0</created_at>"
-                                            + "</domain>"
-                                            + "</domains>"
                                             + "<created_at>2005-07-09 17:14:48.0</created_at>"
                                             + "</group>";
 
@@ -112,8 +85,8 @@ public class GroupTestGwt extends AbstractResourceTestGwt<Group> {
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
+    protected int idValue() {
+        return 1;
     }
 
     @Override
