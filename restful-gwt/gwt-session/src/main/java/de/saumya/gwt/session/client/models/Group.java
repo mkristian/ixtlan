@@ -22,6 +22,11 @@ public class Group extends Resource<Group> {
     public Timestamp createdAt;
 
     @Override
+    public boolean isImmutable() {
+        return true;
+    }
+
+    @Override
     protected void appendXml(final StringBuilder buf) {
         appendXml(buf, "name", this.name);
         appendXml(buf, "created_at", this.createdAt);
