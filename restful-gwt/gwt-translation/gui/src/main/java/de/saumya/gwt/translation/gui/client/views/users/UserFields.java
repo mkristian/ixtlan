@@ -18,6 +18,8 @@ import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.models.Domain;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.Group;
+import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
@@ -35,7 +37,8 @@ public class UserFields extends ResourceFields<User> {
 
     public UserFields(final GetTextController getTextController,
             final ResourceBindings<User> bindings,
-            final UserGroupFactory groupFactory,
+            final GroupFactory groupFactory,
+            final UserGroupFactory userGroupFactory,
             final LocaleFactory localeFactory,
             final DomainFactory domainFactory, final Session session) {
         super(getTextController, bindings);
@@ -94,7 +97,7 @@ public class UserFields extends ResourceFields<User> {
             }
         };
         add("preferred language", preferredLanguage);
-        final GroupLocaleWidget groupsWidget = new GroupLocaleWidget(session,
+        final GroupLocaleDomainWidget groupsWidget = new GroupLocaleDomainWidget(session,
                 localeFactory,
                 domainFactory);
 
@@ -103,7 +106,7 @@ public class UserFields extends ResourceFields<User> {
             @Override
             public void onLogin() {
                 if (session.getUser().isRoot()) {
-                    groupFactory.all(new ResourcesChangeListener<UserGroup>() {
+                    userGroupFactory.all(new ResourcesChangeListener<UserGroup>() {
 
                         @Override
                         public void onLoaded(
@@ -133,9 +136,31 @@ public class UserFields extends ResourceFields<User> {
                 groupsWidget.resetDomains(resources);
             }
         });
+        groupFactory.all(new ResourcesChangeListener<Group>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<Group> resources) {
+                if (session.hasUser()) {
+                    if (session.getUser().isRoot()) {
+                        userGroupFactory.all(new ResourcesChangeListener<UserGroup>() {
+
+                            @Override
+                            public void onLoaded(
+                                    final ResourceCollection<UserGroup> resources) {
+                                groupsWidget.reset(resources);
+                            }
+                        });
+                    }
+                    else {
+                        groupsWidget.reset(session.getUser().groups);
+                    }
+                }
+            }
+
+        });
     }
 
-    static class GroupLocaleWidget extends VerticalPanel implements
+    static class GroupLocaleDomainWidget extends VerticalPanel implements
             Binding<User>, ResourceCollectionResetable<UserGroup> {
 
         private final Map<Integer, GroupWidget> map = new HashMap<Integer, GroupWidget>();
@@ -149,20 +174,12 @@ public class UserFields extends ResourceFields<User> {
         private final LocaleFactory             localeFactory;
         private final DomainFactory             domainFactory;
 
-        GroupLocaleWidget(final Session session,
+        GroupLocaleDomainWidget(final Session session,
                 final LocaleFactory localeFactory,
                 final DomainFactory domainFactory) {
             this.session = session;
             this.localeFactory = localeFactory;
             this.domainFactory = domainFactory;
-            this.session.addSessionListern(new SessionListenerAdapter() {
-
-                @Override
-                public void onLogin() {
-                    reset(session.getUser().groups);
-                }
-
-            });
         }
 
         @Override
@@ -244,13 +261,13 @@ public class UserFields extends ResourceFields<User> {
                 // allowed domains
                 final Collection<Domain> domains;
                 if (this.session.getUser().isRoot()
-                        || this.session.getUser().isLocalesAdmin()) {
+                        || this.session.getUser().isDomainsAdmin()) {
                     domains = this.domainFactory.realDomains();
                 }
                 else {
                     domains = resource.domains;
                 }
-                // add new group widget allowed locales/domains
+                // add new group widget with allowed locales/domains
                 final GroupWidget widget = new GroupWidget(resource,
                         locales,
                         domains);

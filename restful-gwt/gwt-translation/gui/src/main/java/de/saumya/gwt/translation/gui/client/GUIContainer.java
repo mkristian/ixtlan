@@ -140,6 +140,7 @@ public class GUIContainer {
                                                                     this.getTextController,
                                                                     this.userFactory,
                                                                     this.userGroupFactory,
+                                                                    this.groupFactory,
                                                                     this.localeFactory,
                                                                     this.domainFactory,
                                                                     this.session,

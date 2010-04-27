@@ -5,6 +5,7 @@ package de.saumya.gwt.translation.gui.client.views.users;
 
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
@@ -37,8 +38,8 @@ public class UserScreen extends ResourceScreen<User> {
 
     public UserScreen(final LoadingNotice loadingNotice,
             final GetTextController getTextController,
-            final UserFactory factory, final UserGroupFactory groupFactory,
-            final LocaleFactory localeFactory,
+            final UserFactory factory, final UserGroupFactory userGroupFactory,
+            final GroupFactory groupFactory, final LocaleFactory localeFactory,
             final DomainFactory domainFactory, final Session session,
             final ResourceBindings<User> bindings,
             final NotificationListeners listeners,
@@ -50,6 +51,7 @@ public class UserScreen extends ResourceScreen<User> {
                         new UserFields(getTextController,
                                 bindings,
                                 groupFactory,
+                                userGroupFactory,
                                 localeFactory,
                                 domainFactory,
                                 session)),
@@ -72,5 +74,4 @@ public class UserScreen extends ResourceScreen<User> {
                 listeners,
                 hyperlinkFactory);
     }
-
 }
