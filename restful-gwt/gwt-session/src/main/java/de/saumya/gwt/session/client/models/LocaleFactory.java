@@ -59,6 +59,13 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     }
 
     public Locale first(final String code) {
+        if (this.all != null) {
+            for (final Locale locale : this.all) {
+                if (locale.code.equals(code)) {
+                    return locale;
+                }
+            }
+        }
         final Locale locale = newResource(0);
         locale.code = code;
         final Map<String, String> q = new HashMap<String, String>();
@@ -113,8 +120,10 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     private void resetRealLocales() {
         this.realLocales.clear();
         this.realLocales.addAll(this.all);
-        this.realLocales.remove(0);
-        this.realLocales.remove(0);
+        if (this.realLocales.size() > 0) {
+            this.realLocales.remove(0);
+            this.realLocales.remove(0);
+        }
     }
 
     @Override

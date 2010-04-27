@@ -105,7 +105,9 @@ public class DomainFactory extends ResourceFactory<Domain> {
     private void resetRealLocales() {
         this.realDomains.clear();
         this.realDomains.addAll(this.all);
-        this.realDomains.remove(0);
+        if (this.realDomains.size() > 0) {
+            this.realDomains.remove(0);
+        }
     }
 
     @Override
