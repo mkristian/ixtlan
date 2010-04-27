@@ -3,6 +3,8 @@
  */
 package de.saumya.gwt.persistence.client;
 
+import com.google.gwt.xml.client.Element;
+
 public abstract class Resource<E extends Resource<E>> extends
         AbstractResource<E> {
 
@@ -44,6 +46,18 @@ public abstract class Resource<E extends Resource<E>> extends
     protected void delete() {
         this.repository.delete(this, new ResourceRequestCallback<E>(this,
                 this.factory));
+    }
+
+    @Override
+    void fromRootElement(final Element root) {
+        final int id = getInt(root, "id");
+        if (this.state != State.TO_BE_CREATED && this.id != id) {
+            throw new IllegalStateException("loaded id:\n" + root
+                    + "\ndoes not match the id of this resource:\n" + this,
+                    null);
+        }
+        this.id = id;
+        fromElement(root);
     }
 
     @Override
