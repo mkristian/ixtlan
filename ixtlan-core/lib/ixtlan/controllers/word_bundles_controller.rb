@@ -2,8 +2,8 @@ module Ixtlan
   module Controllers
     module WordBundlesController
 
-      def show
-        locale = params[:id]
+      def index
+        locale = params[:code]
         # TODO load in following order and allow to replace findings in the
         # intermediate result set
         # * DEFAULT not_approved
@@ -11,15 +11,15 @@ module Ixtlan
         # * locale-parent latest_approved
         # * locale latest_approved
         l = Locale.first(:code => locale) || Locale.get!(locale)
-        wordMap = {}
+        word_bundle = {}
         Ixtlan::Models::Word.not_approved(:locale => Locale.default).each do |word|
-          wordMap[word.code] = word
+          word_bundle[word.code] = word
         end
         Ixtlan::Models::Word.approved(:locale => Locale.default).each do |word|
-          wordMap[word.code] = word
+          word_bundle[word.code] = word
         end
 
-        render :xml => "<word_bundle><locale>#{locale}</locale><words>" + wordMap.values.collect { |w| w.to_xml }.join + "</words></word_bundle>"
+        render :xml => "<word_bundle><locale>#{locale}</locale><words>" + word_bundle.values.collect { |w| w.to_xml }.join + "</words></word_bundle>" 
       end
     end
   end
