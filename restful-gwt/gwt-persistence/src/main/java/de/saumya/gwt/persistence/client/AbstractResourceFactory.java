@@ -27,12 +27,18 @@ public abstract class AbstractResourceFactory<E extends AbstractResource<E>> {
     abstract void clearCache();
 
     public E getChildResource(final Element root, final String name) {
+        return getChildResource(root, name, null);
+    }
+
+    public E getChildResource(final Element root, final String name,
+            final E defaultValue) {
         final Element element = child(root, name);
         if (element == null) {
-            return null;
+            return defaultValue;
         }
         final E resource = getResource(element);
         resource.fromRootElement(element);
+        putIntoCache(resource);
         return resource;
     }
 

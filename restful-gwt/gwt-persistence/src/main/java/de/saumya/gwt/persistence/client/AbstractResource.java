@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -114,13 +113,8 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
         fromRootElement(doc.getDocumentElement());
     }
 
-    @SuppressWarnings("unchecked")
     void fromRootElement(final Element root) {
         fromElement(root);
-
-        if (this.state == State.TO_BE_CREATED) {
-            this.factory.putIntoCache((E) this);
-        }
     }
 
     public String toXml() {
@@ -131,7 +125,7 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
 
     /**
      * bit strange from object hierarchy point of view but convenient to share
-     * the same methods in both implementations !!!
+     * the same methods in all implementations !!!
      */
     protected void appendXml(final StringBuilder buf, final String name,
             final Resource<?> value) {
@@ -145,7 +139,7 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
 
     /**
      * bit strange from object hierarchy point of view but convenient to share
-     * the same methods in both implementations !!!
+     * the same methods in all implementations !!!
      */
     protected void appendXml(final StringBuilder buf, final String name,
             final SingletonResource<?> value) {
@@ -158,7 +152,7 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
 
     /**
      * bit strange from object hierarchy point of view but convenient to share
-     * the same methods in both implementations !!!
+     * the same methods in all implementations !!!
      */
     protected void appendXml(final StringBuilder buf, final String name,
             final AnonymousResource<?> value) {
@@ -242,8 +236,13 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
     }
 
     protected Timestamp getTimestamp(final Element root, final String name) {
+        return getTimestamp(root, name, null);
+    }
+
+    protected Timestamp getTimestamp(final Element root, final String name,
+            final Timestamp defaultValue) {
         final String value = getString(root, name);
-        return value == null ? null : (value.matches("[0-9]*")
+        return value == null ? defaultValue : (value.matches("[0-9]*")
                 ? new Timestamp(Long.parseLong(value))
                 : new TimestampFactory(value).toTimestamp());
     }
@@ -287,7 +286,6 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
     public void addResourceChangeListener(
             final ResourceChangeListener<E> listener) {
         if (listener != null) {
-            GWT.log(this.factory.storageName(), new Exception());
             this.listeners.add(listener);
         }
     }
