@@ -47,15 +47,16 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
 
     @Override
     void putIntoCache(final E resource) {
-        if (this.all != null) {
-            this.all.addResource(resource);
-            this.all.fireResourcesLoadedEvents();
+        if (!this.cache.containsKey(resource.id)) {
+            if (this.all != null) {
+                this.all.addResource(resource);
+                this.all.fireResourcesLoadedEvents();
+            }
+            if (resource.id == 0) {
+                throw new IllegalStateException("no ID " + resource);
+            }
+            this.cache.put(resource.id, resource);
         }
-        if (this.cache.containsKey(resource.id)) {
-            throw new IllegalStateException("just created resource already in cache: "
-                    + resource);
-        }
-        this.cache.put(resource.id, resource);
     }
 
     @Override

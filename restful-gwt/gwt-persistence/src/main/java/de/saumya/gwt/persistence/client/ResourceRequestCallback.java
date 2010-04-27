@@ -39,7 +39,7 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
             case TO_BE_UPDATED:
                 this.resource.fromXml(response.getText());
                 this.resource.state = State.UP_TO_DATE;
-                GWT.log(this.resource.toString(), null);
+                this.factory.putIntoCache((E) this.resource);
                 break;
             case TO_BE_DELETED:
                 this.resource.state = State.DELETED;
