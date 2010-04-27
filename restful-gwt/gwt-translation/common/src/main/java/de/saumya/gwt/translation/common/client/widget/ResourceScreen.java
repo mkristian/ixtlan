@@ -17,8 +17,9 @@ import de.saumya.gwt.translation.common.client.route.HasPathFactory;
 public class ResourceScreen<E extends Resource<E>> extends
         AbstractResourceScreen<E> implements ResourceCollectionResetable<E> {
 
-    final ResourceFactory<E>    factory;
-    final NotificationListeners listeners;
+    final ResourceFactory<E>                 factory;
+    final NotificationListeners              listeners;
+    private final ResourcesChangeListener<E> listener;
 
     protected <S extends Widget & AllowReadOnly<E>, T extends Widget & ResourceCollectionResetable<E> & HasPathFactory> ResourceScreen(
             final LoadingNotice loadingNotice,
@@ -39,6 +40,14 @@ public class ResourceScreen<E extends Resource<E>> extends
                 hyperlinkFactory);
         this.factory = factory;
         this.listeners = listeners;
+        this.listener = new ResourcesChangeListener<E>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<E> resources) {
+                reset(resources);
+                ResourceScreen.this.loading.setVisible(false);
+            }
+        };
     }
 
     @Override
@@ -78,15 +87,7 @@ public class ResourceScreen<E extends Resource<E>> extends
     @Override
     public void showAll(final Map<String, String> query) {
         final ResourceCollection<E> resources = this.factory.all(query,
-                                                                 new ResourcesChangeListener<E>() {
-
-                                                                     @Override
-                                                                     public void onLoaded(
-                                                                             final ResourceCollection<E> resources) {
-                                                                         reset(resources);
-                                                                         ResourceScreen.this.loading.setVisible(false);
-                                                                     }
-                                                                 });
+                                                                 this.listener);
         // TODO should be set be onChange and onError. maybe make an application
         // wide notification widget
         reset(resources);
