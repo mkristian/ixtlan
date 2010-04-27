@@ -62,7 +62,7 @@ module Ixtlan
         @user = USER.new(user_params)
         @user.current_user = current_user
         @user.reset_password
-        @user.update_all_children(groups, current_user)
+        @user.update_all_children(groups)
 
         respond_to do |format|
           if @user.save
@@ -84,7 +84,7 @@ module Ixtlan
         @user = USER.first_or_get!(params[:id])
         @user.current_user = current_user
         user_params = params[:user]
-        @user.update_all_children(adjust_params(user_params), current_user)
+        @user.update_all_children(adjust_params(user_params))
         @user.attributes = user_params
 
         respond_to do |format|

@@ -1,11 +1,11 @@
 module Ixtlan
   module Models
-    class GroupDomainUser
+    class DomainGroupUser
 
       include DataMapper::Resource
 
       def self.default_storage_name
-        "GroupDomainUser"
+        "DomainGroupUser"
       end
 
       property :group_id, Integer, :key => true

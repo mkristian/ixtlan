@@ -84,6 +84,7 @@ module Ixtlan
           @groups.user = self
           def @groups.<<(group)
             group.locales(@user)
+            group.domains(@user)
             unless member? group
               gu = GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
               super
@@ -99,7 +100,10 @@ module Ixtlan
             end
             super
           end
-          @groups.each {|g| g.locales(self) }
+          @groups.each do |g|
+            g.locales(self)
+            g.domains(self)
+          end
         end
         @groups
       end

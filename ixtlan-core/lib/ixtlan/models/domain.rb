@@ -13,7 +13,7 @@ module Ixtlan
       end
 
       property :id, Serial
-      property :name, String, :required => true , :format => /^[a-z]+$/, :length => 32, :unique_index => true
+      property :name, String, :required => true , :format => /^[a-z]+$|^#{ALL}$/, :length => 32, :unique_index => true
 
       timestamps :created_at
 

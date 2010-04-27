@@ -78,7 +78,7 @@ module Ixtlan
 
           return @domains if user.nil?
 
-          GroupDomainUser.all(:group_id => id, :user_id => user.id).each{ |glu| @domains << glu.domain }
+          DomainGroupUser.all(:group_id => id, :user_id => user.id).each{ |glu| @domains << glu.domain }
           def @domains.group=(group)
             @group = group
           end
@@ -89,14 +89,14 @@ module Ixtlan
           @domains.user = user
           def @domains.<<(domain)
             unless member? domain
-              GroupDomainUser.create(:group_id => @group.id, :user_id => @user.id, :domain_id => domain.id)
+              DomainGroupUser.create(:group_id => @group.id, :user_id => @user.id, :domain_id => domain.id)
               super
             end
 
             self
           end
           def @domains.delete(domain)
-            glu = GroupDomainUser.first(:group_id => @group.id, :user_id => @user.id, :domain_id => domain.id)
+            glu = DomainGroupUser.first(:group_id => @group.id, :user_id => @user.id, :domain_id => domain.id)
             if glu
               glu.destroy
             end
@@ -124,7 +124,7 @@ module Ixtlan
 
         alias :to_x :to_xml_document
         def to_xml_document(opts, doc = nil)
-          opts.merge!({:methods => [:locales]})
+          opts.merge!({:methods => [:locales, :domains], :exclude => [:created_by_id]})
           to_x(opts, doc)
         end
       end
