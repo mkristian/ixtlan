@@ -34,7 +34,10 @@ public class ResourceCollectionNavigation<E extends Resource<E>> extends
         public void reset(final ResourceCollection<?> resources) {
             this.screenPath = new ScreenPath(History.getToken());
             this.params.clear();
-            for (final String param : this.screenPath.query.split("&")) {
+            final String query = this.screenPath.query == null
+                    ? ""
+                    : this.screenPath.query;
+            for (final String param : query.split("&")) {
                 final int index = param.indexOf('=');
                 if (index > -1) {
                     this.params.put(param.substring(0, index),
