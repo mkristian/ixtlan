@@ -49,6 +49,14 @@ public abstract class SingletonResourceFactory<E extends SingletonResource<E>>
 
     public abstract E newResource();
 
+    public E newResource(final ResourceChangeListener<E> listener) {
+        final E resource = newResource();
+        if (listener != null) {
+            resource.addResourceChangeListener(listener);
+        }
+        return resource;
+    }
+
     public E get() {
         return get(null);
     }

@@ -4,6 +4,7 @@
 package de.saumya.gwt.translation.gui.client.views.users;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
+import de.saumya.gwt.session.client.models.Domain;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
@@ -90,13 +92,6 @@ public class UserFields extends ResourceFields<User> {
                 resource.preferedLanguage = getResource();
             }
         };
-        localeFactory.all(new ResourcesChangeListener<Locale>() {
-
-            @Override
-            public void onLoaded(final ResourceCollection<Locale> resources) {
-                preferredLanguage.reset(resources);
-            }
-        });
         add("preferred language", preferredLanguage);
         final GroupLocaleWidget groupsWidget = new GroupLocaleWidget(session,
                 localeFactory);
@@ -121,25 +116,43 @@ public class UserFields extends ResourceFields<User> {
             }
         });
         add("groups", groupsWidget);
+        localeFactory.realLocales(new ResourcesChangeListener<Locale>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<Locale> resources) {
+                preferredLanguage.reset(resources);
+                groupsWidget.resetLocales(resources);
+            }
+        });
     }
 
     static class GroupLocaleWidget extends VerticalPanel implements
             Binding<User>, ResourceCollectionResetable<UserGroup> {
 
-        private final Map<Integer, GroupWidget> map = new HashMap<Integer, GroupWidget>();
+        private static final Collection<Locale> noLocales = Collections.emptySet();
+
+        private final Map<Integer, GroupWidget> map       = new HashMap<Integer, GroupWidget>();
 
         private User                            user;
 
         private final Session                   session;
 
-        private final LocaleFactory             localeFactory;
-
         private boolean                         isEnabled;
+
+        private final LocaleFactory             localeFactory;
 
         GroupLocaleWidget(final Session session,
                 final LocaleFactory localeFactory) {
             this.session = session;
             this.localeFactory = localeFactory;
+            this.session.addSessionListern(new SessionListenerAdapter() {
+
+                @Override
+                public void onLogin() {
+                    reset(session.getUser().groups);
+                }
+
+            });
         }
 
         @Override
@@ -147,8 +160,8 @@ public class UserFields extends ResourceFields<User> {
             this.user = resource;
             for (final GroupWidget widget : this.map.values()) {
                 widget.checkbox.setValue(false);
-                for (int i = 0; i < widget.list.getItemCount(); i++) {
-                    widget.list.setItemSelected(i, false);
+                for (int i = 0; i < widget.localeList.getItemCount(); i++) {
+                    widget.localeList.setItemSelected(i, false);
                 }
             }
             if (resource != null && resource.groups != null) {
@@ -156,9 +169,9 @@ public class UserFields extends ResourceFields<User> {
                     final GroupWidget widget = this.map.get(group.id);
                     if (widget != null) {
                         widget.checkbox.setValue(true);
-                        for (int i = 0; i < widget.list.getItemCount(); i++) {
-                            final boolean selected = group.locales.contains(widget.map.get(widget.list.getValue(i)));
-                            widget.list.setItemSelected(i, selected);
+                        for (int i = 0; i < widget.localeList.getItemCount(); i++) {
+                            final boolean selected = group.locales.contains(widget.localeMap.get(widget.localeList.getValue(i)));
+                            widget.localeList.setItemSelected(i, selected);
                         }
                     }
                 }
@@ -171,8 +184,8 @@ public class UserFields extends ResourceFields<User> {
             for (final GroupWidget widget : this.map.values()) {
                 if (widget.checkbox.getValue()) {
                     resource.groups.add(widget.group);
-                    for (int i = 0; i < widget.list.getItemCount(); i++) {
-                        if (widget.list.isItemSelected(i)) {
+                    for (int i = 0; i < widget.localeList.getItemCount(); i++) {
+                        if (widget.localeList.isItemSelected(i)) {
                             widget.group.locales.add(widget.getLocale(i));
                         }
                         else {
@@ -191,14 +204,7 @@ public class UserFields extends ResourceFields<User> {
                 final Collection<Locale> locales;
                 if (this.session.getUser().isRoot()
                         || this.session.getUser().isLocalesAdmin()) {
-                    locales = this.localeFactory.realLocales(new ResourcesChangeListener<Locale>() {
-
-                        @Override
-                        public void onLoaded(
-                                final ResourceCollection<Locale> resources) {
-                            resetLocales(resources);
-                        }
-                    });
+                    locales = this.localeFactory.realLocales();
                 }
                 else {
                     locales = resource.locales;
@@ -212,50 +218,58 @@ public class UserFields extends ResourceFields<User> {
         }
 
         private void resetLocales(final Collection<Locale> resources) {
-            for (final GroupWidget widget : this.map.values()) {
-                widget.reset(resources);
+            if (this.session.hasUser()
+                    && (this.session.getUser().isRoot() || this.session.getUser()
+                            .isLocalesAdmin())) {
+                for (final GroupWidget widget : this.map.values()) {
+                    widget.reset(resources);
+                }
             }
         }
 
         static class GroupWidget extends FlowPanel {
             final UserGroup     group;
             final CheckBox      checkbox;
-            final ListBox       list;
-            Map<String, Locale> map = new HashMap<String, Locale>();
+            final ListBox       localeList;
+            Map<String, Locale> localeMap = new HashMap<String, Locale>();
+            final ListBox       domainList;
+            Map<String, Domain> domainMap = new HashMap<String, Domain>();
 
             GroupWidget(final UserGroup group, final Collection<Locale> locales) {
                 this.group = group;
                 this.checkbox = new CheckBox(group.name);
                 add(this.checkbox);
 
-                this.list = new ListBox(true);
+                this.localeList = new ListBox(true);
+                this.domainList = new ListBox(true);
                 if (!group.isRoot()) {
-                    add(this.list);
+                    add(this.localeList);
+                    add(this.domainList);
                 }
                 reset(locales);
             }
 
             private Locale getLocale(final int index) {
-                return this.map.get(this.list.getValue(index));
+                return this.localeMap.get(this.localeList.getValue(index));
             }
 
             private void reset(final Collection<Locale> locales) {
-                this.list.clear();
+                this.localeList.clear();
                 if (locales != null) {
                     for (final Locale locale : locales) {
-                        this.map.put(locale.id + "", locale);
-                        this.list.addItem(locale.code, locale.id + "");
+                        this.localeMap.put(locale.id + "", locale);
+                        this.localeList.addItem(locale.code, locale.id + "");
                     }
-                    this.list.setVisible(this.list.getItemCount() != 0);
+                    this.localeList.setVisible(this.localeList.getItemCount() != 0);
                 }
                 else {
-                    this.list.setVisible(false);
+                    this.localeList.setVisible(false);
                 }
             }
 
-            void setEnabled(final boolean isEnabled) {
+            private void setEnabled(final boolean isEnabled) {
                 this.checkbox.setEnabled(isEnabled);
-                this.list.setEnabled(isEnabled);
+                this.localeList.setEnabled(isEnabled);
             }
         }
 

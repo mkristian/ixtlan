@@ -35,10 +35,6 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
             final String message = this.resource.state.message;
             switch (this.resource.state) {
             case TO_BE_CREATED:
-                // if (this.factory.all != null) {
-                // // TODO remove cast
-                // this.factory.all.addResource((E) this.resource);
-                // }
             case TO_BE_LOADED:
             case TO_BE_UPDATED:
                 this.resource.fromXml(response.getText());

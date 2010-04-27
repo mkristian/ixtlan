@@ -2,7 +2,7 @@ package de.saumya.gwt.persistence.client;
 
 @SuppressWarnings("unchecked")
 public class NotificationResourceChangeListener implements
-        OneTimeResourceChangeListener {
+        ResourceChangeListener {
 
     private final ResourceNotifications notifications;
     private final String                message;

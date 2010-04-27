@@ -4,7 +4,8 @@
 package de.saumya.gwt.persistence.client;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Element;
@@ -16,13 +17,13 @@ import de.saumya.gwt.persistence.client.AbstractResource.State;
 public class ResourceCollection<E extends AbstractResource<E>> extends
         ArrayList<E> {
 
-    private static final long                      serialVersionUID = 1L;
+    private static final long                     serialVersionUID = 1L;
 
-    private final List<ResourcesChangeListener<E>> listeners        = new ArrayList<ResourcesChangeListener<E>>();
+    private final Set<ResourcesChangeListener<E>> listeners        = new HashSet<ResourcesChangeListener<E>>();
 
-    private final AbstractResourceFactory<E>       factory;
+    private final AbstractResourceFactory<E>      factory;
 
-    private boolean                                frozen           = false;
+    private boolean                               frozen           = false;
 
     public ResourceCollection(final AbstractResourceFactory<E> factory) {
         this.factory = factory;
@@ -67,14 +68,22 @@ public class ResourceCollection<E extends AbstractResource<E>> extends
         if (listener != null) {
             this.listeners.add(listener);
         }
+        GWT.log(this.factory.storagePluralName()
+                        + " collection has following listeners\n"
+                        + this.listeners,
+                null);
     }
 
     public void removeResourcesChangeListener(
             final ResourcesChangeListener<E> listener) {
         this.listeners.remove(listener);
+        GWT.log(this.factory.storagePluralName()
+                        + " collection has following listeners\n"
+                        + this.listeners,
+                null);
     }
 
-    private void fireResourcesLoadedEvents() {
+    protected void fireResourcesLoadedEvents() {
         for (final ResourcesChangeListener<E> listener : this.listeners) {
             listener.onLoaded(this);
         }
@@ -144,5 +153,4 @@ public class ResourceCollection<E extends AbstractResource<E>> extends
             return super.remove(o);
         }
     }
-
 }

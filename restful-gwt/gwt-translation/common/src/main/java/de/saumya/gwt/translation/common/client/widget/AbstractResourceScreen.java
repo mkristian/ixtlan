@@ -25,8 +25,6 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
     protected static final int                     RESOURCE  = 0;
     protected static final int                     RESOURCES = 1;
 
-    // protected final ResourceNotifications notifications;
-
     protected final AbstractResourceFactory<E>     factory;
 
     protected final AbstractResourceActionPanel<E> actions;
@@ -76,7 +74,6 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
 
         this.factory = factory;
         this.session = session;
-        // this.notifications = notifications;
 
         this.deck = new DeckPanel();
         this.deck.add(display);
@@ -142,7 +139,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
      * to the
      * {@link AbstractResourceScreen#reset(AbstractResource, Timestamp, User)}
      * using null where the info does not exists
-     *
+     * 
      * @param resource
      */
     @Override
@@ -156,14 +153,6 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
         this.loading.setVisible(false);
         setVisible(true);
     }
-
-    // protected void show(final String key) {
-    // final E resource = this.factory.get(key,
-    // this.resourceChangeListener,
-    // this.notifications);
-    // reset(resource);
-    // this.loading.setVisible(true);
-    // }
 
     @Override
     public Screen<?> child(final int parentKey) {

@@ -36,5 +36,4 @@ public class UserFactory extends ResourceFactory<User> {
     public String defaultSearchParameterName() {
         return "login";
     }
-
 }

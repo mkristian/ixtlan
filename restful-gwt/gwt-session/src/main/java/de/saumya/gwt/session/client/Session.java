@@ -1,10 +1,10 @@
 package de.saumya.gwt.session.client;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Event;
@@ -78,6 +78,8 @@ public class Session {
     private final ResourcesChangeListener<Permission>        permissionListener;
     private final ResourceChangeListener<Authentication>     authenticationListener;
 
+    private final Set<SessionListener>                       listeners      = new HashSet<SessionListener>();
+
     public Session(final Repository repository,
             final AuthenticationFactory authenticationFactory,
             final PermissionFactory permissionFactory,
@@ -148,8 +150,6 @@ public class Session {
         };
     }
 
-    private final List<SessionListener> listeners = new ArrayList<SessionListener>();
-
     public void addSessionListern(final SessionListener listener) {
         this.listeners.add(listener);
     }
@@ -206,10 +206,9 @@ public class Session {
     }
 
     void login(final String username, final String password) {
-        final Authentication authentication = this.authenticationFactory.newResource();
+        final Authentication authentication = this.authenticationFactory.newResource(this.authenticationListener);
         authentication.login = username;
         authentication.password = password;
-        authentication.addResourceChangeListener(this.authenticationListener);
         authentication.save();
     }
 

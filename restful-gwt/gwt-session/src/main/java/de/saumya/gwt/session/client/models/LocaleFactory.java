@@ -6,6 +6,7 @@ package de.saumya.gwt.session.client.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.saumya.gwt.persistence.client.AbstractResourceFactory;
 import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.ResourceFactory;
@@ -14,12 +15,37 @@ import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 
 public class LocaleFactory extends ResourceFactory<Locale> {
 
-    private Locale allLocale;
-    private Locale defaultLocale;
+    private final LocaleCollection realLocales = new LocaleCollection(this);
+
+    private static class LocaleCollection extends ResourceCollection<Locale> {
+
+        private static final long serialVersionUID = 1L;
+
+        public LocaleCollection(final AbstractResourceFactory<Locale> factory) {
+            super(factory);
+        }
+
+        private void fireEvents() {
+            fireResourcesLoadedEvents();
+        }
+    }
+
+    private final ResourcesChangeListener<Locale> realLocalesLoaded;
+
+    private Locale                                allLocale;
+    private Locale                                defaultLocale;
 
     public LocaleFactory(final Repository repository,
             final ResourceNotifications notifications) {
         super(repository, notifications);
+        this.realLocalesLoaded = new ResourcesChangeListener<Locale>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<Locale> resources) {
+                resetRealLocales();
+                LocaleFactory.this.realLocales.fireEvents();
+            }
+        };
     }
 
     @Override
@@ -69,24 +95,16 @@ public class LocaleFactory extends ResourceFactory<Locale> {
         return realLocales(null);
     }
 
-    private final ResourceCollection<Locale> realLocales = newResources();
-
     public ResourceCollection<Locale> realLocales(
             final ResourcesChangeListener<Locale> listener) {
+        if (listener != null) {
+            this.realLocales.addResourcesChangeListener(listener);
+        }
         if (this.all == null) {
-            all(new ResourcesChangeListener<Locale>() {
-
-                @Override
-                public void onLoaded(final ResourceCollection<Locale> resources) {
-                    resetRealLocales();
-                    if (listener != null) {
-                        listener.onLoaded(LocaleFactory.this.realLocales);
-                    }
-                    // resources.removeResourcesChangeListener(this);
-                }
-            });
+            all(this.realLocalesLoaded);
         }
         else {
+            this.all.addResourcesChangeListener(this.realLocalesLoaded);
             resetRealLocales();
         }
         return this.realLocales;

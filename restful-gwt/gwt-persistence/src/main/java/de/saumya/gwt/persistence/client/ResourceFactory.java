@@ -36,7 +36,6 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
         for (int i = 0; i < list.getLength(); i++) {
             final Node node = list.item(i);
             if (node.getParentNode().equals(root)) {
-                System.out.println(node.getFirstChild().getNodeValue());
                 return node.getFirstChild() == null
                         ? null
                         : getResource(Integer.parseInt(node.getFirstChild()
@@ -50,6 +49,7 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     void putIntoCache(final E resource) {
         if (this.all != null) {
             this.all.addResource(resource);
+            this.all.fireResourcesLoadedEvents();
         }
         if (this.cache.containsKey(resource.id)) {
             throw new IllegalStateException("just created resource already in cache: "
@@ -62,6 +62,7 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     void removeFromCache(final E resource) {
         if (this.all != null) {
             this.all.removeResource(resource);
+            this.all.fireResourcesLoadedEvents();
         }
         this.cache.remove(resource.id);
     }
@@ -71,6 +72,7 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
         this.cache.clear();
         if (this.all != null) {
             this.all.clearResources();
+            this.all.fireResourcesLoadedEvents();
         }
     }
 
@@ -98,6 +100,14 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     }
 
     public abstract E newResource(final int id);
+
+    public E newResource(final int id, final ResourceChangeListener<E> listener) {
+        final E resource = newResource(id);
+        if (listener != null) {
+            resource.addResourceChangeListener(listener);
+        }
+        return resource;
+    }
 
     public E get(final int key) {
         return get(key, null);

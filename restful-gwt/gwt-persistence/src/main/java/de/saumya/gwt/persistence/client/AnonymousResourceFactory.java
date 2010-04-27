@@ -36,6 +36,14 @@ public abstract class AnonymousResourceFactory<E extends AnonymousResource<E>>
 
     public abstract E newResource();
 
+    public E newResource(final ResourceChangeListener<E> listener) {
+        final E resource = newResource();
+        if (listener != null) {
+            resource.addResourceChangeListener(listener);
+        }
+        return resource;
+    }
+
     public ResourceCollection<E> newResources() {
         return new ResourceCollection<E>(this);
     }

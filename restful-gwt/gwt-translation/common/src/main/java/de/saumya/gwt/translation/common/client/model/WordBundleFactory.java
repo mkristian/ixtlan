@@ -33,8 +33,7 @@ public class WordBundleFactory extends AnonymousResourceFactory<WordBundle> {
 
     public WordBundle first(final String localeCode,
             final ResourceChangeListener<WordBundle> listener) {
-        final WordBundle bundle = newResource();
-        bundle.addResourceChangeListener(listener);
+        final WordBundle bundle = newResource(listener);
         bundle.locale = localeCode;
         final Map<String, String> q = new HashMap<String, String>();
         q.put("code", bundle.locale);

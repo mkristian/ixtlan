@@ -7,9 +7,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -285,15 +285,9 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
     }
 
     public void addResourceChangeListener(
-            final OneTimeResourceChangeListener<E> listener) {
-        if (listener != null) {
-            this.listeners.add(listener);
-        }
-    }
-
-    public void addResourceChangeListener(
             final ResourceChangeListener<E> listener) {
         if (listener != null) {
+            GWT.log(this.factory.storageName(), new Exception());
             this.listeners.add(listener);
         }
     }
@@ -305,26 +299,18 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
 
     @SuppressWarnings("unchecked")
     void fireResourceChangeEvents(final String message) {
-        final Iterator<ResourceChangeListener<E>> iter = this.listeners.iterator();
-        while (iter.hasNext()) {
-            final ResourceChangeListener<E> listener = iter.next();
+        for (final ResourceChangeListener<E> listener : this.listeners) {
             listener.onChange((E) this);
-            if (listener instanceof OneTimeResourceChangeListener<?>) {
-                iter.remove();
-            }
         }
+        this.listeners.clear();
     }
 
     @SuppressWarnings("unchecked")
     void fireResourceErrorEvents(final int status, final String statusText) {
-        final Iterator<ResourceChangeListener<E>> iter = this.listeners.iterator();
-        while (iter.hasNext()) {
-            final ResourceChangeListener<E> listener = iter.next();
-            listener.onChange((E) this);
-            if (listener instanceof OneTimeResourceChangeListener<?>) {
-                iter.remove();
-            }
+        for (final ResourceChangeListener<E> listener : this.listeners) {
+            listener.onError(status, statusText, (E) this);
         }
+        this.listeners.clear();
     }
 
     protected abstract void fromElement(Element root);

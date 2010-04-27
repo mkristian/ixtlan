@@ -33,8 +33,7 @@ public class PhraseBookFactory extends AnonymousResourceFactory<PhraseBook> {
 
     public PhraseBook first(final String localeCode,
             final ResourceChangeListener<PhraseBook> listener) {
-        final PhraseBook book = newResource();
-        book.addResourceChangeListener(listener);
+        final PhraseBook book = newResource(listener);
         book.locale = localeCode;
         final Map<String, String> q = new HashMap<String, String>();
         q.put("code", book.locale);
