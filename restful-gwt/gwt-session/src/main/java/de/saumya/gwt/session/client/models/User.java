@@ -105,4 +105,13 @@ public class User extends Resource<User> {
         }
         return false;
     }
+
+    public boolean isDomainsAdmin() {
+        for (final UserGroup g : this.groups) {
+            if (g.isDomainsAdmin()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

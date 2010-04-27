@@ -141,6 +141,7 @@ public class GUIContainer {
                                                                     this.userFactory,
                                                                     this.userGroupFactory,
                                                                     this.localeFactory,
+                                                                    this.domainFactory,
                                                                     this.session,
                                                                     new ResourceBindings<User>(),
                                                                     this.listeners,

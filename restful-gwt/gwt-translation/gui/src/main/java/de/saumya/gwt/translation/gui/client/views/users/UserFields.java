@@ -4,7 +4,6 @@
 package de.saumya.gwt.translation.gui.client.views.users;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +17,7 @@ import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.models.Domain;
+import de.saumya.gwt.session.client.models.DomainFactory;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
@@ -36,7 +36,8 @@ public class UserFields extends ResourceFields<User> {
     public UserFields(final GetTextController getTextController,
             final ResourceBindings<User> bindings,
             final UserGroupFactory groupFactory,
-            final LocaleFactory localeFactory, final Session session) {
+            final LocaleFactory localeFactory,
+            final DomainFactory domainFactory, final Session session) {
         super(getTextController, bindings);
         add("login", new TextBoxBinding<User>() {
 
@@ -94,7 +95,8 @@ public class UserFields extends ResourceFields<User> {
         };
         add("preferred language", preferredLanguage);
         final GroupLocaleWidget groupsWidget = new GroupLocaleWidget(session,
-                localeFactory);
+                localeFactory,
+                domainFactory);
 
         session.addSessionListern(new SessionListenerAdapter() {
 
@@ -124,14 +126,19 @@ public class UserFields extends ResourceFields<User> {
                 groupsWidget.resetLocales(resources);
             }
         });
+        domainFactory.realDomains(new ResourcesChangeListener<Domain>() {
+
+            @Override
+            public void onLoaded(final ResourceCollection<Domain> resources) {
+                groupsWidget.resetDomains(resources);
+            }
+        });
     }
 
     static class GroupLocaleWidget extends VerticalPanel implements
             Binding<User>, ResourceCollectionResetable<UserGroup> {
 
-        private static final Collection<Locale> noLocales = Collections.emptySet();
-
-        private final Map<Integer, GroupWidget> map       = new HashMap<Integer, GroupWidget>();
+        private final Map<Integer, GroupWidget> map = new HashMap<Integer, GroupWidget>();
 
         private User                            user;
 
@@ -140,11 +147,14 @@ public class UserFields extends ResourceFields<User> {
         private boolean                         isEnabled;
 
         private final LocaleFactory             localeFactory;
+        private final DomainFactory             domainFactory;
 
         GroupLocaleWidget(final Session session,
-                final LocaleFactory localeFactory) {
+                final LocaleFactory localeFactory,
+                final DomainFactory domainFactory) {
             this.session = session;
             this.localeFactory = localeFactory;
+            this.domainFactory = domainFactory;
             this.session.addSessionListern(new SessionListenerAdapter() {
 
                 @Override
@@ -160,8 +170,13 @@ public class UserFields extends ResourceFields<User> {
             this.user = resource;
             for (final GroupWidget widget : this.map.values()) {
                 widget.checkbox.setValue(false);
+                // unset all locales in list
                 for (int i = 0; i < widget.localeList.getItemCount(); i++) {
                     widget.localeList.setItemSelected(i, false);
+                }
+                // unset all domains in list
+                for (int i = 0; i < widget.domainList.getItemCount(); i++) {
+                    widget.domainList.setItemSelected(i, false);
                 }
             }
             if (resource != null && resource.groups != null) {
@@ -169,9 +184,15 @@ public class UserFields extends ResourceFields<User> {
                     final GroupWidget widget = this.map.get(group.id);
                     if (widget != null) {
                         widget.checkbox.setValue(true);
+                        // reset locales list
                         for (int i = 0; i < widget.localeList.getItemCount(); i++) {
                             final boolean selected = group.locales.contains(widget.localeMap.get(widget.localeList.getValue(i)));
                             widget.localeList.setItemSelected(i, selected);
+                        }
+                        // reset domains list
+                        for (int i = 0; i < widget.domainList.getItemCount(); i++) {
+                            final boolean selected = group.domains.contains(widget.domainMap.get(widget.domainList.getValue(i)));
+                            widget.domainList.setItemSelected(i, selected);
                         }
                     }
                 }
@@ -184,12 +205,22 @@ public class UserFields extends ResourceFields<User> {
             for (final GroupWidget widget : this.map.values()) {
                 if (widget.checkbox.getValue()) {
                     resource.groups.add(widget.group);
+                    // set locales list in user's group
                     for (int i = 0; i < widget.localeList.getItemCount(); i++) {
                         if (widget.localeList.isItemSelected(i)) {
                             widget.group.locales.add(widget.getLocale(i));
                         }
                         else {
                             widget.group.locales.remove(widget.getLocale(i));
+                        }
+                    }
+                    // set domains list in user's group
+                    for (int i = 0; i < widget.domainList.getItemCount(); i++) {
+                        if (widget.domainList.isItemSelected(i)) {
+                            widget.group.domains.add(widget.getDomain(i));
+                        }
+                        else {
+                            widget.group.domains.remove(widget.getDomain(i));
                         }
                     }
                 }
@@ -201,6 +232,7 @@ public class UserFields extends ResourceFields<User> {
             clear();
             this.map.clear();
             for (final UserGroup resource : resources) {
+                // allowed locales
                 final Collection<Locale> locales;
                 if (this.session.getUser().isRoot()
                         || this.session.getUser().isLocalesAdmin()) {
@@ -209,7 +241,19 @@ public class UserFields extends ResourceFields<User> {
                 else {
                     locales = resource.locales;
                 }
-                final GroupWidget widget = new GroupWidget(resource, locales);
+                // allowed domains
+                final Collection<Domain> domains;
+                if (this.session.getUser().isRoot()
+                        || this.session.getUser().isLocalesAdmin()) {
+                    domains = this.domainFactory.realDomains();
+                }
+                else {
+                    domains = resource.domains;
+                }
+                // add new group widget allowed locales/domains
+                final GroupWidget widget = new GroupWidget(resource,
+                        locales,
+                        domains);
                 this.map.put(resource.id, widget);
                 add(widget);
             }
@@ -222,7 +266,17 @@ public class UserFields extends ResourceFields<User> {
                     && (this.session.getUser().isRoot() || this.session.getUser()
                             .isLocalesAdmin())) {
                 for (final GroupWidget widget : this.map.values()) {
-                    widget.reset(resources);
+                    widget.resetLocales(resources);
+                }
+            }
+        }
+
+        private void resetDomains(final Collection<Domain> resources) {
+            if (this.session.hasUser()
+                    && (this.session.getUser().isRoot() || this.session.getUser()
+                            .isDomainsAdmin())) {
+                for (final GroupWidget widget : this.map.values()) {
+                    widget.resetDomains(resources);
                 }
             }
         }
@@ -235,7 +289,9 @@ public class UserFields extends ResourceFields<User> {
             final ListBox       domainList;
             Map<String, Domain> domainMap = new HashMap<String, Domain>();
 
-            GroupWidget(final UserGroup group, final Collection<Locale> locales) {
+            GroupWidget(final UserGroup group,
+                    final Collection<Locale> locales,
+                    final Collection<Domain> domains) {
                 this.group = group;
                 this.checkbox = new CheckBox(group.name);
                 add(this.checkbox);
@@ -246,14 +302,19 @@ public class UserFields extends ResourceFields<User> {
                     add(this.localeList);
                     add(this.domainList);
                 }
-                reset(locales);
+                resetLocales(locales);
+                resetDomains(domains);
             }
 
             private Locale getLocale(final int index) {
                 return this.localeMap.get(this.localeList.getValue(index));
             }
 
-            private void reset(final Collection<Locale> locales) {
+            private Domain getDomain(final int index) {
+                return this.domainMap.get(this.domainList.getValue(index));
+            }
+
+            private void resetLocales(final Collection<Locale> locales) {
                 this.localeList.clear();
                 if (locales != null) {
                     for (final Locale locale : locales) {
@@ -267,9 +328,24 @@ public class UserFields extends ResourceFields<User> {
                 }
             }
 
+            private void resetDomains(final Collection<Domain> domains) {
+                this.domainList.clear();
+                if (domains != null) {
+                    for (final Domain domain : domains) {
+                        this.domainMap.put(domain.id + "", domain);
+                        this.domainList.addItem(domain.name, domain.id + "");
+                    }
+                    this.domainList.setVisible(this.domainList.getItemCount() != 0);
+                }
+                else {
+                    this.domainList.setVisible(false);
+                }
+            }
+
             private void setEnabled(final boolean isEnabled) {
                 this.checkbox.setEnabled(isEnabled);
                 this.localeList.setEnabled(isEnabled);
+                this.domainList.setEnabled(isEnabled);
             }
         }
 

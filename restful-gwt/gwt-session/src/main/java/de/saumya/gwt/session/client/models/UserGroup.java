@@ -69,4 +69,8 @@ public class UserGroup extends Resource<UserGroup> {
     public boolean isLocalesAdmin() {
         return "locales".equals(this.name);
     }
+
+    public boolean isDomainsAdmin() {
+        return "domains".equals(this.name);
+    }
 }
