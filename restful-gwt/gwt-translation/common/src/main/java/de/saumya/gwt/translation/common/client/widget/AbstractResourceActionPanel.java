@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.TextBox;
 
 import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.AbstractResourceFactory;
+import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.route.HasPathFactory;
@@ -26,6 +27,8 @@ public abstract class AbstractResourceActionPanel<E extends AbstractResource<E>>
     protected final String            resourceName;
 
     protected PathFactory             pathFactory;
+
+    ResourceChangeListener<E>         listener;
 
     public AbstractResourceActionPanel(
             final GetTextController getTextController,

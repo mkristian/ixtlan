@@ -50,6 +50,7 @@ public class SingletonResourceActionPanel<E extends SingletonResource<E>>
 
             @Override
             protected void action(final E resource) {
+                resource.addResourceChangeListener(SingletonResourceActionPanel.this.listener);
                 resource.reload();
             }
 
@@ -68,6 +69,7 @@ public class SingletonResourceActionPanel<E extends SingletonResource<E>>
 
             @Override
             protected void action(final E resource) {
+                resource.addResourceChangeListener(SingletonResourceActionPanel.this.listener);
                 resource.save();
             }
 

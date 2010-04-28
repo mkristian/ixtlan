@@ -91,7 +91,6 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
 
             @Override
             public void onChange(final E resource) {
-                // TODO make the reset AbstractResource aware !!!
                 reset(resource);
                 this.listener.onChange(resource);
             }
@@ -102,7 +101,9 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
                 this.listener.onError(status, errorMessage, resource);
             }
         };
-
+        // let the actions use this listener to update the content of this
+        // screen
+        actions.listener = this.resourceChangeListener;
         if (displayCollection != null) {
             this.pathFactory = hyperlinkFactory.newPathFactory(factory.storagePluralName());
         }

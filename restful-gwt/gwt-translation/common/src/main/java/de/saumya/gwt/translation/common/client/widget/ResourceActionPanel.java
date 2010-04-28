@@ -78,6 +78,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends
 
             @Override
             protected void action(final E resource) {
+                resource.addResourceChangeListener(ResourceActionPanel.this.listener);
                 resource.reload();
             }
 
@@ -98,6 +99,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends
             @Override
             protected void action(final E resource) {
                 resource.addResourceChangeListener(ResourceActionPanel.this.createdListener);
+                resource.addResourceChangeListener(ResourceActionPanel.this.listener);
                 resource.save();
             }
         };
@@ -107,6 +109,7 @@ public class ResourceActionPanel<E extends Resource<E>> extends
 
             @Override
             protected void action(final E resource) {
+                resource.addResourceChangeListener(ResourceActionPanel.this.listener);
                 resource.save();
             }
 
