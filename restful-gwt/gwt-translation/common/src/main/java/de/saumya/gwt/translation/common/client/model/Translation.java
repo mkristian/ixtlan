@@ -45,14 +45,11 @@ public class Translation extends Resource<Translation> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        buf.append(":previous_text => ").append(this.previousText);
-        buf.append(":text => ").append(this.text);
-        buf.append(", :approved_at => ").append(this.approvedAt);
-        if (this.approvedBy != null) {
-            buf.append(", :approved_by => ");
-            this.approvedBy.toString(buf);
-        }
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "previous_text", this.previousText);
+        toString(indent, buf, "text", this.text);
+        toString(indent, buf, "approved_at", this.approvedAt);
+        toString(indent, buf, "approved_by", this.approvedBy);
     }
 
     @Override

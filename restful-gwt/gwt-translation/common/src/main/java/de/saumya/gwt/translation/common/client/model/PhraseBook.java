@@ -36,11 +36,9 @@ public class PhraseBook extends AnonymousResource<PhraseBook> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        buf.append(":locale => ").append(this.locale);
-        if (this.phrases != null) {
-            buf.append(", :phrases => ").append(this.phrases);
-        }
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "locale", this.locale);
+        toString(indent, buf, "phrases", this.phrases);
     }
 
     @Override

@@ -53,8 +53,14 @@ public abstract class AnonymousResource<E extends AnonymousResource<E>> extends
 
     @Override
     public String toString() {
-        final StringBuilder buf = new StringBuilder(getClass().getName()).append("(");
-        toString(buf);
-        return buf.append(")").toString();
+        final StringBuilder buf = new StringBuilder();
+        toStringRoot("", buf);
+        return buf.toString();
+    }
+
+    @Override
+    public void toStringRoot(final String indent, final StringBuilder buf) {
+        buf.append(indent).append(getClass().getName());
+        toString(indent + INDENT, buf);
     }
 }

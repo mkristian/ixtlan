@@ -35,11 +35,9 @@ public class WordBundle extends AnonymousResource<WordBundle> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        buf.append(":locale => ").append(this.locale);
-        if (this.words != null) {
-            buf.append(", :words => ").append(this.words);
-        }
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "locale", this.locale);
+        toString(indent, buf, "words", this.words);
     }
 
     @Override

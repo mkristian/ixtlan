@@ -30,9 +30,9 @@ public class Word extends AnonymousResource<Word> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        buf.append(":code => ").append(this.code);
-        buf.append(", :text => ").append(this.text);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "code", this.code);
+        toString(indent, buf, "text", this.text);
     }
 
     @Override

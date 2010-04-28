@@ -62,18 +62,20 @@ public class Configuration extends SingletonResource<Configuration> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "session_idle_timeout", this.sessionIdleTimeout);
-        toString(buf, "keep_audit_logs", this.keepAuditLogs);
-        toString(buf, "locales", this.locales);
-        toString(buf,
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "session_idle_timeout", this.sessionIdleTimeout);
+        toString(indent, buf, "keep_audit_logs", this.keepAuditLogs);
+        toString(indent, buf, "locales", this.locales);
+        toString(indent,
+                 buf,
                  "notification_sender_emailn",
                  this.notificationSenderEmail);
-        toString(buf,
+        toString(indent,
+                 buf,
                  "notification_recipient_emails",
                  this.notificationRecipientEmails);
-        toString(buf, "updated_at", this.updatedAt);
-        toString(buf, "updated_by", this.updatedBy);
+        toString(indent, buf, "updated_at", this.updatedAt);
+        toString(indent, buf, "updated_by", this.updatedBy);
     }
 
     @Override

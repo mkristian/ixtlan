@@ -30,7 +30,6 @@ public class ResourceCollection<E extends AbstractResource<E>> extends
     }
 
     public void fromXml(final String xml) {
-        GWT.log(xml, null);
         fromXml(XMLParser.parse(xml).getDocumentElement());
         fireResourcesLoadedEvents();
     }
@@ -47,6 +46,24 @@ public class ResourceCollection<E extends AbstractResource<E>> extends
                 addResource(resource);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder buf = new StringBuilder();
+        buf.append("[\n");
+        boolean first = true;
+        for (final AbstractResource<?> resource : this) {
+            if (first) {
+                first = false;
+            }
+            else {
+                buf.append(",\n");
+            }
+            resource.toStringRoot(AbstractResource.INDENT, buf);
+        }
+        buf.append(first ? "" : "\n").append("]");
+        return buf.toString();
     }
 
     public String toXml() {
@@ -66,12 +83,13 @@ public class ResourceCollection<E extends AbstractResource<E>> extends
     public void addResourcesChangeListener(
             final ResourcesChangeListener<E> listener) {
         if (listener != null) {
-            this.listeners.add(listener);
-        }
-        GWT.log(this.factory.storagePluralName()
+            final boolean added = this.listeners.add(listener);
+            if (added) {
+                GWT.log(this.factory.storagePluralName()
                         + " collection has following listeners\n"
-                        + this.listeners,
-                null);
+                        + this.listeners, null);
+            }
+        }
     }
 
     public void removeResourcesChangeListener(

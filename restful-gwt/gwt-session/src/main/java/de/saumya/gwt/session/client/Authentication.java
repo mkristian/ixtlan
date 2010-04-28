@@ -36,19 +36,17 @@ class Authentication extends SingletonResource<Authentication> {
         this.token = getString(root, "token");
         this.login = null;
         this.password = null;
-        System.out.println(root);
         this.user = this.userFactory.getChildResource(root, "user");
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
+    public void toString(final String indent, final StringBuilder buf) {
         if (this.login != null) {
-            buf.append(":login => ").append(this.login);
+            toString(indent, buf, "login", this.login);
         }
         if (this.token != null) {
-            buf.append(":token => ").append(this.token);
-            buf.append(", :user => ");
-            buf.append(this.user.toString());
+            toString(indent, buf, "token", this.token);
+            toString(indent, buf, "user", this.user);
         }
     }
 

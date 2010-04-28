@@ -17,6 +17,8 @@ import com.google.gwt.xml.client.XMLParser;
 
 public abstract class AbstractResource<E extends AbstractResource<E>> {
 
+    static final String INDENT = "   ";
+
     protected enum State {
         NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED, STALE;
     }
@@ -184,43 +186,58 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
         }
     }
 
-    protected void toString(final StringBuilder buf, final String name,
-            final AbstractResource<?> value) {
+    protected void toString(final String indent, final StringBuilder buf,
+            final String name, final AbstractResource<?> value) {
         if (value != null) {
-            buf.append(", :").append(name).append(" => ");
-            value.toString(buf);
+            buf.append("\n")
+                    .append(indent)
+                    .append(":")
+                    .append(name)
+                    .append(" => ");
+            value.toStringRoot(indent, buf);
         }
     }
 
-    protected void toString(final StringBuilder buf, final String name,
-            final ResourceCollection<?> value) {
+    protected void toString(final String indent, final StringBuilder buf,
+            final String name, final ResourceCollection<?> value) {
         if (value != null) {
-            buf.append(", :").append(name).append(" => [");
+            buf.append("\n")
+                    .append(indent)
+                    .append(":")
+                    .append(name)
+                    .append(" => [\n");
             boolean first = true;
+            final String nextIndent = indent + INDENT;
             for (final AbstractResource<?> resource : value) {
                 if (first) {
+                    buf.append(indent).append(INDENT);
                     first = false;
                 }
                 else {
-                    buf.append(", ");
+                    buf.append(",\n");
                 }
-                resource.toString(buf);
+                resource.toStringRoot(nextIndent, buf);
             }
-            buf.append("]");
+            buf.append(first ? "" : "\n").append(indent).append("]");
         }
     }
 
-    protected void toString(final StringBuilder buf, final String name,
-            final String value) {
+    protected void toString(final String indent, final StringBuilder buf,
+            final String name, final String value) {
         if (value != null) {
-            buf.append(", :").append(name).append(" => ").append(value);
+            buf.append("\n")
+                    .append(indent)
+                    .append(":")
+                    .append(name)
+                    .append(" => ")
+                    .append(value);
         }
     }
 
-    protected void toString(final StringBuilder buf, final String name,
-            final Object value) {
+    protected void toString(final String indent, final StringBuilder buf,
+            final String name, final Object value) {
         if (value != null) {
-            toString(buf, name, value.toString());
+            toString(indent, buf, name, value.toString());
         }
     }
 
@@ -304,7 +321,9 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
 
     protected abstract void appendXml(StringBuilder buf);
 
-    protected abstract void toString(StringBuilder buf);
+    protected abstract void toString(String indent, StringBuilder buf);
+
+    abstract void toStringRoot(final String indent, final StringBuilder buf);
 
     protected abstract void post();
 

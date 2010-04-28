@@ -38,12 +38,10 @@ class Permission extends AnonymousResource<Permission> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        buf.append(":resource => ").append(this.resource);
-        buf.append(":action => ").append(this.action);
-        if (this.roles != null) {
-            buf.append(", :roles => ").append(this.roles);
-        }
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "resource", this.resource);
+        toString(indent, buf, "action", this.action);
+        toString(indent, buf, "roles", this.roles);
     }
 
     @Override

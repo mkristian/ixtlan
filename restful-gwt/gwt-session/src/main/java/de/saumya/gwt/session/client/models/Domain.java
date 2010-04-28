@@ -31,9 +31,9 @@ public class Domain extends Resource<Domain> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "name", this.name);
-        toString(buf, "created_at", this.createdAt);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "name", this.name);
+        toString(indent, buf, "created_at", this.createdAt);
     }
 
     @Override

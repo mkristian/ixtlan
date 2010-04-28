@@ -24,8 +24,8 @@ public class Singleton extends SingletonResource<Singleton> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "name", this.name);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "name", this.name);
     }
 
     @Override

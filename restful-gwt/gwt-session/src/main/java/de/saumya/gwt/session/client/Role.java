@@ -23,13 +23,12 @@ class Role extends AnonymousResource<Role> {
 
     @Override
     protected void fromElement(final Element root) {
-        System.err.println("===+++" + root + " " + getString(root, "name"));
         this.name = getString(root, "name");
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        buf.append(":name => ").append(this.name);
+    public void toString(final String indent, final StringBuilder buf) {
+        buf.append("(:name => ").append(this.name).append(")");
     }
 
     @Override

@@ -83,10 +83,17 @@ public abstract class Resource<E extends Resource<E>> extends
 
     @Override
     public String toString() {
-        final StringBuilder buf = new StringBuilder(getClass().getName()).append("(");
-        buf.append(":id => ").append(this.id);
-        toString(buf);
-        return buf.append(")").toString();
+        final StringBuilder buf = new StringBuilder();
+        toStringRoot("", buf);
+        return buf.toString();
+    }
+
+    @Override
+    protected void toStringRoot(final String indent, final StringBuilder buf) {
+        buf.append(indent).append(getClass().getName());
+        final String newindent = indent + INDENT;
+        toString(newindent, buf, "id", this.id);
+        toString(newindent, buf);
     }
 
     @Override

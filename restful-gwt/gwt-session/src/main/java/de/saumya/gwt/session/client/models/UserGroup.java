@@ -50,11 +50,11 @@ public class UserGroup extends Resource<UserGroup> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "name", this.name);
-        toString(buf, "domains", this.domains);
-        toString(buf, "locales", this.locales);
-        toString(buf, "created_at", this.createdAt);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "name", this.name);
+        toString(indent, buf, "domains", this.domains);
+        toString(indent, buf, "locales", this.locales);
+        toString(indent, buf, "created_at", this.createdAt);
     }
 
     @Override

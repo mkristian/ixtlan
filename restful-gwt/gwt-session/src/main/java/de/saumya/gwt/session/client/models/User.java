@@ -62,14 +62,14 @@ public class User extends Resource<User> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "login", this.login);
-        toString(buf, "name", this.name);
-        toString(buf, "email", this.email);
-        toString(buf, "preferred_language", this.preferedLanguage);
-        toString(buf, "groups", this.groups);
-        toString(buf, "created_at", this.createdAt);
-        toString(buf, "updated_at", this.updatedAt);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "login", this.login);
+        toString(indent, buf, "name", this.name);
+        toString(indent, buf, "email", this.email);
+        toString(indent, buf, "preferred_language", this.preferedLanguage);
+        toString(indent, buf, "groups", this.groups);
+        toString(indent, buf, "created_at", this.createdAt);
+        toString(indent, buf, "updated_at", this.updatedAt);
     }
 
     public Collection<Locale> getAllowedLocales() {

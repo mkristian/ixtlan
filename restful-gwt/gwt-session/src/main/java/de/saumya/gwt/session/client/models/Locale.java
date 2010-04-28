@@ -37,9 +37,9 @@ public class Locale extends Resource<Locale> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "code", this.code);
-        toString(buf, "created_at", this.createdAt);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "code", this.code);
+        toString(indent, buf, "created_at", this.createdAt);
     }
 
     @Override

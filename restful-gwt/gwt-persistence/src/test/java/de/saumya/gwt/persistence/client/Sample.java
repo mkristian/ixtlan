@@ -35,14 +35,14 @@ public class Sample extends Resource<Sample> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
+    public void toString(final String indent, final StringBuilder buf) {
         buf.append(", :language => ").append(this.language);
         if (this.country != null) {
             buf.append(", :country => ").append(this.country);
         }
         if (this.child != null) {
             buf.append(", :child => ");
-            this.child.toString(buf);
+            this.child.toString(indent, buf);
         }
     }
 

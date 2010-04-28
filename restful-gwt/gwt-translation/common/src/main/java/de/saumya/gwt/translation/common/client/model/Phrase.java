@@ -66,15 +66,15 @@ public class Phrase extends Resource<Phrase> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        toString(buf, "code", this.code);
-        toString(buf, "current_text", this.currentText);
-        toString(buf, "text", this.text);
-        toString(buf, "parentTranslation", this.parentTranslation);
-        toString(buf, "default", this.defaultTranslation);
-        toString(buf, "locale", this.locale);
-        toString(buf, "updated_at", this.updatedAt);
-        toString(buf, "updated_by", this.updatedBy);
+    public void toString(final String indent, final StringBuilder buf) {
+        toString(indent, buf, "code", this.code);
+        toString(indent, buf, "current_text", this.currentText);
+        toString(indent, buf, "text", this.text);
+        toString(indent, buf, "parentTranslation", this.parentTranslation);
+        toString(indent, buf, "default", this.defaultTranslation);
+        toString(indent, buf, "locale", this.locale);
+        toString(indent, buf, "updated_at", this.updatedAt);
+        toString(indent, buf, "updated_by", this.updatedBy);
     }
 
     @Override
