@@ -37,7 +37,7 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
         private Note(final String message, final boolean isInfo) {
             this.timestamp = new Timestamp(System.currentTimeMillis());
             this.isInfo = isInfo;
-            this.messages = new String[] { message };
+            this.messages = message.split("\n");
         }
 
         String toHTML() {
@@ -51,12 +51,23 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
                 builder.append(this.messages[0]);
             }
             else {
-                builder.append("<ul>");
-                for (final String msg : this.messages) {
-                    builder.append("<li>").append(msg).append("</li>");
+                if (!this.isInfo) {
+                    for (final String msg : this.messages) {
+                        builder.append(msg).append("<br/>");
+                    }
                 }
-                builder.append("</ul>");
+                else {
+                    builder.append("<ul>");
+                    for (final String msg : this.messages) {
+                        builder.append("<li>").append(msg).append("</li>");
+                    }
+                    builder.append("</ul>");
+                }
             }
+        }
+
+        public String toLine() {
+            return toString().replace("<br/>", " ");
         }
 
         @Override
@@ -146,7 +157,7 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
         this.popup.add(this.all);
         this.all.clear();
         for (final PopupNotifications.Note note : this.notes) {
-            final HTML noteLabel = new HTML(note.toString());
+            final HTML noteLabel = new HTML(note.toLine());
             noteLabel.setStyleName(note.isInfo ? "info-note" : "warn-note");
             this.all.add(noteLabel);
         }
@@ -160,10 +171,12 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
     }
 
     @Override
-    public void error(final int status, final String message,
-            final AbstractResource<?> resource) {
+    public void error(final int status, final String statusMessage,
+            final String message, final AbstractResource<?> resource) {
         // TODO make the resource clickable inside the text
-        warn(status + ": " + message + " " + resource.display());
+        warn(message + " "
+                + (resource.isNew() ? "--none--" : resource.display()) + "\n"
+                + status + ": " + statusMessage);
     }
 
     @Override

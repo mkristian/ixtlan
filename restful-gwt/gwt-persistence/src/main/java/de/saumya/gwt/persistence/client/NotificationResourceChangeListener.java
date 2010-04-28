@@ -15,15 +15,15 @@ public class NotificationResourceChangeListener implements
 
     @Override
     public void onChange(final AbstractResource resource) {
-        this.notifications.info(this.message, resource);
+        this.notifications.info(this.message + " "
+                + resource.factory.storageName() + ": ", resource);
     }
 
     @Override
     public void onError(final int status, final String errorMessage,
             final AbstractResource resource) {
-        // TODO add message to notifications !!!
-        this.notifications.error(status, errorMessage, resource);
-
+        this.notifications.error(status, errorMessage, this.message + " "
+                + resource.factory.storageName() + ": ", resource);
     }
 
 }
