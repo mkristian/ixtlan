@@ -15,6 +15,11 @@ public class WordFactory extends AnonymousResourceFactory<Word> {
     }
 
     @Override
+    public boolean isImmutable() {
+        return true;
+    }
+
+    @Override
     public String storageName() {
         return "word";
     }

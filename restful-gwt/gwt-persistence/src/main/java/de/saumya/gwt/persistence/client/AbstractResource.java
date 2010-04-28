@@ -18,18 +18,7 @@ import com.google.gwt.xml.client.XMLParser;
 public abstract class AbstractResource<E extends AbstractResource<E>> {
 
     protected enum State {
-        NEW, TO_BE_CREATED("created"), TO_BE_UPDATED("updated"), UP_TO_DATE, TO_BE_DELETED(
-                "deleted"), DELETED, TO_BE_LOADED("loaded"), STALE;
-
-        final String message;
-
-        State() {
-            this.message = null;
-        }
-
-        State(final String message) {
-            this.message = message;
-        }
+        NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED, STALE;
     }
 
     private final Set<ResourceChangeListener<E>> listeners = new HashSet<ResourceChangeListener<E>>();
@@ -46,8 +35,8 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
         this.factory = factory;
     }
 
-    public boolean isImmutable() {
-        return false;
+    public final boolean isImmutable() {
+        return this.factory.isImmutable();
     }
 
     public boolean isNew() {
@@ -296,7 +285,7 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
     }
 
     @SuppressWarnings("unchecked")
-    void fireResourceChangeEvents(final String message) {
+    void fireResourceChangeEvents() {
         for (final ResourceChangeListener<E> listener : this.listeners) {
             listener.onChange((E) this);
         }

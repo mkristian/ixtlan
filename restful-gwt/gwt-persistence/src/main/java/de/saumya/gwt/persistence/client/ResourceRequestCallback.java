@@ -31,27 +31,28 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
     public void onResponseReceived(final Request request,
             final Response response) {
         if (response.getStatusCode() < 300) {
-            GWT.log(this.resource.state + " " + this.resource.toString(), null);
-            final String message = this.resource.state.message;
             switch (this.resource.state) {
             case TO_BE_CREATED:
             case TO_BE_LOADED:
             case TO_BE_UPDATED:
                 this.resource.fromXml(response.getText());
+                GWT.log(this.resource.state + " " + this.resource.toString(),
+                        null);
                 this.resource.state = State.UP_TO_DATE;
                 this.factory.putIntoCache((E) this.resource);
                 break;
             case TO_BE_DELETED:
+                GWT.log(this.resource.state + " " + this.resource.toString(),
+                        null);
                 this.resource.state = State.DELETED;
                 this.factory.removeFromCache((E) this.resource);
                 break;
             }
-            this.resource.fireResourceChangeEvents(message);
+            this.resource.fireResourceChangeEvents();
         }
         else if (response.getStatusCode() == 304) {
-            final String message = this.resource.state.message;
             this.resource.state = State.UP_TO_DATE;
-            this.resource.fireResourceChangeEvents(message);
+            this.resource.fireResourceChangeEvents();
         }
         else {
             switch (response.getStatusCode()) {

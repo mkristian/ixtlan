@@ -20,6 +20,10 @@ public abstract class AbstractResourceFactory<E extends AbstractResource<E>> {
         this.repository = repository;
     }
 
+    public boolean isImmutable() {
+        return false;
+    }
+
     abstract void putIntoCache(final E resource);
 
     abstract void removeFromCache(final E resource);

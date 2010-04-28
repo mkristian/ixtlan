@@ -42,10 +42,4 @@ public class Word extends AnonymousResource<Word> {
                 .append(">")
                 .toString();
     }
-
-    @Override
-    public boolean isImmutable() {
-        return true;
-    }
-
 }

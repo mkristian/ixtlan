@@ -117,8 +117,8 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     public E get(final int key, final ResourceChangeListener<E> listener) {
         final E resource = getResource(key);
         resource.addResourceChangeListener(listener);
-        if (resource.isImmutable() && resource.state != State.NEW) {
-            resource.fireResourceChangeEvents(resource.state.message);
+        if (isImmutable() && resource.state != State.NEW) {
+            resource.fireResourceChangeEvents();
             return resource;
         }
         resource.state = State.TO_BE_LOADED;
@@ -143,7 +143,9 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     public ResourceCollection<E> all(final Map<String, String> query,
             final ResourcesChangeListener<E> listener) {
         final ResourceCollection<E> list;
+        boolean loadIt = true;
         if (query == null || query.isEmpty()) {
+            loadIt = this.all == null || !isImmutable();
             if (this.all == null) {
                 this.all = new ResourceCollection<E>(this);
                 this.all.addAll(this.cache.values());
@@ -155,9 +157,11 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
             list = new ResourceCollection<E>(this);
         }
         list.addResourcesChangeListener(listener);
-        this.repository.all(storagePluralName(),
-                            query,
-                            new ResourceCollectionRequestCallback(list));
+        if (loadIt) {
+            this.repository.all(storagePluralName(),
+                                query,
+                                new ResourceCollectionRequestCallback(list));
+        }
         return list;
     }
 }

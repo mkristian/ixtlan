@@ -25,11 +25,6 @@ public class Locale extends Resource<Locale> {
     public Timestamp createdAt;
 
     @Override
-    public boolean isImmutable() {
-        return true;
-    }
-
-    @Override
     protected void appendXml(final StringBuilder buf) {
         appendXml(buf, "code", this.code);
         appendXml(buf, "created_at", this.createdAt);

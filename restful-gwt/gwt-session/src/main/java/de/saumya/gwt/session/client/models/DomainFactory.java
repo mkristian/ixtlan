@@ -48,6 +48,11 @@ public class DomainFactory extends ResourceFactory<Domain> {
     }
 
     @Override
+    public boolean isImmutable() {
+        return true;
+    }
+
+    @Override
     public String storageName() {
         return "domain";
     }

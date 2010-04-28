@@ -21,6 +21,7 @@ public class GroupFactory extends ResourceFactory<Group> {
         return new Group(this.repository, this, id);
     }
 
+    @Override
     public boolean isImmutable() {
         return true;
     }

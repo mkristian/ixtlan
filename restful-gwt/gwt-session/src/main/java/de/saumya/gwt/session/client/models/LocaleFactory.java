@@ -49,6 +49,11 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     }
 
     @Override
+    public boolean isImmutable() {
+        return true;
+    }
+
+    @Override
     public String storageName() {
         return "locale";
     }

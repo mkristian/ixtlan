@@ -63,12 +63,13 @@ public abstract class SingletonResourceFactory<E extends SingletonResource<E>>
 
     public E get(final ResourceChangeListener<E> listener) {
         final E resource = getResource();
-        if (resource.isImmutable() && resource.state != State.NEW) {
-            // TODO fire events
+        resource.addResourceChangeListener(listener);
+        if (isImmutable() && resource.state != State.NEW) {
+            resource.state = State.UP_TO_DATE;
+            resource.fireResourceChangeEvents();
             return resource;
         }
         resource.state = State.TO_BE_LOADED;
-        resource.addResourceChangeListener(listener);
         this.repository.get(storageName(),
                             new ResourceRequestCallback<E>(resource, this));
         return resource;
