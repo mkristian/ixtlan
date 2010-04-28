@@ -112,13 +112,8 @@ public class LocaleFactory extends ResourceFactory<Locale> {
         if (listener != null) {
             this.realLocales.addResourcesChangeListener(listener);
         }
-        if (this.all == null) {
-            all(this.realLocalesLoaded);
-        }
-        else {
-            this.all.addResourcesChangeListener(this.realLocalesLoaded);
-            resetRealLocales();
-        }
+        all(this.realLocalesLoaded);
+        resetRealLocales();
         return this.realLocales;
     }
 

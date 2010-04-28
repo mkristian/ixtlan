@@ -45,7 +45,12 @@ public class GroupTestGwt extends ResourceTestGwt<Group> {
 
     @Override
     protected ResourceFactory<Group> factorySetUp() {
-        return new GroupFactory(this.repository, this.notifications);
+        return new GroupFactory(this.repository,
+                this.notifications,
+                new UserGroupFactory(this.repository,
+                        this.notifications,
+                        new LocaleFactory(this.repository, this.notifications),
+                        new DomainFactory(this.repository, this.notifications)));
     }
 
     @Override

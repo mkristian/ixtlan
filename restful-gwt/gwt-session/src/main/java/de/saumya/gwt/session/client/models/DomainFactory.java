@@ -97,13 +97,8 @@ public class DomainFactory extends ResourceFactory<Domain> {
         if (listener != null) {
             this.realDomains.addResourcesChangeListener(listener);
         }
-        if (this.all == null) {
-            all(this.realDomainsLoaded);
-        }
-        else {
-            this.all.addResourcesChangeListener(this.realDomainsLoaded);
-            resetRealLocales();
-        }
+        all(this.realDomainsLoaded);
+        resetRealLocales();
         return this.realDomains;
     }
 

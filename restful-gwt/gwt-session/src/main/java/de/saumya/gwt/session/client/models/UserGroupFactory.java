@@ -31,8 +31,20 @@ public class UserGroupFactory extends ResourceFactory<UserGroup> {
                 id);
     }
 
+    @Override
     public boolean isImmutable() {
         return true;
+    }
+
+    void putIntoCache(final Group group) {
+        final UserGroup userGroup = newResource(group.id);
+        userGroup.name = group.name;
+        userGroup.createdAt = group.createdAt;
+        putIntoCache(userGroup);
+    }
+
+    void removeFromCache(final Group group) {
+        removeFromCache(super.getResource(group.id));
     }
 
     @Override

@@ -46,7 +46,7 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     }
 
     @Override
-    void putIntoCache(final E resource) {
+    protected void putIntoCache(final E resource) {
         if (!this.cache.containsKey(resource.id)) {
             if (this.all != null) {
                 this.all.addResource(resource);
@@ -60,7 +60,7 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
     }
 
     @Override
-    void removeFromCache(final E resource) {
+    protected void removeFromCache(final E resource) {
         if (this.all != null) {
             this.all.removeResource(resource);
             this.all.fireResourcesLoadedEvents();

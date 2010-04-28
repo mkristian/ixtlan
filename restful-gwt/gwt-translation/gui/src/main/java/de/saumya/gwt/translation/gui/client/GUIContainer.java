@@ -53,12 +53,13 @@ public class GUIContainer {
                                                                     this.notifications);
     public final DomainFactory         domainFactory        = new DomainFactory(this.repository,
                                                                     this.notifications);
-    public final GroupFactory          groupFactory         = new GroupFactory(this.repository,
-                                                                    this.notifications);
     public final UserGroupFactory      userGroupFactory     = new UserGroupFactory(this.repository,
                                                                     this.notifications,
                                                                     this.localeFactory,
                                                                     this.domainFactory);
+    public final GroupFactory          groupFactory         = new GroupFactory(this.repository,
+                                                                    this.notifications,
+                                                                    this.userGroupFactory);
     public final RoleFactory           roleFactory          = new RoleFactory(this.repository,
                                                                     this.notifications);
     public final PermissionFactory     permissionFactory    = new PermissionFactory(this.repository,
