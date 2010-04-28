@@ -31,6 +31,7 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
     public void onResponseReceived(final Request request,
             final Response response) {
         if (response.getStatusCode() < 300) {
+            // all kind of OK status
             switch (this.resource.state) {
             case TO_BE_CREATED:
             case TO_BE_LOADED:
@@ -51,18 +52,19 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
             this.resource.fireResourceChangeEvents();
         }
         else if (response.getStatusCode() == 304) {
+            // UNMODIFIED
             this.resource.state = State.UP_TO_DATE;
             this.resource.fireResourceChangeEvents();
         }
         else {
             switch (response.getStatusCode()) {
-            case 404:
+            case 404:// NOT FOUND
                 this.resource.state = State.NEW;
                 break;
-            case 409:
+            case 409:// CONFLICT
                 this.resource.state = State.STALE;
                 break;
-            case 412:
+            case 412:// TODO hmm what is this
                 break;
             }
 

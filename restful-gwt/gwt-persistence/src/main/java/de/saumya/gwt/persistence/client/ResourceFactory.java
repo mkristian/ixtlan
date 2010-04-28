@@ -145,7 +145,7 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
         final ResourceCollection<E> list;
         boolean loadIt = true;
         if (query == null || query.isEmpty()) {
-            loadIt = this.all == null || !isImmutable();
+            loadIt = this.all == null || this.all.size() == 0 || !isImmutable();
             if (this.all == null) {
                 this.all = new ResourceCollection<E>(this);
                 this.all.addAll(this.cache.values());
