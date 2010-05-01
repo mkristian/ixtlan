@@ -36,6 +36,8 @@ module Ixtlan
           end
         end
 
+        # IP binding is not very useful in the wild since some ISP use 
+        # a different IP for each request, i.e. the session uses many IPs
         def check_session_ip_binding
           if !session[:session_ip].nil? and session[:session_ip] != request.headers['REMOTE_ADDR']
             # client IP has changed
@@ -49,7 +51,7 @@ module Ixtlan
         end
 
         def check_session
-          check_session_ip_binding and check_session_expiry
+          check_session_browser_signature && check_session_expiry
         end
 
         def check_session_browser_signature

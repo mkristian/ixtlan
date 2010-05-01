@@ -2,6 +2,11 @@ module Ixtlan
   module Controllers
     module AuthenticationsController
 
+      def self.included(base)
+        base.skip_before_filter :guard
+        base.skip_before_filter :authenticate, :only => :destroy
+      end
+
       protected
       def login_from_params
         auth = params[:authentication]

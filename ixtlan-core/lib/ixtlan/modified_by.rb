@@ -6,7 +6,8 @@ module Ixtlan
 
     MODIFIED_BY_PROPERTIES = {
       :updated_by => lambda {|r, u| r.updated_by = u},
-      :created_by => lambda {|r, u| r.created_by = u if r.new? }
+      :created_by => lambda {|r, u| r.created_by = u #if r.new? 
+}
     }.freeze
 
     def self.included(model)
@@ -56,14 +57,15 @@ module Ixtlan
     end
 
     module ClassMethods
-      def modified_by(type, *names)
-        if(names.empty?)
-          modified_by(type, :created_by, :updated_by)
+      def modified_by(type, names = nil, options = {})
+        if(names.nil?)
+          modified_by(type, [:created_by, :updated_by])
         else
+          names = [names] unless names.is_a?(Enumerable)
           names.each do |name|
             case name
             when *MODIFIED_BY_PROPERTIES.keys
-              belongs_to name, :model => type.to_s
+              belongs_to name, options.merge!({:model => type.to_s})
             else
               raise ::DataMapper::InvalidModifiedByName, "Invalid 'modified by' name '#{name}'"
             end

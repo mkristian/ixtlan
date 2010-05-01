@@ -2,6 +2,8 @@ module Ixtlan
   module Controllers
     module SearchQuery
 
+      private 
+
       def simple_query(search_parameter)
         args = {}
         args[:limit] = params[:limit].to_i + 1 if params[:limit]

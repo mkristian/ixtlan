@@ -2,6 +2,11 @@ module Ixtlan
   module Controllers
     module WordBundlesController
 
+      def self.included(base)
+        # no guard since everyone needs to load the bundles
+        base.skip_before_filter :guard
+      end
+
       def index
         locale = params[:code]
         # TODO load in following order and allow to replace findings in the

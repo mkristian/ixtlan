@@ -17,7 +17,7 @@ module Ixtlan
 
       property :id, Serial, :field => "uidnumber"
 
-      property :login, String, :required => true , :length => 4..32, :unique_index => true, :format => /^[a-zA-z0-9]*$/, :writer => :private, :field => "uid"
+      property :login, String, :required => true, :field => "uid", :length => 4..32, :unique_index => true, :format => /^[a-zA-Z0-9]*$/, :writer => :private
 
       property :name, String, :required => true, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
 
@@ -34,8 +34,8 @@ module Ixtlan
       # Virtual attribute for the plaintext password
       attr_reader :password
 
-      validates_is_unique  :login
-      validates_is_unique  :email
+      #validates_is_unique  :login
+      #validates_is_unique  :email
 
       def reset_password(len = 12)
         @password = Ixtlan::Passwords.generate(len)
@@ -74,7 +74,7 @@ module Ixtlan
         if @groups.nil?
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the groups collection is empty before filling it
-          @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, GROUP), [])
+          @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Models::GROUP), [])
           GroupUser.all(:memberuid => login).each do |gu|
             @groups << gu.group
           end

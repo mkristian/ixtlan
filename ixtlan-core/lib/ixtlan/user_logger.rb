@@ -39,7 +39,7 @@ module Ixtlan
             end
           end
         else
-          "params=#{controller.params.inspect}"
+          "params=#{controller.params.inspect}#{message}"
         end
       end
     end

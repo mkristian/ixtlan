@@ -9,8 +9,10 @@ module Ixtlan
       #p LOCALE
       # TODO where is LOCALE defined and remove the double defintion
 
-      LOCALE = Object.full_const_get(Models::LOCALE)
-      DOMAIN = Object.full_const_get(Models::DOMAIN)
+      unless const_defined? "LOCALE"
+        LOCALE = Object.full_const_get(Models::LOCALE)
+        DOMAIN = Object.full_const_get(Models::DOMAIN)
+      end
 
       def self.default_storage_name
         "Group"
@@ -22,7 +24,7 @@ module Ixtlan
 
       timestamps :created_at
 
-      modified_by Models::USER
+      modified_by Ixtlan::Models::USER, :created_by
 
       def self.first_or_get!(id_or_name)
         first(:name => id_or_name) || get!(id_or_name)

@@ -18,7 +18,7 @@ module Ixtlan
 
       timestamps :created_at
 
-      modified_by Models::USER
+      modified_by Models::USER, :created_by
 
       def parent
         c = attribute_get(:code)
