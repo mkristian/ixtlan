@@ -33,7 +33,8 @@ module Ixtlan
               errors = if(audit.respond_to?(:errors) && !audit.errors.empty?)
                          " - errors: " + audit.errors.full_messages.join(", ")
                        end
-              "#{controller.params[:controller]}##{controller.params[:action]} #{audit.model}(#{audit.key})#{as_xml}#{message}#{errors}"
+              audit_log = audit.respond_to?(:to_log) ? audit.to_log : "#{audit.model}(#{audit.key})"
+              "#{controller.params[:controller]}##{controller.params[:action]} #{audit_log})#{as_xml}#{message}#{errors}"
             else
               "#{controller.params[:controller]}##{controller.params[:action]}#{as_xml}#{message}"
             end
