@@ -85,7 +85,6 @@ lib/ixtlan/session.rb
 lib/ixtlan/user_logger.rb
 lib/ixtlan/version.rb
 lib/models.rb
-patch
 spec/authentication_spec.rb
 spec/guard_spec.rb
 spec/guards/samples.rb
