@@ -8,15 +8,20 @@ module Ixtlan
         model = old_children.model
 
         # make sure we have an array
-        new_children = if new_children.nil?
-                         []
-                       else
-                         new_children[new_children.keys[0]]
-                       end
-        new_children = [new_children] unless new_children.is_a? Array
+        if new_children.is_a?(Array)
+          # ids of new children
+          new_ids = new_children.collect { |v| v.to_i }
+        else
+          new_children = if new_children.nil?
+                           []
+                         else
+                           new_children[new_children.keys[0]]
+                         end
+          new_children = [new_children] unless new_children.is_a? Array
 
-        # ids of new children
-        new_ids = new_children.collect { |v| v[:id].to_i }
+          # ids of new children
+          new_ids = new_children.collect { |v| v[:id].to_i }
+        end
 
         # delete obsolete old children
         old_children.select do |g|
