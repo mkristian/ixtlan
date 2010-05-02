@@ -12,7 +12,8 @@ module Ixtlan
     end
 
     def data
-      Marshal.load(::Base64.decode64(attribute_get(:data))).merge({:user => @user, :flash => @flash, :expires_at => @expires_at})
+      # user string for flash entry to allow the rails falsh to work properly !
+      Marshal.load(::Base64.decode64(attribute_get(:data))).merge({:user => @user, "flash" => @flash, :expires_at => @expires_at})
     end
   end
 end
