@@ -21,13 +21,21 @@ module Ixtlan
           format.html {
             @notice = block.call(exception)
             if logged_in?
-              render :template => "errors/error", :status => status
+              render_error_page_with_session(status)
             else
-              render :template => "sessions/login", :status => status
+              render_error_page(status)
             end
           }
           format.xml { head status }
         end
+      end
+
+      def render_error_page_with_session(status)
+        render :template => "errors/error", :status => status
+      end
+
+      def render_error_page(status)
+        render :template => "sessions/login", :status => status
       end
 
       def page_not_found(exception)
