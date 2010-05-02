@@ -74,7 +74,7 @@ module Ixtlan
         if @groups.nil?
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the groups collection is empty before filling it
-          @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Models::GROUP), [])
+          @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, GROUP), [])
           GroupUser.all(:memberuid => login).each do |gu|
             @groups << gu.group
           end
