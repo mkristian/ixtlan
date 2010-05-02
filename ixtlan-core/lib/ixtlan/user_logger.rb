@@ -34,7 +34,7 @@ module Ixtlan
                          " - errors: " + audit.errors.full_messages.join(", ")
                        end
               audit_log = audit.respond_to?(:to_log) ? audit.to_log : "#{audit.model}(#{audit.key})"
-              "#{controller.params[:controller]}##{controller.params[:action]} #{audit_log})#{as_xml}#{message}#{errors}"
+              "#{controller.params[:controller]}##{controller.params[:action]} #{audit_log}#{as_xml}#{message}#{errors}"
             else
               "#{controller.params[:controller]}##{controller.params[:action]}#{as_xml}#{message}"
             end
