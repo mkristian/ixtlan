@@ -1,3 +1,21 @@
+=== 0.3.0 / 2010-05-24
+
+* allow model with to_log to have nice log output
+
+* made all controllers nice modules including before_filters
+
+* domains/locales work with guard
+
+* added migration class for ixtlan models
+
+* all models have an ID now
+
+* helper for n-m-relations
+
+* added search module with helper methods
+
+* better audit log
+
 === 0.2.4 / 2010-02-22
 
 * fixed phrases controller to work

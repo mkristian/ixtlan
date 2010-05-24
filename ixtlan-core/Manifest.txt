@@ -77,6 +77,7 @@ lib/ixtlan/passwords.rb
 lib/ixtlan/rails/audit.rb
 lib/ixtlan/rails/error_handling.rb
 lib/ixtlan/rails/guard.rb
+lib/ixtlan/rails/migrations.rb
 lib/ixtlan/rails/session_timeout.rb
 lib/ixtlan/rails/timestamps_modified_by_filter.rb
 lib/ixtlan/rails/unrestful_authentication.rb
