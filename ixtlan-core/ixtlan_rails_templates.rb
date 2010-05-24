@@ -1,7 +1,10 @@
 # inspired by http://www.rowtheboat.com/archives/32
 ###################################################
 
-# helper to add middleware
+# --------------
+# HELPER METHODS
+# --------------
+
 def middleware(name)
   log 'middleware', name
   environment "config.middleware.use '#{name}'"
@@ -31,315 +34,61 @@ CODE
   end
 end
 
-# ixtlan gems
-gem 'ixtlan'#, :version => '0.2.2'
+def add_gem(name, version, options = {})
+  gem name, options
+  java = name =~ /^do_/ ? "<classifier>java</classifier>\n" : ""
+  gsub_file 'pom.xml', /<\/dependencies>/, "<dependency>\n<groupId>rubygems</groupId>\n<artifactId>#{name}</artifactId>\n<version>#{version}</version>\n<type>gem</type>\n#{java}</dependency>\n</dependencies>"
+end
 
-# this pulls in rack_datamapper
-#gem 'datamapper4rails', :version => '0.4.0'
+def migration(model)
+  @__index ||= 0
+  @__index = @__index + 1
+  file "db/migrate/#{@__index}_create_#{model}.rb", <<-CODE
+require 'config/initializers/00_models.rb'
+require 'ixtlan/rails/migrations'
+migration #{@__index}, :create_#{model} do
+  up do
+    Ixtlan::Rails::Migrations.create_#{model}
+  end
 
-# assume sqlite3 to be database
-gem 'do_sqlite3'
+  down do
+  end
+end
+CODE
+end
+
+# --------
+# VERSIONS
+# --------
+
+JRUBY_PLUGINS_VERSION='0.12.0'
 DM_VERSION='0.10.2'
-# serialization, validations and timestamps in your models
-gem 'dm-validations', :version => DM_VERSION
-gem 'dm-timestamps', :version => DM_VERSION
-gem 'dm-migrations', :version => DM_VERSION
-gem 'dm-core', :version => DM_VERSION
 
-# get all datamapper related gems
-gem 'addressable', :lib => 'addressable/uri'
+# -----------
+# MAVEN SETUP
+# -----------
 
-# assume you prefer rspec over unit tests
-gem 'rspec', :lib => false
-gem 'rspec-rails', :lib => false
-
-# logging
-gem 'slf4r'
-gem 'logging'
-
-# install all gems
-rake 'gems:install'
-
-# install specs rake tasks
-generate('rspec', '-f')
-
-# install datamapper rake tasks
-generate('datamapper_install')
-
-# fix config files to work with datamapper instead of active_record
-environment ''
-environment 'config.frameworks -= [ :active_record ]'
-environment '# deactive active_record'
-gsub_file 'spec/spec_helper.rb', /^\s*config[.]/, '  #\0'
-gsub_file 'test/test_helper.rb', /^[^#]*fixtures/, '  #\0'
-
-file 'spec/support/datamapper.rb', <<-CODE
-require 'datamapper4rails/rspec'
-CODE
-
-environment ''
-middleware 'DataMapper::RestfulTransactions'
-middleware 'DataMapper::IdentityMaps'
-middleware 'Rack::Deflater'
-environment "#config.middleware.use 'Ixtlan::CmsScript'"
-environment '# add middleware'
-environment "DM_VERSION='#{DM_VERSION}'"
-
-# init a session store
-initializer 'datamapper_store.rb', <<-CODE
-# init a session store which uses a memory cache and drops the user object
-# and the flash which results into a very thin session and hardly any
-# database updates !
-# cleanup can be a problem. jruby uses soft-references for the cache so
-# memory cleanup with jruby is no problem.
-require 'ixtlan/session'
-ActionController::Base.session_store = :datamapper_store
-ActionController::Base.session = {
-  :cache       => true,
-  :session_class => Ixtlan::Session
-}
-CODE
-
-# define locale model names
-initializer '00_models.rb', <<-CODE
-module Ixtlan
-  module Models
-    AUTHENTICATION = "Authentication"
-    USER = "User"
-    GROUP = "Group"
-    LOCALE = "Locale"
-    TEXT = "I18nText"
-    CONFIGURATION = "Configuration"
-  end
+# setup a pom.xml
+inside("..") do
+  run("mvn archetype:generate -DarchetypeArtifactId=rails-maven-archetype -DarchetypeGroupId=de.saumya.mojo -DarchetypeVersion=#{JRUBY_PLUGINS_VERSION} -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
 end
-CODE
+File.delete('lib/tasks/jdbc.rake')
+File.delete('config/initializers/jdbc.rb')
+gsub_file 'pom.xml', /<version>1.5.0<\/version>/, "<version>1.4.1<\/version>"
 
-# load ixtlan classes
-initializer '01_ixtlan.rb', <<-CODE
-require 'ixtlan/modified_by'
-if ENV['RAILS_ENV']
-  require 'models'
-  require 'ixtlan/rails/error_handling'
-  require 'ixtlan/rails/audit'
-  require 'ixtlan/rails/session_timeout'
-  require 'ixtlan/rails/unrestful_authentication'
-  require 'ixtlan/rails/guard'
-  require 'ixtlan/rails/timestamps_modified_by_filter'
-  require 'ixtlan/optimistic_persistence'
-  require 'ixtlan/monkey_patches'
-end
-# auto require to load needed libraries . . .
-require 'datamapper4rails'
-require 'slf4r'
-CODE
+# ---------------------
+# GWT AND ECLIPSE SETUP
+# ---------------------
 
-# logger config
-initializer '02_loggers.rb', <<-CODE
-require 'ixtlan/logger_config' if ENV['RAILS_ENV']
-CODE
-
-# load the guard config
-initializer '03_guard.rb', <<-CODE
-# load the guard config files from RAILS_ROOT/app/guards
-Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
-CODE
-
-# define the date/time pattern for the xml
-initializer 'time_formats.rb', <<-CODE
-Time::DATE_FORMATS[:xml] = lambda { |time| time.utc.strftime("%Y-%m-%d %H:%M:%S") }
-CODE
-
-# setup migration for the main models
-file "db/migrate/1_create_root_user.rb", <<-CODE
-migration 1, :create_root_user do
-  up do
-    User.auto_migrate!
-    Locale.auto_migrate!
-    Group.auto_migrate!
-    Ixtlan::Models::GroupUser.auto_migrate!
-    Ixtlan::Models::GroupLocaleUser.auto_migrate!
-
-    u = User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :id => 1)
-    #u.current_user = u
-    u.created_at = DateTime.now
-    u.updated_at = u.created_at
-    u.created_by_id = 1
-    u.updated_by_id = 1
-    u.reset_password
-    u.save!
-    g = Group.create(:name => 'root', :current_user => u)
-    u.groups << g
-    u.save
-
-    a = User.create(:login => 'admin', :email => 'admin@exmple.com', :name => 'Administrator', :id => 2, :current_user => u)
-    a.reset_password
-    a.save!
-    users = Group.create(:name => 'users', :current_user => u)
-    a.groups << users
-    locales = Group.create(:name => 'locales', :current_user => u)
-    a.groups << locales
-    a.save
-
-    File.open("root", 'w') { |f| f.puts "root\n\#{u.password}\nadmin\n\#{a.password}\n" }
-  end
-
-  down do
-  end
-end
-CODE
-
-file "db/migrate/2_create_configuration.rb", <<-CODE
-migration 2, :create_configuration do
-  up do
-    Configuration.auto_migrate!
-    Ixtlan::Models::ConfigurationLocale.auto_migrate!
-    Configuration.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => User.first)
-  end
-
-  down do
-  end
-end
-CODE
-
-file "db/migrate/3_create_locale.rb", <<-CODE
-migration 3, :create_locale do
-  up do
-    Locale.auto_migrate!
-    # get/create default locale
-    Locale.default
-    # get/create "every" locale
-    Locale.every
-
-    # root user has access to ALL locales
-    Ixtlan::Models::GroupLocaleUser.create(:group => Group.first, :user => User.first, :locale => Locale.every)
-  end
-
-  down do
-  end
-end
-CODE
-
-file "db/migrate/4_create_text.rb", <<-CODE
-migration 4, :create_text do
-  up do
-    I18nText.auto_migrate!
-  end
-
-  down do
-  end
-end
-CODE
-
-#some small html pages
-file "app/views/sessions/login.html.erb", <<-CODE
-<p style="color: darkgreen"><%= @notice %></p>
-<form method="post">
-  <p>
-    <label for="login">login</label><br />
-    <input type="text" name="login" />
-  </p>
-  <p>
-    <label for="password">password</label><br />
-    <input type="password" name="password" />
-  </p>
-  <p>
-    <input type="submit" value="login" />
-  </p>
-</form>
-CODE
-
-file 'app/views/errors/error.html.erb', <<-CODE
-<h1><%= @notice %></h1>
-CODE
-
-file 'app/views/errors/stale.html.erb', <<-CODE
-<h1>stale resource</h1>
-<p>please reload resource and change it again</p>
-CODE
-
-# setup permissions controller
-file 'app/guards/permissions_guard.rb', <<-CODE
-Ixtlan::Guard.initialize(:permissions, {:index => []})
-CODE
-
-file "app/controllers/permissions_controller.rb", <<-CODE
-class PermissionsController < ApplicationController
-  # TODO the authenticate should NOT be there, i.e. it leaks too much info
-  skip_before_filter :authenticate, :guard
-  include Ixtlan::Controllers::PermissionsController
-end
-CODE
-route "map.resources :permissions"
-
-# setup word_bundles controller
-file "app/controllers/word_bundles_controller.rb", <<-CODE
-class WordBundlesController < ApplicationController
-  # no guard since everyone needs to load the bundles
-  skip_before_filter :guard
-  include Ixtlan::Controllers::WordBundlesController
-end
-CODE
-route "map.resources :word_bundles"
-
-# setup a pom.xml to enable the use of the rails-maven-plugin
-file 'pom.xml', <<-CODE
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.example</groupId>
-  <artifactId>#{File.basename(root)}</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>rails datamapper demo</name>
-  <url>http://github.com/mkristian/rails-templates/blob/master/datamapper.rb</url>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>saumya</id>
-      <name>Saumyas Plugins</name>
-      <url>http://mojo.saumya.de</url>
-    </pluginRepository>
-  </pluginRepositories>
-  <build>
-    <!-- allow the gwt plugin to work with this pom -->
-    <outputDirectory>war/WEB-INF/classes</outputDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.4.1</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>rails-maven-plugin</artifactId>
- <version>${jruby.plugins.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>jruby-maven-plugin</artifactId>
- <version>${jruby.plugins.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>de.saumya.mojo</groupId>
-        <artifactId>gem-maven-plugin</artifactId>
- <version>${jruby.plugins.version}</version>
-      </plugin>
-    </plugins>
-  </build>
-  <properties>
-    <jruby.plugins.version>0.8.0</jruby.plugins.version>
-    <jruby.fork>false</jruby.fork>
-  </properties>
-</project>
-CODE
-
-if ENV['GWT'] == 'true' || (!ENV['GWT'] && yes?("install GWT interface ?"))
+#if ENV['GWT'] == 'true' || (!ENV['GWT'] && yes?("install GWT interface ?"))
   gwt_prefix = "gwt_"
-  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.3.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
+  File.rename("src/main/webapp/WEB-INF/web.xml", 
+              "src/main/webapp/WEB-INF/web.xml.rails")
+  inside("..") do
+    run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.3.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
+  end
+  File.rename("src/main/webapp/WEB-INF/web.xml.rails", 
+              "src/main/webapp/WEB-INF/web.xml")
 
   file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
@@ -394,50 +143,220 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
 org.eclipse.jdt.core.compiler.source=1.6
 CODE
-else
-  gwt_prefix = nil
+#else
+#  gwt_prefix = nil
+#end
+
+# --------------------
+# ADD GEM DEPENDENCIES
+# --------------------
+
+# ixtlan gems
+add_gem 'rack', '1.0.1'
+add_gem 'rack-datamapper', '0.2.5'
+add_gem 'ixtlan', '0.2.5'
+
+# assume sqlite3 to be database
+add_gem 'do_sqlite3', '0.10.1.1'
+
+# serialization, validations and timestamps in your models
+add_gem 'dm-validations', DM_VERSION
+add_gem 'dm-timestamps', DM_VERSION
+add_gem 'dm-migrations', DM_VERSION
+add_gem 'dm-aggregates', DM_VERSION
+add_gem 'dm-core', DM_VERSION
+
+# get all datamapper related gems
+# gem 'addressable', :lib => 'addressable/uri'
+
+# assume you prefer rspec over unit tests
+add_gem 'rspec', '[1.3.0,1.4.0]', :lib => false
+add_gem 'rspec-rails', '1.3.0', :lib => false
+
+# install all gems
+rake 'gems:install'
+
+# install specs rake tasks
+generate('rspec', '-f')
+
+# install datamapper rake tasks
+generate('datamapper_install')
+
+# fix config files to work with datamapper instead of active_record
+environment ''
+environment 'config.frameworks -= [ :active_record ]'
+environment '# deactive active_record'
+gsub_file 'spec/spec_helper.rb', /^\s*config[.]/, '  #\0'
+gsub_file 'test/test_helper.rb', /^[^#]*fixtures/, '  #\0'
+
+file 'spec/support/datamapper.rb', <<-CODE
+require 'datamapper4rails/rspec'
+CODE
+
+# ----------
+# MIDDLEWARE
+# ----------
+
+environment ''
+middleware 'DataMapper::RestfulTransactions'
+middleware 'DataMapper::IdentityMaps'
+middleware 'Rack::Deflater'
+environment "#config.middleware.use 'Ixtlan::CmsScript'"
+environment '# add middleware'
+
+# ------------
+# INITIALIZERS
+# ------------
+
+# define locale model names
+initializer '00_models.rb', <<-CODE
+module Ixtlan
+  module Models
+    AUTHENTICATION = "Authentication"
+    USER = "User"
+    GROUP = "Group"
+    LOCALE = "Locale"
+    DOMAIN = "Domain"
+    TEXT = "I18nText"
+    CONFIGURATION = "Configuration"
+  end
 end
+CODE
+
+# load ixtlan classes
+initializer '01_ixtlan.rb', <<-CODE
+require 'ixtlan/modified_by'
+if ENV['RAILS_ENV']
+  require 'models'
+  require 'ixtlan/rails/error_handling'
+  require 'ixtlan/rails/audit'
+  require 'ixtlan/rails/session_timeout'
+  require 'ixtlan/rails/unrestful_authentication'
+  require 'ixtlan/rails/guard'
+  require 'ixtlan/rails/timestamps_modified_by_filter'
+  require 'ixtlan/optimistic_persistence'
+end
+require 'ixtlan/monkey_patches'
+# auto require to load needed libraries . . .
+require 'datamapper4rails'
+require 'slf4r'
+CODE
+
+# logger config
+initializer '02_loggers.rb', <<-CODE
+require 'ixtlan/logger_config' if ENV['RAILS_ENV']
+CODE
+
+# load the guard config
+initializer '03_guard.rb', <<-CODE
+# load the guard config files from RAILS_ROOT/app/guards
+Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
+CODE
+
+# init a session store
+initializer '04_datamapper_store.rb', <<-CODE
+# init a session store which uses a memory cache and drops the user object
+# and the flash which results into a very thin session and hardly any
+# database updates !
+# cleanup can be a problem. jruby uses soft-references for the cache so
+# memory cleanup with jruby is no problem.
+require 'ixtlan/session'
+ActionController::Base.session_store = :datamapper_store
+ActionController::Base.session = {
+  :cache       => true,
+  :session_class => Ixtlan::Session
+}
+CODE
+
+# define the date/time pattern for the xml
+initializer '05_time_formats.rb', <<-CODE
+Time::DATE_FORMATS[:xml] = lambda { |time| time.utc.strftime("%Y-%m-%d %H:%M:%S") }
+CODE
+
+# ----------
+# MIGRATIONS
+# ----------
+
+migration("user")
+migration("configuration")
+migration("locale")
+migration("domain")
+migration("text")
+
+# -----
+# VIEWS
+# -----
+
+#some small html pages
+file "app/views/sessions/login.html.erb", <<-CODE
+<p style="color: darkgreen"><%= @notice %></p>
+<form method="post">
+  <p>
+    <label for="login">login</label><br />
+    <input type="text" name="login" />
+  </p>
+  <p>
+    <label for="password">password</label><br />
+    <input type="password" name="password" />
+  </p>
+  <p>
+    <input type="submit" value="login" />
+  </p>
+</form>
+CODE
+
+file 'app/views/errors/error.html.erb', <<-CODE
+<h1><%= @notice %></h1>
+CODE
+
+file 'app/views/errors/stale.html.erb', <<-CODE
+<h1>stale resource</h1>
+<p>please reload resource and change it again</p>
+CODE
+
+
+# ----------------------
+# MODELS AND CONTROLLERs
+# ----------------------
+
+# setup permissions controller
+ixtlan_controller("permissions", {:actions => [:index]})
 
 # user model/controller
 generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'User', 'login:string', 'name:string', 'email:string', 'language:string'
-ixtlan_model 'user'
 gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
 gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
 gsub_file 'spec/models/user_spec.rb', /value for email/, 'value@for.email'
 gsub_file 'spec/models/user_spec.rb', /value for language/, 'vl'
+ixtlan_model 'user'
+ixtlan_controller 'users'
 
 # group model/controller
 generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Group', 'name:string'
 ixtlan_model 'group'
+ixtlan_controller 'groups'
 
-# i18n stuff: i18n model, phrases controller
+# domain model/controller
+generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Domain', 'name:string'
+ixtlan_model 'domain'
+ixtlan_controller 'domains'
+
+# i18n stuff: i18n model, phrases, word_bundles controller
 ixtlan_model 'i18n_text'
-
-# TODO rename TextsController to PhraseController i.e. make a new one
 ixtlan_controller "phrases"
+ixtlan_controller "word_bundles"
 
 # locale model/controller
-# TODO add to controller
-#  skip_before_filter :guard, :only => :show
-#  skip_before_filter :authenticate, :only => :show
 generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', 'Locale', 'code:string'
-ixtlan_model "locale"
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
-#file 'spec/support/locale.rb', <<-CODE
-#module Ixtlan
-#  module Models
-#    class Locale
-#      property :id, Integer
-#    end
-#  end
-#end
-#CODE
+ixtlan_model "locale"
+ixtlan_controller "locales"
 
 # configuration guard/model/controller
 file 'app/models/configuration.rb', <<-CODE
 class Configuration < Ixtlan::Models::Configuration
   def self.instance
-    Ixtlan::Models::Configuration.instance
+    get!(1)
   end
 end
 CODE
@@ -445,15 +364,7 @@ ixtlan_controller 'configurations', {:actions => [:show, :edit, :update]}, 'conf
 
 # authentication model/controller
 ixtlan_model "authentication"
-
-file 'app/controllers/authentications_controller.rb', <<-CODE
-class AuthenticationsController < ApplicationController
-  skip_before_filter :guard
-  skip_before_filter :authenticate, :only => :destroy
-  include Ixtlan::Controllers::AuthenticationsController
-end
-CODE
-route "map.resource :authentication"
+ixtlan_controller "authentications", {:actions => [:create]}, 'authentication'
 
 # modify application controller as needed
 gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
@@ -474,6 +385,14 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   #  Configuration.instance.session_idle_timeout
   #end
 
+  def render_error_page_with_session(status)
+    render :template => "errors/error_with_session", :status => status
+  end
+
+  def render_error_page(status)
+    render :template => "errors/error", :status => status
+  end
+
   # needs 'optimistic_persistence'
   rescue_from DataMapper::StaleResourceError, :with => :stale_resource
 
@@ -488,13 +407,20 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   rescue_from ActionController::UnknownAction, :with => :page_not_found
   rescue_from ActionController::MethodNotAllowed, :with => :page_not_found
   rescue_from ActionController::NotImplemented, :with => :page_not_found
+  rescue_from ActionController::InvalidAuthenticityToken, :with => :stale_resource
 
   # have nice stacktraces in development mode
   unless consider_all_requests_local
     rescue_from ActionView::MissingTemplate, :with => :internal_server_error
     rescue_from ActionView::TemplateError, :with => :internal_server_error
   end
+
+  protect_from_forgery # See ActionController::RequestForgeryProtection for details
 CODE
+
+# --------------------------------
+# GLOBAL CONFIG VIA PREINITIALIZER
+# --------------------------------
 
 # configuration before starting rails
 file 'config/preinitializer.rb', <<-CODE
@@ -561,6 +487,10 @@ ActionMailer::Base.smtp_settings = {
 }
 CODE
 
+# ------
+# EPILOG
+# ------
+
 logger.info
 logger.info
 logger.info "info mavenized rails application"
@@ -578,11 +508,13 @@ logger.info "which patches rails after freezing it"
 logger.info
 logger.info
 
+# -----------------------
+# SETUP AND SEED DATABASE
+# -----------------------
 
-# setup the database
 rake 'db:migrate:down VERSION=0'
 rake 'db:sessions:create'
-rake 'db:migrate'
+run('rake db:migrate --trace')
 rake 'db:autoupgrade RAILS_ENV=development'
 logger.info
 logger.info "you find the root password in the file 'root'"
