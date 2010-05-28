@@ -5,37 +5,25 @@ require 'dm-serializer'
 require 'ixtlan/models/update_children'
 module Ixtlan
   module Models
-    class User
-      include DataMapper::Resource
-      include UpdateChildren
+    module User
 
       GROUP = Object.full_const_get(Models::GROUP)
 
-      def self.default_storage_name
-        "User"
+      def root?
+        groups.detect { |g| g.root? } || false
       end
 
-      property :id, Serial, :field => "uidnumber"
+      def locales_admin?
+        groups.detect { |g| g.locales_admin? } || false
+      end
 
-      property :login, String, :required => true, :field => "uid", :length => 4..32, :unique_index => true, :format => /^[a-zA-Z0-9]*$/, :writer => :private
+      def domains_admin?
+        groups.detect { |g| g.domains_admin? } || false
+      end
 
-      property :name, String, :required => true, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
-
-      property :email, String, :required => true, :format => :email_address, :required => true, :length => 8..64, :unique_index => true, :field => "mail"
-
-      property :language, String, :required => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
-
-      property :hashed_password, String, :required => false, :length => 128, :accessor => :private, :field => "userpassword"
-
-      timestamps :at
-
-      modified_by ::Ixtlan::Models::USER
-
-      # Virtual attribute for the plaintext password
-      attr_reader :password
-
-      #validates_is_unique  :login
-      #validates_is_unique  :email
+      def password
+        @password
+      end
 
       def reset_password(len = 12)
         @password = Ixtlan::Passwords.generate(len)
@@ -46,30 +34,6 @@ module Ixtlan
       def digest
         ::Base64.decode64(@hashed_password[6,200])
       end
-
-      def self.authenticate(login, password)
-        user = first(:login => login) # need to get the salt
-        if user
-          digest = user.digest
-          salt = digest[20,147]
-          if ::Digest::SHA1.digest("#{password}" + salt) == digest[0,20]
-            user
-          else
-            "wrong password"
-          end
-        else
-          "unknown login"
-        end
-      end
-
-      def self.first_or_get!(id_or_login)
-        first(:login => id_or_login) || get!(id_or_login)
-      end
-
-      def self.first_or_get(id_or_login)
-        first(:login => id_or_login) || get(id_or_login)
-      end
-
       def groups
         if @groups.nil?
           # TODO spec the empty array to make sure new relations are stored
@@ -108,23 +72,6 @@ module Ixtlan
         @groups
       end
 
-      # make sure login is immutable
-      def login=(new_login)
-        attribute_set(:login, new_login) if login.nil?
-      end
-
-      def root?
-        groups.detect { |g| g.root? } || false
-      end
-
-      def locales_admin?
-        groups.detect { |g| g.locales_admin? } || false
-      end
-
-      def domains_admin?
-        groups.detect { |g| g.domains_admin? } || false
-      end
-
       def update_all_children(new_groups)
         if current_user.root?
           # root has no restrictions
@@ -154,10 +101,10 @@ module Ixtlan
 
           # for each new groups update the locales/domains respectively
           new_groups.each do |group|
-             if user_groups_map.key?(group[:id])
-               user_groups_map[group[:id]].update_children(group[:locales], :locales) if current_user.locales_admin? || current_user.root?
-               user_groups_map[group[:id]].update_children(group[:domains], :domains) if current_user.domains_admin? || current_user.root?
-             end
+            if user_groups_map.key?(group[:id])
+              user_groups_map[group[:id]].update_children(group[:locales], :locales) if current_user.locales_admin? || current_user.root?
+              user_groups_map[group[:id]].update_children(group[:domains], :domains) if current_user.domains_admin? || current_user.root?
+            end
           end
         end
       end
@@ -187,17 +134,71 @@ module Ixtlan
         end
       end
 
-      if protected_instance_methods.find {|m| m == 'to_x'}.nil?
-        alias :to_x :to_xml_document
+      def self.included(model)
+        model.send(:include, DataMapper::Resource)
+        model.send(:include, UpdateChildren)
 
-        protected
+        model.property :id, ::DataMapper::Types::Serial, :field => "uidnumber"
 
-        def to_xml_document(opts={}, doc = nil)
-          unless(opts[:methods] || opts[:exclude])
-            opts.merge!({:exclude => [:hashed_password], :methods => [:groups]})
-          end
-          to_x(opts, doc)
+        model.property :login, String, :required => true, :field => "uid", :length => 4..32, :unique_index => true, :format => /^[a-zA-Z0-9]*$/, :writer => :private
+
+        model.property :name, String, :required => true, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
+
+        model.property :email, String, :required => true, :format => :email_address, :required => true, :length => 8..64, :unique_index => true, :field => "mail"
+
+        model.property :language, String, :required => false, :format => /[a-z][a-z]/, :length => 2, :field => "preferredlanguage"
+
+        model.property :hashed_password, String, :required => false, :length => 128, :accessor => :private, :field => "userpassword"
+
+        model.timestamps :at
+
+        model.modified_by ::Ixtlan::Models::USER
+
+        #validates_is_unique  :login
+        #validates_is_unique  :email
+
+        model.class_eval <<-EOS, __FILE__, __LINE__
+        # make sure login is immutable
+        def login=(new_login)
+          attribute_set(:login, new_login) if login.nil?
         end
+
+        def self.authenticate(login, password)
+          user = first(:login => login) # need to get the salt
+          if user
+            digest = user.digest
+            salt = digest[20,147]
+            if ::Digest::SHA1.digest("\#{password}" + salt) == digest[0,20]
+              user
+            else
+              "wrong password"
+            end
+          else
+            "unknown login"
+          end
+        end
+
+        def self.first_or_get!(id_or_login)
+          first(:login => id_or_login) || get!(id_or_login)
+        end
+
+        def self.first_or_get(id_or_login)
+          first(:login => id_or_login) || get(id_or_login)
+        end
+
+        if protected_instance_methods.find {|m| m == 'to_x'}.nil?
+          alias :to_x :to_xml_document
+
+          protected
+
+          def to_xml_document(opts={}, doc = nil)
+            unless(opts[:methods] || opts[:exclude])
+              opts.merge!({:exclude => [:hashed_password], :methods => [:groups]})
+            end
+            to_x(opts, doc)
+          end
+        end
+EOS
       end
     end
   end

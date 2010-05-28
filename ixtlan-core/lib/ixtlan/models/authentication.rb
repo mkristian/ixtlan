@@ -1,32 +1,33 @@
 require 'dm-serializer'
 module Ixtlan
   module Models
-    class Authentication
-      include DataMapper::Resource
+    module Authentication
 
-      def self.name
-        "Authentication"
-      end
+      def self.included(model)
+        model.send(:include, DataMapper::Resource)
 
-      property :id, Serial, :default => 1
+        model.property :id, ::DataMapper::Types::Serial, :default => 1
 
-      property :login, String,:format => /^[a-zA-Z0-9\-!=+$%^&*\(\){}|\[\]<>_.]*$/
+        model.property :login, String,:format => /^[a-zA-Z0-9\-!=+$%^&*\(\){}|\[\]<>_.]*$/
 
-      property :password, String,:format => /^[a-zA-Z0-9_.]*$/
+        model.property :password, String,:format => /^[a-zA-Z0-9_.]*$/
 
-      attr_accessor :token
+        model.send :attr_accessor, :token
 
-      belongs_to :user, :model => ::Ixtlan::Models::USER
+        model.belongs_to :user, :model => ::Ixtlan::Models::USER
 
-      if protected_instance_methods.find {|m| m == 'to_x'}.nil?
+        model.class_eval <<-EOS, __FILE__, __LINE__
+          if protected_instance_methods.find {|m| m == 'to_x'}.nil?
 
-        protected
+            protected
 
-        alias :to_x :to_xml_document
-        def to_xml_document(opts, doc = nil)
-          opts.merge!({:exclude => [:password,:user_id], :methods => [:token, :user]})
-          to_x(opts, doc)
-        end
+            alias :to_x :to_xml_document
+            def to_xml_document(opts, doc = nil)
+              opts.merge!({:exclude => [:password,:user_id], :methods => [:token, :user]})
+              to_x(opts, doc)
+            end
+          end
+EOS
       end
     end
   end
