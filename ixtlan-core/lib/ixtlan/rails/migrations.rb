@@ -10,12 +10,12 @@ module Ixtlan
       CONFIGURATION = Object.const_get(Ixtlan::Models::CONFIGURATION)
 
       def self.create_user
-        USER.auto_migrate!
-        LOCALE.auto_migrate!
-        GROUP.auto_migrate!
-        Ixtlan::Models::GroupUser.auto_migrate!
-        Ixtlan::Models::GroupLocaleUser.auto_migrate!
-        Ixtlan::Models::DomainGroupUser.auto_migrate!
+        USER.auto_upgrade!
+        LOCALE.auto_upgrade!
+        GROUP.auto_upgrade!
+        Ixtlan::Models::GroupUser.auto_upgrade!
+        Ixtlan::Models::GroupLocaleUser.auto_upgrade!
+        Ixtlan::Models::DomainGroupUser.auto_upgrade!
         
         u = USER.new(:login => 'root', :email => 'root@example.com', :name => 'Superuser', :id => 1)
         u.created_at = DateTime.now
@@ -43,13 +43,13 @@ module Ixtlan
       end
 
       def self.create_configuration
-        Ixtlan::Models::ConfigurationLocale.auto_migrate!
-        CONFIGURATION.auto_migrate!
+        Ixtlan::Models::ConfigurationLocale.auto_upgrade!
+        CONFIGURATION.auto_upgrade!
         CONFIGURATION.create(:session_idle_timeout => 10, :keep_audit_logs => 3, :current_user => USER.first)
       end
 
       def self.create_locale
-        LOCALE.auto_migrate!
+        LOCALE.auto_upgrade!
         # get/create default locale
         LOCALE.create(:code => LOCALE::DEFAULT, :current_user => USER.first)
         # get/create "every" locale
@@ -60,7 +60,7 @@ module Ixtlan
       end
 
       def self.create_domain
-        DOMAIN.auto_migrate!
+        DOMAIN.auto_upgrade!
         # get/create "every" domain
         DOMAIN.create(:name => DOMAIN::ALL, :current_user => User.first)
         
@@ -68,7 +68,7 @@ module Ixtlan
       end
 
       def self.create_text
-        I18nText.auto_migrate!
+        I18nText.auto_upgrade!
       end
     end
   end
