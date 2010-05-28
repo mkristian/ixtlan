@@ -49,7 +49,7 @@ module Ixtlan
     DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
 
     # configure audit logger
-    Ixtlan::AuditConfig.configure(Ixtlan::Models::Configuration.instance.keep_audit_logs,
+    Ixtlan::AuditConfig.configure(Object.full_const_get(Ixtlan::Models::CONFIGURATION).instance.keep_audit_logs,
                                   log_filebase('audit'),
                                   [
                                    Ixtlan::Models::User,
