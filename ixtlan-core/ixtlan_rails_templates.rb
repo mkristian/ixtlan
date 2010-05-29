@@ -73,6 +73,7 @@ DM_VERSION='0.10.2'
 # -----------
 
 # setup a pom.xml
+File.delete('pom.xml') if File.exists?("pom.xml")
 inside("..") do
   run("mvn archetype:generate -DarchetypeArtifactId=rails-maven-archetype -DarchetypeGroupId=de.saumya.mojo -DarchetypeVersion=#{JRUBY_PLUGINS_VERSION} -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
 end
@@ -182,6 +183,7 @@ generate('datamapper_install')
 environment ''
 environment 'config.frameworks -= [ :active_record ]'
 environment '# deactive active_record'
+gsub_file 'config/environment.rb', /.*config.gem\s+.rspec.*/, "\\0 if ENV['RAILS_ENV'] == 'test'"
 gsub_file 'spec/spec_helper.rb', /^\s*config[.]/, '  #\0'
 gsub_file 'test/test_helper.rb', /^[^#]*fixtures/, '  #\0'
 
@@ -218,7 +220,7 @@ module Ixtlan
 end
 require 'ixtlan/modified_by'
 if ENV['RAILS_ENV']
-  require 'models'
+  require 'authentication'
   require 'ixtlan/rails/error_handling'
   require 'ixtlan/rails/audit'
   require 'ixtlan/rails/session_timeout'
@@ -295,14 +297,14 @@ CODE
 
 
 # ----------------------
-# MODELS AND CONTROLLERs
+# MODELS AND CONTROLLERS
 # ----------------------
 
 # setup permissions controller
 ixtlan_controller("permissions", {:actions => [:index]})
 
 # user model/controller
-generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'User', 'login:string', 'name:string', 'email:string'
+generate "ixtlan_datamapper_rspec_scaffold", '-f', '--skip-migration', 'User', 'login:string', 'name:string', 'email:string'
 gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
 gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
 gsub_file 'spec/models/user_spec.rb', /value for email/, 'value@for.email'
@@ -314,13 +316,13 @@ ixtlan_model 'user'
 ixtlan_controller 'users'
 
 # group model/controller
-generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Group', 'name:string'
+generate "ixtlan_datamapper_rspec_scaffold", '-f', '--skip-migration', 'Group', 'name:string'
 gsub_file 'spec/controllers/groups_controller_spec.rb', /\:errors\s+=>\s+{}/, ':update_children => nil, :errors => {}'
 ixtlan_model 'group'
 ixtlan_controller 'groups'
 
 # domain model/controller
-generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', 'Domain', 'name:string'
+generate "ixtlan_datamapper_rspec_scaffold", '-f', '--skip-migration', 'Domain', 'name:string'
 gsub_file 'spec/models/domain_spec.rb', /value for name/, 'valueofname'
 ixtlan_model 'domain'
 ixtlan_controller 'domains'
@@ -331,7 +333,7 @@ ixtlan_controller "phrases"
 ixtlan_controller "word_bundles"
 
 # locale model/controller
-generate "ixtlan_datamapper_rspec_scaffold", '--skip-migration', '--skip-modified-by', '--add-current-user', 'Locale', 'code:string'
+generate "ixtlan_datamapper_rspec_scaffold", '-f', '--skip-migration', '--skip-modified-by', '--add-current-user', 'Locale', 'code:string'
 gsub_file 'spec/models/locale_spec.rb', /value for code/, 'vc'
 ixtlan_model "locale"
 ixtlan_controller "locales"
