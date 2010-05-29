@@ -13,7 +13,7 @@ module Ixtlan
 
       property :action, String, :format => /^[a-zA-Z0-9_.]*$/, :key => true
 
-      has n, :roles, :model => Models::ROLE
+      has n, :roles, :model => Models::Role
 
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?
 

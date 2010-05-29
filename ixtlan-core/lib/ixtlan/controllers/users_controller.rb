@@ -9,9 +9,11 @@ module Ixtlan
       USER = Object.full_const_get(::Ixtlan::Models::USER)
 
       def adjust_params(user_params)
-        lang = user_params.delete(:preferred_language)
-        user_params[:language] = lang.nil? ? nil : lang[:code][0..1]
-        user_params.delete(:groups)
+        if user_params
+          lang = user_params.delete(:preferred_language)
+          user_params[:language] = lang[:code][0..1] if lang
+          user_params.delete(:groups)
+        end
       end
 
       public

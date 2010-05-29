@@ -1,7 +1,9 @@
 require 'dm-serializer'
 module Ixtlan
   module Models
-    class Word < Ixtlan::Models::I18nText
+    class Word 
+
+      include Ixtlan::Models::I18nText
 
       alias :to_x :to_xml_document
       def to_xml_document(opts, doc = nil)

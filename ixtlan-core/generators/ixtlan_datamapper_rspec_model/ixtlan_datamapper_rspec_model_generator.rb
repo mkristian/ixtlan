@@ -16,5 +16,7 @@ class IxtlanDatamapperRspecModelGenerator < DatamapperRspecModelGenerator
            "Don't add timestamps for this model") { |v| options[:skip_timestamps] = v }
     opt.on("--skip-modified-by",
            "Don't add modified_by references for this model") { |v| options[:skip_modified_by] = v }
+    opt.on("--add-current-user",
+           "set current user before invoking a method on the model") { |v| options[:current_user] = v }
   end
 end

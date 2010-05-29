@@ -3,11 +3,11 @@ module Ixtlan
     class Migrations
 
       # assume no namespaces !!!
-      USER = Object.const_get(Ixtlan::Models::USER)
-      GROUP = Object.const_get(Ixtlan::Models::GROUP)
-      LOCALE = Object.const_get(Ixtlan::Models::LOCALE)
-      DOMAIN = Object.const_get(Ixtlan::Models::DOMAIN)
-      CONFIGURATION = Object.const_get(Ixtlan::Models::CONFIGURATION)
+      USER = Object.const_get(Ixtlan::Models::USER.sub(/^::/, ''))
+      GROUP = Object.const_get(Ixtlan::Models::GROUP.sub(/^::/, ''))
+      LOCALE = Object.const_get(Ixtlan::Models::LOCALE.sub(/^::/, ''))
+      DOMAIN = Object.const_get(Ixtlan::Models::DOMAIN.sub(/^::/, ''))
+      CONFIGURATION = Object.const_get(Ixtlan::Models::CONFIGURATION.sub(/^::/, ''))
 
       def self.create_user
         USER.auto_upgrade!

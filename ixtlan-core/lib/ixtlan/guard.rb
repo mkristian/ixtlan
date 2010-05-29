@@ -88,8 +88,8 @@ module Ixtlan
 
     def self.export_xml
       repository(:guard_memory) do
-        role_const = Object.full_const_get(Models::ROLE)
-        permission_const = Object.full_const_get(Models::PERMISSION)
+        role_const = Models::Role
+        permission_const = Models::Permission
         root = role_const.create(:name => @@superuser)
         @@map.each do |controller, actions|
           actions.each do |action, roles|

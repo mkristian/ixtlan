@@ -88,9 +88,9 @@ module Ixtlan
 
         model.property :version, Integer, :required => false
 
-        model.property :current, Boolean, :required => true, :auto_validation => false
+        model.property :current, ::DataMapper::Types::Boolean, :required => true, :auto_validation => false
 
-        model.property :previous, Boolean, :required => true, :auto_validation => false
+        model.property :previous, ::DataMapper::Types::Boolean, :required => true, :auto_validation => false
 
         model.property :updated_at, DateTime, :required => true, :auto_validation => false
 
@@ -143,3 +143,4 @@ EOS
       end
     end
   end
+end

@@ -1,18 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '<%= '/..' * class_nesting_depth %>/../spec_helper')
-
+<% if !options[:skip_modified_by] || options[:current_user] -%>
+USER = Object.full_const_get(Ixtlan::Models::USER) unless Object.const_defined? "USER"
+<% end -%>
 describe <%= class_name %> do
   before(:each) do
-<% unless options[:skip_modified_by] -%>
-    user = Ixtlan::Models::User.first
+<% if !options[:skip_modified_by] || options[:current_user] -%>
+    user = USER.first
     unless user
-      user = Ixtlan::Models::User.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+      user = USER.new(:login => 'root', :email => 'root@exmple.com', :name => 'Superuser', :language => 'en', :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
       user.created_by_id = 1
       user.updated_by_id = 1
       user.save!
     end
 <% end -%>
     @valid_attributes = {
-<% unless options[:skip_modified_by] -%>
+<% if !options[:skip_modified_by] || options[:current_user]  -%>
       :current_user => user,
 <% end -%>
 <% attributes.each_with_index do |attribute, attribute_index| -%>

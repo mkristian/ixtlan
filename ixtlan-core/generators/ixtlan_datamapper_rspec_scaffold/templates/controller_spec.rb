@@ -1,5 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '<%= '/..' * class_nesting_depth %>/../spec_helper')
-
+<% if !options[:skip_modified_by] || options[:current_user] -%>
+CONFIGURATION = Object.full_const_get(Ixtlan::Models::CONFIGURATION) unless Object.const_defined? "CONFIGURATION"
+<% end -%>
 describe <%= controller_class_name %>Controller do
 
   def mock_<%= file_name %>(stubs={})
@@ -16,8 +18,8 @@ describe <%= controller_class_name %>Controller do
 
   def mock_arguments(merge = {})
     args = merge
-<% unless options[:skip_modified_by] -%>
-    args.merge!(:current_user= => nil)
+<% if !options[:skip_modified_by] || options[:current_user] -%>
+    args.merge!(:current_user= => nil, :errors => {})
 <% end -%>
 <% unless options[:skip_audit] -%>
     args.merge!(:model => <%= class_name %>, :key => 12)
@@ -27,13 +29,17 @@ describe <%= controller_class_name %>Controller do
 
 <% unless options[:skip_guard] -%>
   before(:each) do
-    user = Ixtlan::Models::User.new(:id => 1, :login => 'root')
+    user = Object.new
+    def user.id; 1; end
+    def user.login; "root"; end
     def user.groups
-      [Ixtlan::Models::Group.new(:name => "root")]
+      g = Object.new
+      def g.name; "root"; end
+      [g]
     end
     controller.send(:current_user=, user)
-    mock_configuration = mock_model(Ixtlan::Models::Configuration,{})
-    Ixtlan::Models::Configuration.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
+    mock_configuration = mock_model(CONFIGURATION,{})
+    CONFIGURATION.should_receive(:instance).any_number_of_times.and_return(mock_configuration)
     mock_configuration.should_receive(:session_idle_timeout).any_number_of_times.and_return(1)
   end
 <% end -%>
