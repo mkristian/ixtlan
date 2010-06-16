@@ -38,8 +38,7 @@ module Ixtlan
         users = GROUP.create(:name => 'users', :current_user => u)
         locales = GROUP.create(:name => 'locales', :current_user => u)
         domains = GROUP.create(:name => 'domains', :current_user => u)
-        
-        File.open("root", 'w') { |f| f.puts "root\n#{u.password}\n\nadmin\n#{a.password}\n\n" }
+        File.open("root_#{RAILS_ENV}", 'w') { |f| f.puts "root\n#{u.password}\n\nadmin\n#{a.password}\n\n" }
       end
 
       def self.create_configuration

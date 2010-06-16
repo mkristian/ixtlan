@@ -26,8 +26,8 @@ module DataMapper
       root = xml.root_node(doc, opts[:element_name] || default_xml_element_name[])
       properties_to_serialize(opts).each do |property|
         value = __send__(property.name)
-        attrs = (property.type == String) ? {} : {'type' => property.type.to_s.downcase}
-        value = value.to_s(:xml) if property.type == DateTime rescue value
+        attrs = (property.class == DataMapper::Property::String) ? {} : {'type' => property.class.to_s.downcase}
+        value = value.to_s(:xml) if property.class == DataMapper::Property::DateTime rescue value
         xml.add_node(root, property.name.to_s, value.frozen? ? value.to_s.dup: value, attrs)
       end
 

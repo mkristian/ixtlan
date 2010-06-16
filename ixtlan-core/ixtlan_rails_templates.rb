@@ -67,6 +67,7 @@ end
 
 JRUBY_PLUGINS_VERSION='0.12.0'
 DM_VERSION='0.10.2'
+RESTFUL_GWT_VERSION='0.5.0-SNAPSHOT'
 
 # -----------
 # MAVEN SETUP
@@ -79,7 +80,6 @@ inside("..") do
 end
 File.delete('lib/tasks/jdbc.rake')
 File.delete('config/initializers/jdbc.rb')
-gsub_file 'pom.xml', /<version>1.5.0<\/version>/, "<version>1.4.1<\/version>"
 
 # ---------------------
 # GWT AND ECLIPSE SETUP
@@ -88,45 +88,52 @@ gsub_file 'pom.xml', /<version>1.5.0<\/version>/, "<version>1.4.1<\/version>"
 File.rename("src/main/webapp/WEB-INF/web.xml", 
             "src/main/webapp/WEB-INF/web.xml.rails")
 inside("..") do
-  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=0.3.1 -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
+  run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=#{RESTFUL_GWT_VERSION} -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
 end
+
 File.rename("src/main/webapp/WEB-INF/web.xml.rails", 
             "src/main/webapp/WEB-INF/web.xml")
-
+gsub_file 'pom.xml', /<id>rubygems<\/id>/, '<id>rubygems-releases</id>'
+gsub_file 'pom.xml', /.*<layout>.*/, ''
+gsub_file 'pom.xml', /.*<updatePolicy>never.*/, ''
+gsub_file 'pom.xml', /.*<checksumPolicy>ignore.*/, ''
+gsub_file 'pom.xml', /rubygems.org\/gems/, 'gems.saumya.de/releases'
 file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
- <classpathentry kind="src" output="war/WEB-INF/classes" path="src/main/java"/>
- <classpathentry excluding="**" kind="src" output="war/WEB-INF/classes" path="src/main/resources"/>
- <classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
- <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
- <classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
- <classpathentry kind="output" path="war/WEB-INF/classes"/>
+	<classpathentry kind="src" output="war/WEB-INF/classes" path="src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="war/WEB-INF/classes" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
 CODE
 file '.project', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
- <name>ixtlan-demo</name>
- <comment></comment>
- <projects>
- </projects>
- <buildSpec>
-  <buildCommand>
-   <name>org.eclipse.jdt.core.javabuilder</name>
-   <arguments>
-   </arguments>
-  </buildCommand>
-  <buildCommand>
-   <name>org.maven.ide.eclipse.maven2Builder</name>
-   <arguments>
-   </arguments>
-  </buildCommand>
- </buildSpec>
- <natures>
-  <nature>org.maven.ide.eclipse.maven2Nature</nature>
-  <nature>org.eclipse.jdt.core.javanature</nature>
- </natures>
+	<name>ixtlan-demo</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.maven.ide.eclipse.maven2Nature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>com.google.gwt.eclipse.core.gwtNature</nature>
+	</natures>
 </projectDescription>
 CODE
 file '.settings/org.maven.ide.eclipse.prefs', <<-CODE
@@ -145,6 +152,30 @@ org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
 org.eclipse.jdt.core.compiler.compliance=1.6
 org.eclipse.jdt.core.compiler.problem.forbiddenReference=warning
 org.eclipse.jdt.core.compiler.source=1.6
+CODE
+file '.settings/com.google.gwt.eclipse.core.prefs', <<-CODE
+eclipse.preferences.version=1
+entryPointModules=com.example.Application
+filesCopiedToWebInfLib=gwt-servlet.jar
+CODE
+file 'ixtlan-demo.launcher', <<-CODE
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.google.gdt.eclipse.suite.webapp">
+<stringAttribute key="com.google.gdt.eclipse.suiteMainTypeProcessor.PREVIOUSLY_SET_MAIN_TYPE_NAME" value="com.google.gwt.dev.HostedMode"/>
+<booleanAttribute key="com.google.gdt.eclipse.suiteWarArgumentProcessor.IS_WAR_FROM_PROJECT_PROPERTIES" value="true"/>
+<stringAttribute key="com.google.gwt.eclipse.core.URL" value="com.example.Application/Application.html"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/ixtlan-demo"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gwt.eclipse.core.moduleClasspathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.HostedMode"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-style OBFUSCATED -startupUrl com.example.Application/Application.html -logLevel INFO -port 8888 com.example.Application"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ixtlan-demo"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m"/>
+</launchConfiguration>
 CODE
 
 # --------------------

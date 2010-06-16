@@ -4,6 +4,7 @@ module Ixtlan
 
       def self.included(base)
         base.send(:include, Ixtlan::Controllers::SearchQuery)
+        base.skip_before_filter :authenticate, :guard, :only => [:index,:show]
       end
 
       public

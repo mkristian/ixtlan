@@ -59,7 +59,7 @@ module Ixtlan
     module ClassMethods
       def modified_by(type, names = nil, options = {})
         if(names.nil?)
-          modified_by(type, [:created_by, :updated_by])
+          modified_by(type, [:created_by, :updated_by], options)
         else
           names = [names] unless names.is_a?(Enumerable)
           names.each do |name|

@@ -1,7 +1,6 @@
 # -*- ruby -*-
 
 require 'rubygems'
-require 'hoe'
 require './lib/ixtlan/version.rb'
 
 require 'spec'
@@ -9,10 +8,18 @@ require 'spec/rake/spectask'
 require 'pathname'
 require 'yard'
 
-Hoe.spec('ixtlan') do |p|
-  p.developer('mkristian', 'm.kristian@web.de')
-  p.extra_deps = [['dm-core', '~>0.10.1'], ['dm-validations', '~>0.10.1'], ['dm-timestamps', '~>0.10.1'], ['dm-migrations', '~>0.10.1'], ['slf4r', '~>0.2.0'], ['datamapper4rails', '~>0.4.0'],['rack-datamapper', '~>0.2.5'], ['logging', '~>1.2.3']]
-  p.rspec_options << '--options' << 'spec/spec.opts'
+desc "Run specs"
+Spec::Rake::SpecTask.new('spec')
+
+task :clean do
+  sh "rm -r pkg"
+end
+
+desc 'Package as a gem.'
+task :package do
+  sh "gem build rack_datamapper.gemspec" 
+  sh "mkdir -p pkg"
+  sh "mv rack-datamapper-*.gem pkg"
 end
 
 desc 'Install the package as a gem.'

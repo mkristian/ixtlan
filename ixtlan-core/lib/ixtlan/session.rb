@@ -8,12 +8,12 @@ module Ixtlan
       @user = d.delete(:user)
       @flash = d.delete(:flash)
       @expires_at = d.delete(:expires_at)
-      attribute_set(:data, ::Base64.encode64(Marshal.dump(d)))
+      attribute_set(:raw_data, ::Base64.encode64(Marshal.dump(d)))
     end
 
     def data
       # user string for flash entry to allow the rails falsh to work properly !
-      Marshal.load(::Base64.decode64(attribute_get(:data))).merge({:user => @user, "flash" => @flash, :expires_at => @expires_at})
+      Marshal.load(::Base64.decode64(attribute_get(:raw_data))).merge({:user => @user, "flash" => @flash, :expires_at => @expires_at})
     end
   end
 end
