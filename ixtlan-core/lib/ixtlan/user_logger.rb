@@ -1,4 +1,3 @@
-require 'slf4r'
 module Ixtlan
 
   class UserLogger

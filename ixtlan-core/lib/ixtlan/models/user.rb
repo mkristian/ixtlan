@@ -1,6 +1,8 @@
 require 'digest/sha1'
 require 'base64'
 require 'ixtlan/modified_by'
+require 'ixtlan/passwords'
+require 'ixtlan/digest'
 require 'dm-serializer'
 require 'ixtlan/models/update_children'
 module Ixtlan
