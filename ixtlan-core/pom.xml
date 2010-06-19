@@ -57,7 +57,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>slf4r</artifactId>
-      <version>[0.2.0,0.2.99999.99999)</version>
+      <version>0.3.1</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>

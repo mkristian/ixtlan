@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<dm-validations>, ["~> 1.0.0"])
   s.add_runtime_dependency(%q<dm-timestamps>, ["~> 1.0.0"])
   s.add_runtime_dependency(%q<dm-migrations>, ["~> 1.0.0"])
-  s.add_runtime_dependency(%q<slf4r>, ["~> 0.2.0"])
+  s.add_runtime_dependency(%q<slf4r>, ["~> 0.3.1"])
   s.add_runtime_dependency(%q<datamapper4rails>, ["~> 0.4.0"])
   s.add_runtime_dependency(%q<rack-datamapper>, ["~> 0.3.0"])
   s.add_runtime_dependency(%q<logging>, ["~> 1.2.3"])
