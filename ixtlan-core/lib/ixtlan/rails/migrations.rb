@@ -8,6 +8,7 @@ module Ixtlan
       LOCALE = Object.const_get(Ixtlan::Models::LOCALE.sub(/^::/, ''))
       DOMAIN = Object.const_get(Ixtlan::Models::DOMAIN.sub(/^::/, ''))
       CONFIGURATION = Object.const_get(Ixtlan::Models::CONFIGURATION.sub(/^::/, ''))
+      TEXT = Object.const_get(Ixtlan::Models::TEXT.sub(/^::/, ''))
 
       def self.create_user
         USER.auto_migrate!
@@ -16,14 +17,19 @@ module Ixtlan
         Ixtlan::Models::GroupUser.auto_migrate!
         Ixtlan::Models::GroupLocaleUser.auto_migrate!
         Ixtlan::Models::DomainGroupUser.auto_migrate!
-        
-        u = USER.new(:login => 'root', :email => 'root@example.com', :name => 'Superuser', :id => 1)
-        u.created_at = DateTime.now
-        u.updated_at = u.created_at
-        u.created_by_id = 1
-        u.updated_by_id = 1
+
+        u = USER.first
+        if u.nil?
+          u = USER.new(:login => 'root', :email => 'root@example.com', :name => 'Superuser', :id => 1)
+          u.created_at = DateTime.now
+          u.updated_at = u.created_at
+          u.created_by_id = 1
+          u.updated_by_id = 1
+          u.save!
+        end
         u.reset_password
-        u.save!
+        u.current_user = u
+        u.save
 
         g = GROUP.create(:name => 'root', :current_user => u)
         u.groups << g
@@ -67,7 +73,7 @@ module Ixtlan
       end
 
       def self.create_text
-        I18nText.auto_migrate!
+        TEXT.auto_migrate!
       end
     end
   end
