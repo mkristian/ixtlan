@@ -149,11 +149,36 @@ public class SimpleClient {
         con.disconnect();
     }
 
+    /**
+     * just compile this class with <b>javac SimpleClient.java</b> and
+     * execute to see the usage <b>java SimpleClient</b>. when excuted
+     * it will run a complete lifecycle of user resource.
+     */
     public static void main(final String... args) throws IOException {
-        final SimpleClient client = new SimpleClient("root",
-                "w83zf#:q*QF4",
-                "localhost",
-                3000);
+	int port = 3000;//rails default
+	String host = "localhost";
+	String username = null;
+	String password = null;
+	switch(args.length){
+	case 4: 
+	    port = Integer.parseInt(args[3]);
+	case 3: 
+	    host = args[2]; 
+	case 2: 
+	    username = args[0];
+	    password = args[1];
+	    break;
+	default:
+	    System.err.println("usage: java " + SimpleClient.class.getName() + " username password [domain [port]]");
+	    System.err.println("  domain default: " + host);
+	    System.err.println("  port   default: " + port);
+	    System.exit(-1);
+	}
+
+        final SimpleClient client = new SimpleClient(username,
+						     password,
+						     host,
+						     port);
         System.out.println("\nALL USERS");
         System.out.println(client.get("/users.xml"));
 
