@@ -19,7 +19,7 @@ module Ixtlan
       end
 
       def destroy
-        authentication_logger.log_user(current_user.nil? ? nil : current_user.login, "already logged out")
+        authentication_logger.log_user(current_user.nil? ? nil : current_user.login, "logged out")
         session.clear
         head :ok
       end

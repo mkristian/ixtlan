@@ -97,7 +97,7 @@ module Rails
           authentication = AUTHENTICATION.new
           authentication.login = self.current_user.login
           authentication.user = self.current_user
-          authentication.token = form_authenticity_token
+          response.headers["authentication-token"] = form_authenticity_token
           render :xml => authentication.to_xml
         end
       end

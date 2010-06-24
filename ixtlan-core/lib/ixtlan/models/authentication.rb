@@ -12,8 +12,6 @@ module Ixtlan
 
         model.property :password, String,:format => /^[a-zA-Z0-9_.]*$/
 
-        model.send :attr_accessor, :token
-
         model.belongs_to :user, :model => ::Ixtlan::Models::USER
 
         model.class_eval <<-EOS, __FILE__, __LINE__
@@ -23,7 +21,7 @@ module Ixtlan
 
             alias :to_x :to_xml_document
             def to_xml_document(opts, doc = nil)
-              opts.merge!({:exclude => [:password,:user_id], :methods => [:token, :user]})
+              opts.merge!({:exclude => [:password,:user_id], :methods => [:user]})
               to_x(opts, doc)
             end
           end

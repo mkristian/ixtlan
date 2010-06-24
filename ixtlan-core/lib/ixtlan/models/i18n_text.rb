@@ -62,14 +62,14 @@ module Ixtlan
         params[:approved_at] = attribute_get(:updated_at)
         params[:approved_by] = params[:current_user] || current_user
 
-        p = (previous.nil? ? true : previous.update(:previous => false,
+        prev = (previous.nil? ? true : previous.update(:previous => false,
                                                     :current_user => params[:current_user] || current_user))
-        l = (latest.nil? ? true : latest.update(:current => false,
+        lat = (latest.nil? ? true : latest.update(:current => false,
                                                 :previous => true,
                                                 :current_user => params[:current_user] || current_user))
-        u = update(params)
+        upd = update(params)
 
-        u && l && p
+        upd && lat && prev
       end
 
       def approved?
