@@ -11,7 +11,7 @@ import de.saumya.gwt.persistence.client.ResourceFactory;
  */
 public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt<<%= class_name %>> {
 
-
+    <% first = attributes.detect {|a| a.type == :string } || attributes.first -%>
     private <%= class_name %> resource;
 
     private static final String RESOURCE_XML = "<<%= singular_name%>>"
@@ -53,10 +53,12 @@ public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt
 
     @Override
     protected Resource<<%= class_name %>> resourceSetUp() {
-        this.resource = this.factory.newResource();
+        this.resource = this.factory.newResource(idValue());
 
         this.resource.id = 1;
-        this.resource.<%= attributes.first.name.javanize %> = <% if [:date, :time, :date_time].member? attributes.first.type  %>new de.saumya.gwt.persistence.client.TimestampFactory("<%= attributes.first.sample_value %>").toDate()<% else %>"<%= attributes.first.sample_value %>"<% end -%>;
+<% Array(attributes).each do |attribute| -%>
+				  this.resource.<%= attribute.name.javanize %> = <% if [:date, :time, :date_time].member? attribute.type  %>new de.saumya.gwt.persistence.client.TimestampFactory("<%= attribute.sample_value %>").to<%= attribute.type == :date_time ? "Timestamp" : attribute.type.to_s.constantize %>()<% elsif [:integer, :float, :decimal, :big_decimal, :boolean].member? attribute.type  %><%= attribute.sample_value %><% else %>"<%= attribute.sample_value %>"<% end -%>;
+<% end -%>
 
         this.repository.addXmlResponse(RESOURCE_XML);
 
@@ -67,14 +69,14 @@ public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt
 
     @Override
     public void doTestCreate() {
-        assertEquals("<%= attributes.first.sample_value %>", this.resource.<%= attributes.first.name.javanize %><% if [:date, :time, :date_time].member? attributes.first.type  %>.toString()<% end -%>);
+        assertEquals("<%= first.sample_value %>", this.resource.<%= first.name.javanize %><% if [:date, :time, :date_time].member? first.type  %>.toString()<% end -%>);
     }
 
     @Override
     public void doTestUpdate() {
-        this.resource.<%= attributes.first.name.javanize %> = <% if [:date, :time, :date_time].member? attributes.first.type  %>new de.saumya.gwt.persistence.client.TimestampFactory(changedValue()).toDate()<% else %>changedValue()<% end -%>;
+        this.resource.<%= first.name.javanize %> = <% if [:date, :time, :date_time].member? first.type  %>new de.saumya.gwt.persistence.client.TimestampFactory(changedValue()).toDate()<% else %>changedValue()<% end -%>;
         this.resource.save();
-        assertEquals(this.resource.<%= attributes.first.name.javanize %><% if [:date, :time, :date_time].member? attributes.first.type  %>.toString()<% end -%>, changedValue());
+        assertEquals(this.resource.<%= first.name.javanize %><% if [:date, :time, :date_time].member? first.type  %>.toString()<% end -%>, changedValue());
     }
 
     private final static String XML = "<<%= singular_name%>>"
@@ -90,12 +92,12 @@ public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt
 
     @Override
     protected String changedValue() {
-        return "<%= attributes.first.sample_value(false) %>";
+        return "<%= first.sample_value(false) %>";
     }
 
     @Override
-    protected String keyValue() {
-        return "1";
+    protected int idValue() {
+        return 1;
     }
 
     @Override
@@ -105,6 +107,6 @@ public class <%= class_name %>TestGwt extends AbstractApplicationResourceTestGwt
 
     @Override
     protected String value() {
-        return "<%= attributes.first.sample_value %>";
+        return "<%= first.sample_value %>";
     }
 }

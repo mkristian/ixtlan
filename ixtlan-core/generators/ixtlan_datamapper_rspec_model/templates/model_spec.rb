@@ -24,6 +24,7 @@ describe <%= class_name %> do
   end
 
   it "should create a new instance given valid attributes" do
+    <%= class_name %>.all(:<%= attributes.first.name %> => <%= attributes.first.default_value %>).destroy!
     <%= singular_name %> = <%= class_name %>.create(@valid_attributes)
     <%= singular_name %>.valid?.should be_true
   end

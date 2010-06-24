@@ -3,7 +3,7 @@ class <%= class_name %>
 
   property :id, Serial
 <% Array(attributes).each do |attribute| -%>
-  property :<%= attribute.name %>, <%= attribute.type.to_s.capitalize %>, :nullable => false <% if attribute.type == :string or attribute.type == :text or attribute.type == :slug -%>, :format => /^[^<'&">]*$/<% if attribute.type == :string or attribute.type == :slug %>, :length => 255<% end -%><% end -%>
+  property :<%= attribute.name %>, <%= attribute.type == :boolean ? "::DataMapper::Types::Boolean" : attribute.type.to_s.capitalize %>, :required => true<% if attribute.type == :string or attribute.type == :text or attribute.type == :slug -%>, :format => /^[^<'&">]*$/<% if attribute.type == :string or attribute.type == :slug %>, :length => 255<% end -%><% end -%>
 
 <% end -%>
 <% unless options[:skip_timestamps] -%>
@@ -11,7 +11,7 @@ class <%= class_name %>
 <% end -%>
 
 <% unless options[:skip_modified_by] -%>
-  modified_by "Ixtlan::Models::User"
+  modified_by Ixtlan::Models::USER
 
   require 'dm-serializer'
   alias :to_x :to_xml_document

@@ -28,13 +28,8 @@ public class <%= class_name %>Factory extends ResourceFactory<<%= class_name %>>
     }
 
     @Override
-    public String keyName() {
-        return "id";
-    }
-
-    @Override
-    public <%= class_name %> newResource() {
-        return new <%= class_name %>(this.repository, this<% unless options[:skip_modified_by] -%>, this.userFactory<% end -%>);
+    public <%= class_name %> newResource(final int id) {
+        return new <%= class_name %>(this.repository, this<% unless options[:skip_modified_by] -%>, this.userFactory<% end -%>, id);
     }
 
     @Override

@@ -6,11 +6,12 @@ package <%= package %>.views.<%= plural_name %>;
 import <%= package %>.models.<%= class_name %>;
 import <%= package %>.models.<%= class_name %>Factory;
 
-import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.translation.common.client.GetTextController;
-import de.saumya.gwt.translation.common.client.widget.DefaultResourceActionPanel;
+import de.saumya.gwt.translation.common.client.widget.HyperlinkFactory;
 import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
+import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
+import de.saumya.gwt.translation.common.client.widget.ResourceActionPanel;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionListing;
 import de.saumya.gwt.translation.common.client.widget.ResourceCollectionNavigation;
@@ -36,7 +37,8 @@ public class <%= class_name %>Screen extends ResourceScreen<<%= class_name %>> {
             final GetTextController getTextController,
             final <%= class_name %>Factory factory, final Session session,
             final ResourceBindings<<%= class_name %>> bindings,
-            final ResourceNotifications notifications) {
+            final NotificationListeners listeners,
+            final HyperlinkFactory hyperlinkFactory) {
         super(loadingNotice,
                 factory,
                 session,
@@ -48,13 +50,18 @@ public class <%= class_name %>Screen extends ResourceScreen<<%= class_name %>> {
                                 getTextController),
                         new ResourceCollectionListing<<%= class_name %>>(session,
                                 factory,
-                                getTextController)),
-                new DefaultResourceActionPanel<<%= class_name %>>(getTextController,
+                                getTextController,
+                                hyperlinkFactory)),
+                new ResourceActionPanel<<%= class_name %>>(getTextController,
                         bindings,
                         session,
                         factory,
-                        notifications),
-                notifications);
+                        listeners,
+                        hyperlinkFactory,
+                        true,
+                        true),
+                listeners,
+                hyperlinkFactory);
     }
 
 }

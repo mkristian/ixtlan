@@ -13,21 +13,21 @@ import java.sql.Timestamp;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
-import de.saumya.gwt.persistence.client.ResourceWithID;
+import de.saumya.gwt.persistence.client.Resource;
 <% unless options[:skip_modified_by] -%>
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
 <% end -%>
 
-public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
+public class <%= class_name %> extends Resource<<%= class_name %>> {
 
 <% unless options[:skip_modified_by] -%>
     private final UserFactory userFactory;
 
 <% end -%>
     protected <%= class_name %>(final Repository repository, final <%= class_name %>Factory factory<% unless options[:skip_modified_by] -%>,
-            final UserFactory userFactory<% end -%>) {
-        super(repository, factory);
+				final UserFactory userFactory<% end -%>, final int id) {
+        super(repository, factory, id);
 <% unless options[:skip_modified_by] -%>
         this.userFactory = userFactory;
 <% end -%>
@@ -47,7 +47,6 @@ public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
 
     @Override
     protected void appendXml(final StringBuilder buf) {
-        super.appendXml(buf);
 <% Array(attributes).each do |attribute| -%>
         appendXml(buf, "<%= attribute.name %>", this.<%= attribute.name.javanize %>);
 <% end -%>
@@ -62,8 +61,7 @@ public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
     }
 
     @Override
-    protected void fromXml(final Element root) {
-        super.fromXml(root);
+    protected void fromElement(final Element root) {
 <% Array(attributes).each do |attribute| -%>
         this.<%= attribute.name.javanize %> = get<% if attribute.type == :date %>Date<% elsif attribute.type == :integer %>Int<% elsif attribute.type == :boolean %>Boolean<% else %>String<% end -%>(root, "<%= attribute.name %>");
 <% end -%>
@@ -78,18 +76,17 @@ public class <%= class_name %> extends ResourceWithID<<%= class_name %>> {
     }
 
     @Override
-    public void toString(final StringBuilder buf) {
-        super.toString(buf);
+    public void toString(final String indent, final StringBuilder buf) {
 <% Array(attributes).each do |attribute| -%>
-        toString(buf, "<%= attribute.name %>", this.<%= attribute.name.javanize %>);
+        toString(indent, buf, "<%= attribute.name %>", this.<%= attribute.name.javanize %>);
 <% end -%>
 <% unless options[:skip_timestamps] -%>
-        toString(buf, "created_at", this.createdAt);
-        toString(buf, "updated_at", this.updatedAt);
+        toString(indent, buf, "created_at", this.createdAt);
+        toString(indent, buf, "updated_at", this.updatedAt);
 <% end -%>
 <% unless options[:skip_modified_by] -%>
-        toString(buf, "created_by", this.createdBy);
-        toString(buf, "updated_by", this.updatedBy);
+        toString(indent, buf, "created_by", this.createdBy);
+        toString(indent, buf, "updated_by", this.updatedBy);
 <% end -%>
     }
 

@@ -129,7 +129,7 @@ module Rails
                 "#{match}\n\nimport #{java_package}.models.#{class_name}Factory;\nimport #{java_package}.models.#{class_name};\nimport #{java_package}.views.#{plural_name}.#{class_name}Screen;"
               end
               gsub_file application_file, /(screenController = [a-zA-Z.]+;)/mi do |match|
-                "#{match}\n\n        #{class_name}Factory #{variable}Factory = new #{class_name}Factory(container.repository,\n                container.notifications,\n                container.userFactory);\n        #{class_name}Screen #{variable}Screen = new #{class_name}Screen(container.loadingNotice,\n                 container.getTextController,\n                 #{variable}Factory,\n                 container.session,\n                 new ResourceBindings<#{class_name}>(),\n                 container.notifications);\n        screenController.addScreen(#{variable}Screen, \"#{plural_name}\");"
+                "#{match}\n\n        #{class_name}Factory #{variable}Factory = new #{class_name}Factory(container.repository,\n                container.notifications,\n                container.userFactory);\n        #{class_name}Screen #{variable}Screen = new #{class_name}Screen(container.loadingNotice,\n                 container.getTextController,\n                 #{variable}Factory,\n                 container.session,\n                 new ResourceBindings<#{class_name}>(),\n                 container.listeners,\n                 container.hyperlinkFactory);\n        screenController.addScreen(#{variable}Screen, \"#{plural_name}\");"
               end
             end
           end
