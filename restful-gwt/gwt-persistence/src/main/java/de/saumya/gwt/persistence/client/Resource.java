@@ -26,26 +26,35 @@ public abstract class Resource<E extends Resource<E>> extends
 
     @Override
     protected void post() {
-        this.repository.post(this, new ResourceRequestCallback<E>(this,
-                this.factory));
+        this.repository.post(this,
+                             new ResourceRequestCallback<E>(this.repository,
+                                     this,
+                                     this.factory));
     }
 
     @Override
     protected void put() {
-        this.repository.put(this, new ResourceRequestCallback<E>(this,
-                this.factory));
+        this.repository.put(this,
+                            new ResourceRequestCallback<E>(this.repository,
+                                    this,
+                                    this.factory));
     }
 
     @Override
     protected void put(final String verb) {
-        this.repository.put(this, verb, new ResourceRequestCallback<E>(this,
-                this.factory));
+        this.repository.put(this,
+                            verb,
+                            new ResourceRequestCallback<E>(this.repository,
+                                    this,
+                                    this.factory));
     }
 
     @Override
     protected void delete() {
-        this.repository.delete(this, new ResourceRequestCallback<E>(this,
-                this.factory));
+        this.repository.delete(this,
+                               new ResourceRequestCallback<E>(this.repository,
+                                       this,
+                                       this.factory));
     }
 
     @Override

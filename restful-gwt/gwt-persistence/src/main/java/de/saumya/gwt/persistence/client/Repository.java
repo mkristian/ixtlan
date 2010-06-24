@@ -18,7 +18,7 @@ public class Repository {
 
     private String                     authenticationToken;
 
-    public void setAuthenticationToken(final String authenticationToken) {
+    void setAuthenticationToken(final String authenticationToken) {
         this.authenticationToken = authenticationToken;
     }
 

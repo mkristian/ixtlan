@@ -12,7 +12,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 
-import de.saumya.gwt.persistence.client.Repository;
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceChangeListenerAdapter;
 import de.saumya.gwt.persistence.client.ResourceCollection;
@@ -73,18 +72,15 @@ public class Session {
     private final ConfigurationFactory                       configurationFactory;
     private final ResourceChangeListener<Configuration>      configurationListener;
     private final Map<String, Map<String, Collection<Role>>> permissions;
-    private final Repository                                 repository;
     private final PermissionFactory                          permissionFactory;
     private final ResourcesChangeListener<Permission>        permissionListener;
     private final ResourceChangeListener<Authentication>     authenticationListener;
 
     private final Set<SessionListener>                       listeners      = new HashSet<SessionListener>();
 
-    public Session(final Repository repository,
-            final AuthenticationFactory authenticationFactory,
+    public Session(final AuthenticationFactory authenticationFactory,
             final PermissionFactory permissionFactory,
             final ConfigurationFactory configurationFactory) {
-        this.repository = repository;
         this.authenticationFactory = authenticationFactory;
         this.configurationFactory = configurationFactory;
         this.configurationListener = new ResourceChangeListenerAdapter<Configuration>() {
@@ -102,7 +98,6 @@ public class Session {
             public void onChange(final Authentication authentication) {
                 if (authentication.isUptodate()) {
                     doLogin(authentication);
-                    Session.this.repository.setAuthenticationToken(authentication.token);
                 }
                 else if (!authentication.isDeleted()) {
                     doAccessDenied();
@@ -276,9 +271,5 @@ public class Session {
 
     public boolean hasUser() {
         return this.authentication != null;
-    }
-
-    public String sessionToken() {
-        return this.authentication != null ? this.authentication.token : null;
     }
 }

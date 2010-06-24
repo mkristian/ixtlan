@@ -17,8 +17,12 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
 
     private final AbstractResourceFactory<E> factory;
 
-    ResourceRequestCallback(final AbstractResource<E> resource,
+    private final Repository                 repository;
+
+    ResourceRequestCallback(final Repository repository,
+            final AbstractResource<E> resource,
             final AbstractResourceFactory<E> factory) {
+        this.repository = repository;
         this.resource = resource;
         this.factory = factory;
     }
@@ -31,6 +35,10 @@ public class ResourceRequestCallback<E extends AbstractResource<E>> implements
     public void onResponseReceived(final Request request,
             final Response response) {
         if (response.getStatusCode() < 300) {
+            final String token = response.getHeader(RestfulRequestBuilder.AUTHENTICATION_TOKEN);
+            if (token != null) {
+                this.repository.setAuthenticationToken(token);
+            }
             // all kind of OK status
             switch (this.resource.state) {
             case TO_BE_CREATED:

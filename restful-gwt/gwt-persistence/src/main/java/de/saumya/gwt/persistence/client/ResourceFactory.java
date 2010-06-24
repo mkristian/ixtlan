@@ -124,7 +124,9 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
         resource.state = State.TO_BE_LOADED;
         this.repository.get(storagePluralName(),
                             key,
-                            new ResourceRequestCallback<E>(resource, this));
+                            new ResourceRequestCallback<E>(this.repository,
+                                    resource,
+                                    this));
         return resource;
     }
 

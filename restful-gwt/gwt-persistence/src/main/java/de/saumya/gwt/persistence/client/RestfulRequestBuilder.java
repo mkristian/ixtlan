@@ -9,13 +9,16 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 
 public class RestfulRequestBuilder extends RequestBuilder {
+
+    static final String AUTHENTICATION_TOKEN = "authentication-token";
+
     public RestfulRequestBuilder(final String httpMethod, final String url,
             final String authenticationToken) {
         super(httpMethod, url);
         setHeader("content-type", "application/xml");
         setHeader("If-None-Match", "blahblah");
         if (authenticationToken != null) {
-            setHeader("authenticity-token", authenticationToken);
+            setHeader(AUTHENTICATION_TOKEN, authenticationToken);
         }
     }
 

@@ -71,7 +71,9 @@ public abstract class SingletonResourceFactory<E extends SingletonResource<E>>
         }
         resource.state = State.TO_BE_LOADED;
         this.repository.get(storageName(),
-                            new ResourceRequestCallback<E>(resource, this));
+                            new ResourceRequestCallback<E>(this.repository,
+                                    resource,
+                                    this));
         return resource;
     }
 }

@@ -66,10 +66,9 @@ public class SessionTestGwt extends GWTTestCase {
                 + "</permission>" + "</permissions>");
         // TODO maybe the whole mockup here is not neccessary and instead the
         // repository mock with authentication xml is sufficient
-        this.session = new Session(this.repository,
-                new AuthenticationFactory(this.repository,
-                        this.notification,
-                        this.userFactory),
+        this.session = new Session(new AuthenticationFactory(this.repository,
+                this.notification,
+                this.userFactory),
                 permissionFactory,
                 new ConfigurationFactory(this.repository,
                         this.notification,
@@ -84,7 +83,6 @@ public class SessionTestGwt extends GWTTestCase {
                     final User user = SessionTestGwt.this.userFactory.newResource(1);
                     user.login = username;
                     authentication.user = user;
-                    authentication.token = "blabla123";
                     user.groups = groupFactory.newResources();
                     final UserGroup root = groupFactory.newResource(1);
                     root.name = "root";
@@ -157,7 +155,6 @@ public class SessionTestGwt extends GWTTestCase {
         assertEquals(1, this.listener.countSuccess);
         assertEquals(0, this.listener.countAccessDenied);
         assertEquals(0, this.listener.countLogout);
-        assertNotNull(this.session.sessionToken());
         assertTrue(this.session.hasUser());
         assertNotNull(this.session.getUser());
     }
@@ -168,7 +165,6 @@ public class SessionTestGwt extends GWTTestCase {
         assertEquals(0, this.listener.countSuccess);
         assertEquals(1, this.listener.countAccessDenied);
         assertEquals(0, this.listener.countLogout);
-        assertNull(this.session.sessionToken());
         assertFalse(this.session.hasUser());
         assertNull(this.session.getUser());
     }
@@ -179,7 +175,6 @@ public class SessionTestGwt extends GWTTestCase {
         assertEquals(0, this.listener.countSuccess);
         assertEquals(1, this.listener.countAccessDenied);
         assertEquals(0, this.listener.countLogout);
-        assertNull(this.session.sessionToken());
         assertFalse(this.session.hasUser());
         assertNull(this.session.getUser());
     }
@@ -190,7 +185,6 @@ public class SessionTestGwt extends GWTTestCase {
         assertEquals(1, this.listener.countSuccess);
         assertEquals(0, this.listener.countAccessDenied);
         assertEquals(1, this.listener.countLogout);
-        assertNull(this.session.sessionToken());
         assertFalse(this.session.hasUser());
         assertNull(this.session.getUser());
     }

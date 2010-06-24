@@ -24,7 +24,6 @@ public class AuthenticationTestGwt extends
 
     private static final String RESOURCE_XML = "<authentication>"
                                                      + "<id>1</id>"
-                                                     + "<token>asdqwe</token>"
                                                      + "<user>"
                                                      + "<id>1</id>"
                                                      + "<login>root</login>"
@@ -57,7 +56,7 @@ public class AuthenticationTestGwt extends
 
     @Override
     public void doTestCreate() {
-        assertEquals("asdqwe", this.resource.token);
+        assertEquals("root", this.resource.user.login);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class AuthenticationTestGwt extends
 
     @Override
     protected String value() {
-        return "asdqwe";
+        return "root";
     }
 
     @Override

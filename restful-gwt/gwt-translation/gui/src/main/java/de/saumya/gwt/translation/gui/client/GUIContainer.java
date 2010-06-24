@@ -88,10 +88,9 @@ public class GUIContainer {
                                                                     this.userFactory,
                                                                     this.localeFactory);
 
-    public final Session               session              = new Session(this.repository,
-                                                                    new AuthenticationFactory(this.repository,
-                                                                            this.notifications,
-                                                                            this.userFactory),
+    public final Session               session              = new Session(new AuthenticationFactory(this.repository,
+                                                                    this.notifications,
+                                                                    this.userFactory),
                                                                     this.permissionFactory,
                                                                     this.configurationFactory);
 

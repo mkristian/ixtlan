@@ -9,7 +9,10 @@ import java.sql.Timestamp;
 public class TimestampFactory {
     final String value;
 
-    public TimestampFactory(final String value) {
+    public TimestampFactory(String value) {
+        if (!value.contains(":")) {
+            value += " 00:00:00";
+        }
         if (value.contains(".")) {
             this.value = value + "000000000".substring(0, 29 - value.length());
         }

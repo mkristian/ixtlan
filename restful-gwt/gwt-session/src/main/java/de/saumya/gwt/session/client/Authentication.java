@@ -22,7 +22,6 @@ class Authentication extends SingletonResource<Authentication> {
 
     String login;
     String password;
-    String token;
     User   user;
 
     @Override
@@ -33,7 +32,6 @@ class Authentication extends SingletonResource<Authentication> {
 
     @Override
     protected void fromElement(final Element root) {
-        this.token = getString(root, "token");
         this.login = null;
         this.password = null;
         this.user = this.userFactory.getChildResource(root, "user");
@@ -44,8 +42,7 @@ class Authentication extends SingletonResource<Authentication> {
         if (this.login != null) {
             toString(indent, buf, "login", this.login);
         }
-        if (this.token != null) {
-            toString(indent, buf, "token", this.token);
+        if (this.user != null) {
             toString(indent, buf, "user", this.user);
         }
     }
