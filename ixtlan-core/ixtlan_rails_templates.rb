@@ -65,8 +65,8 @@ end
 # VERSIONS
 # --------
 
-JRUBY_PLUGINS_VERSION='0.12.0'
-DM_VERSION='0.10.2'
+JRUBY_PLUGINS_VERSION='0.20.0-SNAPSHOT'
+DM_VERSION='1.0.0'
 RESTFUL_GWT_VERSION='0.5.0-SNAPSHOT'
 
 # -----------
@@ -81,6 +81,16 @@ end
 File.delete('lib/tasks/jdbc.rake')
 File.delete('config/initializers/jdbc.rb')
 
+# ---
+# GIT
+# ---
+file 'log/.gitignore', <<-CODE
+*log
+CODE
+file 'db/.gitignore', <<-CODE
+*sqlite3
+CODE
+
 # ---------------------
 # GWT AND ECLIPSE SETUP
 # ---------------------
@@ -93,11 +103,8 @@ end
 
 File.rename("src/main/webapp/WEB-INF/web.xml.rails", 
             "src/main/webapp/WEB-INF/web.xml")
-gsub_file 'pom.xml', /<id>rubygems<\/id>/, '<id>rubygems-releases</id>'
-gsub_file 'pom.xml', /.*<layout>.*/, ''
-gsub_file 'pom.xml', /.*<updatePolicy>never.*/, ''
-gsub_file 'pom.xml', /.*<checksumPolicy>ignore.*/, ''
-gsub_file 'pom.xml', /rubygems.org\/gems/, 'gems.saumya.de/releases'
+gsub_file 'pom.xml', /.*rspec -->.*/, ''
+gsub_file 'pom.xml', /.*<!--.*rspec.*/, ''
 file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
@@ -184,22 +191,25 @@ CODE
 
 # ixtlan gems
 add_gem 'rack', '1.0.1'
-add_gem 'rack-datamapper', '0.2.5'
-add_gem 'ixtlan', '0.4.0.pre2'
+#add_gem 'rack-datamapper', '0.3.2'
+add_gem 'ixtlan', '0.4.0.pre3'
+#add_gem 'slf4r', '0.3.2'
 
 # assume sqlite3 to be database
-add_gem 'do_sqlite3', '0.10.1.1'
+add_gem 'dm-sqlite-adapter', DM_VERSION
 
 # serialization, validations and timestamps in your models
 add_gem 'dm-validations', DM_VERSION
 add_gem 'dm-timestamps', DM_VERSION
 add_gem 'dm-migrations', DM_VERSION
 add_gem 'dm-aggregates', DM_VERSION
+add_gem 'dm-transactions', DM_VERSION
 add_gem 'dm-core', DM_VERSION
+add_gem 'extlib', '0.9.15' #needed to execute this template
 
 # assume you prefer rspec over unit tests
 add_gem 'rspec', '[1.3.0,1.4.0]', :lib => false
-add_gem 'rspec-rails', '1.3.0', :lib => false
+add_gem 'rspec-rails', '1.3.2', :lib => false
 
 # install all gems
 rake 'gems:install'
@@ -212,7 +222,7 @@ generate('datamapper_install')
 
 # fix config files to work with datamapper instead of active_record
 environment ''
-environment 'config.frameworks -= [ :active_record ]'
+environment 'config.frameworks -= [ :active_record, :active_resource ]'
 environment '# deactive active_record'
 gsub_file 'config/environment.rb', /.*config.gem\s+.rspec.*/, "\\0 if ENV['RAILS_ENV'] == 'test'"
 gsub_file 'spec/spec_helper.rb', /^\s*config[.]/, '  #\0'
@@ -251,7 +261,7 @@ module Ixtlan
 end
 require 'ixtlan/modified_by'
 if ENV['RAILS_ENV']
-  require 'authentication'
+  require 'models'
   require 'ixtlan/rails/error_handling'
   require 'ixtlan/rails/audit'
   require 'ixtlan/rails/session_timeout'
@@ -264,7 +274,6 @@ require 'ixtlan/monkey_patches'
 
 # auto require to load needed libraries . . .
 require 'datamapper4rails'
-require 'slf4r'
 require 'ixtlan/logger_config' if ENV['RAILS_ENV']
 
 # cleanup can be a problem. jruby uses soft-references for the cache so
@@ -277,7 +286,7 @@ ActionController::Base.session = {
 }
 
 # load the guard config files from RAILS_ROOT/app/guards
-Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard))
+Ixtlan::Guard.load(Slf4r::LoggerFacade.new(Ixtlan::Guard)) if ENV['RAILS_ENV']
 CODE
 
 # define the date/time pattern for the xml
@@ -515,6 +524,6 @@ logger.info
 logger.info "start the GWT gui in another console"
 logger.info "\tmvn gwt:run"
 logger.info
-logger.info "you find the root password in the file 'root'"
+logger.info "you find the root password in the file 'root_development'"
 logger.info
 logger.info

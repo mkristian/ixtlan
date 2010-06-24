@@ -57,14 +57,14 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>slf4r</artifactId>
-      <version>0.3.1</version>
+      <version>0.3.2</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>datamapper4rails</artifactId>
-      <version>[0.4.0,0.4.99999.99999)</version>
+      <version>[0.5.0,0.5.99999.99999)</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>
