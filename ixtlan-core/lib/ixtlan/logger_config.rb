@@ -46,12 +46,13 @@ module Ixtlan
     DataMapper.logger = logger([appender,rails_appender], DataMapper)
 
     #TODO better find out which database !!!
-    DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
+#    DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
 
     # configure audit logger
     Ixtlan::AuditConfig.configure(Object.full_const_get(Ixtlan::Models::CONFIGURATION).instance.keep_audit_logs,
                                   log_filebase('audit'),
                                   [
+                                   Ixtlan::AuditConfig,
                                    Ixtlan::Models::User,
                                    Ixtlan::Rails::Audit,
                                    Ixtlan::Rails::SessionTimeout,

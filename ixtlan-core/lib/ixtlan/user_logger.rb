@@ -2,6 +2,8 @@ module Ixtlan
 
   class UserLogger
 
+    AUDIT = Ixtlan::Models::AUDIT.nil? ? nil : Object.full_const_get(Ixtlan::Models::AUDIT)
+
     def initialize(arg)
       @logger = Slf4r::LoggerFacade.new(arg)
     end
@@ -46,7 +48,11 @@ module Ixtlan
 
     def log_user(user, message = nil, &block)
       user ||= "???"
-      @logger.info {"[#{user}] #{message}#{block.call if block}" }
+      msg = "#{message}#{block.call if block}"
+      if AUDIT
+        AUDIT.new(:date => DateTime.now, :message => msg, :login => user).push
+      end
+      @logger.info {"[#{user}] #{msg}" }
     end
   end
 end

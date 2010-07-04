@@ -1,6 +1,7 @@
 module Ixtlan
   module Models
     AUTHENTICATION = "::Ixtlan::Models::Authentication" unless const_defined? "AUTHENTICATION"
+    AUDIT = "::Ixtlan::Models::Audit" unless const_defined? "AUDIT"
     USER = "::Ixtlan::Models::User" unless const_defined? "USER"
     GROUP = "::Ixtlan::Models::Group" unless const_defined? "GROUP"
     ROLE = "::Ixtlan::Models::Role" unless const_defined? "ROLE"

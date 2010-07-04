@@ -75,6 +75,10 @@ module Ixtlan
       def self.create_text
         TEXT.auto_migrate!
       end
+
+      def self.create_audit
+        Object.const_get(Ixtlan::Models::AUDIT.sub(/^::/, '')).auto_migrate! if Ixtlan::Models::AUDIT
+      end
     end
   end
 end
