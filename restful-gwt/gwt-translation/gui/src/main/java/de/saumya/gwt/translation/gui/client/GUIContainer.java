@@ -12,6 +12,8 @@ import de.saumya.gwt.session.client.PopupNotifications;
 import de.saumya.gwt.session.client.RoleFactory;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionController;
+import de.saumya.gwt.session.client.models.Audit;
+import de.saumya.gwt.session.client.models.AuditFactory;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.session.client.models.Domain;
@@ -37,6 +39,7 @@ import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.LocaleController;
 import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
+import de.saumya.gwt.translation.gui.client.views.audits.AuditScreen;
 import de.saumya.gwt.translation.gui.client.views.configuration.ConfigurationScreen;
 import de.saumya.gwt.translation.gui.client.views.domains.DomainScreen;
 import de.saumya.gwt.translation.gui.client.views.groups.GroupScreen;
@@ -49,6 +52,8 @@ import de.saumya.gwt.translation.gui.client.views.users.UserScreen;
 public class GUIContainer {
     public final Repository            repository           = new Repository();
     public final PopupNotifications    notifications        = new PopupNotifications();
+    public final AuditFactory          auditFactory         = new AuditFactory(this.repository,
+                                                                    this.notifications);
     public final LocaleFactory         localeFactory        = new LocaleFactory(this.repository,
                                                                     this.notifications);
     public final DomainFactory         domainFactory        = new DomainFactory(this.repository,
@@ -168,6 +173,13 @@ public class GUIContainer {
                                                                     new ResourceBindings<Domain>(),
                                                                     this.listeners,
                                                                     this.hyperlinkFactory);
+    public final AuditScreen           auditScreen          = new AuditScreen(this.loadingNotice,
+                                                                    this.getTextController,
+                                                                    this.auditFactory,
+                                                                    this.session,
+                                                                    new ResourceBindings<Audit>(),
+                                                                    this.listeners,
+                                                                    this.hyperlinkFactory);
 
     public GUIContainer(final Panel panel) {
         // add the screens to the screen controller which hangs them into a
@@ -175,6 +187,7 @@ public class GUIContainer {
         this.screenController.addScreen(this.configurationScreen,
                                         "configurations");
         this.screenController.addScreen(this.phraseScreen, "phrases");
+        this.screenController.addScreen(this.auditScreen, "audits");
         this.screenController.addScreen(this.userScreen, "users");
         this.screenController.addScreen(this.groupScreen, "groups");
         this.screenController.addScreen(this.localeScreen, "locales");
