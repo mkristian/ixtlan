@@ -59,8 +59,14 @@ public abstract class ListBoxBinding<T extends AbstractResource<T>, S extends Re
     }
 
     protected S getResource() {
-        final String key = getValue(getSelectedIndex());
-        return this.map.get(key);
+        final int selected = getSelectedIndex();
+        if (selected > -1) {
+            final String key = getValue(selected);
+            return this.map.get(key);
+        }
+        else {
+            return null;
+        }
     }
 
     protected ResourceCollection<S> getResources(

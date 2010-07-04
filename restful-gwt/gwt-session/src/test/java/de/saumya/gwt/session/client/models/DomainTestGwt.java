@@ -6,9 +6,6 @@ import de.saumya.gwt.persistence.client.ResourceTestGwt;
 
 public class DomainTestGwt extends ResourceTestGwt<Domain> {
 
-    /**
-     * Must refer to a valid module that sources this class.
-     */
     @Override
     public String getModuleName() {
         return "de.saumya.gwt.session.Session";

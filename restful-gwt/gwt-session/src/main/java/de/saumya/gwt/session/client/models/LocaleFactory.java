@@ -4,6 +4,7 @@
 package de.saumya.gwt.session.client.models;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import de.saumya.gwt.persistence.client.AbstractResourceFactory;
@@ -79,11 +80,14 @@ public class LocaleFactory extends ResourceFactory<Locale> {
 
             @Override
             public void onLoaded(final ResourceCollection<Locale> resources) {
-                final Locale l = resources.iterator().next();
-                locale.id = l.id;
-                locale.code = l.code;
-                locale.createdAt = l.createdAt;
-                // TODO maybe fire resource change
+                final Iterator<Locale> iter = resources.iterator();
+                if (iter.hasNext()) {
+                    final Locale l = iter.next();
+                    locale.id = l.id;
+                    locale.code = l.code;
+                    locale.createdAt = l.createdAt;
+                    // TODO maybe fire resource change
+                }
             }
         });
         return locale;
@@ -120,9 +124,12 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     private void resetRealLocales() {
         this.realLocales.clear();
         this.realLocales.addAll(this.all);
-        if (this.realLocales.size() > 0) {
+        switch (this.realLocales.size()) {
+        default:
             this.realLocales.remove(0);
+        case 1:
             this.realLocales.remove(0);
+        case 0:
         }
     }
 

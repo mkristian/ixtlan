@@ -81,11 +81,6 @@ public class UserFields extends ResourceFields<User> {
         final ListBoxBinding<User, Locale> preferredLanguage = new ListBoxBinding<User, Locale>(false) {
 
             @Override
-            public void reset(final ResourceCollection<Locale> locales) {
-                super.reset(localeFactory.realLocales());
-            }
-
-            @Override
             public void pullFrom(final User resource) {
                 setEnabled(isEnabled() && getItemCount() > 0);
                 select(resource.preferedLanguage);
