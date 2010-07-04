@@ -86,6 +86,10 @@ File.delete('config/initializers/jdbc.rb')
 # ---
 # GIT
 # ---
+file '.gitignore', <<-CODE
+target
+root_*
+CODE
 file 'log/.gitignore', <<-CODE
 *log
 CODE
@@ -103,11 +107,30 @@ inside("..") do
   run("mvn archetype:generate -DarchetypeArtifactId=gui -DarchetypeGroupId=de.saumya.gwt.translation -DarchetypeVersion=#{RESTFUL_GWT_VERSION} -DartifactId=#{File.basename(root)} -DgroupId=com.example -Dversion=0.1.0-SNAPSHOT -B")
 end
 
+File.delete('src/test/java/com/example/client/GwtTestSample.java')
 File.rename("src/main/webapp/WEB-INF/web.xml.rails", 
             "src/main/webapp/WEB-INF/web.xml")
 gsub_file 'pom.xml', /.*rspec -->.*/, ''
 gsub_file 'pom.xml', /.*<!--.*rspec.*/, ''
 gsub_file 'pom.xml', /<build>.*/, "<build>\n    <outputDirectory>war/WEB-INF/classes</outputDirectory>"
+
+file 'war/WEB-INF/web.xml', <<-CODE
+<web-app>
+  <!-- Proxy Servlets to the restful backend - i.e. rails ixtlan backend-->
+  <servlet>
+    <servlet-name>XMLProxyServlet</servlet-name>
+    <servlet-class>de.saumya.gwt.persistence.server.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>base</param-name>
+      <param-value>/com.example.Application</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>XMLProxyServlet</servlet-name>
+    <url-pattern>*.xml</url-pattern>
+  </servlet-mapping>
+</web-app>
+CODE
 file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
@@ -123,7 +146,7 @@ CODE
 file '.project', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ixtlan-demo</name>
+	<name>#{File.basename(root)}</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -168,14 +191,14 @@ eclipse.preferences.version=1
 entryPointModules=com.example.Application
 filesCopiedToWebInfLib=gwt-servlet.jar
 CODE
-file 'ixtlan-demo.launcher', <<-CODE
+file "#{File.basename(root)}.launcher", <<-CODE
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.google.gdt.eclipse.suite.webapp">
 <stringAttribute key="com.google.gdt.eclipse.suiteMainTypeProcessor.PREVIOUSLY_SET_MAIN_TYPE_NAME" value="com.google.gwt.dev.HostedMode"/>
 <booleanAttribute key="com.google.gdt.eclipse.suiteWarArgumentProcessor.IS_WAR_FROM_PROJECT_PROPERTIES" value="true"/>
 <stringAttribute key="com.google.gwt.eclipse.core.URL" value="com.example.Application/Application.html"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/ixtlan-demo"/>
+<listEntry value="/#{File.basename(root)}"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
@@ -183,7 +206,7 @@ file 'ixtlan-demo.launcher', <<-CODE
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gwt.eclipse.core.moduleClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.HostedMode"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-style OBFUSCATED -startupUrl com.example.Application/Application.html -logLevel INFO -port 8888 com.example.Application"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ixtlan-demo"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="#{File.basename(root)}"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m"/>
 </launchConfiguration>
 CODE
@@ -362,7 +385,8 @@ generate "ixtlan_datamapper_rspec_scaffold", '-f', '--skip-migration', 'User', '
 gsub_file 'spec/models/user_spec.rb', /.*:name => "sc'?r&?ipt".*/, ''
 gsub_file 'spec/models/user_spec.rb', /value for login/, 'valueForLogin'
 gsub_file 'spec/models/user_spec.rb', /value for email/, 'value@for.email'
-gsub_file 'spec/controllers/users_controller_spec.rb', /\:errors\s+=>\s+{}/, ':reset_password => nil, :password => "pass", :email => "email",:attributes= => nil, :update_all_children => nil, :errors => {}'
+gsub_file 'spec/controllers/users_controller_spec.rb', /\:errors\s+=>\s+{}/, ':reset_password => nil, :password => "pass", :email => "email", :login=> "login", :attributes= => nil, :update_all_children => nil, :errors => {}'
+gsub_file 'spec/controllers/users_controller_spec.rb', /CONFIGURATION,\s*{}/, 'CONFIGURATION, {:password_sender_email => "email", :login_url => "url"}'
 gsub_file 'spec/controllers/users_controller_spec.rb', /\:update\s+=>\s+false/, ':save => false'
 gsub_file 'spec/controllers/users_controller_spec.rb', /\:update\s+=>\s+true/, ':save => true'
 gsub_file 'spec/controllers/users_controller_spec.rb', /receive\(\:update\).with\(.*\)/, 'receive(:save)'

@@ -22,6 +22,8 @@ module Ixtlan
 
         model.property :password_sender_email, String, :format => :email_address, :required => false, :length => 64
 
+        model.property :login_url, String, :required => false, :length => 128
+
         model.property :notification_sender_email, String, :format => :email_address, :required => false, :length => 64
 
         model.property :notification_recipient_emails, String, :format => Proc.new { |email| emails = email.split(','); emails.find_all { |e| e =~ DataMapper::Validate::Format::Email::EmailAddress }.size == emails.size}, :required => false, :length => 254 #honour mysql max varchar length

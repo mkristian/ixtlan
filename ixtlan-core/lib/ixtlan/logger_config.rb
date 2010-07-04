@@ -46,7 +46,13 @@ module Ixtlan
     DataMapper.logger = logger([appender,rails_appender], DataMapper)
 
     #TODO better find out which database !!!
-#    DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
+    if DataObjects.const_defined?("Sqlite3")
+      DataObjects::Sqlite3.logger = logger([appender,rails_appender], DataObjects)
+    elsif DataObjects.const_defined?("Mysql")
+      DataObjects::Mysql.logger = logger([appender,rails_appender], DataObjects)
+    elsif DataObjects.const_defined?("Postgres")
+      DataObjects::Postgres.logger = logger([appender,rails_appender], DataObjects)
+    end
 
     # configure audit logger
     Ixtlan::AuditConfig.configure(Object.full_const_get(Ixtlan::Models::CONFIGURATION).instance.keep_audit_logs,
