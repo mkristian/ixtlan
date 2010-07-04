@@ -26,9 +26,13 @@ public class Configuration extends SingletonResource<Configuration> {
 
     public int                        sessionIdleTimeout;
     public int                        keepAuditLogs;
+    public String                     passwordSenderEmail;
+    public String                     loginUrl;
     public ResourceCollection<Locale> locales;
     public String                     notificationSenderEmail;
     public String                     notificationRecipientEmails;
+    public String                     errorsDumpDirectory;
+    public String                     logfilesDirectory;
     public Timestamp                  updatedAt;
     public User                       updatedBy;
 
@@ -36,6 +40,10 @@ public class Configuration extends SingletonResource<Configuration> {
     protected void appendXml(final StringBuilder buf) {
         appendXml(buf, "session_idle_timeout", this.sessionIdleTimeout);
         appendXml(buf, "keep_audit_logs", this.keepAuditLogs);
+        appendXml(buf, "password_sender_email", this.passwordSenderEmail);
+        appendXml(buf, "login_url", this.loginUrl);
+        appendXml(buf, "errors_dump_directory", this.errorsDumpDirectory);
+        appendXml(buf, "logfiles_directory", this.logfilesDirectory);
         appendXml(buf, "locales", this.locales);
         appendXml(buf,
                   "notification_sender_email",
@@ -51,6 +59,10 @@ public class Configuration extends SingletonResource<Configuration> {
     protected void fromElement(final Element root) {
         this.sessionIdleTimeout = getInt(root, "session_idle_timeout");
         this.keepAuditLogs = getInt(root, "keep_audit_logs");
+        this.passwordSenderEmail = getString(root, "password_sender_email");
+        this.loginUrl = getString(root, "login_url");
+        this.logfilesDirectory = getString(root, "logfiles_directory");
+        this.errorsDumpDirectory = getString(root, "errors_dump_directory");
         this.locales = this.localeFactory.getChildResourceCollection(root,
                                                                      "locales");
         this.notificationRecipientEmails = getString(root,
@@ -66,6 +78,10 @@ public class Configuration extends SingletonResource<Configuration> {
         toString(indent, buf, "session_idle_timeout", this.sessionIdleTimeout);
         toString(indent, buf, "keep_audit_logs", this.keepAuditLogs);
         toString(indent, buf, "locales", this.locales);
+        toString(indent, buf, "password_sender_email", this.passwordSenderEmail);
+        toString(indent, buf, "login_url", this.loginUrl);
+        toString(indent, buf, "errors_dump_directory", this.errorsDumpDirectory);
+        toString(indent, buf, "logfiles_directory", this.logfilesDirectory);
         toString(indent,
                  buf,
                  "notification_sender_emailn",

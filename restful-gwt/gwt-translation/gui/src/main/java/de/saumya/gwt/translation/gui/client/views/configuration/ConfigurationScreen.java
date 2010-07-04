@@ -85,6 +85,62 @@ public class ConfigurationScreen extends SingletonResourceScreen<Configuration> 
                     }
                 },
                 64);
+            add("email address of sender for password emails",
+                new TextBoxBinding<Configuration>() {
+
+                    @Override
+                    public void pullFrom(final Configuration resource) {
+                        setText(resource.passwordSenderEmail);
+                    }
+
+                    @Override
+                    public void pushInto(final Configuration resource) {
+                        resource.passwordSenderEmail = getText();
+                    }
+                },
+                64);
+            add("login url for new user emails",
+                new TextBoxBinding<Configuration>() {
+
+                    @Override
+                    public void pullFrom(final Configuration resource) {
+                        setText(resource.loginUrl);
+                    }
+
+                    @Override
+                    public void pushInto(final Configuration resource) {
+                        resource.loginUrl = getText();
+                    }
+                },
+                128);
+            add("directory for log files",
+                new TextBoxBinding<Configuration>() {
+
+                    @Override
+                    public void pullFrom(final Configuration resource) {
+                        setText(resource.logfilesDirectory);
+                    }
+
+                    @Override
+                    public void pushInto(final Configuration resource) {
+                        resource.logfilesDirectory = getText();
+                    }
+                },
+                192);
+            add("directory for error dumps",
+                new TextBoxBinding<Configuration>() {
+
+                    @Override
+                    public void pullFrom(final Configuration resource) {
+                        setText(resource.errorsDumpDirectory);
+                    }
+
+                    @Override
+                    public void pushInto(final Configuration resource) {
+                        resource.errorsDumpDirectory = getText();
+                    }
+                },
+                192);
         }
     }
 
