@@ -72,7 +72,7 @@ module Ixtlan
             format.html { redirect_to(user_url(@user.id)) }
             format.xml  { render :xml => @user, :status => :created, :location => user_url(@user.id) + ".xml" }
 
-            Mailer.deliver_password(@user.email, "Configuration.instance.password_sender_email", @user.password)
+            ::Ixtlan::Mailer.deliver_password(@user.email, "Configuration.instance.password_sender_email", @user.password)
           else
             format.html { render :action => "new" }
             format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }

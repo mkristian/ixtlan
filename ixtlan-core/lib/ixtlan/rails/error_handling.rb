@@ -90,7 +90,7 @@ module Ixtlan
         logger = Logger.new(log_file)
 
         dump_environment(logger, exception, controller)
-        Ixtlan::Mailer.deliver_error_notification(@email_from, @email_to, exception, log_file) unless (@email_to.blank? || @email_from.blank?)
+        ::Ixtlan::Mailer.deliver_error_notification(@email_from, @email_to, exception, log_file) unless (@email_to.blank? || @email_from.blank?)
         log_file
       end
 
