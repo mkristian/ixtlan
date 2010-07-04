@@ -38,10 +38,12 @@ CODE
   end
 end
 
-def add_gem(name, version, options = {})
+def add_gem(name, version, scope = :compile, options = {})
   gem name, options
-  java = name =~ /^do_/ ? "<classifier>java</classifier>\n" : ""
-  gsub_file 'pom.xml', /<\/dependencies>/, "<dependency>\n<groupId>rubygems</groupId>\n<artifactId>#{name}</artifactId>\n<version>#{version}</version>\n<type>gem</type>\n#{java}</dependency>\n</dependencies>"
+  unless scope.nil?
+    scope = scope == :compile ? "" : "<scope>#{scope}</scope>\n"
+    gsub_file 'pom.xml', /<\/dependencies>/, "<dependency>\n<groupId>rubygems</groupId>\n<artifactId>#{name}</artifactId>\n<version>#{version}</version>\n<type>gem</type>\n#{scope}</dependency>\n</dependencies>"
+  end
 end
 
 def migration(model)
@@ -105,6 +107,7 @@ File.rename("src/main/webapp/WEB-INF/web.xml.rails",
             "src/main/webapp/WEB-INF/web.xml")
 gsub_file 'pom.xml', /.*rspec -->.*/, ''
 gsub_file 'pom.xml', /.*<!--.*rspec.*/, ''
+gsub_file 'pom.xml', /<build>.*/, "<build>\n    <outputDirectory>war/WEB-INF/classes</outputDirectory>"
 file '.classpath', <<-CODE
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
@@ -192,7 +195,7 @@ CODE
 # ixtlan gems
 add_gem 'rack', '1.0.1'
 #add_gem 'rack-datamapper', '0.3.2'
-add_gem 'ixtlan', '0.4.0.pre3'
+add_gem 'ixtlan', '0.4.0.pre4'
 #add_gem 'slf4r', '0.3.2'
 
 # assume sqlite3 to be database
@@ -205,11 +208,11 @@ add_gem 'dm-migrations', DM_VERSION
 add_gem 'dm-aggregates', DM_VERSION
 add_gem 'dm-transactions', DM_VERSION
 add_gem 'dm-core', DM_VERSION
-add_gem 'extlib', '0.9.15' #needed to execute this template
+add_gem 'extlib', '0.9.15', nil #nil == needed to execute this template
 
 # assume you prefer rspec over unit tests
-add_gem 'rspec', '[1.3.0,1.4.0]', :lib => false
-add_gem 'rspec-rails', '1.3.2', :lib => false
+add_gem 'rspec', '[1.3.0,1.4.0]', :test, :lib => false
+add_gem 'rspec-rails', '1.3.2', :test, :lib => false
 
 # install all gems
 rake 'gems:install'
@@ -239,6 +242,8 @@ CODE
 environment ''
 middleware 'DataMapper::RestfulTransactions'
 middleware 'DataMapper::IdentityMaps'
+middleware 'Ixtlan::AuditRack'
+environment '# this is important to clean up the Thread.current when you set AUDIT'
 middleware 'Rack::Deflater'
 environment '# add middleware'
 
@@ -257,6 +262,8 @@ module Ixtlan
     DOMAIN = "::Domain"
     TEXT = "::I18nText"
     CONFIGURATION = "::Configuration"
+    # set this to nil to switch off Audit logs into the database
+    AUDIT = "::Audit"
   end
 end
 require 'ixtlan/modified_by'
@@ -303,6 +310,7 @@ migration("configuration")
 migration("locale")
 migration("domain")
 migration("text")
+migration("audit")
 
 # -----
 # VIEWS
@@ -327,11 +335,17 @@ file "app/views/sessions/login.html.erb", <<-CODE
 CODE
 
 file 'app/views/errors/error.html.erb', <<-CODE
-<h1><%= @notice %></h1>
+<h2>error</h2>
+<h3><%= @notice %></h3>
+CODE
+
+file 'app/views/errors/error_with_session.html.erb', <<-CODE
+<h2>error with session</h2>
+<h3><%= @notice %></h3>
 CODE
 
 file 'app/views/errors/stale.html.erb', <<-CODE
-<h1>stale resource</h1>
+<h2>stale resource</h2>
 <p>please reload resource and change it again</p>
 CODE
 
@@ -386,6 +400,10 @@ ixtlan_controller 'configurations', {:actions => [:show, :edit, :update]}, 'conf
 ixtlan_model "authentication"
 ixtlan_controller "authentications", {:actions => [:create]}, 'authentication'
 
+# audit model/controller
+ixtlan_model "audit"
+ixtlan_controller "audits", {:actions => [:index]}
+
 # modify application controller as needed
 gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   filter_parameter_logging :password, :login
@@ -414,7 +432,7 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   end
 
   # needs 'optimistic_persistence'
-  rescue_from DataMapper::StaleResourceError, :with => :stale_resource
+  rescue_from Ixtlan::StaleResourceError, :with => :stale_resource
 
   # needs 'guard'
   rescue_from Ixtlan::GuardException, :with => :page_not_found
@@ -464,16 +482,20 @@ module Ixtlan
       result
     end
 
-    def self.load(dir, file)
-      symbolize_keys(YAML::load(ERB.new(IO.read(File.join(dir, file))).result))
+    def self.load(file)
+      symbolize_keys(YAML::load(ERB.new(IO.read(file)).result)) if File.exists?(file)
     end
   end
 end
 
-CONFIG = Ixtlan::Configurator.load(File.dirname(__FILE__), 'global.yml')
+CONFIG = Ixtlan::Configurator.load(File.join(File.dirname(__FILE__), 'global.yml')) || {}
 CODE
 
-file 'config/global.yml', <<-CODE
+file 'config/.gitignore', <<-CODE
+global.yml
+CODE
+
+file 'config/global-exmaple.yml', <<-CODE
 # possible example to have a file with all the (production) passwords
 # outside GIT/SUBVERSION/CVS/etc !!!
 mysql:
