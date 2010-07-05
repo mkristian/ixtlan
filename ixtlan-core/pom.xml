@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>ixtlan</artifactId>
-  <version>0.4.0.pre4</version>
+  <version>0.4.0.pre5</version>
   <packaging>gem</packaging>
   <name>ixtlan plugins for rails and datamapper</name>
   <description><![CDATA[this is set of rails and datamapper plugins for setting up a little more advanced rails application then the default rails generator does. the focus is on security and privacy as well a complete restful xml support.]]></description>
