@@ -273,6 +273,8 @@ middleware 'DataMapper::IdentityMaps'
 middleware 'Ixtlan::AuditRack'
 environment '# this is important to clean up the Thread.current when you set AUDIT'
 middleware 'Rack::Deflater'
+middleware 'Ixtlan::ChildPath', 'com.example.Application'
+environment '# you need this to run the war file directly without copying the GWT application into the root directory'
 environment '# add middleware'
 
 # ------------

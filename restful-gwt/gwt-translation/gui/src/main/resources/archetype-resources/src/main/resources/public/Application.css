@@ -12,8 +12,6 @@
   display:none;
 }
 
-
-
 .login {
 margin-top: 3%;
 margin-left: 35%;
@@ -30,12 +28,12 @@ color: darkblue;
 padding: .2em;
 }
 .info-notification, .warn-notification, .showall-notification {
-margin-top: .5em;
+margin-top: .1em;
 margin-left: 20%;
 margin-right: 20%;
-opacity: 0.9;
+opacity: 0.8;
 font-weight: bold;
-padding: 1em;
+padding: .7em;
 width: 60%;
 }
 .info-note, .warn-note{
@@ -85,42 +83,43 @@ margin-left: .2em;
 .gwt-TabPanel{
 width: 100%
 }
-.header-panel {
+.resource-header-panel {
 clear: both;
 float:right;
 margin-right: 4.5%;
 }
-.header-panel div {
+.resource-header-panel div {
 display:inline;
-}.action-panel {
+}
+.resource-action-panel {
 margin-left:1.2%;
 margin-right:2em;
 }
-.action-panel * {
+.resource-action-panel * {
 float:left;
 }
-.action-panel div.gwt-Label {
+.resource-action-panel div.gwt-Label {
 color:darkBlue;
 display:inline;
 font-weight:bold;
 font-size:1.1em;
 }
-.action-panel input {
+.resource-action-panel input {
 margin-left:0.5em;
 margin-right:0.5em;
 }
-.action-panel .new-create {
+.resource-collection-navigation, .resource-action-panel .resource-buttons {
 clear:both;
 }
-.screen table {
+.resource-screen table {
 margin-top: .5em;
 clear: both;
 }
-.resource-panel {
+.resource-fields {
 margin-top: 1em;
 clear: both;
 }
-.resource-panel > div {
+.resource-fields > div {
 float: left;
 width: 30%;
 margin-bottom: .5em;
@@ -128,10 +127,10 @@ margin-right: 1%;
 margin-left: 1%;
 border: solid white 1px;
 }
-.resource-panel > div.big-box {
+.resource-fields > div.big-box {
 width: 62.2%
 }
-.resource-panel > div input, .resource-panel > div textarea {
+.resource-fields > div input, .resource-fields > div textarea {
 width:100%;
 }
 .is-ok, .is-error{
@@ -143,13 +142,31 @@ color: darkgreen;
 .is-error{
 color: darkred;
 }
-.resource-panel > div.has-errors{
+.resource-fields > div.has-errors{
 border: solid red 1px;
 }
-.resource-panel input[disabled]{
+.resource-fields input[disabled]{
+color: gray;
+}
+.resource-buttons .action-buttons button{
+color: darkgreen;
+}
+.resource-action-panel .get-by button {
 color: black;
 }
-.screen .loading {
+.resource-action-panel .search .gwt-Label {
+margin-top: .5em;
+}
+.resource-action-panel input{
+margin-right: 0;
+}
+.resource-buttons .new-create button{
+color: darkred;
+}
+.resource-collection-navigation, .resource-action-panel .resource-buttons {
+padding-top: .5em;
+}
+.loading-notice {
 background-color:lightgoldenRodYellow;
 border:1px solid darkgoldenrod;
 color:darkgoldenrod;
