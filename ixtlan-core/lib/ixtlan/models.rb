@@ -1,15 +1,15 @@
 module Ixtlan
   module Models
-    AUTHENTICATION = "::Ixtlan::Models::Authentication" unless const_defined? "AUTHENTICATION"
-    AUDIT = "::Ixtlan::Models::Audit" unless const_defined? "AUDIT"
-    USER = "::Ixtlan::Models::User" unless const_defined? "USER"
-    GROUP = "::Ixtlan::Models::Group" unless const_defined? "GROUP"
-    ROLE = "::Ixtlan::Models::Role" unless const_defined? "ROLE"
-    PERMISSION = "::Ixtlan::Models::Permission" unless const_defined? "PERMISSION"
-    LOCALE = "::Ixtlan::Models::Locale" unless const_defined? "LOCALE"
-    DOMAIN = "::Ixtlan::Models::Domain" unless const_defined? "DOMAIN"
-    CONFIGURATION = "::Ixtlan::Models::Configuration" unless const_defined? "CONFIGURATION"
-    TRANSLATION = "::Ixtlan::Models::Translation" unless const_defined? "TRANSLATION"
-    TEXT = "::Ixtlan::Models::I18nText" unless const_defined? "TEXT"
+    AUTHENTICATION = "::Authentication" unless const_defined? "AUTHENTICATION"
+    AUDIT = "::Audit" unless const_defined? "AUDIT"
+    USER = "::User" unless const_defined? "USER"
+    GROUP = "::Group" unless const_defined? "GROUP"
+    ROLE = "::Role" unless const_defined? "ROLE"
+    PERMISSION = "::Permission" unless const_defined? "PERMISSION"
+    LOCALE = "::Locale" unless const_defined? "LOCALE"
+    DOMAIN = "::Domain" unless const_defined? "DOMAIN"
+    CONFIGURATION = "::Configuration" unless const_defined? "CONFIGURATION"
+    TRANSLATION = "::Translation" unless const_defined? "TRANSLATION"
+    TEXT = "::I18nText" unless const_defined? "TEXT"
   end
 end

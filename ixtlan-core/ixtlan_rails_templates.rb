@@ -89,6 +89,7 @@ File.delete('config/initializers/jdbc.rb')
 file '.gitignore', <<-CODE
 target
 root_*
+tomcat
 CODE
 file 'log/.gitignore', <<-CODE
 *log
@@ -114,6 +115,10 @@ gsub_file 'pom.xml', /.*rspec -->.*/, ''
 gsub_file 'pom.xml', /.*<!--.*rspec.*/, ''
 gsub_file 'pom.xml', /<build>.*/, "<build>\n    <outputDirectory>war/WEB-INF/classes</outputDirectory>"
 
+file 'war/WEB-INF/.gitignore', <<-CODE
+classes
+lib
+CODE
 file 'war/WEB-INF/web.xml', <<-CODE
 <web-app>
   <!-- Proxy Servlets to the restful backend - i.e. rails ixtlan backend-->
@@ -278,20 +283,15 @@ environment '# add middleware'
 initializer 'ixtlan.rb', <<-CODE
 module Ixtlan
   module Models
-    AUTHENTICATION = "::Authentication"
-    USER = "::User"
-    GROUP = "::Group"
-    LOCALE = "::Locale"
-    DOMAIN = "::Domain"
-    TEXT = "::I18nText"
-    CONFIGURATION = "::Configuration"
+    # overwrite configuration class
+    # CONFIGURATION = "::MyConfiguration"
     # set this to nil to switch off Audit logs into the database
-    AUDIT = "::Audit"
+    # AUDIT = nil
   end
 end
+require 'ixtlan/models'
 require 'ixtlan/modified_by'
 if ENV['RAILS_ENV']
-  require 'models'
   require 'ixtlan/rails/error_handling'
   require 'ixtlan/rails/audit'
   require 'ixtlan/rails/session_timeout'
@@ -442,9 +442,9 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
   #  User.get(session[:user_id])
   #end
 
-  # override default to use value from configuration
+  # overwrite default
   #def session_timeout
-  #  Configuration.instance.session_idle_timeout
+  #  3 # time out in 3 minutes
   #end
 
   def render_error_page_with_session(status)
@@ -455,27 +455,10 @@ gsub_file 'app/controllers/application_controller.rb', /^\s*helper.*/, <<-CODE
     render :template => "errors/error", :status => status
   end
 
-  # needs 'optimistic_persistence'
-  rescue_from Ixtlan::StaleResourceError, :with => :stale_resource
-
-  # needs 'guard'
-  rescue_from Ixtlan::GuardException, :with => :page_not_found
-  rescue_from Ixtlan::PermissionDenied, :with => :page_not_found
-
-  #standard rails or datamapper/dataobjects
-  rescue_from DataObjects::SQLError, :with => :internal_server_error
-  rescue_from DataMapper::ObjectNotFoundError, :with => :page_not_found
-  rescue_from ActionController::RoutingError, :with => :page_not_found
-  rescue_from ActionController::UnknownAction, :with => :page_not_found
-  rescue_from ActionController::MethodNotAllowed, :with => :page_not_found
-  rescue_from ActionController::NotImplemented, :with => :page_not_found
-  rescue_from ActionController::InvalidAuthenticityToken, :with => :stale_resource
-
-  # have nice stacktraces in development mode
-  unless consider_all_requests_local
-    rescue_from ActionView::MissingTemplate, :with => :internal_server_error
-    rescue_from ActionView::TemplateError, :with => :internal_server_error
-  end
+  include Ixtlan::Rails::RescueModule
+  # you can overwrite a rescue directive here
+  # rescue_from ::Ixtlan::StaleResourceError, :with => :stale_resource
+  # rescue_from ::ActionView::MissingTemplate, :with => :internal_server_error
 
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 CODE
