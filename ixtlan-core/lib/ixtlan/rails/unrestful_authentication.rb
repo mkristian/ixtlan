@@ -1,3 +1,4 @@
+
 module Ixtlan
 module Rails
   module UnrestfulAuthentication
@@ -49,15 +50,15 @@ module Rails
           session.clear
           render_login_page
         when :post
-          user = login_from_params
+          user = login_from_params || "no username or password"
           if user.instance_of? String
-            authentication_logger.log_user(params[:login] || params[:authentication][:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
+            authentication_logger.log_user(params[:login] || (params[:authentication] || {})[:login], user + " from IP #{request.headers['REMOTE_ADDR']}")
             session.clear
             render_access_denied
           else
-            authentication_logger.log_user(user.login, "logged in")
+            authentication_logger.log_user(user.nil? ? nil : user.login, "logged in")
             session.clear
-            #  reset_session
+            # reset session
             self.current_user = user
             render_successful_login
           end
@@ -82,7 +83,7 @@ module Rails
         authentication_logger.log_user(current_user.login, "logged out")
         current_user = nil
         session.clear
-        # reset_session
+        # reset session
         render_logout_page
         false
       else

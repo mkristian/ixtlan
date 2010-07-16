@@ -19,9 +19,13 @@ module Ixtlan
 
             protected
 
+            def permissions
+              Guard.permissions(user)
+            end
+
             alias :to_x :to_xml_document
             def to_xml_document(opts, doc = nil)
-              opts.merge!({:exclude => [:password,:user_id], :methods => [:user]})
+              opts.merge!({:exclude => [:password,:user_id], :methods => [:user, :permissions]})
               to_x(opts, doc)
             end
           end
