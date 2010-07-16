@@ -1,8 +1,7 @@
 require 'ixtlan/optimistic_persistence_module'
+require 'ixtlan/stale_resource_error'
 
-module DataMapper
-
-  class StaleResource < StandardError; end
+module Ixtlan
 
   module OptimisticPersistenceValidation
 

@@ -3,6 +3,8 @@ module Ixtlan
   module Rails
     module ErrorHandling
 
+      protected
+
       def log_user_error(exception)
         Ixtlan::UserLogger.new(Ixtlan::Rails::ErrorHandling).log_action(self, " - #{exception.class} - #{exception.message}")
         log_error(exception)
@@ -31,11 +33,11 @@ module Ixtlan
       end
 
       def render_error_page_with_session(status)
-        render :template => "errors/error", :status => status
+        render :template => "errors/error_with_session", :status => status
       end
 
       def render_error_page(status)
-        render :template => "sessions/login", :status => status
+        render :template => "sessions/error", :status => status
       end
 
       def page_not_found(exception)

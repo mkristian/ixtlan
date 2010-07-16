@@ -26,3 +26,5 @@ module Ixtlan
     end
   end
 end
+
+ActionController::Base.send(:include, Ixtlan::Rails::RescueModule)
