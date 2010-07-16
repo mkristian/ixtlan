@@ -86,26 +86,33 @@ module Ixtlan
       @@map[controller.to_sym] = symbolize(map)
     end
 
+    ROLE = Models::Role
+    PERMISSION = Models::Permission
+
     def self.export_xml
+      xml = permissions.to_xml
       repository(:guard_memory) do
-        role_const = Models::Role
-        permission_const = Models::Permission
-        root = role_const.create(:name => @@superuser)
+        PERMISSION.all.destroy!
+        ROLE.all.destroy!
+      end
+      xml
+    end
+
+    def self.permissions(user = nil)
+      repository(:guard_memory) do
+        root = ROLE.create(:name => @@superuser)
         @@map.each do |controller, actions|
           actions.each do |action, roles|
-            permission = permission_const.create(:resource => controller, :action => action)
+            permission = PERMISSION.create(:resource => controller, :action => action)
             permission.roles << root
             roles.each do |role|
-              r = role_const.create(:name => role)
+              r = ROLE.create(:name => role)
               permission.roles << r unless permission.roles.member? r
             end
             permission.save
           end
         end
-        xml = permission_const.all.to_xml
-        permission_const.all.destroy!
-        role_const.all.destroy!
-        xml
+        PERMISSION.all
       end
     end
 
