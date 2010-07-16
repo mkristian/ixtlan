@@ -4,6 +4,8 @@ module Ixtlan
       
       def self.included(base)
         base.send(:include, Ixtlan::Controllers::SearchQuery)
+        # do not want to expose groups on filesystem cache
+        base.cache_headers :private
       end
 
       public

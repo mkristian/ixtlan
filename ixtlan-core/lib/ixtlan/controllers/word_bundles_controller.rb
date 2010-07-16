@@ -5,6 +5,8 @@ module Ixtlan
       def self.included(base)
         # no guard since everyone needs to load the bundles
         base.skip_before_filter :guard
+
+        base.cache_headers :protected
       end
 
       def index

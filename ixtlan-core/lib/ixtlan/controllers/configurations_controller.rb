@@ -2,6 +2,10 @@ module Ixtlan
   module Controllers
     module ConfigurationsController
 
+      def self.included(base)
+        base.cache_headers :protected
+      end
+
       private
 
       CONFIGURATION = Object.full_const_get(::Ixtlan::Models::CONFIGURATION)

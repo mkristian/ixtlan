@@ -2,6 +2,10 @@ module Ixtlan
   module Controllers
     module PhrasesController
 
+      def self.included(base)
+        base.cache_headers :protected
+      end
+
       private
 
       LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)

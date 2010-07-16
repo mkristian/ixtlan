@@ -4,6 +4,10 @@ module Ixtlan
 
       include SearchQuery
 
+      def self.included(base)
+        base.cache_headers :protected, false # no_store == false
+      end
+
       private
 
       USER = Object.full_const_get(::Ixtlan::Models::USER)

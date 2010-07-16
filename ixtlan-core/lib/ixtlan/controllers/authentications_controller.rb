@@ -5,15 +5,22 @@ module Ixtlan
       def self.included(base)
         base.skip_before_filter :guard
         base.skip_before_filter :authenticate, :only => :destroy
+
+        # do not want to expose permissions settings on filesystem cache
+        base.cache_headers :private
       end
 
       protected
       def login_from_params
         auth = params[:authentication]
-        User.authenticate(auth[:login], auth[:password])
+        User.authenticate(auth[:login], auth[:password]) if auth
       end
 
       public
+      def show
+        render_successful_login
+      end
+
       def create
         render_successful_login
       end

@@ -10,7 +10,7 @@ module Ixtlan
 
       def query(parameter, value)
         args = {}
-        args[:limit] = params[:limit].to_i + 1 if params[:limit]
+        args[:limit] = (params[:limit] || 10).to_i + 1 #if params[:limit]
         args[:offset] = params[:offset].to_i if params[:offset]
 
         if value
