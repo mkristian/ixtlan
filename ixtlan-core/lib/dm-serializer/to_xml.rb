@@ -26,9 +26,9 @@ module DataMapper
       root = xml.root_node(doc, opts[:element_name] || default_xml_element_name[])
       properties_to_serialize(opts).each do |property|
         value = __send__(property.name)
-        attrs = (property.class == DataMapper::Property::String) ? {} : {'type' => property.class.to_s.downcase}
+        attrs = opts[:skip_types] ? {} : (property.class == DataMapper::Property::String) ? {} : {'type' => property.class.to_s.downcase}
         value = value.to_s(:xml) if property.class == DataMapper::Property::DateTime rescue value
-        xml.add_node(root, property.name.to_s, value.frozen? ? value.to_s.dup: value, attrs)
+        xml.add_node(root, property.name.to_s, value.frozen? ? value.to_s.dup: value, attrs) unless value.blank? && opts[:skip_empty_tags]
       end
 
       (opts[:methods] || []).each do |meth|
@@ -38,8 +38,10 @@ module DataMapper
           unless value.nil?
             if value.respond_to?(:to_xml_document)
               options = value.is_a?(DataMapper::Collection) ? {:collection_element_name => xml_name} : {:element_name => xml_name}
+              options[:skip_types] = opts[:skip_types]
+              options[:skip_empty_tags] = opts[:skip_empty_tags]
               options.merge!(opts[meth] || {})
-              xml.add_xml(root, value.__send__(:to_xml_document, options))
+              xml.add_xml(root, value.__send__(:to_xml_document, options)) unless value.is_a?(DataMapper::Collection) && opts[:skip_empty_tags] == true && value.size == 0 
             else
               xml.add_node(root, xml_name, value.to_s)
             end
@@ -61,8 +63,12 @@ module DataMapper
       xml = DataMapper::Serialize::XMLSerializers::SERIALIZER
       doc = xml.new_document
       default_collection_element_name = lambda {Extlib::Inflection.underscore(self.model.storage_name).tr("/", "-")}
-      root = xml.root_node(doc, opts[:collection_element_name] || default_collection_element_name[], {'type' => 'array'})
+      root = xml.root_node(doc, opts[:collection_element_name] || default_collection_element_name[], opts[:skip_types] ? {} : {'type' => 'array'})
+      items = []
       self.each do |item|
+        items << item
+      end
+      items.each do |item|
         item.__send__(:to_xml_document, opts, doc)
       end
       doc
