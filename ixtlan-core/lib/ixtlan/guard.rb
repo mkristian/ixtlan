@@ -18,6 +18,10 @@ module Ixtlan
           end
           true
         end
+
+        def allowed(action, locale = nil)
+          ::Ixtlan::Guard.check(self, params[:controller], action, locale)
+        end
       end
     end
   end
@@ -100,6 +104,8 @@ module Ixtlan
 
     def self.permissions(user = nil)
       repository(:guard_memory) do
+        PERMISSION.all.destroy!
+        ROLE.all.destroy!
         root = ROLE.create(:name => @@superuser)
         @@map.each do |controller, actions|
           actions.each do |action, roles|
@@ -128,10 +134,17 @@ module Ixtlan
           raise ::Ixtlan::GuardException.new("unknown action '#{action}' for controller '#{resource}'")
         else
           allowed << @@superuser unless allowed.member? @@superuser
-          for group in groups
-             if allowed.member? group.name.to_sym
-               return locale.nil? ? true : (group.locales.member? locale)
-             end
+          all_groups = allowed.member?(:*) 
+          if(all_groups && locale.nil?)
+            return true
+          else
+            for group in groups
+              if all_groups || allowed.member?(group.name.to_sym)
+                if(locale.nil? || group.locales.member?(locale))
+                  return true
+                end
+              end
+            end
           end
           return false
         end
