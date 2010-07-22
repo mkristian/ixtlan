@@ -43,9 +43,4 @@ public class GroupFactory extends ResourceFactory<Group> {
         // keep "all" cache up to date
         this.userGroupFactory.removeFromCache(resource);
     }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return "name";
-    }
 }

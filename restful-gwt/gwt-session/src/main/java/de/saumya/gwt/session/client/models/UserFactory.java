@@ -31,9 +31,4 @@ public class UserFactory extends ResourceFactory<User> {
                 this.groupFactory,
                 key);
     }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return "login";
-    }
 }

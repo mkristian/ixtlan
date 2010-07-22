@@ -110,9 +110,4 @@ public class DomainFactory extends ResourceFactory<Domain> {
         }
     }
 
-    @Override
-    public String defaultSearchParameterName() {
-        return "name";
-    }
-
 }

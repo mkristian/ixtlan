@@ -28,10 +28,4 @@ public class AuditFactory extends ResourceFactory<Audit> {
     public boolean isImmutable() {
         return true;
     }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return "query";
-    }
-
 }

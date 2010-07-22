@@ -132,9 +132,4 @@ public class LocaleFactory extends ResourceFactory<Locale> {
         case 0:
         }
     }
-
-    @Override
-    public String defaultSearchParameterName() {
-        return "code";
-    }
 }

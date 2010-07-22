@@ -59,7 +59,7 @@ public abstract class AbstractResourceFactory<E extends AbstractResource<E>> {
     }
 
     public String defaultSearchParameterName() {
-        return null;
+        return "query";
     }
 
     public String storagePluralName() {
