@@ -127,8 +127,14 @@ margin-right: 1%;
 margin-left: 1%;
 border: solid white 1px;
 }
+.resource-fields > div.small-box {
+width: 15%
+}
 .resource-fields > div.big-box {
 width: 62.2%
+}
+.resource-fields > div.huge-box {
+width: 92.2%
 }
 .resource-fields > div input, .resource-fields > div textarea {
 width:100%;

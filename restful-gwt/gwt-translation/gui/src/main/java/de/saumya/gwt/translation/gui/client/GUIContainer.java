@@ -95,8 +95,8 @@ public class GUIContainer {
 
     public final Session               session              = new Session(new AuthenticationFactory(this.repository,
                                                                     this.notifications,
-                                                                    this.userFactory),
                                                                     this.permissionFactory,
+                                                                    this.userFactory),
                                                                     this.configurationFactory);
 
     public final GetText               getText              = new GetText(new WordBundleFactory(this.repository,

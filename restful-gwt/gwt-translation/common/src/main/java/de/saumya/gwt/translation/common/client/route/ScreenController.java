@@ -26,7 +26,7 @@ import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class ScreenController {
 
-    private final TabPanel          bodyPanel  = new TabPanel();
+    private final TabPanel          tabPanel  = new TabPanel();
 
     private final GetTextController getTextController;
 
@@ -45,7 +45,7 @@ public class ScreenController {
         this.getTextController = getTextController;
         this.localeFactory = localeFactory;
         this.hyperlinkFactory = hyperlinkFactory;
-        panel.add(this.bodyPanel);
+        panel.add(this.tabPanel);
         History.addValueChangeHandler(new ValueChangeHandler<String>() {
 
             @Override
@@ -62,7 +62,7 @@ public class ScreenController {
 
             @Override
             public void onLogin() {
-                final TabBar bar = ScreenController.this.bodyPanel.getTabBar();
+                final TabBar bar = ScreenController.this.tabPanel.getTabBar();
                 for (int i = 0; i < bar.getTabCount(); i++) {
                     final String name = ScreenController.this.names.get(i);
                     // TODO better permissions check !?!?
@@ -80,12 +80,13 @@ public class ScreenController {
     }
 
     private void dispatch(final ScreenPath path) {
+        // TODO check permission and return to "default" page in needed
         if (path.controllerName != null) {
-            this.bodyPanel.selectTab(this.names.indexOf(path.controllerName));
+            this.tabPanel.selectTab(this.names.indexOf(path.controllerName));
         }
         else {
             // select no tab !!!
-            this.bodyPanel.selectTab(-1);
+            this.tabPanel.selectTab(-1);
         }
         this.dispatcher.dispatch(path);
         switchLocale(path.locale);
@@ -101,12 +102,12 @@ public class ScreenController {
             final TranslatableHyperlink link) {
         final int index = this.names.indexOf(link.getCode());
         if (index < 0) {
-            this.bodyPanel.add((Widget) screen, link);
+            this.tabPanel.add((Widget) screen, link);
             this.names.add(link.getCode());
         }
         else {
-            this.bodyPanel.remove(index);
-            this.bodyPanel.insert((Widget) screen, link, index);
+            this.tabPanel.remove(index);
+            this.tabPanel.insert((Widget) screen, link, index);
         }
         this.dispatcher.register(link.getCode(), screen);
     }

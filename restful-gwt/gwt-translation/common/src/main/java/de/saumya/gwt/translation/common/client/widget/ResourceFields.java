@@ -17,8 +17,8 @@ import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.translation.common.client.GetTextController;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings.Binding;
 
-public class ResourceFields<E extends AbstractResource<E>> extends FlowPanel implements
-        AllowReadOnly<E> {
+public class ResourceFields<E extends AbstractResource<E>> extends FlowPanel
+        implements AllowReadOnly<E> {
 
     protected final GetTextController getTextController;
 
@@ -51,10 +51,47 @@ public class ResourceFields<E extends AbstractResource<E>> extends FlowPanel imp
         add(new TranslatableLabel(this.getTextController, text));
     }
 
+    private static enum BoxType {
+        SMALL, NORMAL, BIG, HUGE
+    }
+
+    protected <T extends Widget & Binding<E>> void addSmall(final String label,
+            final T widget) {
+        add(label, widget, BoxType.SMALL);
+    }
+
     protected <T extends Widget & Binding<E>> void add(final String label,
             final T widget) {
+        add(label, widget, BoxType.NORMAL);
+    }
+
+    protected <T extends Widget & Binding<E>> void addBig(final String label,
+            final T widget) {
+        add(label, widget, BoxType.BIG);
+    }
+
+    protected <T extends Widget & Binding<E>> void addHuge(final String label,
+            final T widget) {
+        add(label, widget, BoxType.HUGE);
+    }
+
+    private <T extends Widget & Binding<E>> void add(final String label,
+            final T widget, final BoxType boxType) {
         this.bindings.add(widget);
         final ComplexPanel panel = new FlowPanel();
+        switch (boxType) {
+        case SMALL:
+            panel.addStyleName("small-box");
+            break;
+        case NORMAL:
+            break;
+        case BIG:
+            panel.addStyleName("big-box");
+            break;
+        case HUGE:
+            panel.addStyleName("huge-box");
+            break;
+        }
         final Label message = new TranslatableLabel(this.getTextController);
         panel.add(message);
         panel.add(new TranslatableLabel(this.getTextController, label));
@@ -66,6 +103,7 @@ public class ResourceFields<E extends AbstractResource<E>> extends FlowPanel imp
             final String label, final T textBox, final int min, final int max) {
         this.bindings.add(textBox);
         final ComplexPanel panel = new FlowPanel();
+        panel.addStyleName("small-box");
         final Label message = new TranslatableLabel(this.getTextController);
         message.setStyleName("is-ok");
         textBox.addKeyUpHandler(new KeyUpHandler() {
