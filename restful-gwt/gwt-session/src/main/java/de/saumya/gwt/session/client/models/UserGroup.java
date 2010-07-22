@@ -28,8 +28,8 @@ public class UserGroup extends Resource<UserGroup> {
 
     public Timestamp                  createdAt;
 
-    public ResourceCollection<Domain> domains;
-    public ResourceCollection<Locale> locales;
+    public ResourceCollection<Domain> domains = new ResourceCollection<Domain>(this.domainFactory);
+    public ResourceCollection<Locale> locales = new ResourceCollection<Locale>(this.localeFactory);
 
     @Override
     protected void appendXml(final StringBuilder buf) {

@@ -83,8 +83,19 @@ public abstract class ResourceFactory<E extends Resource<E>> extends
 
     public ResourceCollection<E> getChildResourceCollection(final Element root,
             final String name) {
+        return getChildResourceCollection(root, name, newResources());
+    }
+
+    public ResourceCollection<E> getChildResourceCollection(final Element root,
+            final String name, final ResourceCollection<E> defaultValues) {
+        final ResourceCollection<E> resources;
+        if (defaultValues != null) {
+            resources = defaultValues;
+        }
+        else {
+            resources = newResources();
+        }
         final Element element = child(root, name);
-        final ResourceCollection<E> resources = newResources();
         if (element != null) {
             resources.fromXml(element);
         }

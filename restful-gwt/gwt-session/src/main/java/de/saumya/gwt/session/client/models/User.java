@@ -56,7 +56,8 @@ public class User extends Resource<User> {
         this.preferedLanguage = this.localeFactory.getChildResource(root,
                                                                     "preferred_language");
         this.groups = this.groupFactory.getChildResourceCollection(root,
-                                                                   "groups");
+                                                                   "groups",
+                                                                   this.groups);
         this.createdAt = getTimestamp(root, "created_at");
         this.updatedAt = getTimestamp(root, "updated_at");
     }
