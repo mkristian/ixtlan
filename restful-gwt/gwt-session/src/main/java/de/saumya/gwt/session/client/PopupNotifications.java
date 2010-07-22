@@ -103,6 +103,7 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
         };
         this.popup.addCloseHandler(closeHandler);
     }
+
     private final Label        closeLabel = new Label("(X) close");
     {
         this.closeLabel.addClickHandler(new ClickHandler() {
@@ -183,6 +184,16 @@ public class PopupNotifications implements Notifications, ResourceNotifications 
     public void info(final String message, final AbstractResource<?> resource) {
         // TODO make the resource clickable inside the text
         info(message + " " + resource.display());
+    }
+
+    @Override
+    public boolean isShowing() {
+        return this.popup.isShowing();
+    }
+
+    @Override
+    public void hide() {
+        this.popup.hide();
     }
 
 }

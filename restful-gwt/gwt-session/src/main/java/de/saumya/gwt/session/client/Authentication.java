@@ -6,23 +6,29 @@ package de.saumya.gwt.session.client;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
+import de.saumya.gwt.persistence.client.ResourceCollection;
 import de.saumya.gwt.persistence.client.SingletonResource;
 import de.saumya.gwt.session.client.models.User;
 import de.saumya.gwt.session.client.models.UserFactory;
 
 class Authentication extends SingletonResource<Authentication> {
 
-    private final UserFactory userFactory;
+    private final UserFactory       userFactory;
+    private final PermissionFactory permissionFactory;
 
     protected Authentication(final Repository repository,
-            final AuthenticationFactory factory, final UserFactory userFactory) {
+            final AuthenticationFactory factory,
+            final PermissionFactory permissionFactory,
+            final UserFactory userFactory) {
         super(repository, factory);
         this.userFactory = userFactory;
+        this.permissionFactory = permissionFactory;
     }
 
-    String login;
-    String password;
-    User   user;
+    String                         login;
+    String                         password;
+    User                           user;
+    ResourceCollection<Permission> permissions;
 
     @Override
     protected void appendXml(final StringBuilder buf) {
@@ -35,6 +41,8 @@ class Authentication extends SingletonResource<Authentication> {
         this.login = null;
         this.password = null;
         this.user = this.userFactory.getChildResource(root, "user");
+        this.permissions = this.permissionFactory.getChildResourceCollection(root,
+                                                                             "permissions");
     }
 
     @Override
@@ -45,6 +53,7 @@ class Authentication extends SingletonResource<Authentication> {
         if (this.user != null) {
             toString(indent, buf, "user", this.user);
         }
+        toString(indent, buf, "permissions", this.permissions);
     }
 
     @Override

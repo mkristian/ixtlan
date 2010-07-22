@@ -14,8 +14,6 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 
 import de.saumya.gwt.persistence.client.ResourceChangeListener;
 import de.saumya.gwt.persistence.client.ResourceChangeListenerAdapter;
-import de.saumya.gwt.persistence.client.ResourceCollection;
-import de.saumya.gwt.persistence.client.ResourcesChangeListener;
 import de.saumya.gwt.session.client.models.Configuration;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.session.client.models.Locale;
@@ -72,14 +70,11 @@ public class Session {
     private final ConfigurationFactory                       configurationFactory;
     private final ResourceChangeListener<Configuration>      configurationListener;
     private final Map<String, Map<String, Collection<Role>>> permissions;
-    private final PermissionFactory                          permissionFactory;
-    private final ResourcesChangeListener<Permission>        permissionListener;
     private final ResourceChangeListener<Authentication>     authenticationListener;
 
     private final Set<SessionListener>                       listeners      = new HashSet<SessionListener>();
 
     public Session(final AuthenticationFactory authenticationFactory,
-            final PermissionFactory permissionFactory,
             final ConfigurationFactory configurationFactory) {
         this.authenticationFactory = authenticationFactory;
         this.configurationFactory = configurationFactory;
@@ -92,12 +87,33 @@ public class Session {
                         + " minutes", null);
             }
         };
+        this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
         this.authenticationListener = new ResourceChangeListener<Authentication>() {
 
             @Override
             public void onChange(final Authentication authentication) {
                 if (authentication.isUptodate()) {
+                    Session.this.permissions.clear();
+                    for (final Permission permission : authentication.permissions) {
+                        final Map<String, Collection<Role>> actions;
+                        if (Session.this.permissions.containsKey(permission.resource)) {
+                            actions = Session.this.permissions.get(permission.resource);
+                        }
+                        else {
+                            actions = new HashMap<String, Collection<Role>>();
+                            Session.this.permissions.put(permission.resource,
+                                                         actions);
+                        }
+                        actions.put(permission.action, permission.roles);
+                        GWT.log("added permission for '" + permission.resource
+                                + "#" + permission.action + ": "
+                                + permission.roles, null);
+                    }
                     doLogin(authentication);
+                    if (hasUser()) {
+                        History.fireCurrentHistoryState();
+                    }
+
                 }
                 else if (!authentication.isDeleted()) {
                     doAccessDenied();
@@ -110,39 +126,7 @@ public class Session {
                 doAccessDenied();
             }
         };
-        this.permissions = new HashMap<String, Map<String, Collection<Role>>>();
-        this.permissionFactory = permissionFactory;
-        this.permissionFactory.all(new ResourcesChangeListener<Permission>() {
-
-            @Override
-            public void onLoaded(final ResourceCollection<Permission> resources) {
-                for (final Permission permission : resources) {
-                    final Map<String, Collection<Role>> actions;
-                    if (Session.this.permissions.containsKey(permission.resource)) {
-                        actions = Session.this.permissions.get(permission.resource);
-                    }
-                    else {
-                        actions = new HashMap<String, Collection<Role>>();
-                        Session.this.permissions.put(permission.resource,
-                                                     actions);
-                    }
-                    actions.put(permission.action, permission.roles);
-                    GWT.log("added permission for '" + permission.resource
-                                    + "#" + permission.action + ": "
-                                    + permission.roles,
-                            null);
-                }
-            }
-        });
-        this.permissionListener = new ResourcesChangeListener<Permission>() {
-
-            @Override
-            public void onLoaded(final ResourceCollection<Permission> resources) {
-                if (hasUser()) {
-                    History.fireCurrentHistoryState();
-                }
-            }
-        };
+        authenticationFactory.get(this.authenticationListener);
     }
 
     public void addSessionListern(final SessionListener listener) {
@@ -184,18 +168,17 @@ public class Session {
         // load configuration and reset the timeout of the timer
         this.configurationFactory.get(this.configurationListener);
         fireSuccessfulLogin();
-        if (this.permissions.size() == 0) {
-
-            this.permissionFactory.all(this.permissionListener);
-        }
     }
 
     void doAccessDenied() {
+        // if (this.authentication != null) {
         this.authentication = null;
         fireAccessDenied();
+        // }
     }
 
     void doLogout() {
+        // this.
         this.authentication.destroy();
         this.authentication = null;
     }
@@ -219,6 +202,7 @@ public class Session {
     }
 
     public boolean isAllowed(final String action, final String resourceName) {
+        GWT.log("----------------" + this.authentication.user.groups, null);
         for (final UserGroup role : this.authentication.user.groups) {
             if (isAllowed(action, resourceName, role)) {
                 return true;

@@ -78,22 +78,27 @@ public class SessionController {
                 }
             }
         });
-        loginScreen.setVisible(true);
-        sessionSession.setVisible(false);
+        showLoginScreen("loading . . .", true);
     }
 
     public void showSessionScreen() {
+        this.loginScreen.notifications().hide();
         this.sessionSession.setVisible(true);
         this.loginScreen.setVisible(false);
     }
 
     public void showLoginScreen(final String msg, final boolean isInfo) {
         this.loginScreen.passwordTextBox().setText("");
-        if (isInfo) {
-            this.loginScreen.notifications().info(msg);
+        if (this.loginScreen.notifications().isShowing()) {
+            this.loginScreen.notifications().hide();
         }
         else {
-            this.loginScreen.notifications().warn(msg);
+            if (isInfo) {
+                this.loginScreen.notifications().info(msg);
+            }
+            else {
+                this.loginScreen.notifications().warn(msg);
+            }
         }
         this.loginScreen.setVisible(true);
         this.sessionSession.setVisible(false);

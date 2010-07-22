@@ -6,13 +6,13 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class PermissionFactory extends AnonymousResourceFactory<Permission> {
 
-    private final RoleFactory groupFactory;
+    private final RoleFactory roleFactory;
 
     public PermissionFactory(final Repository repository,
-            final ResourceNotifications notification,
-            final RoleFactory groupFactory) {
-        super(repository, notification);
-        this.groupFactory = groupFactory;
+            final ResourceNotifications notifications,
+            final RoleFactory roleFactory) {
+        super(repository, notifications);
+        this.roleFactory = roleFactory;
     }
 
     @Override
@@ -22,6 +22,6 @@ public class PermissionFactory extends AnonymousResourceFactory<Permission> {
 
     @Override
     public Permission newResource() {
-        return new Permission(this.repository, this, this.groupFactory);
+        return new Permission(this.repository, this, this.roleFactory);
     }
 }

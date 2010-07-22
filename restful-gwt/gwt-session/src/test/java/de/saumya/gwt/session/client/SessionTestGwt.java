@@ -59,21 +59,27 @@ public class SessionTestGwt extends GWTTestCase {
                 this.notification,
                 this.localeFactory,
                 groupFactory);
-        this.repository.add("<permissions>" + "<permission>"
+        this.repository.add("<authentication>" + "<user><id>1</id>"
+                + "<login>dhamma</login>" + "<groups>" + "<group>"
+                + "<id>1</id>" + "<name>admin</name>"
+                + "<created_at>2005-07-09 17:14:48.0</created_at>"
+                + "<locales>" + "<locale>" + "<id>1</id><code>en</code>"
+                + "</locale>" + "</locales>" + "</group>" + "</groups>"
+                + "</user>" + "<permissions>" + "<permission>"
                 + "<resource>user</resource>" + "<action>create</action>"
                 + "<roles>" + "<role>" + "<name>admin</name>" + "</role>"
                 + "<role>" + "<name>root</name>" + "</role>" + "</roles>"
-                + "</permission>" + "</permissions>");
+                + "</permission>" + "</permissions>" + "</authentication>");
+        this.repository.add("<configuration></configuration>");
         // TODO maybe the whole mockup here is not neccessary and instead the
         // repository mock with authentication xml is sufficient
         this.session = new Session(new AuthenticationFactory(this.repository,
                 this.notification,
-                this.userFactory),
                 permissionFactory,
-                new ConfigurationFactory(this.repository,
-                        this.notification,
-                        this.userFactory,
-                        this.localeFactory)) {
+                this.userFactory), new ConfigurationFactory(this.repository,
+                this.notification,
+                this.userFactory,
+                this.localeFactory)) {
 
             @Override
             void login(final String username, final String password) {
@@ -114,12 +120,17 @@ public class SessionTestGwt extends GWTTestCase {
         this.repository.reset();
 
         this.repository.add("<authentications>" + "<authentication>"
-                + "<token>1234567890</token>" + "<user><login>dhamma</login>"
-                + "<groups>" + "<group>" + "<name>admin</name>"
+                + "<user><login>dhamma</login>" + "<groups>" + "<group>"
+                + "<name>admin</name>"
                 + "<created_at>2005-07-09 17:14:48.0</created_at>"
                 + "<locales>" + "<locale>" + "<id>1</id><code>en</code>"
                 + "</locale>" + "</locales>" + "</group>" + "</groups>"
-                + "</user>" + "</authentication>" + "</authentications>");
+                + "</user>" + "<permissions>" + "<permission>"
+                + "<resource>user</resource>" + "<action>create</action>"
+                + "<roles>" + "<role>" + "<name>admin</name>" + "</role>"
+                + "<role>" + "<name>root</name>" + "</role>" + "</roles>"
+                + "</permission>" + "</permissions>" + "</authentication>"
+                + "</authentications>");
     }
 
     static class SessionListenerMock implements SessionListener {

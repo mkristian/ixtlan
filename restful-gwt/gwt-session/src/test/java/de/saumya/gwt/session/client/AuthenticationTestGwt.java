@@ -89,15 +89,19 @@ public class AuthenticationTestGwt extends
     protected SingletonResourceFactory<Authentication> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
                 this.notifications);
+        final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
+                this.notifications,
+                localeFactory,
+                new DomainFactory(this.repository, this.notifications));
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new UserGroupFactory(this.repository,
-                        this.notifications,
-                        localeFactory,
-                        new DomainFactory(this.repository, this.notifications)));
+                userGroupFactory);
         return new AuthenticationFactory(this.repository,
                 this.notifications,
+                new PermissionFactory(this.repository,
+                        this.notifications,
+                        new RoleFactory(this.repository, this.notifications)),
                 this.userFactory);
     }
 
