@@ -25,7 +25,12 @@ module Ixtlan
 
             alias :to_x :to_xml_document
             def to_xml_document(opts, doc = nil)
-              opts.merge!({:exclude => [:password,:user_id], :methods => [:user, :permissions]})
+              opts.merge!({
+                            :skip_types => true,
+                            :skip_empty_tags => true,
+                            :exclude => [:password, :user_id, :id], 
+                            :methods => [:user, :permissions]
+                          })
               to_x(opts, doc)
             end
           end

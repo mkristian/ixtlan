@@ -194,8 +194,35 @@ module Ixtlan
           protected
 
           def to_xml_document(opts={}, doc = nil)
-            unless(opts[:methods] || opts[:exclude])
-              opts.merge!({:exclude => [:hashed_password], :methods => [:groups]})
+            unless(opts[:methods])
+              opts.merge!({ 
+                            :skip_types => true,
+                            :skip_empty_tags => true,
+                            :methods => [:groups, :created_by, :updated_by], 
+                            :groups => {
+                              :exclude => [:created_at, :created_by_id], 
+                              :methods => [:locales, :domains], 
+                              :locales => {
+                                :methods => [], 
+                                :exclude => [:created_at]
+                              }, 
+                              :domains => {
+                                :methods => [], 
+                                :exclude => [:created_at]
+                              }
+                            },
+                            :created_by => {
+                              :methods => [], 
+                              :exclude => [:created_at, :updated_at, :hashed_password, :created_by_id, :updated_by_id, :language]
+                            },
+                            :updated_by => {
+                              :methods => [], 
+                              :exclude => [:created_at, :updated_at, :hashed_password, :created_by_id, :updated_by_id, :language]
+                            }                        
+                          })
+            end
+            unless(opts[:exclude])
+              opts.merge!({:exclude => [:hashed_password, :created_by_id, :updated_by_id]})
             end
             to_x(opts, doc)
           end

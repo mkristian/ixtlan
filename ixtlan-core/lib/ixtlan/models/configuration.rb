@@ -52,7 +52,20 @@ module Ixtlan
       alias :to_x :to_xml_document
       def to_xml_document(opts, doc = nil)
         unless(opts[:methods] || opts[:exclude])
-          opts.merge!({:methods => [:updated_by, :locales], :exclude => [:updated_by_id, :id]})
+          opts.merge!({
+                        :skip_types => true,
+                        :skip_empty_tags => true,
+                        :methods => [:updated_by, :locales], 
+                        :updated_by => {
+                          :methods => [], 
+                          :exclude => [:created_at, :updated_at, :hashed_password, :created_by_id, :updated_by_id, :language]
+                        }, 
+                        :locales => {
+                          :methods => [],
+                          :exclude => [:created_at]
+                        }, 
+                        :exclude => [:updated_by_id, :id]
+                      })
         end
         to_x(opts, doc)
       end
