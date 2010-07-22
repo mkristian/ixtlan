@@ -25,7 +25,7 @@ module Ixtlan
       # GET /users
       # GET /users.xml
       def index
-        @users = USER.all(simple_query(:login))
+        @users = query(USER, :login, :email)
 
         respond_to do |format|
           format.html

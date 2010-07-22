@@ -9,6 +9,12 @@ module Ixtlan
         base.cache_headers :protected
       end
 
+      private
+
+      LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
+
+      public
+
       def index
         locale = params[:code]
         # TODO load in following order and allow to replace findings in the
@@ -17,12 +23,12 @@ module Ixtlan
         # * DEFAULT latest_approved
         # * locale-parent latest_approved
         # * locale latest_approved
-        l = Locale.first(:code => locale) || Locale.get!(locale)
+        l = LOCALE.first(:code => locale) || LOCALE.get!(locale)
         word_bundle = {}
-        Ixtlan::Models::Word.not_approved(:locale => Locale.default).each do |word|
+        Ixtlan::Models::Word.not_approved(:locale => LOCALE.default).each do |word|
           word_bundle[word.code] = word
         end
-        Ixtlan::Models::Word.approved(:locale => Locale.default).each do |word|
+        Ixtlan::Models::Word.approved(:locale => LOCALE.default).each do |word|
           word_bundle[word.code] = word
         end
 

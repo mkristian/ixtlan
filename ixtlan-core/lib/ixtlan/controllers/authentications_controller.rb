@@ -10,10 +10,14 @@ module Ixtlan
         base.cache_headers :private
       end
 
+      private
+
+      USER = Object.full_const_get(::Ixtlan::Models::USER)
+
       protected
       def login_from_params
         auth = params[:authentication]
-        User.authenticate(auth[:login], auth[:password]) if auth
+        USER.authenticate(auth[:login], auth[:password]) if auth
       end
 
       public

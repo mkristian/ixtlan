@@ -7,12 +7,16 @@ module Ixtlan
         base.cache_headers :protected
       end
 
+      private
+
+      DOMAIN = Object.full_const_get(::Ixtlan::Models::DOMAIN)
+
       public
 
       # GET /domains
       # GET /domains.xml
       def index
-        @domains = Domain.all(simple_query(:name))
+        @domains = query(DOMAIN, :name)
 
         respond_to do |format|
           format.html
@@ -23,7 +27,7 @@ module Ixtlan
       # GET /domains/1
       # GET /domains/1.xml
       def show
-        @domain = Domain.first_or_get!(params[:id])
+        @domain = DOMAIN.first_or_get!(params[:id])
 
         respond_to do |format|
           format.html # show.html.erb
@@ -34,7 +38,7 @@ module Ixtlan
       # GET /domains/new
       # GET /domains/new.xml
       def new
-        @domain = Domain.new
+        @domain = DOMAIN.new
 
         respond_to do |format|
           format.html # new.html.erb
@@ -44,13 +48,13 @@ module Ixtlan
 
       # GET /domains/1/edit
       def edit
-        @domain = Domain.first_or_get!(params[:id])
+        @domain = DOMAIN.first_or_get!(params[:id])
       end
 
       # POST /domains
       # POST /domains.xml
       def create
-        @domain = Domain.new(params[:domain])
+        @domain = DOMAIN.new(params[:domain])
         @domain.current_user = current_user
 
         respond_to do |format|
@@ -68,7 +72,7 @@ module Ixtlan
       # PUT /domains/1
       # PUT /domains/1.xml
       def update
-        @domain = Domain.first_or_get!(params[:id])
+        @domain = DOMAIN.first_or_get!(params[:id])
         @domain.current_user = current_user
 
         respond_to do |format|
@@ -86,7 +90,7 @@ module Ixtlan
       # DELETE /domains/1
       # DELETE /domains/1.xml
       def destroy
-        @domain = Domain.first_or_get(params[:id])
+        @domain = DOMAIN.first_or_get(params[:id])
         @domain.destroy if @domain
 
         respond_to do |format|

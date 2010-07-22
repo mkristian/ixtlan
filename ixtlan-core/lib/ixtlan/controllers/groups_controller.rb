@@ -8,12 +8,26 @@ module Ixtlan
         base.cache_headers :private
       end
 
+      private
+
+      GROUP = Object.full_const_get(::Ixtlan::Models::GROUP)
+      
       public
 
       # GET /groups
       # GET /groups.xml
       def index
-        @groups = Group.all(simple_query(:name))
+        @groups = query(GROUP, :name)
+
+        # restrict the groups to the groups of the current user
+        # unless the current user is allowed to create groups
+        # and need to see all
+        unless allowed(:create)
+          allowed_group_ids = current_user.groups.collect {|g| g.id }
+          @groups.delete_if do |g|
+            ! allowed_group_ids.member?(g.id)
+          end
+        end
 
         respond_to do |format|
           format.html
@@ -24,7 +38,14 @@ module Ixtlan
       # GET /groups/1
       # GET /groups/1.xml
       def show
-        @group = Group.first_or_get!(params[:id])
+        @group = GROUP.first_or_get!(params[:id])
+
+        # restrict the groups to the groups of the current user
+        # unless the current user is allowed to create groups
+        # and need to see all
+        unless allowed(:create)
+          allowed_groups = current_user.groups
+        end
 
         respond_to do |format|
           format.html # show.html.erb
@@ -35,7 +56,7 @@ module Ixtlan
       # GET /groups/new
       # GET /groups/new.xml
       def new
-        @group = Group.new
+        @group = GROUP.new
 
         respond_to do |format|
           format.html # new.html.erb
@@ -45,7 +66,7 @@ module Ixtlan
 
       # GET /groups/1/edit
       def edit
-        @group = Group.first_or_get!(params[:id])
+        @group = GROUP.first_or_get!(params[:id])
       end
 
       # POST /groups
@@ -54,7 +75,7 @@ module Ixtlan
         group = params[:group] || {}
         group.delete(:locales)
         group.delete(:domains)
-        @group = Group.new(group)
+        @group = GROUP.new(group)
         @group.current_user = current_user
 
         respond_to do |format|
@@ -72,7 +93,7 @@ module Ixtlan
       # PUT /groups/1
       # PUT /groups/1.xml
       def update
-        @group = Group.first_or_get!(params[:id])
+        @group = GROUP.first_or_get!(params[:id])
         @group.current_user = current_user
 
         @group.update_children((params[:group] || {}).delete(:locales), :locale)
@@ -92,7 +113,7 @@ module Ixtlan
       # DELETE /groups/1
       # DELETE /groups/1.xml
       def destroy
-        @group = Group.first_or_get(params[:id])
+        @group = GROUP.first_or_get(params[:id])
         @group.current_user = current_user
         @group.destroy if @group
 

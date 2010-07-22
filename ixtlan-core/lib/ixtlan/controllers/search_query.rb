@@ -3,24 +3,40 @@ module Ixtlan
     module SearchQuery
 
       private 
-
-      def simple_query(search_parameter)
-        query(search_parameter, params[search_parameter])
+      def query(model, *parameters)
+        _query(model, false, parameters)
       end
 
-      def query(parameter, value)
-        args = {}
-        args[:limit] = (params[:limit] || 10).to_i + 1 #if params[:limit]
-        args[:offset] = params[:offset].to_i if params[:offset]
+      def query_limit_all(model, *parameters)
+        _query(model, true, parameters)
+      end
 
+      def query(model, limit_all, *parameters)
+        result = nil
+        value = parameters[0].is_a?(String) ? parameters.shift : params[:query]
         if value
-          if "false" == params[:fuzzy]
-            args[parameter] = value
-          else
-            args[parameter.like] = "%" + value.to_s + "%"
+          parameters.each do |p|
+            args = {}
+            if "false" == params[:fuzzy]
+              args[p] = value
+            else
+              args[p.like] = "%" + value.to_s + "%"
+            end
+            if result
+              result = result + model.all(args)
+            else
+              result = model.all(args)
+            end
           end
         end
-        args
+        if limit_all || value
+          limit = (params[:limit] || 10).to_i + 1
+          offset = (params[:offset] || 0).to_i
+          
+          (result || model.all)[offset, offset + limit]
+        else
+          model.all
+        end
       end
     end
   end

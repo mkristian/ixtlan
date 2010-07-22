@@ -8,12 +8,17 @@ module Ixtlan
         base.cache_headers :protected, false #no_store == false
       end
 
+      private
+
+      AUDIT = Object.full_const_get(::Ixtlan::Models::AUDIT)
+
       public
 
       # GET /audits
       # GET /audits.xml
       def index
-        @audits = Audit.all(query(:login, params[:query])).reverse + Audit.all(query(:message, params[:query])).reverse
+        # limit all queries
+        @audits = query_limit_all(AUDIT, :login, :message).reverse
 
         respond_to do |format|
           format.html

@@ -8,12 +8,16 @@ module Ixtlan
         base.cache_headers :public, true # no_store == true
       end
 
+      private
+
+      LOCALE = Object.full_const_get(::Ixtlan::Models::LOCALE)
+
       public
 
       # GET /locales
       # GET /locales.xml
       def index
-        @locales = Locale.all(simple_query(:code))
+        @locales = query(LOCALE, :code)
 
         respond_to do |format|
           format.html
@@ -24,7 +28,7 @@ module Ixtlan
       # GET /locales/1
       # GET /locales/1.xml
       def show
-        @locale = Locale.first_or_get!(params[:id])
+        @locale = LOCALE.first_or_get!(params[:id])
 
         respond_to do |format|
           format.html # show.html.erb
@@ -35,7 +39,7 @@ module Ixtlan
       # GET /locales/new
       # GET /locales/new.xml
       def new
-        @locale = Locale.new
+        @locale = LOCALE.new
 
         respond_to do |format|
           format.html # new.html.erb
@@ -45,13 +49,13 @@ module Ixtlan
 
       # GET /locales/1/edit
       def edit
-        @locale = Locale.first_or_get!(params[:id])
+        @locale = LOCALE.first_or_get!(params[:id])
       end
 
       # POST /locales
       # POST /locales.xml
       def create
-        @locale = Locale.new(params[:locale])
+        @locale = LOCALE.new(params[:locale])
         @locale.current_user = current_user
 
         respond_to do |format|
@@ -69,7 +73,7 @@ module Ixtlan
       # PUT /locales/1
       # PUT /locales/1.xml
       def update
-        @locale = Locale.first_or_get!(params[:id])
+        @locale = LOCALE.first_or_get!(params[:id])
         @locale.current_user = current_user
 
         respond_to do |format|
@@ -87,7 +91,7 @@ module Ixtlan
       # DELETE /locales/1
       # DELETE /locales/1.xml
       def destroy
-        @locale = Locale.first_or_get(params[:id])
+        @locale = LOCALE.first_or_get(params[:id])
         @locale.destroy if @locale
 
         respond_to do |format|
