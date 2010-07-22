@@ -210,7 +210,6 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
             final String nextIndent = indent + INDENT;
             for (final AbstractResource<?> resource : value) {
                 if (first) {
-                    buf.append(indent).append(INDENT);
                     first = false;
                 }
                 else {
