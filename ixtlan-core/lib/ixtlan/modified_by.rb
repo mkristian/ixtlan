@@ -6,8 +6,7 @@ module Ixtlan
 
     MODIFIED_BY_PROPERTIES = {
       :updated_by => lambda {|r, u| r.updated_by = u},
-      :created_by => lambda {|r, u| r.created_by = u #if r.new? 
-}
+      :created_by => lambda {|r, u| r.created_by = u if r.new? }
     }.freeze
 
     def self.included(model)

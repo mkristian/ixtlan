@@ -50,6 +50,7 @@ describe Ixtlan::Guard do
     @controller = Controller.new
     @widget = Erector::Widget.new
     @widget.controller = @controller
+    Locale.first(:code => "en") || Locale.create(:code => "en", :current_user => User.first)
   end
 
   it 'should export permissions' do
@@ -65,11 +66,11 @@ describe Ixtlan::Guard do
   end
 
   it 'should allow with locale' do
-    Ixtlan::Guard.check(@controller, :permissions, :update, Ixtlan::Models::Locale.first_or_create(:code => "en")).should be_true
+    Ixtlan::Guard.check(@controller, :permissions, :update, Locale.first_or_create(:code => "en")).should be_true
   end
 
   it 'should disallow with locale' do
-    Ixtlan::Guard.check(@controller, :configurations, :update, Ixtlan::Models::Locale.first_or_create(:code => "en")).should be_false
+    Ixtlan::Guard.check(@controller, :configurations, :update, Locale.first_or_create(:code => "en")).should be_false
   end
 
   it 'should raise GuardException on unknown controller' do
@@ -98,28 +99,28 @@ describe Ixtlan::Guard do
     @controller.params[:action] = :update
     @controller.params[:controller] = :permissions
 
-    @controller.send(:guard, Ixtlan::Models::Locale.first_or_create(:code => "en")).should be_true
+    @controller.send(:guard, Locale.first_or_create(:code => "en")).should be_true
   end
 
   it 'should deny permission with right locale' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :configurations
 
-    lambda {@controller.send(:guard, Ixtlan::Models::Locale.first_or_create(:code => "en"))}.should raise_error( Ixtlan::PermissionDenied)
+    lambda {@controller.send(:guard, Locale.first_or_create(:code => "en"))}.should raise_error( Ixtlan::PermissionDenied)
   end
 
   it 'should deny permission with wrong locale' do
     @controller.params[:action] = :update
     @controller.params[:controller] = :permissions
 
-    lambda {@controller.send(:guard, Ixtlan::Models::Locale.first_or_create(:code => "de"))}.should raise_error( Ixtlan::PermissionDenied)
+    lambda {@controller.send(:guard, Locale.first(:code => "de")||Locale.create(:code => "de", :current_user => User.first))}.should raise_error( Ixtlan::PermissionDenied)
  end
 
   it 'should allow with locale' do
-    @widget.send(:allowed, :permissions, :update, Ixtlan::Models::Locale.first_or_create(:code => "en")).should be_true
+    @widget.send(:allowed, :permissions, :update, Locale.first_or_create(:code => "en")).should be_true
   end
 
   it 'should deny permission with locale' do
-    @widget.send(:allowed, :configurations, :update, Ixtlan::Models::Locale.first_or_create(:code => "en")).should be_false
+    @widget.send(:allowed, :configurations, :update, Locale.first_or_create(:code => "en")).should be_false
   end
 end

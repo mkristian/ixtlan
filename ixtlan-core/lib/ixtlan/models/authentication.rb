@@ -1,4 +1,5 @@
 require 'dm-serializer'
+require 'ixtlan/guard'
 module Ixtlan
   module Models
     module Authentication
@@ -20,7 +21,7 @@ module Ixtlan
             protected
 
             def permissions
-              Guard.permissions(user)
+              ::Ixtlan::Guard.permissions(user)
             end
 
             alias :to_x :to_xml_document

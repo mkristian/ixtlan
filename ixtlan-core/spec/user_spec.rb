@@ -1,10 +1,7 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
+require 'dm-migrations'
 
-User = Ixtlan::Models::User
-Group = Ixtlan::Models::Group
-Locale = Ixtlan::Models::Locale
-Domain = Ixtlan::Models::Domain
 describe Ixtlan::Models::User do
 
   before(:all) do
@@ -91,7 +88,7 @@ describe Ixtlan::Models::User do
     end
 
     it 'should be able to create an user without groups' do
-      u = User.new(:login => 'user', :email => 'user@example.com', :name => 'user', :current_user => @root)
+      u = User.new(:login => 'user_no_groups', :email => 'user_no_groups@example.com', :name => 'user', :current_user => @root)
       u.update_all_children(nil)
       u.save
 
@@ -101,7 +98,7 @@ describe Ixtlan::Models::User do
 
   describe 'user_admin and locales/domains_admin' do
     before(:each) do
-      @admin = User.create(:login => 'admin', :email => 'admin@example.com', :name => 'admin', :current_user => @root)
+      @admin = User.create(:login => 'admin_user', :email => 'admin_user@example.com', :name => 'admin', :current_user => @root)
       @admin.groups << @users
       @admin.groups << @locales
       @admin.groups << @domains
@@ -149,7 +146,7 @@ describe Ixtlan::Models::User do
   end
 
   describe 'user_admin without locales/domains' do
-    before(:each) do
+    before(:all) do
       @admin = User.create(:login => 'admin', :email => 'admin@example.com', :name => 'admin', :current_user => @root)
       @admin.groups << @users
       @admin.save
@@ -171,7 +168,7 @@ describe Ixtlan::Models::User do
     end
 
     it 'should be able to create an user without disallowed groups and locales' do
-      u = User.new(:login => 'user', :email => 'user@example.com', :name => 'user', :current_user => @admin)
+      u = User.new(:login => 'user_admin', :email => 'user_admin@example.com', :name => 'user', :current_user => @admin)
       u.update_all_children(@groups)
       u.save
 

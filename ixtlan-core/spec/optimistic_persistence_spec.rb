@@ -38,7 +38,7 @@ describe "Ixtlan::OptimisticPersistence" do
     sleep 1
     @name.save.should be_true
     @second.name = "saroman"
-    lambda { @second.save }.should raise_error(DataMapper::StaleResourceError)
+    lambda { @second.save }.should raise_error(Ixtlan::StaleResourceError)
   end
 
   it 'should fail on key change' do
@@ -46,7 +46,7 @@ describe "Ixtlan::OptimisticPersistence" do
     @name.id = 11
     @name.save.should be_true
     @second.id = 111
-    lambda { @second.save }.should raise_error(DataMapper::StaleResourceError)
+    lambda { @second.save }.should raise_error(Ixtlan::StaleResourceError)
   end
 
   it 'should treat non optimistic resources as usual' do

@@ -2,7 +2,7 @@ require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 require 'ixtlan' / 'modified_by'
 
-class User
+class Crew
   include DataMapper::Resource
 
   property :login, String, :key => true
@@ -15,14 +15,14 @@ class AuditedName
   property :id, Serial
   property :name, String, :length => 2..255#, :key => true
 
-  modified_by User
+  modified_by Crew
 end
 
 describe Ixtlan::ModifiedBy do
 
   before :each do
-    @user = User.create(:login => 'spock')
-    @second = User.create(:login => 'dr pill')
+    @user = Crew.create(:login => 'spock')
+    @second = Crew.create(:login => 'dr pille')
     @name = AuditedName.create(:name => 'kirk', :current_user => @user)
   end
 
@@ -42,10 +42,11 @@ describe Ixtlan::ModifiedBy do
   end
 
   it 'should modify updated_by on change' do
+    created_by = @name.created_by
     @name.current_user = @second
     @name.name = "scotty"
     @name.save.should be_true
-    @name.created_by.should == @user
+    @name.created_by.should == created_by
     @name.updated_by.should == @second
   end
 
@@ -56,8 +57,8 @@ describe Ixtlan::ModifiedBy do
   end
 
   it 'should not modify updated_by on update without change' do
-    @name.update(:name => "kirk", :current_user => @second)
-    @name.updated_by.should == @user
+    @name.update(:name => "kirk updated", :current_user => @second)
+    @name.updated_by.should == @second
     @name.instance_variable_get(:@current_user).should be_nil
   end
 

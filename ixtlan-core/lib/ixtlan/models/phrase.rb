@@ -8,6 +8,11 @@ module Ixtlan
         "Phrase"
       end
 
+      unless const_defined? "LOCALE"
+        LOCALE = Object.full_const_get(Models::LOCALE)
+        TEXT = Object.full_const_get(Models::TEXT)
+      end
+
       property :id, Serial
 
       property :code, String, :required => true, :length => 64
@@ -22,9 +27,9 @@ module Ixtlan
 
       belongs_to :locale, :model => Models::LOCALE
 
-      belongs_to :default_translation, :model => Models::TRANSLATION, :required => false
+      belongs_to :default_translation, :model => Translation, :required => false
 
-      belongs_to :parent_translation, :model => Models::TRANSLATION, :required => false
+      belongs_to :parent_translation, :model => Translation, :required => false
 
       alias :to_x :to_xml_document
       def to_xml_document(opts = {}, doc = nil)
@@ -35,12 +40,12 @@ module Ixtlan
       def self.all(args = {})
         phrases = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, Ixtlan::Models::Phrase), [])
         map = {}
-        locale = (args[:locale] ||= Locale.default)
-        I18nText.not_approved(args.dup).each do |text|
+        locale = args[:locale] || LOCALE.default
+        TEXT.not_approved(args.dup).each do |text|
           phrase = Phrase.new(:code => text.code, :text => text.text, :current_text => text.text, :locale => locale, :updated_at => text.updated_at, :updated_by => text.updated_by)
           map[phrase.code] = phrase
         end
-        I18nText.latest_approved(args.dup).each do |text|
+        TEXT.latest_approved(args.dup).each do |text|
           if (phrase = map[text.code])
             phrase.current_text = text.text
           else
@@ -51,7 +56,7 @@ module Ixtlan
         case locale.code.size
         when 2
           params = args.dup
-          params[:locale] = Locale.default
+          params[:locale] = LOCALE.default
           Translation.map_for(params).each do |code, trans|
             ph = map[code]
             if(ph.nil?)

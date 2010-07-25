@@ -18,12 +18,16 @@ module Ixtlan
 
       belongs_to :approved_by, :model => Models::USER
 
+      unless const_defined? "TEXT"
+        TEXT = Object.full_const_get(Models::TEXT)
+      end
+
       def self.map_for(args = {})
         map = {}
-        I18nText.latest_approved(args.dup).each do |text|
+        TEXT.latest_approved(args.dup).each do |text|
           map[text.code] = Translation.create(:text => text.text, :approved_at => text.approved_at, :approved_by => text.approved_by)
         end
-        I18nText.second_latest_approved(args.dup).each do |text|
+        TEXT.second_latest_approved(args.dup).each do |text|
           translation = map[text.code]
           translation.previous_text = text.text
         end

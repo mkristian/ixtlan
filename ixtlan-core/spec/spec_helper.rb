@@ -10,24 +10,51 @@ require 'dm-timestamps'
 require 'slf4r'
 
 require 'ixtlan' / 'models'
-require 'ixtlan' / 'user_logger'
 require 'ixtlan' / 'modified_by'
-require 'ixtlan' / 'models' / 'audit'
-require 'ixtlan' / 'models' / 'domain'
-require 'ixtlan' / 'models' / 'locale'
-require 'ixtlan' / 'models' / 'group'
-require 'ixtlan' / 'models' / 'user'
-require 'ixtlan' / 'models' / 'configuration'
-require 'ixtlan' / 'models' / 'group_user'
-require 'ixtlan' / 'models' / 'group_locale_user'
-require 'ixtlan' / 'models' / 'permission'
-require 'ixtlan' / 'models' / 'role'
-require 'ixtlan' / 'models' / 'i18n_text'
 require 'ixtlan' / 'passwords'
 require 'ixtlan' / 'digest'
+puts "**********************************************"
+p Ixtlan::Models::LOCALE
+
+require 'ixtlan' / 'models' / 'locale'
+class Locale
+  include Ixtlan::Models::Locale
+end
+require 'ixtlan' / 'models' / 'domain'
+class Domain
+  include Ixtlan::Models::Domain
+end
+require 'ixtlan' / 'models' / 'group'
+class Group
+  include Ixtlan::Models::Group
+end
+require 'ixtlan' / 'models' / 'user'
+class User
+  include Ixtlan::Models::User
+end
+require 'ixtlan' / 'models' / 'configuration'
+class Configuration
+  include Ixtlan::Models::Configuration
+end
+require 'ixtlan' / 'models' / 'audit'
+class Audit
+  include Ixtlan::Models::Audit
+end
+require 'ixtlan' / 'models' / 'group_user'
+require 'ixtlan' / 'models' / 'domain_group_user'
+require 'ixtlan' / 'models' / 'group_locale_user'
+require 'ixtlan' / 'models' / 'role'
+require 'ixtlan' / 'models' / 'permission'
+require 'ixtlan' / 'models' / 'i18n_text'
+class I18nText
+  include Ixtlan::Models::I18nText
+end
 
 #hide log output
-Slf4r::LoggerFacade4RubyLogger.file = StringIO.new
+Slf4r::LoggerFacade4RubyLogger.file = StringIO.new unless defined?(JRUBY_VERSION)
+
+
+require 'ixtlan' / 'user_logger'
 
 module ActiveSupport
   class SecureRandom
@@ -51,6 +78,7 @@ module ActionController
     def self.filters
       @filters
     end
+
   end
 end
 class Request
@@ -65,9 +93,9 @@ class Controller
   include ActionController::Base
   def initialize
     @params = {}
-    u = Ixtlan::Models::User.first(:login => :marvin)
+    u = User.first(:login => :marvin)
     if u.nil?
-      u = Ixtlan::Models::User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+      u = User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
       if(u.respond_to? :created_by_id)
         u.created_by_id = 1
         u.updated_by_id = 1
@@ -76,7 +104,7 @@ class Controller
     end
     @password = u.reset_password
     u.save!
-    g = Ixtlan::Models::Group.first(:name => :admin) || Ixtlan::Models::Group.create(:name => :admin, :current_user => u)
+    g = Group.first(:name => :admin) || Group.create(:name => :admin, :current_user => u)
 #p g.errors
 #gg = Ixtlan::Models::Group.new(:name => :admin2, :current_user => u)
 #gg.save
@@ -85,8 +113,8 @@ class Controller
     Ixtlan::Models::GroupUser.all.destroy!
     Ixtlan::Models::GroupLocaleUser.all.destroy!
     u.groups << g
-    g.locales << Ixtlan::Models::Locale.default
-    g.locales << Ixtlan::Models::Locale.first_or_create(:code => "en")
+    g.locales << Locale.default
+    g.locales << (Locale.first(:code => "en") || Locale.create(:code => "en", :current_user => u))
     g.save
     @user = u
   end
@@ -99,6 +127,10 @@ class Controller
 
   def render_session_timeout
     @rendered = true
+  end
+
+  def cache_headers(*args)
+    p *args
   end
 
   def session_timeout
@@ -123,6 +155,16 @@ class Controller
 end
 
 DataMapper.setup(:default, :adapter => :in_memory)
+root  = User.new(:login => "marvin2", :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+if(root.respond_to? :created_by_id)
+  root.created_by_id = 1
+  root.updated_by_id = 1
+end
+root.save!
+
+Locale.create(:code => "DEFAULT", :current_user => root)
+Locale.create(:code => "ALL", :current_user => root)
+Domain.create(:name => "ALL", :current_user => root)
 
 class String
   def cleanup
@@ -161,6 +203,7 @@ end
 
 class Object
   def self.full_const_get(clazz, ref = Object)
+    clazz = clazz.dup
     if clazz =~ /::/
       clazz.sub!(/^::/, '')
       ref = ref.const_get(clazz.sub(/::.*/, ''))

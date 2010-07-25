@@ -3,6 +3,10 @@ module Ixtlan
   module Models
     module I18nText
 
+      unless const_defined? "TEXT_LOCALE"
+        TEXT_LOCALE = Object.full_const_get(Models::LOCALE)
+      end
+
       def invariant
         no_version = original_attributes[:version].nil? && attribute_get(:version).nil?
         if no_version
@@ -38,9 +42,9 @@ module Ixtlan
         size =
           case locale.code.size
           when 2
-            self.model.latest_approved(:code => code, :locale => Locale.default).size
+            self.model.latest_approved(:code => code, :locale => TEXT_LOCALE.default).size
           when 5
-            self.model.latest_approved(:code => code, :locale => Locale.first(:code => locale.code[0,1])).size
+            self.model.latest_approved(:code => code, :locale => TEXT_LOCALE.first(:code => locale.code[0,1])).size
           else
             1
           end
