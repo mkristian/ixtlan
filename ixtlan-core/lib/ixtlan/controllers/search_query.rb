@@ -4,11 +4,11 @@ module Ixtlan
 
       private 
       def query(model, *parameters)
-        _query(model, false, parameters)
+        _query(model, false, *parameters)
       end
 
       def query_limit_all(model, *parameters)
-        _query(model, true, parameters)
+        _query(model, true, *parameters)
       end
 
       def query(model, limit_all, *parameters)
