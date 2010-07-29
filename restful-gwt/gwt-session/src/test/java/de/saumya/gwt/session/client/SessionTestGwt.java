@@ -8,6 +8,7 @@ import de.saumya.gwt.persistence.client.RepositoryMock;
 import de.saumya.gwt.persistence.client.ResourceNotifications;
 import de.saumya.gwt.session.client.models.ConfigurationFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.Locale;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.User;
@@ -19,7 +20,7 @@ public class SessionTestGwt extends GWTTestCase {
 
     protected RepositoryMock        repository;
 
-    protected ResourceNotifications notification;
+    protected ResourceNotifications notifications;
 
     protected Session               session;
 
@@ -40,25 +41,29 @@ public class SessionTestGwt extends GWTTestCase {
     @Override
     protected void gwtSetUp() {
         this.repository = new RepositoryMock();
-        this.notification = new GWTResourceNotification();
+        this.notifications = new GWTResourceNotification();
         this.repository.reset();
-        final DomainFactory venueFactory = new DomainFactory(this.repository,
-                this.notification);
+        final DomainFactory domainFactory = new DomainFactory(this.repository,
+                this.notifications);
         this.localeFactory = new LocaleFactory(this.repository,
-                this.notification);
-        final UserGroupFactory groupFactory = new UserGroupFactory(this.repository,
-                this.notification,
+                this.notifications);
+        final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
+                this.notifications,
                 this.localeFactory,
-                venueFactory);
+                domainFactory);
         final RoleFactory roleFactory = new RoleFactory(this.repository,
-                this.notification);
+                this.notifications);
         final PermissionFactory permissionFactory = new PermissionFactory(this.repository,
-                this.notification,
+                this.notifications,
                 roleFactory);
         this.userFactory = new UserFactory(this.repository,
-                this.notification,
+                this.notifications,
                 this.localeFactory,
-                groupFactory);
+                domainFactory,
+                new GroupFactory(this.repository,
+                        this.notifications,
+                        userGroupFactory),
+                userGroupFactory);
         this.repository.add("<authentication>" + "<user><id>1</id>"
                 + "<login>dhamma</login>" + "<groups>" + "<group>"
                 + "<id>1</id>" + "<name>admin</name>"
@@ -74,10 +79,10 @@ public class SessionTestGwt extends GWTTestCase {
         // TODO maybe the whole mockup here is not neccessary and instead the
         // repository mock with authentication xml is sufficient
         this.session = new Session(new AuthenticationFactory(this.repository,
-                this.notification,
+                this.notifications,
                 permissionFactory,
                 this.userFactory), new ConfigurationFactory(this.repository,
-                this.notification,
+                this.notifications,
                 this.userFactory,
                 this.localeFactory)) {
 
@@ -89,8 +94,8 @@ public class SessionTestGwt extends GWTTestCase {
                     final User user = SessionTestGwt.this.userFactory.newResource(1);
                     user.login = username;
                     authentication.user = user;
-                    user.groups = groupFactory.newResources();
-                    final UserGroup root = groupFactory.newResource(1);
+                    user.groups = userGroupFactory.newResources();
+                    final UserGroup root = userGroupFactory.newResource(1);
                     root.name = "root";
                     root.locales = SessionTestGwt.this.localeFactory.newResources();
                     final Locale en = SessionTestGwt.this.localeFactory.newResource(123);

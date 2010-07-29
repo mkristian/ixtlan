@@ -6,29 +6,6 @@ package de.saumya.gwt.persistence.client;
 abstract public class AbstractMutableResourceTestGwt<T extends AbstractResource<T>>
         extends AbstractResourceTestGwt<T> {
 
-    // protected RepositoryMock repository;
-    // protected ResourceNotifications notifications;
-    // protected CountingResourceChangeListener<T> countingResourceListener;
-    // protected CountingResourcesChangeListener<T> countingResourcesListener;
-    //
-    // protected AbstractResource<T> resource;
-    // protected AbstractResourceFactory<T> factory;
-    //
-    // @Override
-    // protected void gwtSetUp(final AbstractResourceFactory<T> factory) {
-    // this.notifications = new GWTResourceNotification();
-    // this.factory = factory;
-    //
-    // this.countingResourceListener = new CountingResourceChangeListener<T>();
-    // this.countingResourcesListener = new
-    // CountingResourcesChangeListener<T>();
-    //
-    // this.resource = resourceSetUp();
-    //
-    // this.countingResourceListener.reset();
-    // this.countingResourcesListener.reset();
-    // }
-
     public void testCreate() {
         assertTrue(this.resource.isUptodate());
         doTestCreate();
@@ -65,8 +42,4 @@ abstract public class AbstractMutableResourceTestGwt<T extends AbstractResource<
     abstract protected void doTestCreate();
 
     abstract protected void doTestUpdate();
-
-    // @Override
-    // abstract protected AbstractResource<T> resourceSetUp();
-
 }

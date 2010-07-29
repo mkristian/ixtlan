@@ -8,6 +8,7 @@ public class UserGroupFactory extends ResourceFactory<UserGroup> {
 
     private final LocaleFactory localeFactory;
     private final DomainFactory domainFactory;
+    UserFactory                 userFactory;
 
     public UserGroupFactory(final Repository repository,
             final ResourceNotifications notifications,
@@ -28,7 +29,8 @@ public class UserGroupFactory extends ResourceFactory<UserGroup> {
                 this,
                 this.localeFactory,
                 this.domainFactory,
-                id);
+                id,
+                this.userFactory);
     }
 
     @Override

@@ -202,7 +202,6 @@ public class Session {
     }
 
     public boolean isAllowed(final String action, final String resourceName) {
-        GWT.log("----------------" + this.authentication.user.groups, null);
         for (final UserGroup role : this.authentication.user.groups) {
             if (isAllowed(action, resourceName, role)) {
                 return true;

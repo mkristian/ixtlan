@@ -30,6 +30,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
     protected final AbstractResourceActionPanel<E> actions;
 
     protected final Widget                         display;
+    protected final ResourceResetable<E>           displayResetable;
     protected final AllowReadOnly<E>               displayAllowReadOnly;
 
     protected final Widget                         displayCollection;
@@ -46,7 +47,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
     protected final DeckPanel                      deck;
     protected final ResourceChangeListener<E>      resourceChangeListener;
 
-    protected <ResourceWidget extends Widget & AllowReadOnly<E>> AbstractResourceScreen(
+    protected <ResourceWidget extends Widget & AllowReadOnly<E> & ResourceResetable<E>> AbstractResourceScreen(
             final LoadingNotice loadingNotice,
             final AbstractResourceFactory<E> factory, final Session session,
             final ResourceWidget display, final Widget displayCollection,
@@ -64,6 +65,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
         // TODO from a javascript point of view casting might be better then
         // multiple references to the same object
         this.display = display;
+        this.displayResetable = display;
         this.displayAllowReadOnly = display;
 
         // TODO from a javascript point of view casting might be better then
@@ -146,6 +148,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
     @Override
     public final void reset(final E resource) {
         this.actions.reset(resource);
+        this.displayResetable.reset(resource);
         this.actions.setReadOnly(this.displayAllowReadOnly.isReadOnly());
 
         this.displayAllowReadOnly.reset(resource);

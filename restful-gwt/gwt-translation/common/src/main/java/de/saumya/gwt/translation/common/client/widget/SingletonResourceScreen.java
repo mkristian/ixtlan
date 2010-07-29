@@ -17,7 +17,7 @@ public class SingletonResourceScreen<E extends SingletonResource<E>> extends
 
     private final SingletonResourceFactory<E> factory;
 
-    protected <ResourceWidget extends Widget & AllowReadOnly<E>> SingletonResourceScreen(
+    protected <ResourceWidget extends Widget & AllowReadOnly<E> & ResourceResetable<E>> SingletonResourceScreen(
             final LoadingNotice loadingNotice,
             final SingletonResourceFactory<E> factory, final Session session,
             final ResourceWidget display,

@@ -73,6 +73,8 @@ public class GUIContainer {
     public final UserFactory           userFactory          = new UserFactory(this.repository,
                                                                     this.notifications,
                                                                     this.localeFactory,
+                                                                    this.domainFactory,
+                                                                    this.groupFactory,
                                                                     this.userGroupFactory);
     public final WordFactory           wordFactory          = new WordFactory(this.repository,
                                                                     this.notifications);
@@ -123,7 +125,8 @@ public class GUIContainer {
                                                                     this.getTextController,
                                                                     this.session,
                                                                     this.localeFactory,
-                                                                    this.hyperlinkFactory);
+                                                                    this.hyperlinkFactory,
+                                                                    this.notifications);
     public final DefaultLoginScreen    loginPanel           = new DefaultLoginScreen(this.notifications);
     public final NotificationListeners listeners            = new NotificationListeners(this.notifications);
     public final PhraseScreen          phraseScreen         = new PhraseScreen(this.loadingNotice,

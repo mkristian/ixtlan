@@ -113,20 +113,18 @@ public class ConfigurationScreen extends SingletonResourceScreen<Configuration> 
                     }
                 },
                 128);
-            add("directory for log files",
-                new TextBoxBinding<Configuration>() {
+            add("directory for log files", new TextBoxBinding<Configuration>() {
 
-                    @Override
-                    public void pullFrom(final Configuration resource) {
-                        setText(resource.logfilesDirectory);
-                    }
+                @Override
+                public void pullFrom(final Configuration resource) {
+                    setText(resource.logfilesDirectory);
+                }
 
-                    @Override
-                    public void pushInto(final Configuration resource) {
-                        resource.logfilesDirectory = getText();
-                    }
-                },
-                192);
+                @Override
+                public void pushInto(final Configuration resource) {
+                    resource.logfilesDirectory = getText();
+                }
+            }, 192);
             add("directory for error dumps",
                 new TextBoxBinding<Configuration>() {
 
@@ -153,7 +151,7 @@ public class ConfigurationScreen extends SingletonResourceScreen<Configuration> 
 
         @Override
         public void reset(final Configuration resource) {
-            reset(resource, resource.updatedAt, resource.updatedBy);
+            reset(resource.updatedAt, resource.updatedBy);
         }
     }
 

@@ -145,7 +145,7 @@ public class DefaultSessionScreen extends VerticalPanel implements
         if (visible) {
             this.welcome.setText("welcome");
             this.userLabel.setText("\u00a0" + this.session.getUser().name
-                    + "\u00a0<" + this.session.getUser().email + ">");
+                    + "\u00a0(" + this.session.getUser().login + ")");
             loadWordsForLocale();
         }
         super.setVisible(visible);

@@ -15,18 +15,23 @@ public class UserGroup extends Resource<UserGroup> {
 
     private final LocaleFactory localeFactory;
     private final DomainFactory domainFactory;
+    private final UserFactory   userFactory;
 
     protected UserGroup(final Repository repository,
             final UserGroupFactory factory, final LocaleFactory localeFactory,
-            final DomainFactory domainFactory, final int id) {
+            final DomainFactory domainFactory, final int id,
+            final UserFactory userFactory) {
         super(repository, factory, id);
         this.localeFactory = localeFactory;
         this.domainFactory = domainFactory;
+        this.userFactory = userFactory;
     }
 
     public String                     name;
 
     public Timestamp                  createdAt;
+
+    public User                       createdBy;
 
     public ResourceCollection<Domain> domains = new ResourceCollection<Domain>(this.domainFactory);
     public ResourceCollection<Locale> locales = new ResourceCollection<Locale>(this.localeFactory);
@@ -37,6 +42,7 @@ public class UserGroup extends Resource<UserGroup> {
         appendXml(buf, "locales", this.locales);
         appendXml(buf, "domains", this.domains);
         appendXml(buf, "created_at", this.createdAt);
+        appendXml(buf, "created_by", this.createdBy);
     }
 
     @Override
@@ -47,6 +53,9 @@ public class UserGroup extends Resource<UserGroup> {
         this.domains = this.domainFactory.getChildResourceCollection(root,
                                                                      "domains");
         this.createdAt = getTimestamp(root, "created_at");
+        this.createdBy = this.userFactory.getChildResource(root,
+                                                           "created_by",
+                                                           this.createdBy);
     }
 
     @Override
@@ -55,6 +64,7 @@ public class UserGroup extends Resource<UserGroup> {
         toString(indent, buf, "domains", this.domains);
         toString(indent, buf, "locales", this.locales);
         toString(indent, buf, "created_at", this.createdAt);
+        toString(indent, buf, "created_by", this.createdBy);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class PhraseScreen extends ResourceScreen<Phrase> implements Locatable {
 
         @Override
         public void reset(final Phrase resource) {
-            reset(resource, resource.updatedAt, resource.updatedBy);
+            reset(resource.updatedAt, resource.updatedBy);
         }
 
     }

@@ -8,7 +8,7 @@ import com.google.gwt.xml.client.Element;
 public abstract class Resource<E extends Resource<E>> extends
         AbstractResource<E> {
 
-    final ResourceFactory<E> factory;
+    protected final ResourceFactory<E> factory;
 
     protected Resource(final Repository repository,
             final ResourceFactory<E> factory, final int id) {

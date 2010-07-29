@@ -118,13 +118,20 @@ public class UserTestGwt extends ResourceTestGwt<User> {
     protected ResourceFactory<User> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
                 this.notifications);
+        final DomainFactory domainFactory = new DomainFactory(this.repository,
+                this.notifications);
+        final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
+                this.notifications,
+                localeFactory,
+                domainFactory);
         return new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new UserGroupFactory(this.repository,
+                domainFactory,
+                new GroupFactory(this.repository,
                         this.notifications,
-                        localeFactory,
-                        new DomainFactory(this.repository, this.notifications)));
+                        userGroupFactory),
+                userGroupFactory);
     }
 
     @Override

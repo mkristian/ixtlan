@@ -28,7 +28,7 @@ public class LocaleScreen extends ResourceScreen<Locale> {
         }
 
         public void reset(final Locale resource) {
-            reset(resource, resource.createdAt, null);
+            reset(resource.createdAt, resource.createdBy, null, null);
         }
     }
 

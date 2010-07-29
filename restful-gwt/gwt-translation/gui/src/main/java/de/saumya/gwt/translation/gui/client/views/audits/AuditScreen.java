@@ -28,7 +28,7 @@ public class AuditScreen extends ResourceScreen<Audit> {
         }
 
         public void reset(final Audit resource) {
-            reset(resource, null, null);
+            reset(null, null);
         }
     }
 

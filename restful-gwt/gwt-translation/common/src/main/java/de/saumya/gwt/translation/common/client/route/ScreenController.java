@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import de.saumya.gwt.session.client.Notifications;
 import de.saumya.gwt.session.client.Session;
 import de.saumya.gwt.session.client.SessionListenerAdapter;
 import de.saumya.gwt.session.client.SessionScreen;
@@ -26,7 +27,7 @@ import de.saumya.gwt.translation.common.client.widget.TranslatableHyperlink;
 
 public class ScreenController {
 
-    private final TabPanel          tabPanel  = new TabPanel();
+    private final TabPanel          tabPanel   = new TabPanel();
 
     private final GetTextController getTextController;
 
@@ -38,10 +39,19 @@ public class ScreenController {
 
     private final HyperlinkFactory  hyperlinkFactory;
 
+    private final Session           session;
+
+    private final Notifications     notifications;
+
+    private String                  defaultName;
+
     public ScreenController(final SessionScreen panel,
             final GetTextController getTextController, final Session session,
             final LocaleFactory localeFactory,
-            final HyperlinkFactory hyperlinkFactory) {
+            final HyperlinkFactory hyperlinkFactory,
+            final Notifications notifications) {
+        this.notifications = notifications;
+        this.session = session;
         this.getTextController = getTextController;
         this.localeFactory = localeFactory;
         this.hyperlinkFactory = hyperlinkFactory;
@@ -80,16 +90,46 @@ public class ScreenController {
     }
 
     private void dispatch(final ScreenPath path) {
-        // TODO check permission and return to "default" page in needed
+        GWT.log(path + " " + this.names, null);
         if (path.controllerName != null) {
-            this.tabPanel.selectTab(this.names.indexOf(path.controllerName));
+            GWT.log(path.action.name().toLowerCase()
+                    + " "
+                    + path.controllerName
+                    + " allowed "
+                    + this.session.isAllowed(path.action.name().toLowerCase(),
+                                             path.controllerName), null);
+            if (this.session.isAllowed(path.action.name().toLowerCase(),
+                                       path.controllerName)) {
+                this.tabPanel.selectTab(this.names.indexOf(path.controllerName));
+                this.dispatcher.dispatch(path);
+            }
+            else {
+                this.notifications.warn("requested page does not exists");
+                if (this.defaultName != null) {
+                    this.tabPanel.selectTab(this.names.indexOf(this.defaultName));
+                    this.dispatcher.dispatch(new ScreenPath("/" + path.locale
+                            + "/" + this.defaultName));
+                }
+                else {
+                    // select no tab !!!
+                    this.tabPanel.selectTab(-1);
+                }
+            }
         }
-        else {
-            // select no tab !!!
-            this.tabPanel.selectTab(-1);
-        }
-        this.dispatcher.dispatch(path);
         switchLocale(path.locale);
+    }
+
+    public void addDefaultScreen(final Screen<?> screen, final String name) {
+        addDefaultScreen(screen,
+                         this.hyperlinkFactory.newTranslatableHyperlink(name,
+                                                                        "/"
+                                                                                + name));
+    }
+
+    public void addDefaultScreen(final Screen<?> screen,
+            final TranslatableHyperlink link) {
+        this.defaultName = link.getCode();
+        addScreen(screen, link);
     }
 
     public void addScreen(final Screen<?> screen, final String name) {

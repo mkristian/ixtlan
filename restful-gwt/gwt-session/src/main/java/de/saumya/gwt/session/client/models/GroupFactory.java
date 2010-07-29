@@ -8,6 +8,8 @@ public class GroupFactory extends ResourceFactory<Group> {
 
     private final UserGroupFactory userGroupFactory;
 
+    UserFactory                    userFactory;
+
     public GroupFactory(final Repository repository,
             final ResourceNotifications notifications,
             final UserGroupFactory userGroupFactory) {
@@ -22,7 +24,7 @@ public class GroupFactory extends ResourceFactory<Group> {
 
     @Override
     public Group newResource(final int id) {
-        return new Group(this.repository, this, id);
+        return new Group(this.repository, this, id, this.userFactory);
     }
 
     @Override

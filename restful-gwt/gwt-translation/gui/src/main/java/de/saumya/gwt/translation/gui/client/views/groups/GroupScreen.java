@@ -28,7 +28,7 @@ public class GroupScreen extends ResourceScreen<Group> {
         }
 
         public void reset(final Group resource) {
-            reset(resource, resource.createdAt, null);
+            reset(resource.createdAt, resource.createdBy, null, null);
         }
     }
 

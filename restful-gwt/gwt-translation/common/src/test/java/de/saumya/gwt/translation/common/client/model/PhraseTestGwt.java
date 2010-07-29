@@ -3,6 +3,7 @@ package de.saumya.gwt.translation.common.client.model;
 import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
 import de.saumya.gwt.session.client.models.UserGroupFactory;
@@ -43,13 +44,20 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
     protected ResourceFactory<Phrase> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
                 this.notifications);
+        final DomainFactory domainFactory = new DomainFactory(this.repository,
+                this.notifications);
+        final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
+                this.notifications,
+                localeFactory,
+                domainFactory);
         final UserFactory userFactory = new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new UserGroupFactory(this.repository,
+                domainFactory,
+                new GroupFactory(this.repository,
                         this.notifications,
-                        localeFactory,
-                        new DomainFactory(this.repository, this.notifications)));
+                        userGroupFactory),
+                userGroupFactory);
         return new PhraseFactory(this.repository,
                 this.notifications,
                 userFactory,

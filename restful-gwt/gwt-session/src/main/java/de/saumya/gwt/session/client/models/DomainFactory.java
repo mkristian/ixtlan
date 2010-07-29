@@ -34,6 +34,8 @@ public class DomainFactory extends ResourceFactory<Domain> {
 
     private Domain                                allDomain;
 
+    UserFactory                                   userFactory;
+
     public DomainFactory(final Repository repository,
             final ResourceNotifications notifications) {
         super(repository, notifications);
@@ -59,7 +61,7 @@ public class DomainFactory extends ResourceFactory<Domain> {
 
     @Override
     public Domain newResource(final int id) {
-        return new Domain(this.repository, this, id);
+        return new Domain(this.repository, this, id, this.userFactory);
     }
 
     public Domain first(final String name) {

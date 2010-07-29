@@ -32,7 +32,10 @@ public class UserScreen extends ResourceScreen<User> {
         }
 
         public void reset(final User resource) {
-            reset(resource, resource.updatedAt, null);
+            reset(resource.createdAt,
+                  resource.createdBy,
+                  resource.updatedAt,
+                  resource.updatedBy);
         }
     }
 

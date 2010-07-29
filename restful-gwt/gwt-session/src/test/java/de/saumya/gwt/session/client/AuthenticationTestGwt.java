@@ -4,6 +4,7 @@ import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.SingletonResourceFactory;
 import de.saumya.gwt.persistence.client.SingletonResourceTestGwt;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
 import de.saumya.gwt.session.client.models.UserGroupFactory;
@@ -89,13 +90,19 @@ public class AuthenticationTestGwt extends
     protected SingletonResourceFactory<Authentication> factorySetUp() {
         final LocaleFactory localeFactory = new LocaleFactory(this.repository,
                 this.notifications);
+        final DomainFactory domainFactory = new DomainFactory(this.repository,
+                this.notifications);
         final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
                 this.notifications,
                 localeFactory,
-                new DomainFactory(this.repository, this.notifications));
+                domainFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
                 localeFactory,
+                domainFactory,
+                new GroupFactory(this.repository,
+                        this.notifications,
+                        userGroupFactory),
                 userGroupFactory);
         return new AuthenticationFactory(this.repository,
                 this.notifications,

@@ -3,6 +3,7 @@ package de.saumya.gwt.translation.common.client.model;
 import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
 import de.saumya.gwt.session.client.models.DomainFactory;
+import de.saumya.gwt.session.client.models.GroupFactory;
 import de.saumya.gwt.session.client.models.LocaleFactory;
 import de.saumya.gwt.session.client.models.UserFactory;
 import de.saumya.gwt.session.client.models.UserGroupFactory;
@@ -43,17 +44,25 @@ public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
 
     @Override
     protected ResourceFactory<Translation> factorySetUp() {
+        final LocaleFactory localeFactory = new LocaleFactory(this.repository,
+                this.notifications);
+        final DomainFactory domainFactory = new DomainFactory(this.repository,
+                this.notifications);
+        final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
+                this.notifications,
+                localeFactory,
+                domainFactory);
+        final UserFactory userFactory = new UserFactory(this.repository,
+                this.notifications,
+                localeFactory,
+                domainFactory,
+                new GroupFactory(this.repository,
+                        this.notifications,
+                        userGroupFactory),
+                userGroupFactory);
         return new TranslationFactory(this.repository,
                 this.notifications,
-                new UserFactory(this.repository,
-                        this.notifications,
-                        new LocaleFactory(this.repository, this.notifications),
-                        new UserGroupFactory(this.repository,
-                                this.notifications,
-                                new LocaleFactory(this.repository,
-                                        this.notifications),
-                                new DomainFactory(this.repository,
-                                        this.notifications))));
+                userFactory);
     }
 
     @Override

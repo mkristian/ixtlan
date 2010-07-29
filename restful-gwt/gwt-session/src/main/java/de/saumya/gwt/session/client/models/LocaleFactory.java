@@ -36,6 +36,8 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     private Locale                                allLocale;
     private Locale                                defaultLocale;
 
+    UserFactory                                   userFactory;
+
     public LocaleFactory(final Repository repository,
             final ResourceNotifications notifications) {
         super(repository, notifications);
@@ -61,7 +63,7 @@ public class LocaleFactory extends ResourceFactory<Locale> {
 
     @Override
     public Locale newResource(final int id) {
-        return new Locale(this.repository, this, id);
+        return new Locale(this.repository, this, id, this.userFactory);
     }
 
     public Locale first(final String code) {

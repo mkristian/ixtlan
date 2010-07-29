@@ -15,72 +15,98 @@ import de.saumya.gwt.translation.common.client.GetTextController;
 public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
         extends FlowPanel implements ResourceResetable<E> {
 
-    private final GetTextController getTextController;
-
-    // private final Label keyLabel;
-    // private final Label keyValue;
-    private final Label             modifiedAtLabel;
-    private final Label             modifiedAtValue;
-    private final Label             byLabel;
-    private final Label             modifiedByLabel;
-    private final Label             modifiedByValue;
+    private final Label modifiedAtLabel;
+    private final Label modifiedAtValue;
+    private final Label modifiedByOnlyLabel;
+    private final Label modifiedByLabel;
+    private final Label modifiedByValue;
+    private final Label createdAtLabel;
+    private final Label createdAtValue;
+    private final Label createdByOnlyLabel;
+    private final Label createdByLabel;
+    private final Label createdByValue;
 
     public ResourceHeaderPanel(final GetTextController getTextController) {
         setStyleName("resource-header-panel");
-        this.getTextController = getTextController;
-        // this.keyLabel = label("key");
-        // this.keyValue = label();
-        this.modifiedAtLabel = label("modified at");
-        this.modifiedAtValue = label();
-        this.byLabel = label("by");
-        this.modifiedByLabel = label("modified by");
-        this.modifiedByValue = label();
+        this.createdAtLabel = label("created at", getTextController);
+        this.createdAtValue = label(getTextController);
+        this.createdByOnlyLabel = label("created by", getTextController);
+        this.createdByLabel = label("by", getTextController);
+        this.createdByValue = label(getTextController);
+        this.modifiedAtLabel = label("modified at", getTextController);
+        this.modifiedAtValue = label(getTextController);
+        this.modifiedByOnlyLabel = label("modified gby", getTextController);
+        this.modifiedByLabel = label("by", getTextController);
+        this.modifiedByValue = label(getTextController);
     }
 
     /**
      * only the resource knows whether it has updated Timestamp and/or updatedBy
      * User. an implementation needs to forward the respective info to the
-     * {@link ResourceScreen#reset(AbstractResource, Timestamp, User)} using
-     * null where the info does not exists
+     * {@link ResourceScreen#reset(Timestamp, User)} using null where the info
+     * does not exists
      */
-    protected void reset(final E resource, final Timestamp updatedAt,
-            final User updatedBy) {
-        // final int keyValue = resource.isNew() ? 0 : resource.id;
-        // if (keyValue != 0) {
-        // this.keyValue.setText("\u00a0" + keyValue + "\u00a0");
-        // }
-        // this.keyValue.setVisible(keyValue != 0);
-        // this.keyLabel.setVisible(keyValue != 0);
-        this.modifiedByLabel.setVisible(false);
-        this.byLabel.setVisible(false);
-        if (updatedAt != null) {
-            this.modifiedAtValue.setText("\u00a0"
-                    + updatedAt.toString().replaceFirst("[.]0+$", "")
-                    + "\u00a0");
-            if (updatedBy != null) {
-                this.byLabel.setVisible(true);
-                this.modifiedByValue.setText("\u00a0" + updatedBy.display());
-            }
-        }
-        else if (updatedBy != null) {
-            this.modifiedByLabel.setVisible(true);
-            this.modifiedByValue.setText(updatedBy.display());
-        }
-        this.modifiedByValue.setVisible(updatedBy != null);
-        this.modifiedAtLabel.setVisible(updatedAt != null);
-        this.modifiedAtValue.setVisible(updatedAt != null);
-
+    protected void reset(final Timestamp updatedAt, final User updatedBy) {
+        doReset(updatedAt,
+                updatedBy,
+                this.modifiedByLabel,
+                this.modifiedByValue,
+                this.modifiedByOnlyLabel,
+                this.modifiedAtLabel,
+                this.modifiedAtValue);
         setVisible(true);
     }
 
-    private Label label() {
-        return label(null);
+    protected void reset(final Timestamp createdAt, final User createdBy,
+            final Timestamp updatedAt, final User updatedBy) {
+        doReset(createdAt,
+                createdBy,
+                this.createdByLabel,
+                this.createdByValue,
+                this.createdByOnlyLabel,
+                this.createdAtLabel,
+                this.createdAtValue);
+        doReset(updatedAt,
+                updatedBy,
+                this.modifiedByLabel,
+                this.modifiedByValue,
+                this.modifiedByOnlyLabel,
+                this.modifiedAtLabel,
+                this.modifiedAtValue);
+        setVisible(true);
     }
 
-    private Label label(final String labelValue) {
+    protected void doReset(final Timestamp at, final User by,
+            final Label byLabel, final Label byValue, final Label byOnlyLabel,
+            final Label atLabel, final Label atValue) {
+        byLabel.setVisible(false);
+        byOnlyLabel.setVisible(false);
+        if (at != null) {
+            atValue.setText("\u00a0" + at.toString().replaceFirst("[.]0+$", "")
+                    + "\u00a0");
+            if (by != null) {
+                byLabel.setVisible(true);
+                byValue.setText("\u00a0" + by.display() + "\u00a0");
+            }
+        }
+        else if (by != null) {
+            byLabel.setVisible(true);
+            byValue.setText(by.display() + "\u00a0");
+        }
+        byValue.setVisible(by != null);
+        atLabel.setVisible(at != null);
+        atValue.setVisible(at != null);
+    }
+
+    private Label label(final GetTextController getTextController) {
+        return label(null, getTextController);
+    }
+
+    private Label label(final String labelValue,
+            final GetTextController getTextController) {
         final Label label = labelValue == null
                 ? new Label()
-                : new TranslatableLabel(this.getTextController, labelValue);
+                : new TranslatableLabel(getTextController, labelValue);
         label.setVisible(false);
         add(label);
         return label;

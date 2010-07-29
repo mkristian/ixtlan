@@ -28,7 +28,7 @@ public class DomainScreen extends ResourceScreen<Domain> {
         }
 
         public void reset(final Domain resource) {
-            reset(resource, resource.createdAt, null);
+            reset(resource.createdAt, resource.createdBy, null, null);
         }
     }
 
