@@ -2,6 +2,7 @@ require 'rubygems'
 lib_path = (Pathname(__FILE__).dirname.parent.expand_path + 'lib').to_s
 $LOAD_PATH.unshift lib_path unless $LOAD_PATH.include?(lib_path)
 
+require 'extlib'
 require 'dm-core'
 require 'dm-validations'
 require 'dm-serializer'
@@ -9,43 +10,41 @@ require 'dm-timestamps'
 
 require 'slf4r'
 
-require 'ixtlan' / 'models'
-require 'ixtlan' / 'modified_by'
-require 'ixtlan' / 'passwords'
-require 'ixtlan' / 'digest'
-puts "**********************************************"
-p Ixtlan::Models::LOCALE
+require 'ixtlan/models'
+require 'ixtlan/modified_by'
+require 'ixtlan/passwords'
+require 'ixtlan/digest'
 
-require 'ixtlan' / 'models' / 'locale'
+require 'ixtlan/models/locale'
 class Locale
   include Ixtlan::Models::Locale
 end
-require 'ixtlan' / 'models' / 'domain'
+require 'ixtlan/models/domain'
 class Domain
   include Ixtlan::Models::Domain
 end
-require 'ixtlan' / 'models' / 'group'
+require 'ixtlan/models/group'
 class Group
   include Ixtlan::Models::Group
 end
-require 'ixtlan' / 'models' / 'user'
+require 'ixtlan/models/user'
 class User
   include Ixtlan::Models::User
 end
-require 'ixtlan' / 'models' / 'configuration'
+require 'ixtlan/models/configuration'
 class Configuration
   include Ixtlan::Models::Configuration
 end
-require 'ixtlan' / 'models' / 'audit'
+require 'ixtlan/models/audit'
 class Audit
   include Ixtlan::Models::Audit
 end
-require 'ixtlan' / 'models' / 'group_user'
-require 'ixtlan' / 'models' / 'domain_group_user'
-require 'ixtlan' / 'models' / 'group_locale_user'
-require 'ixtlan' / 'models' / 'role'
-require 'ixtlan' / 'models' / 'permission'
-require 'ixtlan' / 'models' / 'i18n_text'
+require 'ixtlan/models/group_user'
+require 'ixtlan/models/domain_group_user'
+require 'ixtlan/models/group_locale_user'
+require 'ixtlan/models/role'
+require 'ixtlan/models/permission'
+require 'ixtlan/models/i18n_text'
 class I18nText
   include Ixtlan::Models::I18nText
 end
@@ -54,7 +53,7 @@ end
 Slf4r::LoggerFacade4RubyLogger.file = StringIO.new unless defined?(JRUBY_VERSION)
 
 
-require 'ixtlan' / 'user_logger'
+require 'ixtlan/user_logger'
 
 module ActiveSupport
   class SecureRandom
@@ -95,10 +94,10 @@ class Controller
     @params = {}
     u = User.first(:login => :marvin)
     if u.nil?
-      u = User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 1, :created_at => DateTime.now, :updated_at => DateTime.now)
+      u = User.new(:login => :marvin, :name => 'marvin the robot', :email=> "marvin@universe.example.com", :language => "xx", :id => 111, :created_at => DateTime.now, :updated_at => DateTime.now)
       if(u.respond_to? :created_by_id)
-        u.created_by_id = 1
-        u.updated_by_id = 1
+        u.created_by_id = 111
+        u.updated_by_id = 111
       end
       u.save!
     end

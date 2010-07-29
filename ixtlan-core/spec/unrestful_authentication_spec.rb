@@ -2,8 +2,8 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
-require 'ixtlan' / 'models' / 'authentication'
-require 'ixtlan' / 'rails' / 'unrestful_authentication'
+require 'ixtlan/models/authentication'
+require 'ixtlan/rails/unrestful_authentication'
 
 class Controller
 

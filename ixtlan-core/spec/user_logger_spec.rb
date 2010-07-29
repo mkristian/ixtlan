@@ -2,6 +2,7 @@ require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
 require 'ixtlan/rails/session_timeout'
+
 class Response
   attr_accessor :content_type
   def initialize

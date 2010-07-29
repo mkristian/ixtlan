@@ -1,6 +1,6 @@
 require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
-require 'ixtlan' / 'modified_by'
+require 'ixtlan/modified_by'
 
 class Crew
   include DataMapper::Resource

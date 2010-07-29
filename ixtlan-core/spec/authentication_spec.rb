@@ -3,7 +3,7 @@ require 'pathname'
 require Pathname(__FILE__).dirname + 'spec_helper.rb'
 
 
-require 'ixtlan' / 'models' / 'authentication'
+require 'ixtlan/models/authentication'
 
 class Authentication
   include Ixtlan::Models::Authentication
@@ -31,7 +31,7 @@ describe Ixtlan::Models::Authentication do
 
   it "should" do
     xml = @authentication.to_xml
-    xml.gsub!(/[0-9-]{10}T[0-9+-:]{14}/, "").gsub!(/<created_at><\/created_at>/, "<created_at/>").gsub!(/<locale><id>[0-9]*<\/id>/, "<locale>").gsub!(/<permission>.*<\/permission>/, '').should == "<authentication><login>marvin2</login><user><id>1356</id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email><language>xx</language><created_at/><updated_at></updated_at><groups><group><id>1356</id><name>marvin2_root</name><locales><locale><code>DEFAULT</code><created_by_id>1</created_by_id></locale><locale><code>en</code><created_by_id>1</created_by_id></locale></locales></group></groups><created_by><id>1356</id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email></created_by><updated_by><id>1356</id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email></updated_by></user><permissions></permissions></authentication>"
+    xml.gsub!(/[0-9-]{10}T[0-9+-:]{14}/, "").gsub!(/<created_at><\/created_at>/, "<created_at/>").gsub!(/<locale><id>[0-9]*<\/id>/, "<locale>").gsub!(/<permission>.*<\/permission>/, '').gsub(/id>[0-9]+<\//,'id></').should == "<authentication><login>marvin2</login><user><id></id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email><language>xx</language><created_at/><updated_at></updated_at><groups><group><id></id><name>marvin2_root</name><locales><locale><code>DEFAULT</code><created_by_id></created_by_id></locale><locale><code>en</code><created_by_id></created_by_id></locale></locales></group></groups><created_by><id></id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email></created_by><updated_by><id></id><login>marvin2</login><name>marvin the robot</name><email>marvin@universe.example.com</email></updated_by></user><permissions></permissions></authentication>"
   end
 
 end
