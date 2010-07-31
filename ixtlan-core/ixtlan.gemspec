@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'dm-validations', '~> 1.0.0'
   s.add_dependency 'dm-timestamps', '~> 1.0.0'
   s.add_dependency 'dm-migrations', '~> 1.0.0'
-  s.add_dependency 'slf4r', '0.3.2'
+  s.add_dependency 'slf4r', '0.3.3'
   s.add_dependency 'datamapper4rails', '~> 0.5.0'
   s.add_dependency 'rack-datamapper', '~> 0.3.0'
   s.add_dependency 'logging', '~> 1.2.3'
