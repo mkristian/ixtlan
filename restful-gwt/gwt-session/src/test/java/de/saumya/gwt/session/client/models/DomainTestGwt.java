@@ -2,9 +2,9 @@ package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceTestGwt;
+import de.saumya.gwt.session.client.AbstractUserResourceTestGwt;
 
-public class DomainTestGwt extends ResourceTestGwt<Domain> {
+public class DomainTestGwt extends AbstractUserResourceTestGwt<Domain> {
 
     @Override
     public String getModuleName() {
@@ -58,7 +58,7 @@ public class DomainTestGwt extends ResourceTestGwt<Domain> {
 
     @Override
     protected ResourceFactory<Domain> factorySetUp() {
-        return new DomainFactory(this.repository, this.notifications);
+        return this.domainFactory;
     }
 
     @Override

@@ -89,13 +89,19 @@ public class ScreenController {
         });
     }
 
+    public void dispatchDefault() {
+        if (History.getToken() == null || History.getToken().length() == 0) {
+            History.newItem("/DEFAULT/" + this.defaultName);
+        }
+    }
+
     private void dispatch(final ScreenPath path) {
-        GWT.log(path + " " + this.names, null);
         if (path.controllerName != null) {
-            GWT.log(path.action.name().toLowerCase()
-                    + " "
+            GWT.log("dispatch permissions: "
+                    + path.action.name().toLowerCase()
+                    + " on "
                     + path.controllerName
-                    + " allowed "
+                    + " is allowed: "
                     + this.session.isAllowed(path.action.name().toLowerCase(),
                                              path.controllerName), null);
             if (this.session.isAllowed(path.action.name().toLowerCase(),
@@ -104,7 +110,9 @@ public class ScreenController {
                 this.dispatcher.dispatch(path);
             }
             else {
-                this.notifications.warn("requested page does not exists");
+                if (!path.controllerName.equals(this.defaultName)) {
+                    this.notifications.warn("requested page does not exists");
+                }
                 if (this.defaultName != null) {
                     this.tabPanel.selectTab(this.names.indexOf(this.defaultName));
                     this.dispatcher.dispatch(new ScreenPath("/" + path.locale

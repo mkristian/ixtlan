@@ -2,9 +2,9 @@ package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceTestGwt;
+import de.saumya.gwt.session.client.AbstractUserResourceTestGwt;
 
-public class GroupTestGwt extends ResourceTestGwt<Group> {
+public class GroupTestGwt extends AbstractUserResourceTestGwt<Group> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -45,25 +45,7 @@ public class GroupTestGwt extends ResourceTestGwt<Group> {
 
     @Override
     protected ResourceFactory<Group> factorySetUp() {
-        final LocaleFactory localeFactory = new LocaleFactory(this.repository,
-                this.notifications);
-        final DomainFactory domainFactory = new DomainFactory(this.repository,
-                this.notifications);
-        final UserGroupFactory userGroupFactory = new UserGroupFactory(this.repository,
-                this.notifications,
-                localeFactory,
-                domainFactory);
-        new UserFactory(this.repository,
-                this.notifications,
-                localeFactory,
-                domainFactory,
-                new GroupFactory(this.repository,
-                        this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
-        return new GroupFactory(this.repository,
-                this.notifications,
-                userGroupFactory);
+        return this.groupFactory;
     }
 
     @Override

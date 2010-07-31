@@ -36,7 +36,7 @@ public class LocaleFactory extends ResourceFactory<Locale> {
     private Locale                                allLocale;
     private Locale                                defaultLocale;
 
-    UserFactory                                   userFactory;
+    private UserFactory                           userFactory;
 
     public LocaleFactory(final Repository repository,
             final ResourceNotifications notifications) {
@@ -49,6 +49,10 @@ public class LocaleFactory extends ResourceFactory<Locale> {
                 LocaleFactory.this.realLocales.fireEvents();
             }
         };
+    }
+
+    void setUserFactory(final UserFactory userFactory) {
+        this.userFactory = userFactory;
     }
 
     @Override

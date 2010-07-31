@@ -6,8 +6,6 @@ package de.saumya.gwt.translation.common.client.route;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
-
 public class ScreenDispatcher {
 
     private final Map<String, Screen<?>> registry = new HashMap<String, Screen<?>>();
@@ -17,8 +15,6 @@ public class ScreenDispatcher {
     }
 
     void dispatch(final ScreenPath path) {
-        GWT.log("dispatch action " + path.controllerName, null);
-
         if (path.controllerName != null) {
             dispatch(this.registry.get(path.controllerName), path);
         }
@@ -41,7 +37,6 @@ public class ScreenDispatcher {
         }
         else {
             screen.setupPathFactory(parentPath);
-            GWT.log("dispatch action " + path.action, null);
             switch (path.action) {
             case NEW:
                 screen.showNew();

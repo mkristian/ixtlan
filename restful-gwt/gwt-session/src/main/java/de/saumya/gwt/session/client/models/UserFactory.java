@@ -11,16 +11,11 @@ public class UserFactory extends ResourceFactory<User> {
 
     public UserFactory(final Repository repository,
             final ResourceNotifications notifications,
-            final LocaleFactory localeFactory,
-            final DomainFactory domainFactory, final GroupFactory groupFactory,
-            final UserGroupFactory userGroupFactory) {
+            final GroupFactory groupFactory) {
         super(repository, notifications);
-        this.localeFactory = localeFactory;
-        this.userGroupFactory = userGroupFactory;
-        localeFactory.userFactory = this;
-        domainFactory.userFactory = this;
-        groupFactory.userFactory = this;
-        userGroupFactory.userFactory = this;
+        this.localeFactory = groupFactory.userGroupFactory.localeFactory;
+        this.userGroupFactory = groupFactory.userGroupFactory;
+        groupFactory.setUserFactory(this);
     }
 
     @Override

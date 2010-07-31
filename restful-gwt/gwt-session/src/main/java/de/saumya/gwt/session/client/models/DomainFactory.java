@@ -34,7 +34,7 @@ public class DomainFactory extends ResourceFactory<Domain> {
 
     private Domain                                allDomain;
 
-    UserFactory                                   userFactory;
+    private UserFactory                           userFactory;
 
     public DomainFactory(final Repository repository,
             final ResourceNotifications notifications) {
@@ -47,6 +47,10 @@ public class DomainFactory extends ResourceFactory<Domain> {
                 DomainFactory.this.realDomains.fireEvents();
             }
         };
+    }
+
+    void setUserFactory(final UserFactory userFactory) {
+        this.userFactory = userFactory;
     }
 
     @Override

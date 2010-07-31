@@ -104,6 +104,8 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
         fromRootElement(doc.getDocumentElement());
     }
 
+    // this can be overwritten to do something special, like extract the ID and
+    // pass on the rest
     void fromRootElement(final Element root) {
         fromElement(root);
     }

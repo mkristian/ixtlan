@@ -2,9 +2,9 @@ package de.saumya.gwt.session.client.models;
 
 import de.saumya.gwt.persistence.client.AbstractResource;
 import de.saumya.gwt.persistence.client.ResourceFactory;
-import de.saumya.gwt.persistence.client.ResourceTestGwt;
+import de.saumya.gwt.session.client.AbstractUserResourceTestGwt;
 
-public class LocaleTestGwt extends ResourceTestGwt<Locale> {
+public class LocaleTestGwt extends AbstractUserResourceTestGwt<Locale> {
 
     /**
      * Must refer to a valid module that sources this class.
@@ -62,7 +62,8 @@ public class LocaleTestGwt extends ResourceTestGwt<Locale> {
 
     @Override
     protected ResourceFactory<Locale> factorySetUp() {
-        return new LocaleFactory(this.repository, this.notifications);
+        System.out.println(this.localeFactory);
+        return this.localeFactory;
     }
 
     @Override

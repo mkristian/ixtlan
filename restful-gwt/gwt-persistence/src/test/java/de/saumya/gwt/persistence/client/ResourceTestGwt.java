@@ -7,7 +7,9 @@ abstract public class ResourceTestGwt<T extends Resource<T>> extends
 
     @Override
     protected void gwtSetUp() {
-        this.repository = new RepositoryMock();
+        if (this.repository == null) {
+            this.repository = new RepositoryMock();
+        }
         this.factory = factorySetUp();
         gwtSetUp(this.factory);
     }

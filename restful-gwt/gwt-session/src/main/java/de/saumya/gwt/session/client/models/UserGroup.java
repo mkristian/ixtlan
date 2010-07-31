@@ -25,6 +25,8 @@ public class UserGroup extends Resource<UserGroup> {
         this.localeFactory = localeFactory;
         this.domainFactory = domainFactory;
         this.userFactory = userFactory;
+        this.domains = new ResourceCollection<Domain>(this.domainFactory);
+        this.locales = new ResourceCollection<Locale>(this.localeFactory);
     }
 
     public String                     name;
@@ -33,8 +35,8 @@ public class UserGroup extends Resource<UserGroup> {
 
     public User                       createdBy;
 
-    public ResourceCollection<Domain> domains = new ResourceCollection<Domain>(this.domainFactory);
-    public ResourceCollection<Locale> locales = new ResourceCollection<Locale>(this.localeFactory);
+    public ResourceCollection<Domain> domains;
+    public ResourceCollection<Locale> locales;
 
     @Override
     protected void appendXml(final StringBuilder buf) {

@@ -54,12 +54,9 @@ public class TranslationTestGwt extends AbstractCommonTestGwt<Translation> {
                 domainFactory);
         final UserFactory userFactory = new UserFactory(this.repository,
                 this.notifications,
-                localeFactory,
-                domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
+                        userGroupFactory));
         return new TranslationFactory(this.repository,
                 this.notifications,
                 userFactory);

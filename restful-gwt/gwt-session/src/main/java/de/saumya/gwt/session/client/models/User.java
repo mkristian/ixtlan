@@ -47,9 +47,10 @@ public class User extends Resource<User> {
         appendXml(buf, "preferred_language", this.preferedLanguage);
         appendXml(buf, "groups", this.groups);
         appendXml(buf, "created_at", this.createdAt);
-        appendXml(buf, "created_by", this.createdBy);
         appendXml(buf, "updated_at", this.updatedAt);
-        appendXml(buf, "updated_by", this.updatedBy);
+        // to avoid endless recursion the createBy and updatedBy get omitted
+        // appendXml(buf, "created_by", this.createdBy);
+        // appendXml(buf, "updated_by", this.updatedBy);
     }
 
     @Override
@@ -62,11 +63,11 @@ public class User extends Resource<User> {
         this.groups = this.groupFactory.getChildResourceCollection(root,
                                                                    "groups",
                                                                    this.groups);
-        this.createdAt = getTimestamp(root, "created_at");
+        this.createdAt = getTimestamp(root, "created_at", this.createdAt);
         this.createdBy = this.factory.getChildResource(root,
                                                        "created_by",
                                                        this.createdBy);
-        this.updatedAt = getTimestamp(root, "updated_at");
+        this.updatedAt = getTimestamp(root, "updated_at", this.updatedAt);
         this.updatedBy = this.factory.getChildResource(root,
                                                        "updated_by",
                                                        this.updatedBy);
@@ -80,9 +81,13 @@ public class User extends Resource<User> {
         toString(indent, buf, "preferred_language", this.preferedLanguage);
         toString(indent, buf, "groups", this.groups);
         toString(indent, buf, "created_at", this.createdAt);
-        toString(indent, buf, "created_by", this.createdBy);
+        if (this.createdBy != null) {
+            toString(indent, buf, "created_by", this.createdBy.login);
+        }
         toString(indent, buf, "updated_at", this.updatedAt);
-        toString(indent, buf, "updated_by", this.updatedBy);
+        if (this.updatedBy != null) {
+            toString(indent, buf, "updated_by", this.updatedBy.login);
+        }
     }
 
     public Collection<Locale> getAllowedLocales() {

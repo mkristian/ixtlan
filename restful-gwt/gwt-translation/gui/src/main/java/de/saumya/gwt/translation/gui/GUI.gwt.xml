@@ -6,6 +6,8 @@
 
   <inherits name="de.saumya.gwt.translation.common.Common"/>
 
+  <inherits name="de.saumya.webfortune.Dhammapada"/>
+
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->

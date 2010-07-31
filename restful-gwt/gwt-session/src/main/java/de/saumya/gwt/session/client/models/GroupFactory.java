@@ -6,15 +6,20 @@ import de.saumya.gwt.persistence.client.ResourceNotifications;
 
 public class GroupFactory extends ResourceFactory<Group> {
 
-    private final UserGroupFactory userGroupFactory;
+    final UserGroupFactory userGroupFactory;
 
-    UserFactory                    userFactory;
+    private UserFactory    userFactory;
 
     public GroupFactory(final Repository repository,
             final ResourceNotifications notifications,
             final UserGroupFactory userGroupFactory) {
         super(repository, notifications);
         this.userGroupFactory = userGroupFactory;
+    }
+
+    void setUserFactory(final UserFactory userFactory) {
+        this.userFactory = userFactory;
+        this.userGroupFactory.setUserFactory(userFactory);
     }
 
     @Override

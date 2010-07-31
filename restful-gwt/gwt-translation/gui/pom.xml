@@ -18,6 +18,11 @@
       <artifactId>common</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>de.saumya.webfortune</groupId>
+      <artifactId>dhammapada</artifactId>
+      <version>0.3-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>ixtlan-gwt-translation-gui</finalName>

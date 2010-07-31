@@ -58,12 +58,9 @@ public class SessionTestGwt extends GWTTestCase {
                 roleFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
-                this.localeFactory,
-                domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
+                        userGroupFactory));
         this.repository.add("<authentication>" + "<user><id>1</id>"
                 + "<login>dhamma</login>" + "<groups>" + "<group>"
                 + "<id>1</id>" + "<name>admin</name>"

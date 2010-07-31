@@ -39,6 +39,7 @@ import de.saumya.gwt.translation.common.client.widget.LoadingNotice;
 import de.saumya.gwt.translation.common.client.widget.LocaleController;
 import de.saumya.gwt.translation.common.client.widget.NotificationListeners;
 import de.saumya.gwt.translation.common.client.widget.ResourceBindings;
+import de.saumya.gwt.translation.gui.client.views.DhammapadaScreen;
 import de.saumya.gwt.translation.gui.client.views.audits.AuditScreen;
 import de.saumya.gwt.translation.gui.client.views.configuration.ConfigurationScreen;
 import de.saumya.gwt.translation.gui.client.views.domains.DomainScreen;
@@ -72,10 +73,7 @@ public class GUIContainer {
                                                                     this.roleFactory);
     public final UserFactory           userFactory          = new UserFactory(this.repository,
                                                                     this.notifications,
-                                                                    this.localeFactory,
-                                                                    this.domainFactory,
-                                                                    this.groupFactory,
-                                                                    this.userGroupFactory);
+                                                                    this.groupFactory);
     public final WordFactory           wordFactory          = new WordFactory(this.repository,
                                                                     this.notifications);
     public final TranslationFactory    translationFactory   = new TranslationFactory(this.repository,
@@ -185,8 +183,18 @@ public class GUIContainer {
                                                                     this.hyperlinkFactory);
 
     public GUIContainer(final Panel panel) {
+        this(panel, true);
+    }
+
+    public GUIContainer(final Panel panel, final boolean addDefaultScreen) {
         // add the screens to the screen controller which hangs them into a
         // tab-panel
+
+        if (addDefaultScreen) {
+            this.screenController.addDefaultScreen(new DhammapadaScreen(this.getTextController),
+                                                   "dhammapada");
+        }
+
         this.screenController.addScreen(this.configurationScreen,
                                         "configurations");
         this.screenController.addScreen(this.phraseScreen, "phrases");

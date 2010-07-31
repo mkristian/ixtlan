@@ -31,12 +31,9 @@ public abstract class AbstractUserSingletonResourceTestGwt<E extends SingletonRe
                 this.domainFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
-                this.localeFactory,
-                this.domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        this.userGroupFactory),
-                this.userGroupFactory);
+                        this.userGroupFactory));
         super.gwtSetUp();
     }
 }

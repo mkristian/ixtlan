@@ -126,12 +126,9 @@ public class UserTestGwt extends ResourceTestGwt<User> {
                 domainFactory);
         return new UserFactory(this.repository,
                 this.notifications,
-                localeFactory,
-                domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
+                        userGroupFactory));
     }
 
     @Override

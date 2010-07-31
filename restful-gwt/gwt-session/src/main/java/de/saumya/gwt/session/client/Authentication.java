@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.session.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Element;
 
 import de.saumya.gwt.persistence.client.Repository;
@@ -38,9 +39,10 @@ class Authentication extends SingletonResource<Authentication> {
 
     @Override
     protected void fromElement(final Element root) {
+        GWT.log(root.toString(), null);
         this.login = null;
         this.password = null;
-        this.user = this.userFactory.getChildResource(root, "user");
+        this.user = this.userFactory.getChildResource(root, "user", this.user);
         this.permissions = this.permissionFactory.getChildResourceCollection(root,
                                                                              "permissions");
     }

@@ -45,12 +45,9 @@ public class PhraseBookTestGwt extends
                 domainFactory);
         final UserFactory userFactory = new UserFactory(this.repository,
                 this.notifications,
-                localeFactory,
-                domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
+                        userGroupFactory));
         return new PhraseBookFactory(this.repository,
                 this.notifications,
                 new PhraseFactory(this.repository,

@@ -98,12 +98,9 @@ public class AuthenticationTestGwt extends
                 domainFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
-                localeFactory,
-                domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
+                        userGroupFactory));
         return new AuthenticationFactory(this.repository,
                 this.notifications,
                 new PermissionFactory(this.repository,

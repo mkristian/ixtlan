@@ -25,6 +25,7 @@ public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
     private final Label createdByOnlyLabel;
     private final Label createdByLabel;
     private final Label createdByValue;
+    private final Label separator;
 
     public ResourceHeaderPanel(final GetTextController getTextController) {
         setStyleName("resource-header-panel");
@@ -33,9 +34,10 @@ public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
         this.createdByOnlyLabel = label("created by", getTextController);
         this.createdByLabel = label("by", getTextController);
         this.createdByValue = label(getTextController);
+        this.separator = label(", ", null);
         this.modifiedAtLabel = label("modified at", getTextController);
         this.modifiedAtValue = label(getTextController);
-        this.modifiedByOnlyLabel = label("modified gby", getTextController);
+        this.modifiedByOnlyLabel = label("modified by", getTextController);
         this.modifiedByLabel = label("by", getTextController);
         this.modifiedByValue = label(getTextController);
     }
@@ -66,6 +68,8 @@ public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
                 this.createdByOnlyLabel,
                 this.createdAtLabel,
                 this.createdAtValue);
+        this.separator.setVisible((createdAt != null || createdBy != null)
+                && (updatedAt != null || updatedBy != null));
         doReset(updatedAt,
                 updatedBy,
                 this.modifiedByLabel,
@@ -86,12 +90,12 @@ public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
                     + "\u00a0");
             if (by != null) {
                 byLabel.setVisible(true);
-                byValue.setText("\u00a0" + by.display() + "\u00a0");
+                byValue.setText("\u00a0" + by.display());
             }
         }
         else if (by != null) {
-            byLabel.setVisible(true);
-            byValue.setText(by.display() + "\u00a0");
+            byOnlyLabel.setVisible(true);
+            byValue.setText(by.display());
         }
         byValue.setVisible(by != null);
         atLabel.setVisible(at != null);
@@ -104,8 +108,8 @@ public abstract class ResourceHeaderPanel<E extends AbstractResource<E>>
 
     private Label label(final String labelValue,
             final GetTextController getTextController) {
-        final Label label = labelValue == null
-                ? new Label()
+        final Label label = getTextController == null
+                ? new Label(labelValue)
                 : new TranslatableLabel(getTextController, labelValue);
         label.setVisible(false);
         add(label);

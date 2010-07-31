@@ -3,6 +3,7 @@
  */
 package de.saumya.gwt.session.client;
 
+import de.saumya.gwt.persistence.client.RepositoryMock;
 import de.saumya.gwt.persistence.client.Resource;
 import de.saumya.gwt.persistence.client.ResourceTestGwt;
 import de.saumya.gwt.session.client.models.DomainFactory;
@@ -16,11 +17,13 @@ public abstract class AbstractUserResourceTestGwt<E extends Resource<E>>
 
     protected LocaleFactory    localeFactory;
     protected DomainFactory    domainFactory;
+    protected GroupFactory     groupFactory;
     protected UserGroupFactory userGroupFactory;
     protected UserFactory      userFactory;
 
     @Override
     protected void gwtSetUp() {
+        this.repository = new RepositoryMock();
         this.localeFactory = new LocaleFactory(this.repository,
                 this.notifications);
         this.domainFactory = new DomainFactory(this.repository,
@@ -29,14 +32,12 @@ public abstract class AbstractUserResourceTestGwt<E extends Resource<E>>
                 this.notifications,
                 this.localeFactory,
                 this.domainFactory);
+        this.groupFactory = new GroupFactory(this.repository,
+                this.notifications,
+                this.userGroupFactory);
         this.userFactory = new UserFactory(this.repository,
                 this.notifications,
-                this.localeFactory,
-                this.domainFactory,
-                new GroupFactory(this.repository,
-                        this.notifications,
-                        this.userGroupFactory),
-                this.userGroupFactory);
+                this.groupFactory);
         super.gwtSetUp();
     }
 }

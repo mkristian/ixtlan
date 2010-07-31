@@ -52,12 +52,9 @@ public class PhraseTestGwt extends AbstractCommonTestGwt<Phrase> {
                 domainFactory);
         final UserFactory userFactory = new UserFactory(this.repository,
                 this.notifications,
-                localeFactory,
-                domainFactory,
                 new GroupFactory(this.repository,
                         this.notifications,
-                        userGroupFactory),
-                userGroupFactory);
+                        userGroupFactory));
         return new PhraseFactory(this.repository,
                 this.notifications,
                 userFactory,
