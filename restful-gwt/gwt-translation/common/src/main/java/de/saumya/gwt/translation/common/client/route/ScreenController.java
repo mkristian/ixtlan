@@ -78,18 +78,16 @@ public class ScreenController {
                     // TODO better permissions check !?!?
                     bar.setTabEnabled(i, session.isAllowed(Action.INDEX, name)
                             || session.isAllowed(Action.SHOW, name)
-                            || session.isAllowed(Action.UPDATE, name));
+                            || session.isAllowed(Action.UPDATE, name)
+                            || name.equals(ScreenController.this.defaultName));
                 }
-                // final String pathValue = History.getToken().length() == 0
-                // ? "/"
-                // : History.getToken();
                 dispatch(new ScreenPath(History.getToken()));
             }
 
         });
     }
 
-    public void dispatchDefault() {
+    public void redirectDefault() {
         if (History.getToken() == null || History.getToken().length() == 0) {
             History.newItem("/DEFAULT/" + this.defaultName);
         }
