@@ -37,7 +37,7 @@ module Ixtlan
       end
 
       def render_error_page(status)
-        render :template => "sessions/error", :status => status
+        render :template => "errors/error", :status => status
       end
 
       def page_not_found(exception)

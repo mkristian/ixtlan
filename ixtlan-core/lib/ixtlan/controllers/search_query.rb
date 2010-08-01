@@ -11,7 +11,7 @@ module Ixtlan
         _query(model, true, *parameters)
       end
 
-      def query(model, limit_all, *parameters)
+      def _query(model, limit_all, *parameters)
         result = nil
         value = parameters[0].is_a?(String) ? parameters.shift : params[:query]
         if value
