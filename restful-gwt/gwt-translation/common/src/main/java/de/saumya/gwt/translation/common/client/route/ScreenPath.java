@@ -40,11 +40,11 @@ public class ScreenPath {
      * <li>/locale/name/1/nested/3</li>
      * <li>/locale/name/1/nested/3/edit</li>
      * </ul>
-     *
+     * 
      * a key with with value <b>new</b> will produce the wrong action and a
      * controllerName with <b>edit</b> will produce the wrong action on the
      * wrong controller !
-     *
+     * 
      * @param fullpath
      */
     public ScreenPath(final String fullpath) {
@@ -143,16 +143,6 @@ public class ScreenPath {
             result.append("$").append(query);
         }
         return result.toString();
-        // TODO use stringbuilder and apply all cases properly
-        // return "/"
-        // + this.locale
-        // + "/"
-        // + (this.controllerName != null ? this.controllerName : "")
-        // + (this.key != 0 ? "/" + this.key : "")
-        // + (this.action == Action.EDIT || this.action == Action.NEW
-        // ? "/" + this.action.toString().toLowerCase()
-        // : "")
-        // + (query != null && query.length() > 0 ? "$" + query : "");
     }
 
     @Override
