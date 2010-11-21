@@ -1,3 +1,4 @@
+require 'ixtlan/mailer'
 module Ixtlan
   module Controllers
     module UsersController
@@ -76,8 +77,10 @@ module Ixtlan
             format.html { redirect_to(user_url(@user.id)) }
             format.xml  { render :xml => @user, :status => :created, :location => user_url(@user.id) + ".xml" }
 
-            ::Ixtlan::Mailer.deliver_new_user(@user.email, Configuration.instance.password_sender_email, @user.login, Configuration.instance.login_url)
-            ::Ixtlan::Mailer.deliver_password(@user.email, Configuration.instance.password_sender_email, @user.password)
+            if Configuration.instance.password_sender_email
+              ::Ixtlan::Mailer.deliver_new_user(@user.email, Configuration.instance.password_sender_email, @user.login, Configuration.instance.login_url)
+              ::Ixtlan::Mailer.deliver_password(@user.email, Configuration.instance.password_sender_email, @user.password)
+            end
           else
             format.html { render :action => "new" }
             format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
