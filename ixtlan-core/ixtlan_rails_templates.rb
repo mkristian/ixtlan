@@ -5,9 +5,9 @@
 # HELPER METHODS
 # --------------
 
-def middleware(name)
+def middleware(name, *args)
   log 'middleware', name
-  environment "config.middleware.use '#{name}'"
+  environment "config.middleware.use '#{name}' '#{args.join('\',\'')}'"
 end
 
 def ixtlan_model(name)
@@ -243,10 +243,13 @@ add_gem 'rspec', '[1.3.0,1.4.0]', :test, :lib => false
 add_gem 'rspec-rails', '1.3.2', :test, :lib => false
 
 # install all gems
-rake 'gems:install'
+log 'gemhome', java.lang.System.getProperty('maven.home')
+run("mvn gem:initialize -Djruby.gem.home=#{ENV['GEM_HOME']} -Djruby.gem.path=#{ENV['GEM_PATH']}")
+#rake 'gems:install'
 
 # install specs rake tasks
-generate('rspec', '-f')
+run("mvn rails2:generate -Djruby.gem.home=#{ENV['GEM_HOME']} -Djruby.gem.path=#{ENV['GEM_PATH']} -Dargs='rspec -f'")
+#generate('rspec', '-f')
 
 # install datamapper rake tasks
 generate('datamapper_install')
