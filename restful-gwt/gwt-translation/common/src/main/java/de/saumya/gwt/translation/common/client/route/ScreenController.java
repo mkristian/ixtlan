@@ -95,15 +95,22 @@ public class ScreenController {
 
     private void dispatch(final ScreenPath path) {
         if (path.controllerName != null) {
+            final String action = path.action.name().toLowerCase();
             GWT.log("dispatch permissions: "
-                    + path.action.name().toLowerCase()
-                    + " on "
-                    + path.controllerName
-                    + " is allowed: "
-                    + this.session.isAllowed(path.action.name().toLowerCase(),
-                                             path.controllerName), null);
-            if (this.session.isAllowed(path.action.name().toLowerCase(),
-                                       path.controllerName)) {
+                            + action
+                            + " on "
+                            + path.controllerName
+                            + " is allowed: "
+                            + (this.session.isAllowed(action,
+                                                      path.controllerName) || ("index".equals(action) && this.session.isAllowed("show",
+                                                                                                                                path.controllerName))),
+                    null);
+            if (this.session.isAllowed(action, path.controllerName)
+                    // for index action also check the show action, assuming that one
+                    // implies the other hence serve singleton with show
+                    // permissions
+                    || ("index".equals(action) && this.session.isAllowed("show",
+                                                                         path.controllerName))) {
                 this.tabPanel.selectTab(this.names.indexOf(path.controllerName));
                 this.dispatcher.dispatch(path);
             }
@@ -111,6 +118,7 @@ public class ScreenController {
                 if (!path.controllerName.equals(this.defaultName)) {
                     this.notifications.warn("requested page does not exists");
                 }
+                GWT.log(this.defaultName, null);
                 if (this.defaultName != null) {
                     this.tabPanel.selectTab(this.names.indexOf(this.defaultName));
                     this.dispatcher.dispatch(new ScreenPath("/" + path.locale

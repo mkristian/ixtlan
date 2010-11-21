@@ -10,8 +10,8 @@ public abstract class AnonymousResourceFactory<E extends AnonymousResource<E>>
     protected ResourceCollection<E> all;
 
     public AnonymousResourceFactory(final Repository repository,
-            final ResourceNotifications notification) {
-        super(repository, notification);
+            final ResourceNotifications notifications) {
+        super(repository, notifications);
     }
 
     @Override

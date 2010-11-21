@@ -146,7 +146,7 @@ public abstract class AbstractResourceScreen<E extends AbstractResource<E>>
      * @param resource
      */
     @Override
-    public final void reset(final E resource) {
+    public void reset(final E resource) {
         this.actions.reset(resource);
         this.displayResetable.reset(resource);
         this.actions.setReadOnly(this.displayAllowReadOnly.isReadOnly());

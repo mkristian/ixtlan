@@ -30,6 +30,11 @@ public abstract class AbstractResourceFactory<E extends AbstractResource<E>> {
 
     abstract void clearCache();
 
+    // TODO most properly will need to delete this method since default is
+    // needed when updating
+    // the object and the server does not send this info. in such a case the
+    // already set child
+    // object should stay where it is.
     public E getChildResource(final Element root, final String name) {
         return getChildResource(root, name, null);
     }

@@ -22,6 +22,10 @@ public class Repository {
         this.authenticationToken = authenticationToken;
     }
 
+    public String getAuthenticationToken() {
+        return this.authenticationToken;
+    }
+
     void all(final String resourceName, final Map<String, String> query,
             final RequestCallback callback) {
         final StringBuilder buf = new StringBuilder(URL);

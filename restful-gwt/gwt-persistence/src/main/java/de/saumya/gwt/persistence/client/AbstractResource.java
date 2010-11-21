@@ -9,6 +9,8 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -17,7 +19,7 @@ import com.google.gwt.xml.client.XMLParser;
 
 public abstract class AbstractResource<E extends AbstractResource<E>> {
 
-    static final String INDENT = "   ";
+    protected static final String INDENT = "   ";
 
     protected enum State {
         NEW, TO_BE_CREATED, TO_BE_UPDATED, UP_TO_DATE, TO_BE_DELETED, DELETED, TO_BE_LOADED, STALE;
@@ -293,29 +295,51 @@ public abstract class AbstractResource<E extends AbstractResource<E>> {
     public void addResourceChangeListener(
             final ResourceChangeListener<E> listener) {
         if (listener != null) {
-            this.listeners.add(listener);
+            DeferredCommand.addCommand(new Command() {
+                @Override
+                public void execute() {
+                    AbstractResource.this.listeners.add(listener);
+                }
+            });
         }
     }
 
     public void removeResourceChangeListener(
             final ResourceChangeListener<E> listener) {
-        this.listeners.remove(listener);
+        DeferredCommand.addCommand(new Command() {
+            @Override
+            public void execute() {
+                AbstractResource.this.listeners.remove(listener);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
     void fireResourceChangeEvents() {
-        for (final ResourceChangeListener<E> listener : this.listeners) {
-            listener.onChange((E) this);
-        }
-        this.listeners.clear();
+        DeferredCommand.addCommand(new Command() {
+            @Override
+            public void execute() {
+                for (final ResourceChangeListener<E> listener : AbstractResource.this.listeners) {
+                    listener.onChange((E) AbstractResource.this);
+                }
+                AbstractResource.this.listeners.clear();
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
     void fireResourceErrorEvents(final int status, final String statusText) {
-        for (final ResourceChangeListener<E> listener : this.listeners) {
-            listener.onError(status, statusText, (E) this);
-        }
-        this.listeners.clear();
+        DeferredCommand.addCommand(new Command() {
+            @Override
+            public void execute() {
+                for (final ResourceChangeListener<E> listener : AbstractResource.this.listeners) {
+                    listener.onError(status,
+                                     statusText,
+                                     (E) AbstractResource.this);
+                }
+                AbstractResource.this.listeners.clear();
+            }
+        });
     }
 
     protected abstract void fromElement(Element root);
