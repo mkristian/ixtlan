@@ -5,11 +5,13 @@ require 'ixtlan/passwords'
 require 'ixtlan/digest'
 require 'dm-serializer'
 require 'ixtlan/models/update_children'
+require 'ixtlan/models/group_user'
 module Ixtlan
   module Models
     module User
 
       GROUP = Object.full_const_get(Models::GROUP)
+      GROUP_USER = Object.full_const_get(Models::GROUP_USER)
 
       def root?
         groups.detect { |g| g.root? } || false
@@ -41,7 +43,7 @@ module Ixtlan
           # TODO spec the empty array to make sure new relations are stored
           # in the database or the groups collection is empty before filling it
           @groups = ::DataMapper::Collection.new(::DataMapper::Query.new(self.repository, GROUP), [])
-          GroupUser.all(:memberuid => login).each do |gu|
+          GROUP_USER.all(:memberuid => login).each do |gu|
             @groups << gu.group
           end
           def @groups.user=(user)
@@ -52,7 +54,7 @@ module Ixtlan
             group.locales(@user)
             group.domains(@user)
             unless member? group
-              gu = GroupUser.create(:memberuid => @user.login, :gidnumber => group.id)
+              gu = GROUP_USER.create(:memberuid => @user.login, :gidnumber => group.id)
               super
             end
 
@@ -60,7 +62,7 @@ module Ixtlan
           end
 
           def @groups.delete(group)
-            gu = GroupUser.first(:memberuid => @user.login, :gidnumber => group.id)
+            gu = GROUP_USER.first(:memberuid => @user.login, :gidnumber => group.id)
             if gu
               gu.destroy
             end
@@ -94,7 +96,7 @@ module Ixtlan
       def update_locales_domains(new_groups)
         if(new_groups)
           # make sure we have an array
-          new_groups = new_groups[:group]
+          new_groups = new_groups.is_a?(Array) ? new_groups : new_groups[:group]
           new_groups = [new_groups] unless new_groups.is_a? Array
 
           # create a map group_id =>  group
@@ -152,9 +154,10 @@ module Ixtlan
 
         model.property :hashed_password, String, :required => false, :length => 128, :accessor => :private, :field => "userpassword"
 
-        model.timestamps :at
-
-        model.modified_by ::Ixtlan::Models::USER
+        if !model.const_defined?('LDAP') || !model.const_get('LDAP')
+          model.timestamps :at
+          model.modified_by ::Ixtlan::Models::USER
+        end
 
         #validates_is_unique  :login
         #validates_is_unique  :email

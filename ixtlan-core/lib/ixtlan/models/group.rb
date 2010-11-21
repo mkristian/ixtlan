@@ -16,9 +16,10 @@ module Ixtlan
 
         model.property :name, String, :required => true , :format => /^[^<'&">]*$/, :length => 32, :field => "cn", :unique_index => true
 
-        model.timestamps :created_at
-
-        model.modified_by Ixtlan::Models::USER, :created_by
+        if !model.const_defined?('LDAP') || !model.const_get('LDAP')
+          model.timestamps :created_at
+          model.modified_by Ixtlan::Models::USER, :created_by
+        end
 
         model.class_eval <<-EOS, __FILE__, __LINE__
       if protected_instance_methods.find {|m| m == 'to_x'}.nil?

@@ -12,7 +12,7 @@ module Ixtlan
 
       USER = Object.full_const_get(::Ixtlan::Models::USER)
 
-      def adjust_params(user_params)
+      def adjust_params_and_return_groups(user_params)
         if user_params
           lang = user_params.delete(:preferred_language)
           user_params[:language] = lang[:code][0..1] if lang
@@ -64,7 +64,7 @@ module Ixtlan
       # POST /users.xml
       def create
         user_params = params[:user]
-        groups = adjust_params(user_params)
+        groups = adjust_params_and_return_groups(user_params)
         @user = USER.new(user_params)
         @user.current_user = current_user
         @user.reset_password
@@ -72,7 +72,7 @@ module Ixtlan
 
         respond_to do |format|
           if @user.save
-            flash[:notice] = 'User was successfully created.'
+            flash[:notice] = "User was successfully created: #{@user.password}"
             format.html { redirect_to(user_url(@user.id)) }
             format.xml  { render :xml => @user, :status => :created, :location => user_url(@user.id) + ".xml" }
 
@@ -91,7 +91,7 @@ module Ixtlan
         @user = USER.first_or_get!(params[:id])
         @user.current_user = current_user
         user_params = params[:user]
-        @user.update_all_children(adjust_params(user_params))
+        @user.update_all_children(adjust_params_and_return_groups(user_params))
         @user.attributes = user_params
 
         respond_to do |format|
