@@ -15,7 +15,7 @@
   <repositories>
     <repository>
       <id>saumya</id>
-      <url>mojo.saumya.de</url>
+      <url>http://mojo.saumya.de</url>
     </repository>
   </repositories>
   <dependencies>
