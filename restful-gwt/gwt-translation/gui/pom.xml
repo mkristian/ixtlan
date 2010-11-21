@@ -12,6 +12,12 @@
   <artifactId>gui</artifactId>
   <packaging>jar</packaging>
   <name>GWT GUI for managing locale and translations</name>
+  <repositories>
+    <repository>
+      <id>saumya</id>
+      <url>mojo.saumya.de</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>de.saumya.gwt.translation</groupId>
