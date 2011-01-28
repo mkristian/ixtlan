@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rubygems</groupId>
   <artifactId>ixtlan</artifactId>
-  <version>0.4.1</version>
+  <version>0.4.2</version>
   <packaging>gem</packaging>
   <name><![CDATA[ixtlan plugins for rails and datamapper]]></name>
   <description><![CDATA[this is set of rails and datamapper plugins for setting up a little more advanced rails application then the default rails generator does. the focus is on security and privacy as well a complete restful xml support.]]></description>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>rubygems</groupId>
       <artifactId>slf4r</artifactId>
-      <version>[0.3.0,0.3.3]</version>
+      <version>[0.3.0,0.3.4)</version>
       <type>gem</type>
       <scope>compile</scope>
     </dependency>
