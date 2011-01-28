@@ -21,7 +21,9 @@ end
 describe Ixtlan::ModifiedBy do
 
   before :each do
-    @user = Crew.create(:login => 'spock')
+    Crew.all.destroy!
+    AuditedName.all.destroy!
+    @user = Crew.create(:login => 'spocky')
     @second = Crew.create(:login => 'dr pille')
     @name = AuditedName.create(:name => 'kirk', :current_user => @user)
   end

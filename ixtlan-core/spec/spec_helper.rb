@@ -9,6 +9,7 @@ require 'dm-serializer'
 require 'dm-timestamps'
 
 require 'slf4r'
+require 'slf4r/ruby_logger'
 
 require 'ixtlan/models'
 require 'ixtlan/modified_by'

@@ -36,6 +36,7 @@ end
 describe Ixtlan::Models::Authentication do
 
   before :all do
+    User.all.destroy!
     @controller = Controller.new
     @log = StringIO.new
     Slf4r::LoggerFacade4RubyLogger.file = @log
