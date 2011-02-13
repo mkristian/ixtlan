@@ -1,7 +1,7 @@
 # create by maven - leave it as is
 Gem::Specification.new do |s|
   s.name = 'ixtlan'
-  s.version = '0.4.2'
+  s.version = '0.4.3'
 
   s.summary = 'ixtlan plugins for rails and datamapper'
   s.description = 'this is set of rails and datamapper plugins for setting up a little more advanced rails application then the default rails generator does. the focus is on security and privacy as well a complete restful xml support.'

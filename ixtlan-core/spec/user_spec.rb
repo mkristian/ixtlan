@@ -98,7 +98,7 @@ describe Ixtlan::Models::User do
 
   describe 'user_admin and locales/domains_admin' do
     before(:each) do
-      @admin = User.create(:login => 'admin_user', :email => 'admin_user@example.com', :name => 'admin', :current_user => @root)
+      @admin = User.first(:login => 'admin_user') || User.create(:login => 'admin_user', :email => 'admin_user@example.com', :name => 'admin', :current_user => @root)
       @admin.groups << @users
       @admin.groups << @locales
       @admin.groups << @domains
@@ -112,7 +112,7 @@ describe Ixtlan::Models::User do
     end
 
     it 'should be able to create an user' do
-      u = User.new(:login => 'user', :email => 'user@example.com', :name => 'user', :current_user => @admin)
+      u = User.new(:login => 'user1', :email => 'user1@example.com', :name => 'user', :current_user => @admin)
       u.update_all_children(@groups)
       u.save
 
@@ -127,7 +127,7 @@ describe Ixtlan::Models::User do
     end
 
     it 'should be able to create an user but ignore disallowed group root' do
-      u = User.new(:login => 'user', :email => 'user@example.com', :name => 'user', :current_user => @admin)
+      u = User.new(:login => 'user2', :email => 'user2@example.com', :name => 'user', :current_user => @admin)
 
       groups = @groups.dup
       groups[:group] << { :id => @root_group.id.to_s }

@@ -144,7 +144,7 @@ module Ixtlan
 
         model.property :id, ::DataMapper::Types::Serial, :field => "uidnumber"
 
-        model.property :login, String, :required => true, :field => "uid", :length => 4..32, :unique_index => true, :format => /^[a-zA-Z0-9]*$/, :writer => :private
+        model.property :login, String, :required => true, :field => "uid", :length => 4..32, :unique_index => true, :format => /^[a-zA-Z0-9._-]*$/, :writer => :private
 
         model.property :name, String, :required => true, :format => /^[^<">]*$/, :length => 2..64, :field => "cn"
 
